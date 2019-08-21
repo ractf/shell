@@ -1,18 +1,24 @@
 import React from "react";
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
+import { transparentize } from "polished";
 
 import logo from "../static/wordmark.png";
 import { APIContext } from "../containers/controllers/API";
+
+import theme from "theme";
 
 
 const BrandLink = styled(Link)`
     font-size: 1.4em;
     font-weight: 500;
-    color: #fff !important;
+    color: ${theme.fg} !important;
 `;
 
 const HeadLink = styled(Link)`
+
+    display: none;
+
     color: #ddd;
     padding: 0 15px;
     font-size: 14px;
@@ -28,7 +34,7 @@ const Head = styled.header`
     width: 100%;
     height: 60px;
 
-    background-color: #111023bb;
+    background-color: ${transparentize(.27, theme.bg_d1)};
     padding: 16px 32px;
     position: relative;
     z-index: 50;

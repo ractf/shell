@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import Button, { ButtonRow } from "./Button";
 
 
 const TabButtonRow = styled(ButtonRow)`
-    justify-content: flex-start;
+    justify-content: ${props => props.center ? "center" : "flex-start"};
 
     >button {
         border-radius: 0;
@@ -13,6 +13,10 @@ const TabButtonRow = styled(ButtonRow)`
         min-width: 100px;
         opacity: .5;
         transition: none;
+        font-size: 1.1em;
+    }
+    >button:active {
+        outline: none;
     }
 
     >button:first-child {
@@ -39,39 +43,24 @@ const TabWrap = styled.div`
     min-height: 300px;
 `;
 
+export default ({center, children}) => {
+    const [active, setActive] = useState(0);
 
-export default class TabbedView extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            active: 0,
-        }
-    }
-
-    switch(i) {
-        return () => {
-            this.setState({ active: i });
-        }
-    }
-
-    render() {
-        return (
-            <>
-                <TabButtonRow>
-                    {this.props.children.map((c, i) =>
-                        <Button key={i} click={this.switch(i)} medium
-                            className={i === this.state.active ? "active" : ""}>
-                                {c.props.label}</Button>)}
-                </TabButtonRow>
-                <TabWrap>
-                    {this.props.children.map((c, i) =>
-                        <div style={{display: i === this.state.active ? "block" : "none"}}>
-                            {c.props.children}
-                        </div>
-                    )}
-                </TabWrap>
-            </>
-        )
-    }
+    return (
+        <>
+            <TabButtonRow center={center}>
+                {children.map((c, i) =>
+                    <Button key={i} click={(() => setActive(i))} medium
+                        className={i === active ? "active" : ""}>
+                            {c.props.label}</Button>)}
+            </TabButtonRow>
+            <TabWrap>
+                {children.map((c, i) =>
+                    <div style={{display: i === active ? "block" : "none"}}>
+                        {c.props.children}
+                    </div>
+                )}
+            </TabWrap>
+        </>
+    )
 }

@@ -10,7 +10,8 @@ const HomeSplit = styled.div`
     flex-grow: 1;
     align-items: center;
     width: 100%;
-    
+    max-width: 1400px;
+
     >* {
         flex-basis: 0;
         flex-grow: 1;
@@ -30,7 +31,7 @@ export default () =>
         <HomeSplit>
             <div>
                 <SectionTitle>Welcome, { api.user.username }</SectionTitle>
-                <Button to={"/hub"} main>Continue Challenges</Button>
+                <Button to={"/campaign"} main>Continue Challenges</Button>
                 <Button to={"/leaderboard"} main>View Leaderboard</Button>
                 <ButtonRow>
                     <Button to={"/support"} main lesser>Support</Button>

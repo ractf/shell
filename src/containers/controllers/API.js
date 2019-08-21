@@ -42,7 +42,26 @@ class APIClass extends Component {
             categories: [],
 
             login: this.login,
+            getCategoryName: this.getCategoryName,
+            challengesIn: this.challengesIn,
+            getChallenge: this.getChallenge,
         };
+    }
+
+    getCategoryName = (category_code) => {
+        return "Crypto";
+    }
+
+    challengesIn = (category_code) => {
+        return this.state.challenges.filter(c => c.category === category_code);
+    }
+
+    getChallenge = (category, challenge) => {
+        let results = this.state.challenges.filter(c => (
+            c.category === category && c.number === challenge
+        ));
+        if (!results.length) return {};
+        return results[0];
     }
 
     componentWillMount() {
@@ -82,14 +101,19 @@ class APIClass extends Component {
     reload_cache = () => {
         // TODO: This
         this.setState({
-            challenges: [],
+            challenges: [{
+                category: "crypto",
+                number: "1",
+                name: "Crypto Chal 1",
+                description: "HI!!!<br>Notice me, senapi~~!!!"
+            }],
             categories: [
                 ["Cryptography", "crypto"],
                 ["Miscelaneous", "misc"],
                 ["Reverse Engineering", "reveng"],
                 ["Steganography", "steg"],
                 ["GNU+Linux", "linux"],
-                ["World Wide Web", "www"], 
+                ["World Wide Web", "www"],
             ],
 
             user: {

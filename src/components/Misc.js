@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 export const HR = styled.div`
@@ -11,6 +10,9 @@ export const HR = styled.div`
 
 export const SectionTitle = styled.div`
     font-size: 3rem;
+`;
+export const SectionTitle2 = styled.div`
+    font-size: 2rem;
 `;
 
 export const SectionHeading = styled.div`

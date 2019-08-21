@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Button, { ButtonRow } from "../../components/Button";
@@ -40,6 +39,8 @@ export default () => <>
                     <Input val={api.user.username} limit={36} placeholder={"Team Name"} />
                     <OptionTitle>Team Description</OptionTitle>
                     <Input val={api.user.username} rows={5} placeholder={"Team Description"} />
+                    <OptionTitle>Team password</OptionTitle>
+                    <Input val={api.user.username} password placeholder={"Team Password"} />
                 </div>
             </TabbedView>
             <HR />

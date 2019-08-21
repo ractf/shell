@@ -1,10 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FaLink } from "react-icons/fa";
 
 import { SectionTitle, SectionH2, SectionHeading, TextBlock } from "../../../components/Misc";
 import ListPage from "./ListPage";
+
+import theme from "theme";
 
 
 const OverviewWrap = styled.div`
@@ -14,7 +16,7 @@ const OverviewWrap = styled.div`
 
 const FaLinkIcon = styled(FaLink)`
     font-size: .5em;
-    color: #fff;
+    color: ${theme.fg};
     margin-left: .4em;
 
     :hover {

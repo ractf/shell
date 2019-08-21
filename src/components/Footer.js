@@ -1,28 +1,34 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled, { css } from 'styled-components';
+import { transparentize } from "polished";
+
+import { APIContext } from "../containers/controllers/API";
+
+import theme from "theme";
 
 
 const Foot = styled.footer`
     width: 100%;
-    background-color: #111023bb;
+    background-color: ${transparentize(.27, theme.bg_d1)};
     position: fixed;
     left: 0;
     bottom: 0;
     max-height: 34px;
+    flex-shrink: 0;
 
     padding: 10px 20px;
     padding-top: 0;
-    color: #fff;
+    color: ${theme.fg};
     font-size: .8em;
     position: relative;
 
     overflow-y: hidden;
     transition: max-height 500ms ease-in-out;
 
-    &:hover {
+    /*&:hover {*/
         max-height: 250px;
-    }
+    /*}*/
 `;
 
 const ColStyle = styled.div`
@@ -73,11 +79,16 @@ const FG = styled.div`flex-grow: 1`;
 
 
 const FootLink = (props) => <p><Link to={props.to}>{props.children}</Link></p>;
-const FootText = (props) => <FootTop>
+const FootText = (props) => <FootTop><APIContext.Consumer>{api => <>{api.authenticated ? <>
     <span>0% complete | Ranked #0 on leaderboard | 0 hints used | 0 points | 0 challenges solved</span>
     <FG />
     <LogoutLink to={"/logout"}>Logout</LogoutLink>
-</FootTop>;
+
+</> : <>
+    <FG />
+    <Link to={"/login"}>Login</Link>
+</>}</>}</APIContext.Consumer></FootTop>;
+
 const FootMain = () => <FootMainWrap>
     <FootCol title={"RACFT"}>
         <FootLink to={"/about"}>About</FootLink>

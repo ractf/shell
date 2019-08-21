@@ -2,13 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 
+import theme from "theme";
+
+
 const Button = styled.button`
     background-color: #2c2a44;
     border-radius: 2px;
     border: 1px solid #373354;
     display: block;
     cursor: pointer;
-    color: #fff;
+    color: ${theme.fg};
     font-family: 'Roboto Mono',monospace;
     font-size: 1.2rem;
     padding: 5px 10px;
@@ -26,10 +29,15 @@ const Button = styled.button`
         background: none;
     `}
 
-    &:hover {
-        background-color: #222034;
-        text-decoration: none;
-    }
+    ${props => props.disabled ? css`
+        color: #999;
+        cursor: not-allowed;
+    ` : css`
+        &:hover {
+            background-color: ${theme.bg};
+            text-decoration: none;
+        }
+    `}
 `;
 const NoUnderline = styled(Link)`
     && {
@@ -53,8 +61,8 @@ export const ButtonRow = styled.div`
 
 export default (props) =>
     props.to ?
-        <NoUnderline to={props.to}>
-            <Button onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
+        <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
+            <Button onMouseDown={(e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
         </NoUnderline>
-        : <Button onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
+        : <Button onMouseDown={(e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
 ;

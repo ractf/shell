@@ -2,6 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+import theme from "theme";
+
+
 const HubButton = styled.button`
     padding: 2rem 16px;
     width: 300px;
@@ -9,7 +12,7 @@ const HubButton = styled.button`
     margin-bottom: 8px;
     font-size: 1.2rem;
     border-radius: 2px;
-    color: #fff;
+    color: ${theme.fg};
     display: inline-block;
     background-color: rgba(24,22,36,0.7);
     border: 1px solid #181624;

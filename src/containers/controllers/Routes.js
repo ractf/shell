@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { Transition } from "react-transition-group";
 import styled from "styled-components";
 
 import SettingsPage from "../pages/SettingsPage";
 import UsersList from "../pages/UsersList";
 import TeamsList from "../pages/TeamsList";
 import TeamPage from "../pages/TeamPage";
-import HomePage from "../pages/HomePage.js";
-import HubPage from "../pages/ChallengeHub.js";
-import { NotFound } from "../pages/ErrorPages.js";
+import HomePage from "../pages/HomePage";
+import HubPage from "../pages/ChallengeHub";
+import CategoryHub from "../pages/CategoryHub";
+import ChallengePage, { CampaignChallengePage } from "../pages/ChallengePage";
+import Campaign from "../pages/Campaign";
+import SignUpPage from "../pages/SignUp";
+import { NotFound } from "../pages/ErrorPages";
 
+import DemoPage from "../pages/DemoPage";
 
+/*
 const CTFRouter = ({ location }) =>
     <Wrapper>
         <TransitionGroup>
@@ -23,9 +29,16 @@ const CTFRouter = ({ location }) =>
                 <section className="route-section">
                     <Switch location={location}>
                         <Route path="/" exact render={() => <Redirect to={"/home"} />} />
+
+                        <Route path="/register" exact component={SignUpPage} />
+
                         <Route path="/home" exact component={HomePage} />
                         <Route path="/hub" exact component={HubPage} />
+                        <Route path="/category/:category" exact component={CategoryHub} />
+                        <Route path="/category/:category/:challenge" exact component={ChallengePage} />
                         <Route path="/settings" exact component={SettingsPage} />
+                        <Route path="/campaign" exact component={Campaign} />
+                        <Route path="/campaign/:challenge" exact component={CampaignChallengePage} />
 
                         <Route path="/users" exact component={UsersList} />
                         <Route path="/teams" exact component={TeamsList} />
@@ -42,13 +55,121 @@ const CTFRouter = ({ location }) =>
                         <Route path="/me" exact render={checkAuth(MyProfile, api)}/>
                         <Route path="/my_plugins" exact render={checkAuth(WIP, api)}/>
                         <Route path="/logout" exact render={logout(auth, api)}/>
-                        */}
+                        * /}
                         <Route component={NotFound} />
                     </Switch>
                 </section>
             </CSSTransition>
         </TransitionGroup>
     </Wrapper>;
+*/
+
+class Fader extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.fadeSpeed = 100;
+
+        this.state = {
+            opacity: 1,
+
+            curChild: props.children,
+            curUniqId: props.uniqId,
+            prevChild: null,
+            prevUniqId: null,
+            animationCallback: null
+        };
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const prevUniqId = prevProps.uniqKey || prevProps.children.type;
+        const uniqId = this.props.uniqKey || this.props.children.type;
+
+        if (prevUniqId !== uniqId) {
+            this.setState({
+                opacity: 0,
+
+                curChild: this.props.children,
+                curUniqId: uniqId,
+                prevChild: prevProps.children,
+                prevUniqId,
+                animationCallback: this.swapChildren
+            });
+
+            setTimeout(() => {
+                this.swapChildren()
+            }, this.fadeSpeed / 2);
+        }
+    }
+
+    swapChildren = () => {
+        this.setState({
+            opacity: 1,
+
+            prevChild: null,
+            prevUniqId: null,
+            animationCallback: null
+        });
+    };
+
+    render() {
+        return (
+            <Container style={{ opacity: this.state.opacity, transition: "opacity " + this.fadeSpeed + "ms ease" }}>
+                {this.state.prevChild || this.state.curChild}
+            </Container>
+        );
+    }
+}
+
+const Container = styled.div`
+    /*width: 100%;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;*/
+    position: relative; 
+    text-align: center;
+
+`;
+
+const CTFRouter = ({ location, doAnimations }) => {
+    const body = <Switch location={location}>
+        <Route path="/" exact render={() => <Redirect to={"/home"} />} />
+
+        <Route path="/register" exact component={SignUpPage} />
+
+        <Route path="/home" exact component={HomePage} />
+        <Route path="/hub" exact component={HubPage} />
+        <Route path="/category/:category" exact component={CategoryHub} />
+        <Route path="/category/:category/:challenge" exact component={ChallengePage} />
+        <Route path="/settings" exact component={SettingsPage} />
+        <Route path="/campaign" exact component={Campaign} />
+        <Route path="/campaign/:challenge" exact component={CampaignChallengePage} />
+
+        <Route path="/users" exact component={UsersList} />
+        <Route path="/teams" exact component={TeamsList} />
+        <Route path="/team" exact component={TeamPage} />
+
+
+        <Route path="/demo" exact component={DemoPage} />
+        {/*
+        <Route path="/login" exact render={checkAuth(Login, api, false)}/>
+        <Route path="/register" exact render={checkAuth(Register, api, false)}/>
+
+        <Route path="/new" exact render={checkAuth(NewTwow, api)}/>
+        <Route path="/join" exact render={checkAuth(WIP, api)}/>
+        <Route path="/browse" exact render={checkAuth(TWOWBrowse, api)}/>
+        <Route path="/manage" exact render={checkAuth(BrowseMine, api)}/>
+        <Route path="/settings" exact render={checkAuth(ProfileSettings, api)}/>
+        <Route path="/me" exact render={checkAuth(MyProfile, api)}/>
+        <Route path="/my_plugins" exact render={checkAuth(WIP, api)}/>
+        <Route path="/logout" exact render={logout(auth, api)}/>
+        */}
+        <Route component={NotFound} />
+    </Switch>;
+
+    return doAnimations ? <Fader>{body}</Fader> : <Container>{body}</Container>;
+};
 
 const Wrapper = styled.div`
     .fade-enter {
