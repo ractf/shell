@@ -4,6 +4,8 @@ import { transparentize } from "polished";
 
 import { SectionTitle } from "../../../components/Misc";
 
+import Table from "../../../components/Table";
+
 import theme from "theme";
 
 
@@ -13,6 +15,8 @@ const ListWrap = styled.div`
     max-width: 1400px;
     margin: auto;
 `;
+
+/*
 const Table = styled.table`
     width: 100%;
     text-align: left;
@@ -39,23 +43,13 @@ const TR = styled.tr`
         background-color: ${transparentize(.53, theme.bg_d1)};
     }
 `;
+*/
 
-export default (props) => {
+export default ({ title, columns, data }) => {
     return <ListWrap>
-        {props.title
-            ? <SectionTitle>{props.title}</SectionTitle>
+        {title
+            ? <SectionTitle>{title}</SectionTitle>
             : null}
-        <Table {...props}>
-            <THead>
-                <tr>
-                    {props.columns.map(i => <TD>{i}</TD>)}
-                </tr>
-            </THead>
-            <tbody>
-                {props.data.map(i => <TR>
-                    {i.map(j => <TD>{j}</TD>)}
-                </TR>)}
-            </tbody>
-        </Table>
+        <Table headings={columns} data={data} />
     </ListWrap>;
 }

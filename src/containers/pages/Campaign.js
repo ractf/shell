@@ -59,6 +59,7 @@ const ChalNode_ = styled.div`
 
     ${props => !(props.done || props.unlocked) ? css`
         color: ${theme.bg_l2};
+        user-select: none;
     ` : css`
         cursor: pointer;
         color: ${theme.bg_l3};
@@ -78,42 +79,6 @@ const ChalNode_ = styled.div`
         }
     `}1
 `;
-const NodeLink_ = styled.div`
-    width: ${link_size};
-    height: 0;
-    margin-top: ${link_size};
-    margin-bottom: ${link_size};
-
-    position: relative;
-
-    >* {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: ${link_part};
-    }
-
-    &::before, &::after {
-        content: "";
-        display: block;
-
-        position: absolute;
-        left: 0;
-        height: 4px;
-        top: 0;
-        width: 30%;
-        background-color: inherit;
-    }
-    &::after {
-        left: 70%;
-    }
-`;
-const NodeLink = (props) => (
-    <></>/*<NodeLink_>
-         {props.done ? <FaCheck /> : props.unlocked ? <FaLockOpen /> : <FaLock />}
-    </NodeLink_>*/
-);
 
 
 const ChalNodeLink = styled.div`
@@ -156,7 +121,7 @@ const LockDown = styled(LockRight)`
 `;
 const ChalNode = props => {
     return (
-        <ChalNode_ tabIndex={"0"} onMouseDown={(e => e.target.click())} onClick={(props.done || props.unlocked) && props.click} {...props}>
+        <ChalNode_ tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) && props.click} {...props}>
             <div>{props.name}</div>
 
             
@@ -300,6 +265,14 @@ const CampaignWrap = styled.div`
 
 
 const SectionBlurb = styled.div`
+    margin: auto;    
+    margin-bottom: 24px;
+    width: 800px;
+    line-height: 1.25;
+
+    &>br {
+        line-height: 1.8;
+    }
 `;
 
 export default (props) => {
@@ -326,7 +299,11 @@ export default (props) => {
         <TabbedView center>
 
             <CampaignWrap label="Campaign">
-                <SectionBlurb>uwu whats this</SectionBlurb>
+                <SectionBlurb>
+                    These campaign-style challenges are new for RACTF 2020!<br/>
+                    Each challenge has a number of precursor challenges (except the first ones, of course), one of which must be completed before you can attempt the challenge.<br/>
+                    Please let us know what you think of this style on our <a href={"https://discord.gg/FfW2xXR"}>Discord server</a>.
+                </SectionBlurb>
 
                 <CampaignRow top>
                     <ChalNode lockUnlocked done right click={showChallenge("campaign", 1, true)} name={"Intercepted Email"} />
@@ -356,7 +333,13 @@ export default (props) => {
                 </CampaignRow>
             </CampaignWrap>
             <div label="Categorical Challenges" />
-            <div label="RACTF 2019" />
+            <div label="RACTF 2019">
+                <SectionBlurb>
+                    A select number of challenges from RACTF 2019 have been resurrected for your enjoyment.<br/>
+                    Writeups are available for a number of these challenges, and most of the challenge authors would be happy to explain what's going on in some of these.<br/><br/>
+                    Note that these challenges aren't worth any points for RACTF 2020!
+                </SectionBlurb>
+            </div>
         </TabbedView>
     </Page>;
 };

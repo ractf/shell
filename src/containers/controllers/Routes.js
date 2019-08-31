@@ -3,19 +3,15 @@ import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { Transition } from "react-transition-group";
 import styled from "styled-components";
 
+import ChallengePage, { CampaignChallengePage } from "../pages/ChallengePage";
+import { TeamsList, UsersList } from "../pages/Lists";
+import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
-import UsersList from "../pages/UsersList";
-import TeamsList from "../pages/TeamsList";
+import { NotFound } from "../pages/ErrorPages";
+import SignUpPage from "../pages/SignUp";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
-import HubPage from "../pages/ChallengeHub";
-import CategoryHub from "../pages/CategoryHub";
-import ChallengePage, { CampaignChallengePage } from "../pages/ChallengePage";
 import Campaign from "../pages/Campaign";
-import SignUpPage from "../pages/SignUp";
-import { NotFound } from "../pages/ErrorPages";
-
-import DemoPage from "../pages/DemoPage";
 
 /*
 const CTFRouter = ({ location }) =>
@@ -128,6 +124,10 @@ const Container = styled.div`
     display: flex;
     justify-content: center;*/
     position: relative; 
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    flex-grow: 1;
     text-align: center;
 
 `;
@@ -139,9 +139,6 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/register" exact component={SignUpPage} />
 
         <Route path="/home" exact component={HomePage} />
-        <Route path="/hub" exact component={HubPage} />
-        <Route path="/category/:category" exact component={CategoryHub} />
-        <Route path="/category/:category/:challenge" exact component={ChallengePage} />
         <Route path="/settings" exact component={SettingsPage} />
         <Route path="/campaign" exact component={Campaign} />
         <Route path="/campaign/:challenge" exact component={CampaignChallengePage} />
@@ -150,8 +147,10 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/teams" exact component={TeamsList} />
         <Route path="/team" exact component={TeamPage} />
 
+        <Route path="/conduct" exact component={Conduct} />
+        <Route path="/privacy" exact component={Privacy } />
 
-        <Route path="/demo" exact component={DemoPage} />
+
         {/*
         <Route path="/login" exact render={checkAuth(Login, api, false)}/>
         <Route path="/register" exact render={checkAuth(Register, api, false)}/>

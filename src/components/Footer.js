@@ -94,13 +94,13 @@ const FootMain = () => <FootMainWrap>
         <FootLink to={"/about"}>About</FootLink>
         <FootLink to={"/conduct"}>Code of Conduct</FootLink>
         <FootLink to={"/privacy"}>Privacy Policy</FootLink>
-        <FootLink to={"/support"}>Support</FootLink>
     </FootCol>
     <FootCol title={"Social"}>
-        <FootLink to={"/discord"}>Discord</FootLink>
+        <p><a href={"https://discord.gg/FfW2xXR"}>Discord</a></p>
     </FootCol>
     <FootCol right>
         <p>&copy; 2019 RACTF Team</p>
+        <p>Built by RACTF, for RACTF</p>
     </FootCol>
 </FootMainWrap>;
 

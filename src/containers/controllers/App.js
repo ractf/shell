@@ -77,6 +77,13 @@ const GlobalStyle = createGlobalStyle`
             text-decoration: underline;
         }
     }
+
+    ul {
+        text-align: left;
+    }
+    ul > li {
+        margin: 16px 0;
+    }
 `;
 
 const StyledParticles = styled(Particles)`
@@ -92,11 +99,18 @@ const SiteWarning = styled.div`
     position: fixed;
     background-color: #ac1010;
     box-shadow: 5px 0 5px #000;
-    top: 60px;
+    top: 0;
+    z-index: 1000;
     left: 0;
     width: 100%;
     padding: 10px 20px;
     text-align: center;
+    transition: 300ms opacity ease;
+    cursor: default;
+
+    &:hover {
+        opacity: .5;
+    }
 `;
 
 const PageWrap = styled.div`
@@ -156,7 +170,7 @@ Keyboard interrupt received, exiting.
 
                     {!api.ready ? <SiteWarning>
                         Site operating in offline mode:
-                        Failed to connect to the primary servers!<br />
+                        Failed to connect to the CTF servers!<br />
                         Functionality will be limited until service is restored.
                     </SiteWarning> : null}
 
@@ -165,9 +179,7 @@ Keyboard interrupt received, exiting.
                     <GlobalStyle />
                     <PageWrap>
                         <Header />
-                        <PageBody>
-                            <Routes />
-                        </PageBody>
+                        <Routes />
                         <Footer />
                     </PageWrap>
                 </>}</APIContext.Consumer></API>

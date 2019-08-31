@@ -1,8 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { transparentize } from "polished";
+import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
+import { FaLink } from "react-icons/fa";
 import theme from "theme";
 
 
@@ -11,6 +12,9 @@ const PageHead = styled.div`
     background-color: ${transparentize(.27, theme.bg_d1)};
     padding: 48px;
     padding-bottom: 8px;
+    ${props => props.minimal && css`
+        padding-top: 0;
+    `}
     text-align: center;
     font-size: 2em;
     position: relative;
@@ -22,6 +26,14 @@ const PageContent = styled.div`
     padding: 32px 64px;
     max-width: 1200px;
     margin: auto;
+    flex-grow: 1;
+    width: 100%;
+    ${props => props.vCentre && css`
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    `}
 `;
 const HeadTitle = styled.div`
     margin-bottom: 64px;
@@ -44,11 +56,32 @@ const HeadLink = styled(Link)`
     }
 `;
 
-const Page = (props) => {
+const FaLinkIcon = styled(FaLink)`
+    font-size: .5em;
+    color: ${theme.fg};
+    margin-left: .4em;
+
+    :hover {
+        color: #ddd;
+    }
+`;
+
+const LinkIcon = ({ url }) => {
+    if (!url) return null;
+    return <a href={url}>
+        <FaLinkIcon />
+    </a>;
+};
+
+
+const Page = ({ title, url, children, vCentre }) => {
     return (
         <>
-            <PageHead>
-                <HeadTitle>{ props.title }</HeadTitle>
+            <PageHead minimal={!title || title.length === 0}>
+                {title ? <HeadTitle>
+                    {title}
+                    {url ? <LinkIcon url={url} /> : null}
+                </HeadTitle> : null}
                 <HeadLinks>
                     <HeadLink to={"/users"}>Users</HeadLink>
                     <HeadLink to={"/teams"}>Teams</HeadLink>
@@ -61,8 +94,8 @@ const Page = (props) => {
                     <HeadLink to={"/logout"}>Logout</HeadLink>
                 </HeadLinks>
             </PageHead>
-            <PageContent>
-                { props.children }
+            <PageContent vCentre={vCentre}>
+                {children}
             </PageContent>
         </>
     );

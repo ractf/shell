@@ -1,40 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { FaLink } from "react-icons/fa";
 
 import { SectionTitle, SectionH2, SectionHeading, TextBlock } from "../../../components/Misc";
 import ListPage from "./ListPage";
 
-import theme from "theme";
+import Page from "./Page"
 
-
-const OverviewWrap = styled.div`
-    flex-grow: 1;
-    width: 100%;
-`;
-
-const FaLinkIcon = styled(FaLink)`
-    font-size: .5em;
-    color: ${theme.fg};
-    margin-left: .4em;
-
-    :hover {
-        color: #ddd;
-    }
-`;
-
-const LinkIcon = (props) => {
-    if (!props.website) return null;
-
-return <Link to={props.website}>
-        <FaLinkIcon />
-    </Link>;
-};
 
 export default (props) =>
-    <OverviewWrap>
-        <SectionTitle>{props.title}<LinkIcon website={props.website} /></SectionTitle>
+    <Page title={props.title} url={props.website}>
         {props.underTitle
             ? <SectionHeading>69th Place</SectionHeading>
             : null}
@@ -48,4 +23,4 @@ export default (props) =>
                 <ListPage columns={i[1]} data={i[2]} />
             </>
         ))}
-    </OverviewWrap>;
+    </Page>;
