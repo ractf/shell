@@ -11,7 +11,7 @@ const style = css`
     outline: none;
     min-width: ${props => props.width || "100%"};
 
-    ${props => props.center ? css`text-align: center` : null}
+    ${props => props.center ? css`text-align: center;` : null}
     ${props => props.valid ? css`
         background-color: #18162455;
         border: 1px solid #413d6399;

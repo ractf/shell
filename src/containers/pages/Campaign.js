@@ -219,8 +219,8 @@ const Challenge = ({challenge, doHide}) => {
     const [flagValid, setFlagValid] = useState(false);
     const [promptHint, setPromptHint] = useState(false);
 
-    const regex = /^ractf{.+?}$/;
-    const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^}]+?|$)(?:}|$)$/;
+    const regex = /^ractf{.+}$/;
+    const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
     const api = useContext(APIContext);
 
     const changeFlag = (flag) => {
