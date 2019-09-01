@@ -26,3 +26,26 @@ storiesOf('Button', module)
       </span>
     </Button>
   ));
+
+storiesOf('Footer', module)
+    .add('With RACTF code', () => <Footer></Footer>)
+
+storiesOf('Header', module)
+
+
+storiesOf('HubButton', module)
+
+
+storiesOf('Input', module)
+
+
+storiesOf('Misc', module)
+
+
+storiesOf('TabbedView', module)
+
+
+storiesOf('Table', module)
+
+
+storiesOf('ToggleButtom', module)
