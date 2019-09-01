@@ -103,7 +103,7 @@ export default ({ sorter, headings, data, noSort }) => {
         <thead>
             <TR heading>
                 {headings.map((i, n) => (
-                    <TD key={n} onClick={noSort && toggleSort(n)} sortable={!noSort}>{i}</TD>
+                    <TD key={n} onClick={noSort || toggleSort(n)} sortable={!noSort}>{i}</TD>
                 ))}
             </TR>
         </thead>

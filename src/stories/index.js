@@ -1,51 +1,31 @@
 import React from 'react';
 
-import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import { linkTo } from '@storybook/addon-links';
+import { addDecorator, configure } from '@storybook/react';
+import { withKnobs } from '@storybook/addon-knobs';
 
-import { Welcome } from '@storybook/react/demo';
-import Button from '../components/Button';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import HubButton from '../components/HubButton';
-import Input from '../components/Input';
-import Misc from '../components/Misc';
-import TabbedView from '../components/TabbedView';
-import Table from '../components/Table';
-import ToggleButton from '../components/ToggleButton';
+import { GlobalStyle } from "../containers/controllers/App";
+import MockRoute from "./MockRoute";
 
-storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
+import styled from 'styled-components';
+const Centre = styled.div`
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
 
-storiesOf('Button', module)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
-  .add('with some emoji', () => (
-    <Button onClick={action('clicked')}>
-      <span role="img" aria-label="so cool">
-        😀 😎 👍 💯
-      </span>
-    </Button>
-  ));
+    &>div {
+        flex-grow: 1;
+    }
+`;
 
-storiesOf('Footer', module)
-    .add('With RACTF code', () => <Footer></Footer>)
+addDecorator(withKnobs);
+addDecorator(s => <><GlobalStyle /><MockRoute><Centre><div>{s()}</div></Centre></MockRoute></>);
 
-storiesOf('Header', module)
+const req = require.context('../components', true, /\.stories\.js$/);
 
+function loadStories() {
+    req.keys().forEach(filename => req(filename));
+}
 
-storiesOf('HubButton', module)
-
-
-storiesOf('Input', module)
-
-
-storiesOf('Misc', module)
-
-
-storiesOf('TabbedView', module)
-
-
-storiesOf('Table', module)
-
-
-storiesOf('ToggleButtom', module)
+configure(loadStories, module);
