@@ -76,15 +76,18 @@ ${props => props.sortable && css`
 `}
 `;
 
-export default ({ sorter, headings, data }) => {
+export default ({ sorter, headings, data, noSort }) => {
     const [sortMode, setSortMode] = useState(null);
-    const sorterFunc = sorter || ((i, j) => (
-        j === null ? i :
-            i.sort((a, b) => (
-                a === b ? 0 :
-                    (j[1] ? a[j[0]] < b[j[0]] : a[j[0]] > b[j[0]]) * 2 - 1
-            ))
-    ));
+    let sorterFunc;
+    if (!noSort)
+        sorterFunc = sorter || ((i, j) => (
+            j === null ? i :
+                i.sort((a, b) => (
+                    a === b ? 0 :
+                        (j[1] ? a[j[0]] < b[j[0]] : a[j[0]] > b[j[0]]) * 2 - 1
+                ))
+        ));
+    else sorterFunc = x => x;
 
     const toggleSort = n => {
         return e => {
@@ -100,7 +103,7 @@ export default ({ sorter, headings, data }) => {
         <thead>
             <TR heading>
                 {headings.map((i, n) => (
-                    <TD key={n} onClick={toggleSort(n)} sortable>{i}</TD>
+                    <TD key={n} onClick={noSort && toggleSort(n)} sortable={!noSort}>{i}</TD>
                 ))}
             </TR>
         </thead>

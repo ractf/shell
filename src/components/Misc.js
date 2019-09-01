@@ -44,3 +44,14 @@ export const TextBlock = styled.div`
     border-radius: 2px;
     white-space: pre-wrap;
 `;
+
+export const SectionBlurb = styled.div`
+    margin: auto;    
+    margin-bottom: 24px;
+    width: 800px;
+    line-height: 1.25;
+
+    &>br {
+        line-height: 1.8;
+    }
+`;

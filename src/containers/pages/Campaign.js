@@ -9,7 +9,7 @@ import { APIContext } from "../controllers/API";
 import Input from "../../components/Input";
 import Button, { ButtonRow } from "../../components/Button";
 import TabbedView from "../../components/TabbedView";
-import { TextBlock, SectionTitle, SectionTitle2 } from "../../components/Misc";
+import { TextBlock, SectionTitle, SectionTitle2, SectionBlurb } from "../../components/Misc";
 
 import Page from "./bases/Page";
 
@@ -264,16 +264,7 @@ const CampaignWrap = styled.div`
 `;
 
 
-const SectionBlurb = styled.div`
-    margin: auto;    
-    margin-bottom: 24px;
-    width: 800px;
-    line-height: 1.25;
 
-    &>br {
-        line-height: 1.8;
-    }
-`;
 
 export default (props) => {
     const [challenge, setChallenge] = useState(null);

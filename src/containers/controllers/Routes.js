@@ -12,7 +12,7 @@ import SignUpPage from "../pages/SignUp";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
-import Profile from "../pages/Profile";
+import About from "../pages/About";
 
 /*
 const CTFRouter = ({ location }) =>
@@ -144,9 +144,6 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/campaign" exact component={Campaign} />
         <Route path="/campaign/:challenge" exact component={CampaignChallengePage} />
 
-        <Route path="/profile" exact render={() => <Redirect to={"/profile/me"} />} />
-        <Route path="/profile/:user" exact component={Profile} />
-
         <Route path="/users" exact component={UsersList} />
         <Route path="/teams" exact component={TeamsList} />
         <Route path="/team" exact component={TeamPage} />
@@ -154,6 +151,7 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/conduct" exact component={Conduct} />
         <Route path="/privacy" exact component={Privacy } />
 
+        <Route path="/about" exact component={About} />
 
         {/*
         <Route path="/login" exact render={checkAuth(Login, api, false)}/>
