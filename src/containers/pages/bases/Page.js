@@ -89,7 +89,7 @@ const Page = ({ title, url, children, vCentre }) => {
 
                     <HeadLink to={"/campaign"}>Challenges</HeadLink>
 
-                    <HeadLink to={"/profile/me"}>Profile</HeadLink>
+                    <HeadLink to={"/profile"}>Profile</HeadLink>
                     <HeadLink to={"/team"}>My Team</HeadLink>
                     <HeadLink to={"/logout"}>Logout</HeadLink>
                 </HeadLinks>
