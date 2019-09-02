@@ -4,7 +4,7 @@ import { Transition } from "react-transition-group";
 import styled from "styled-components";
 
 import ChallengePage, { CampaignChallengePage } from "../pages/ChallengePage";
-import { TeamsList, UsersList } from "../pages/Lists";
+import { TeamsList, UsersList, Leaderboard } from "../pages/Lists";
 import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
@@ -150,6 +150,7 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/users" exact component={UsersList} />
         <Route path="/teams" exact component={TeamsList} />
         <Route path="/team" exact component={TeamPage} />
+        <Route path="/leaderboard" exact component={Leaderboard} />
 
         <Route path="/conduct" exact component={Conduct} />
         <Route path="/privacy" exact component={Privacy } />
