@@ -19,7 +19,7 @@ const VimMode = styled.div`
     width: 100vw;
     height: 100vh;
     white-space: pre-line;
-    font-family: 'Roboto Mono', monospace;
+    font-family: ${theme.font_stack};
     position: fixed;
     left: 0;
     top: 0; 

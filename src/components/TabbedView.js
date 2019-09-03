@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Button, { ButtonRow } from "./Button";
@@ -43,20 +43,24 @@ const TabWrap = styled.div`
     min-height: 300px;
 `;
 
-export default ({center, children}) => {
-    const [active, setActive] = useState(0);
+export default ({center, children, callback, initial}) => {
+    const [active, setActive] = useState(initial || 0);
+
+    useEffect(() => {
+        if (callback) callback(active);
+    });
 
     return (
         <>
             <TabButtonRow center={center}>
                 {children.map((c, i) =>
-                    <Button key={i} click={(() => setActive(i))} medium
+                    <Button key={i} click={(() => {active !== i && setActive(i)})} medium
                         className={i === active ? "active" : ""}>
                             {c.props.label}</Button>)}
             </TabButtonRow>
             <TabWrap>
                 {children.map((c, i) =>
-                    <div style={{display: i === active ? "block" : "none"}}>
+                    <div key={i} style={{display: i === active ? "block" : "none"}}>
                         {c.props.children}
                     </div>
                 )}

@@ -1,6 +1,6 @@
 import React from "react";
-import Table from "../../components/Table"
 
+import Table from "../../components/Table";
 import Page from "./bases/Page";
 
 export const TeamsList = () => {

@@ -8,6 +8,7 @@ import { TeamsList, UsersList } from "../pages/Lists";
 import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
+import Leaderboard from "../pages/Leaderboard";
 import SignUpPage from "../pages/SignUp";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
@@ -150,6 +151,7 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/users" exact component={UsersList} />
         <Route path="/teams" exact component={TeamsList} />
         <Route path="/team" exact component={TeamPage} />
+        <Route path="/leaderboard" exact component={Leaderboard} />
 
         <Route path="/conduct" exact component={Conduct} />
         <Route path="/privacy" exact component={Privacy } />
