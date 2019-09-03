@@ -4,10 +4,11 @@ import { Transition } from "react-transition-group";
 import styled from "styled-components";
 
 import ChallengePage, { CampaignChallengePage } from "../pages/ChallengePage";
-import { TeamsList, UsersList, Leaderboard } from "../pages/Lists";
+import { TeamsList, UsersList } from "../pages/Lists";
 import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
+import Leaderboard from "../pages/Leaderboard";
 import SignUpPage from "../pages/SignUp";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
