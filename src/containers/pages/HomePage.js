@@ -16,10 +16,10 @@ const NewsContainer = styled.div`
     width: 100%;
     max-width: 1400px;
     border-radius: 2px;
-    border: 1px solid white;
     flex-direction: row;
     height: 150px;
     align-items: center;
+    background-color: #2c2a4455;
 
     >* {
         flex-basis: 0;
@@ -30,25 +30,24 @@ const NewsContainer = styled.div`
 const NewsTitle = styled.div`
     width: 100px;
     float: left;
-    margin-left: 50px;
+    margin: 0 50px;
     font-size: 48px;
+    flex-grow: 0;
 `;
 
 const NewsFlexbox = styled.div`
     display: flex;
     flex-direction: column;
-    float: right;
-    align-items: center;
+    flex-grow: 1;
+    text-align: center;
     width: 100%;
-    margin-right: 50px;
 `;
 
 const NewsBlock = styled.div`
-    border: 1px solid white;
+    border: 1px solid ${theme.bg_d1};
     border-radius: 2px;
     padding: 10px 25px;
     margin: 10px 25px;
-    width: 100%;
 `;
 
 const News1 = () => <>
@@ -76,9 +75,7 @@ export default () => {
         </Block>
 
         <NewsContainer>
-            <div>
                 <NewsTitle>News</NewsTitle>
-            </div>
             <div>
                 <NewsFlexbox>
                     <NewsBlock><News1 /></NewsBlock>
