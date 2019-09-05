@@ -11,11 +11,15 @@ import Page from "./bases/Page";
 
 import theme from "theme";
 
-const HomeSplit = styled.div`
+const NewsContainer = styled.div`
     display: flex;
-    align-items: center;
     width: 100%;
     max-width: 1400px;
+    border-radius: 2px;
+    border: 1px solid white;
+    flex-direction: row;
+    height: 150px;
+    align-items: center;
 
     >* {
         flex-basis: 0;
@@ -23,27 +27,37 @@ const HomeSplit = styled.div`
     }
 `;
 
-const News = () => <>
-    No news at this time<br /><br />
-</>;
-
-const Credits = () => <>
-    Cache not implemented.<br /><br />//TODO: This
-</>;
-
-const Head = styled.h1`
-    font-size: 2em;
-    margin: 0.67em 0;
-    font-weight: 500;
+const NewsTitle = styled.div`
+    width: 100px;
+    float: left;
+    margin-left: 50px;
+    font-size: 48px;
 `;
 
+const NewsFlexbox = styled.div`
+    display: flex;
+    flex-direction: column;
+    float: right;
+    align-items: center;
+    width: 100%;
+    margin-right: 50px;
+`;
 
+const NewsBlock = styled.div`
+    border: 1px solid white;
+    border-radius: 2px;
+    padding: 10px 25px;
+    margin: 10px 25px;
+    width: 100%;
+`;
 
-const Notifications = () => {
-    return <div>
-        No site notifications right now! Check back later.
-    </div>;
-}
+const News1 = () => <>
+    This is some news
+</>;
+
+const News2 = () => <>
+    Even more news
+</>;
 
 const Block = styled.div`
     margin: 25px 0;
@@ -61,16 +75,17 @@ export default () => {
             Alternatively, check the <Link to={"/leaderboard"}>leaderboard</Link> to see how everyone's getting on.
         </Block>
 
-        <HomeSplit>
+        <NewsContainer>
             <div>
-                <SectionTitle2>News</SectionTitle2>
-                <News />
+                <NewsTitle>News</NewsTitle>
             </div>
             <div>
-                <SectionTitle2>Credits</SectionTitle2>
-                <Credits />
+                <NewsFlexbox>
+                    <NewsBlock><News1 /></NewsBlock>
+                    <NewsBlock><News2 /></NewsBlock>
+                </NewsFlexbox>
             </div>
-        </HomeSplit>
+        </NewsContainer>
 
         <HR />
         <Button to={"/admin"} main>Admin Panel</Button>
