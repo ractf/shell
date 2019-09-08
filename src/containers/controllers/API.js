@@ -18,13 +18,14 @@ export const APIContext = React.createContext({
 
 class APIClass extends Component {
     PROTOCOL = "http:";
-    DOMAIN = "//localhost:5000";
-    API_BASE = "/";
+    DOMAIN = "//kylesbank.me:8000";
+    API_BASE = "";
     BASE_URL = this.PROTOCOL + this.DOMAIN + this.API_BASE;
 
     ENDPOINTS = {
         VALIDATE_TOKEN: "/validate_token",
-        LOGIN: "/login",
+        REGISTER: "/auth/register",
+        LOGIN: "/auth/login",
     };
 
     constructor() {
@@ -42,6 +43,9 @@ class APIClass extends Component {
             categories: [],
 
             login: this.login,
+            logout: this.logout,
+            register: this.register,
+            
             getCategoryName: this.getCategoryName,
             challengesIn: this.challengesIn,
             getChallenge: this.getChallenge,
@@ -65,7 +69,7 @@ class APIClass extends Component {
     }
 
     componentWillMount() {
-        this.reload_cache();
+        // this.reload_cache();
 
         let token = localStorage.getItem('token');
         if (token) {
@@ -116,6 +120,7 @@ class APIClass extends Component {
                 ["World Wide Web", "www"],
             ],
 
+            authenticated: true,
             user: {
                 username: "Bottersnike",
                 id: null,
@@ -124,6 +129,7 @@ class APIClass extends Component {
         });
     }
 
+    // todo: this
     validate_token = (data, success, failure, critical) => {
         axios({
             url: this.BASE_URL + this.ENDPOINTS.VALIDATE_TOKEN,
@@ -135,27 +141,61 @@ class APIClass extends Component {
         }).catch(critical);
     };
 
-    login = (data, success, failure, critical) => {
-        axios({
-            url: this.BASE_URL + this.ENDPOINTS.LOGIN,
-            method: "post",
-            data: {uname: data.username, password: data.password}
-        }).then(response => {
-            if (response.data.success) {
+    logout = () => {
+        localStorage.removeItem('token');
+        this.setState({
+            authenticated: false,
+            user: null,
+        })
+    }
+
+    login = (username, password) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.LOGIN,
+                method: "post",
+                data: {name: username, password: password}
+            }).then(response => {
                 localStorage.setItem('token', response.data.token);
+                this.reload_cache();
+                resolve(response.data.token);
+            }).catch(e => {
+                console.log(e);
+                console.log(e.response);
+                reject(e.response);
+            })
+        });
+    };
 
-                this.setState({
-                    authenticated: true,
-                    user: {
-                        username: data.username,
-                        id: response.data.token.split(":")[0]
-                    }
-                });
+    register = (username, password, email) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.REGISTER,
+                method: "post",
+                data: {name: username, password: password, email: email}
+            }).then(response => {
+                console.log(response);
+                reject();
+                resolve(response.data.token);
 
-                success(response.data, this);
-            }
-            else failure(response.data, this);
-        }).catch(critical);
+                return;
+
+                if (response.data.success) {
+                    localStorage.setItem('token', response.data.token);
+
+                    this.setState({
+                        authenticated: true,
+                        user: {
+                            username: data.username,
+                            id: response.data.token.split(":")[0]
+                        }
+                    });
+
+                    success(response.data, this);
+                }
+                else failure(response.data, this);
+            }).catch(reject)
+        });
     };
 
     render() {
@@ -163,4 +203,4 @@ class APIClass extends Component {
     }
 }
 
-export let API = withRouter(APIClass);
+export const API = withRouter(APIClass);

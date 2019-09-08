@@ -58,6 +58,7 @@ export default () => {
     const tabSwitch = i => {
         if (initDone[i]) return;
         initDone[i] = true;
+        if (!Plotly) return;
 
         if (i === 0) {
             Plotly.react(userGraphEl.current, userGraphData, {

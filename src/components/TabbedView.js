@@ -38,7 +38,7 @@ const TabWrap = styled.div`
 
     background-color: #2c2a4455;
     padding: 1em 2em;
-    border-radius: 0 2px 2px 2px;
+    border-radius: 2px;
     margin-top: -1px;
     min-height: 300px;
 `;

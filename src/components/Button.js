@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 
@@ -52,17 +52,19 @@ export const ButtonRow = styled.div`
     flex-wrap: wrap;
 
     >* {
+        margin-left: 0;
         margin-right: 16px;
     }
     >*:last-child {
         margin-right: 0;
     }
+
 `;
 
-export default (props) =>
+export default forwardRef((props, ref) =>
     props.to ?
         <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
-            <Button onMouseDown={(e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
+            <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
         </NoUnderline>
-        : <Button onMouseDown={(e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
-;
+        : <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
+);

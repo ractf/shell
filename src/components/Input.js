@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import styled, { css } from "styled-components";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
@@ -28,7 +28,7 @@ const style = css`
         }
     `}
     ${props => props.password && css`
-        padding-left: calc(10px + 1em);
+        padding-left: calc(12px + 1em);
     `}
 
     &:focus +div {
@@ -85,6 +85,7 @@ export default class Input extends Component {
         }
 
         this.handleChange = this.handleChange.bind(this);
+        this.inputRef = createRef();
     }
 
     handleChange(event) {
@@ -93,22 +94,35 @@ export default class Input extends Component {
         if (this.props.limit)
             value = value.substring(0, this.props.limit);
         // Regex testing
+        let valid = this.props.format.test(value);
         if (this.props.format)
-            this.setState({ valid: this.props.format.test(value) });
+            this.setState({ valid: valid });
 
         this.setState({ val: value });
         if (this.props.callback)
-            this.props.callback(value, this.state.valid);
+            this.props.callback(value, valid);
     }
 
     togglePwd = () => {
         this.setState({showPass: !this.state.showPass});
     }
 
+    keyDown = (e) => {
+        if (e.keyCode === 13 && this.props.next) {
+            e.preventDefault();
+            this.props.next.current.click();
+        }
+    }
+
+    click = () => {
+        this.inputRef.current.focus();
+    }
+
     render() {
         return <InputWrap>
             {this.props.rows ?
                 <StyledTextarea
+                    ref={this.inputRef}
                     value={this.state.val}
                     onChange={this.handleChange}
                     rows={this.props.rows}
@@ -116,13 +130,15 @@ export default class Input extends Component {
                     valid={this.state.val.length === 0 || this.state.valid}
                     {...this.props} />
                 : <StyledInput
+                    onKeyDown={this.keyDown}
+                    ref={this.inputRef}
                     value={this.state.val}
                     type={(this.props.password && !this.state.showPass) ? "password" : "text"}
                     onChange={this.handleChange}
                     placeholder={this.props.placeholder}
                     valid={this.state.val.length === 0 || this.state.valid}
                     {...this.props} />}
-            {this.props.center ? null
+            {this.props.center || this.props.noCount ? null
                 : <LengthCounter>{this.state.val.length}{this.props.limit
                     ? "/" + this.props.limit
                     : ""

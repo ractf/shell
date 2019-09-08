@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useContext } from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { Transition } from "react-transition-group";
 import styled from "styled-components";
@@ -9,12 +9,13 @@ import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
 import Leaderboard from "../pages/Leaderboard";
-import SignUpPage from "../pages/SignUp";
+import { SignUp, LogIn } from "../pages/SignUp";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
 import Profile from "../pages/Profile";
 import About from "../pages/About";
+import { APIContext } from "./API";
 
 /*
 const CTFRouter = ({ location }) =>
@@ -135,11 +136,18 @@ const Container = styled.div`
 
 `;
 
+const Logout = () => {
+    useContext(APIContext).logout();
+    return <Redirect to={"/"} />
+}
+
 const CTFRouter = ({ location, doAnimations }) => {
     const body = <Switch location={location}>
         <Route path="/" exact render={() => <Redirect to={"/home"} />} />
 
-        <Route path="/register" exact component={SignUpPage} />
+        <Route path="/login" exact component={LogIn} />
+        <Route path="/logout" exact component={Logout} />
+        <Route path="/register" exact component={SignUp} />
 
         <Route path="/home" exact component={HomePage} />
         <Route path="/settings" exact component={SettingsPage} />
@@ -154,7 +162,7 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/leaderboard" exact component={Leaderboard} />
 
         <Route path="/conduct" exact component={Conduct} />
-        <Route path="/privacy" exact component={Privacy } />
+        <Route path="/privacy" exact component={Privacy} />
 
         <Route path="/about" exact component={About} />
 
