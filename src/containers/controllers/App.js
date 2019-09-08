@@ -40,9 +40,10 @@ const VimMode = styled.div`
     }
 `;
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
+        font-family: inherit;
     }
 
     body, html {
