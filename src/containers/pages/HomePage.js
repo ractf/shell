@@ -19,6 +19,8 @@ const NewsContainer = styled.div`
     flex-direction: row;
     height: 150px;
     align-items: center;
+    border: 1px solid ${theme.bg_d1};
+
     background-color: #2c2a4455;
 
     >* {
@@ -48,6 +50,7 @@ const NewsBlock = styled.div`
     border-radius: 2px;
     padding: 10px 25px;
     margin: 10px 25px;
+    background-color: ${theme.bg_l1};
 `;
 
 const News1 = () => <>
