@@ -1,15 +1,17 @@
 import React, { useContext, useState, createRef } from "react";
-import { withRouter } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import Page from "./bases/Page";
 import Input from "../../components/Input";
 import Button, { ButtonRow } from "../../components/Button";
+import Spinner from "../../components/Spinner";
+import Form, { formAction } from "../../components/Form";
 
 import { APIContext } from "../controllers/API";
 
 import theme from "theme";
-import { SectionTitle2 } from "../../components/Misc";
+import { SectionTitle2, SubtleText, HR } from "../../components/Misc";
 
 const AuthWrap = styled.div`
     border: 1px solid #373354;
@@ -32,69 +34,220 @@ const AuthWrap = styled.div`
     }
 `;
 
+const FormError = styled.div`
+    color: #ac3232;
+    font-weight: 500;
+    font-size: 1.2em;
+`;
+
+const EMAIL_RE = /^\S+@\S+\.\S+$/;
+
+
+export const JoinTeam = () => {
+    const [message, setMessage] = useState("");
+    const button = createRef();
+    const submit = formAction();
+
+    const doJoinTeam = ({ name, password }) => {
+
+    }
+
+    return <Page vCentre>
+        <AuthWrap>
+            <SectionTitle2>Join a Team</SectionTitle2>
+            <SubtleText>
+                Did you want to <Link to={"/team/new"}>create a team</Link> instead?
+            </SubtleText>
+
+            <Form submit={submit} handle={doJoinTeam} button={button}>
+                <Input name={"name"} placeholder={"Team Name"} />
+                <Input name={"password"} placeholder={"Team Password"} password />
+
+                {message && <FormError>{message}</FormError>}
+
+                <ButtonRow>
+                    <Button ref={button} form={submit} medium>Join Team</Button>
+                </ButtonRow>
+            </Form>
+        </AuthWrap>
+    </Page>;
+}
+
+export const CreateTeam = () => {
+    const [message, setMessage] = useState("");
+    const button = createRef();
+    const submit = formAction();
+
+    const doCreateTeam = ({ name, affil, web, password }) => {
+
+    }
+
+    return <Page vCentre>
+        <AuthWrap>
+            <SectionTitle2>Create a New Team</SectionTitle2>
+            <SubtleText>
+                Did you want to <Link to={"/team/join"}>join a team</Link> instead?
+            </SubtleText>
+
+            <Form submit={submit} handle={doCreateTeam} button={button}>
+                <Input name={"name"} placeholder={"Team Name"} />
+                <Input name={"affil"} placeholder={"Affiliation"} />
+                <Input name={"web"} placeholder={"Website"} />
+                <Input name={"password"} placeholder={"Team Password"} password />
+
+                {message && <FormError>{message}</FormError>}
+
+                <ButtonRow>
+                    <Button ref={button} form={submit} medium>Create Team</Button>
+                </ButtonRow>
+            </Form>
+        </AuthWrap>
+    </Page>;
+}
+
+
+export const EmailVerif = () => {
+    const [verif, setVerif] = useState(0);
+
+    setTimeout(() => {
+        setVerif(2)
+    }, 3000)
+
+    return <Page vCentre>
+        <AuthWrap>
+            {verif === 0 ? <>
+                <div>Verifying your account...</div>
+                <Spinner />
+            </> : verif === 1 ? <>
+                <FormError>Account verification failed!</FormError>
+            </> : verif === 2 ? <>
+                <SectionTitle2>
+                    Welcome to RACTF!
+                </SectionTitle2>
+                <div>Where to now, chief?</div>
+                <ButtonRow>
+                    <Button to={"/team/new"}>Create a Team</Button>
+                    <Button to={"/team/join"}>Join a Team</Button>
+                </ButtonRow>
+            </> : null}
+        </AuthWrap>
+    </Page>;
+}
+
+
+export const EmailMessage = () => {
+    return <Page vCentre>
+        <AuthWrap>
+            Thank you for registering!
+            <br/><br/>
+            Please check your indox for a verification link.
+            <br/><br/>
+            Make sure to check your spam folder if you can't find it!
+        </AuthWrap>
+    </Page>;
+}
+
+
 export const SignUp = () => {
     const api = useContext(APIContext);
+    const [message, setMessage] = useState("");
 
-    const doRegister = () => {
-        api.register("test", "test123", "a@b.com").then(
+    const doRegister = ({ username, passwd1, passwd2, email }) => {
+        if (passwd1 !== passwd2)
+            return setMessage("Passwords must match");
+        if (!username)
+            return setMessage("No username provided");
+        if (!passwd1)
+            return setMessage("No password provided");
+        if (!email)
+            return setMessage("No email provided");
+        if (!EMAIL_RE.test(email))
+            return setMessage("Invalid email");
+
+        api.register(username, passwd1, email).then(
             message => {
-                console.log(message)
+                console.log(message);
             }
         ).catch(
             message => {
-                setMessage(message);
+                if (message.response && message.response.data)
+                    setMessage(message.response.data.detail);
+                else if (message.message)
+                    setMessage(message.message);
+                else setMessage("Unknown error occured.")
             }
         );
     }
+
+    const submit = formAction();
+    const button = createRef();
 
     return <Page vCentre>
         <AuthWrap>
             <SectionTitle2>Register for RACTF</SectionTitle2>
 
-            <Input placeholder={"Username"} />
-            <Input placeholder={"Password"} password />
-            <Input placeholder={"Repeat Password"} password />
+            <Form submit={submit} handle={doRegister} button={button}>
+                <Input name={"username"} placeholder={"Username"} />
+                <Input format={EMAIL_RE} name={"email"} placeholder={"Email"} />
+                <Input name={"passwd1"} placeholder={"Password"} password />
+                <Input name={"passwd2"} placeholder={"Repeat Password"} password />
 
-            <ButtonRow>
-                <Button click={doRegister} medium>Register</Button>
-                <Button medium lesser to={"/login"}>Login</Button>
-            </ButtonRow>
+                {message && <FormError>{message}</FormError>}
+
+                <ButtonRow>
+                    <Button ref={button} form={submit} medium>Register</Button>
+                    <Button medium lesser to={"/login"}>Login</Button>
+                </ButtonRow>
+            </Form>
         </AuthWrap>
-    </Page>
+    </Page>;
 };
 
-export const LogIn = withRouter(({ history }) => {
+export const LogIn = () => {
     const api = useContext(APIContext);
     const [message, setMessage] = useState("");
-    const [valid, setValid] = useState([false, false]);
 
-    let username = createRef();
-    let password = createRef();
-    let activate = createRef();
+    const doRegister = ({ username, password }) => {
+        if (!username)
+            return setMessage("No username provided");
+        if (!password)
+            return setMessage("No password provided");
 
-    const doLogin = () => {
-        api.login(username.current.state.val, password.current.state.val).then(() => {
-            history.push("/")
-        }).catch(e => {
-            debugger;
-            setMessage("Username or password incorrect");
-            console.error(e);
-            throw e;
-        });
+        api.login(username, password).then(
+            message => {
+                console.log(message);
+
+            }
+        ).catch(
+            message => {
+                window.msg = message;
+                if (message.response && message.response.data)
+                    setMessage(message.response.data.detail);
+                else if (message.message)
+                    setMessage(message.message);
+                else setMessage("Unknown error occured.")
+            }
+        );
     }
+
+    const submit = formAction();
+    const button = createRef();
 
     return <Page vCentre>
         <AuthWrap>
             <SectionTitle2>Login to RACTF</SectionTitle2>
-            {message}
 
-            <Input format={/.+/} callback={(_, val) => setValid([val, valid[1]])} placeholder={"Username"} ref={username} next={password} noCount />
-            <Input format={/.+/} callback={(_, val) => setValid([valid[0], val])} placeholder={"Password"} ref={password} next={activate} password />
+            <Form submit={submit} handle={doRegister} button={button}>
+                <Input name={"username"} placeholder={"Username"} />
+                <Input name={"password"} placeholder={"Password"} password />
 
-            <ButtonRow>
-                <Button medium disabled={!(valid[0] && valid[1])} ref={activate} click={doLogin}>Login</Button>
-                <Button medium lesser to={"/register"}>Register</Button>
-            </ButtonRow>
+                {message && <FormError>{message}</FormError>}
+
+                <ButtonRow>
+                    <Button ref={button} form={submit} medium>Login</Button>
+                    <Button medium lesser to={"/register"}>Register</Button>
+                </ButtonRow>
+            </Form>
         </AuthWrap>
-    </Page>
-});
+    </Page>;
+};

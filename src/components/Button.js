@@ -61,10 +61,17 @@ export const ButtonRow = styled.div`
 
 `;
 
-export default forwardRef((props, ref) =>
-    props.to ?
-        <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
-            <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
-        </NoUnderline>
-        : <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
-);
+export default forwardRef((props, ref) => {
+    const clickFunc = () => {
+        if (props.click)
+            props.click();
+        if (props.form && props.form.callback)
+            props.form.callback();
+    }
+    return (props.to ?
+            <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
+                <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</Button>
+            </NoUnderline>
+            : <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</Button>
+    );
+})

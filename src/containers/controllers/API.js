@@ -23,9 +23,13 @@ class APIClass extends Component {
     BASE_URL = this.PROTOCOL + this.DOMAIN + this.API_BASE;
 
     ENDPOINTS = {
-        VALIDATE_TOKEN: "/validate_token",
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
+
+        CHALLENGES: "/challenges",
+
+        USER_SELF: "/members/self",
+        USER: "/members/id/",
     };
 
     constructor() {
@@ -68,33 +72,10 @@ class APIClass extends Component {
         return results[0];
     }
 
-    componentWillMount() {
-        // this.reload_cache();
-
+    async componentWillMount() {
         let token = localStorage.getItem('token');
         if (token) {
-            this.validate_token({token: token}, (data) => {
-                this.setState({
-                    user: {
-                        username: data.username,
-                        id: token.split(":")[0],
-                    },
-                    authenticated: true,
-                    ready: true,
-                });
-            }, () => {
-                this.setState({
-                    authenticated: false,
-                    ready: true,
-                });
-                console.warn("Previous token invalid!")
-            }, (error) => {
-                this.setState({
-                    authenticated: false,
-                    ready: true,
-                });
-                console.error("Failed to query API!\n" + error.toString());
-            });
+            this.reload_cache();
         } else {
             this.setState({
                 ready: true,
@@ -102,9 +83,42 @@ class APIClass extends Component {
         }
     }
 
-    reload_cache = () => {
+    get_headers = () => {
+        return {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+        };
+    }
+
+    get_challenges = () => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.CHALLENGES,
+                method: "get",
+                headers: this.get_headers(),
+            }).then(response => {
+                console.log(response)
+                resolve(response.data);
+            }).catch(reject);
+        });
+    }
+
+    reload_cache = async () => {
         // TODO: This
+        try {
+            const user_data = await this.get_user("self");
+        } catch (e) {
+            console.error(e);
+        }
+
+        try {
+            const challenges = await this.get_challenges();
+        } catch {
+            return this.logout();
+        }
+
         this.setState({
+            ready: true,
+
             challenges: [{
                 category: "crypto",
                 number: "1",
@@ -119,33 +133,51 @@ class APIClass extends Component {
                 ["GNU+Linux", "linux"],
                 ["World Wide Web", "www"],
             ],
-
-            authenticated: true,
-            user: {
-                username: "Bottersnike",
-                id: null,
-                referal: "/join/imagineHavingABackend",
-            },
         });
     }
 
-    // todo: this
-    validate_token = (data, success, failure, critical) => {
-        axios({
-            url: this.BASE_URL + this.ENDPOINTS.VALIDATE_TOKEN,
-            method: "post",
-            data: {token: data.token},
-        }).then(response => {
-            if (response.data.success) success(response.data, this);
-            else failure(response.data, this);
-        }).catch(critical);
+    post_login = (username, id, token) => {
+        localStorage.setItem("token", token);
+        this.setState({
+            authenticated: true,
+            user: {
+                username: username,
+                id: id,
+                referal: "/join/imagineHavingABackend",
+            },
+        });
+
+        this.reload_cache();
+
+        this.props.history.push("/");
+    }
+
+    get_user = (id) => {
+        let url = this.BASE_URL;
+        if (id === "self") 
+            url += this.ENDPOINTS.USER_SELF;
+        else
+            url += this.ENDPOINTS.USER + id;
+
+        return new Promise((resolve, reject) => {
+            axios({
+                url: url,
+                method: "get",
+                headers: this.get_headers(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
     };
 
     logout = () => {
+        console.error("!!!!!REFUSING TO LOGOUT!!!!!")
+        return;
         localStorage.removeItem('token');
         this.setState({
             authenticated: false,
             user: null,
+            ready: false
         })
     }
 
@@ -154,16 +186,12 @@ class APIClass extends Component {
             axios({
                 url: this.BASE_URL + this.ENDPOINTS.LOGIN,
                 method: "post",
+                headers: this.get_headers(),
                 data: {name: username, password: password}
             }).then(response => {
-                localStorage.setItem('token', response.data.token);
-                this.reload_cache();
-                resolve(response.data.token);
-            }).catch(e => {
-                console.log(e);
-                console.log(e.response);
-                reject(e.response);
-            })
+                this.post_login(username, "", response.data.token);
+                resolve();
+            }).catch(reject);
         });
     };
 
@@ -172,28 +200,12 @@ class APIClass extends Component {
             axios({
                 url: this.BASE_URL + this.ENDPOINTS.REGISTER,
                 method: "post",
+                headers: this.get_headers(),
                 data: {name: username, password: password, email: email}
             }).then(response => {
-                console.log(response);
-                reject();
-                resolve(response.data.token);
-
+                this.props.history.push("/register/email");
+                resolve();
                 return;
-
-                if (response.data.success) {
-                    localStorage.setItem('token', response.data.token);
-
-                    this.setState({
-                        authenticated: true,
-                        user: {
-                            username: data.username,
-                            id: response.data.token.split(":")[0]
-                        }
-                    });
-
-                    success(response.data, this);
-                }
-                else failure(response.data, this);
             }).catch(reject)
         });
     };

@@ -45,6 +45,12 @@ export const TextBlock = styled.div`
     white-space: pre-wrap;
 `;
 
+export const SubtleText = styled.div`
+    opacity: .9;
+    font-size: .9em;
+    margin-top: 1em;
+`;
+
 export const SectionBlurb = styled.div`
     margin: auto;    
     margin-bottom: 24px;
