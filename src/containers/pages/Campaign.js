@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import styled, { css } from "styled-components";
 import { transparentize } from "polished";
 import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
 
 import { APIContext } from "../controllers/API";
 
@@ -146,9 +145,6 @@ const CampaignRow = styled.div`
     margin-bottom: ${link_size};
     &:last-child {margin-bottom: 0;}
     justify-content: center;
-`;
-const NodeSpacer = styled.div`
-    margin-left: ${props => props.link ? link_size : node_size};
 `;
 
 const Darken = styled.div`

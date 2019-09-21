@@ -4,7 +4,7 @@ import { transparentize } from "polished";
 
 import theme from "theme";
 
-const Table_ = styled.table`
+const StyledTable = styled.table`
 width: 100%;
 text-align: left;
 border-collapse: collapse;
@@ -99,7 +99,7 @@ export default ({ sorter, headings, data, noSort }) => {
         }
     }
 
-    return <Table_>
+    return <StyledTable>
         <thead>
             <TR heading>
                 {headings.map((i, n) => (
@@ -113,5 +113,5 @@ export default ({ sorter, headings, data, noSort }) => {
                     {i.map((j, m) => <TD key={m}>{j}</TD>)}
                 </TR>))}
         </tbody>
-    </Table_>
+    </StyledTable>
 }

@@ -20,9 +20,6 @@ const PageHead = styled.div`
     font-size: 2em;
     position: relative;
 `;
-const H1 = styled.h1`
-    font-weight: 500;
-`;
 const PageContent = styled.div`
     padding: 32px 64px;
     max-width: 1200px;

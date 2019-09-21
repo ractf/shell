@@ -10,8 +10,7 @@ import Form, { formAction } from "../../components/Form";
 
 import { APIContext } from "../controllers/API";
 
-import theme from "theme";
-import { SectionTitle2, SubtleText, HR } from "../../components/Misc";
+import { SectionTitle2, SubtleText } from "../../components/Misc";
 
 const AuthWrap = styled.div`
     border: 1px solid #373354;

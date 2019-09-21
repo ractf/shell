@@ -119,9 +119,6 @@ const PageWrap = styled.div`
     min-height: 100vh;
     width: 100%;
 `;
-const PageBody = styled.div`
-    flex-grow: 1;
-`;
 
 class App extends Component {
     constructor(props) {

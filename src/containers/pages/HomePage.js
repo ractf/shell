@@ -1,15 +1,12 @@
 import React, { useContext } from "react";
-import { transparentize } from "polished";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import Button, { ButtonRow } from "../../components/Button";
+import Button from "../../components/Button";
 import { HR, SectionTitle, SectionTitle2 } from "../../components/Misc";
 import { APIContext } from "../controllers/API";
 
 import Page from "./bases/Page";
-
-import theme from "theme";
 
 const HomeSplit = styled.div`
     display: flex;
@@ -30,20 +27,6 @@ const News = () => <>
 const Credits = () => <>
     Cache not implemented.<br /><br />//TODO: This
 </>;
-
-const Head = styled.h1`
-    font-size: 2em;
-    margin: 0.67em 0;
-    font-weight: 500;
-`;
-
-
-
-const Notifications = () => {
-    return <div>
-        No site notifications right now! Check back later.
-    </div>;
-}
 
 const Block = styled.div`
     margin: 25px 0;

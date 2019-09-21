@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
-import { Transition } from "react-transition-group";
 import styled from "styled-components";
 
-import ChallengePage, { CampaignChallengePage } from "../pages/ChallengePage";
+import { CampaignChallengePage } from "../pages/ChallengePage";
 import { TeamsList, UsersList } from "../pages/Lists";
 import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
