@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled, { css } from 'styled-components';
 import { transparentize } from "polished";
@@ -79,15 +79,11 @@ const FG = styled.div`flex-grow: 1`;
 
 
 const FootLink = (props) => <p><Link to={props.to}>{props.children}</Link></p>;
-const FootText = (props) => <FootTop><APIContext.Consumer>{api => <>{api.authenticated ? <>
+const FootText = () => <FootTop>
     <span>0% complete | Ranked #0 on leaderboard | 0 hints used | 0 points | 0 challenges solved</span>
     <FG />
     <LogoutLink to={"/logout"}>Logout</LogoutLink>
-
-</> : <>
-    <FG />
-    <Link to={"/login"}>Login</Link>
-</>}</>}</APIContext.Consumer></FootTop>;
+</FootTop>;
 
 const FootMain = () => <FootMainWrap>
     <FootCol title={"RACFT"}>
@@ -104,9 +100,10 @@ const FootMain = () => <FootMainWrap>
     </FootCol>
 </FootMainWrap>;
 
-export default () => (
-    <Foot>
-        <FootText />
+export default () => {
+    const api = useContext(APIContext);
+    return <Foot>
+        {api.authenticated ? <FootText /> : null}
         <FootMain />
     </Foot>
-);
+};

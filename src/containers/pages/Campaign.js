@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, createRef, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { transparentize } from "polished";
 import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
@@ -120,10 +120,10 @@ const LockDown = styled(LockRight)`
 `;
 const ChalNode = props => {
     return (
-        <ChalNode_ tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) && props.click} {...props}>
+        <ChalNode_ tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) ? props.click : null} {...props}>
             <div>{props.name}</div>
 
-            
+
             {props.right && <LockRight {...props}>{props.lockDone ? <FaCheck /> : props.lockUnlocked ? <FaLockOpen /> : <FaLock />}</LockRight>}
             {props.down && <LockDown {...props}>{props.lockDone ? <FaCheck /> : props.lockUnlocked ? <FaLockOpen /> : <FaLock />}</LockDown>}
 
@@ -169,7 +169,7 @@ const ModalWrap = styled.div`
 `;
 const ModalBox = styled.div`
     border: 1px solid ${theme.bg_l1};
-    padding: 20px 40px;
+    padding: 32px 48px;
     background-color: ${theme.bg};
     box-shadow: 0 0 25px -10px #000;
     display: flex;
@@ -177,7 +177,7 @@ const ModalBox = styled.div`
     align-items: center;
     max-width: 75vw;
 `;
-const Modal = ({onHide, children}) =>
+const Modal = ({ onHide, children }) =>
     <ModalWrap>
         <Darken onMouseDown={(e => e.target.click())} onClick={onHide || (() => null)} />
         <ModalBox>
@@ -190,7 +190,7 @@ const HintWarn = styled.div`
     margin-top: 8px;
     font-size: 1.2em;
 `;
-const HintModal = ({okay, cancel}) =>
+const HintModal = ({ okay, cancel }) =>
     <Modal>
         <SectionTitle2>Are you sure you want to use a hint?</SectionTitle2>
         <HintWarn>This is irrevocable and will halve your points for this challenge.</HintWarn>
@@ -210,7 +210,7 @@ const ChalMeta = styled.div`
     font-size: .8em;
     margin-bottom: 2em;
 `;
-const Challenge = ({challenge, doHide}) => {
+const Challenge = ({ challenge, doHide }) => {
     const [flag, setFlag] = useState("");
     const [flagValid, setFlagValid] = useState(false);
     const [promptHint, setPromptHint] = useState(false);
@@ -260,9 +260,159 @@ const CampaignWrap = styled.div`
 `;
 
 
+const JopardyRule = styled.div`
+    font-size: 2em;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    padding-left: 16px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+
+    &::before {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        margin-top: -4px;
+        left: 0;
+        top: 50%;
+        border: 5px solid ${theme.fg};
+        border-left-color: transparent;
+        border-top-color: transparent;
+        transform: translate(-50%, -50%) rotate(45deg);
+        transition: transform 200ms ease;
+    }
+
+    &::after {
+        position: absolute;
+        content: "";
+        display: block;
+        top: 100%;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: ${theme.bg_l3};
+        transition: width 100ms ease;
+    }
+
+    ${props => !props.open && css`
+        &::after {
+            width: 100%;
+        }
+
+        &::before {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+    `}
+`;
+const JopardyChildren = styled.div`
+    text-align: left;
+
+    max-height: ${props => props.openHeight};
+    transition: max-height 200ms ease;
+    overflow-y: hidden;
+
+    ${props => !props.open && css`
+        max-height: 0;
+    `}
+`;
+
+const JCTheme = styled.div`
+    padding: 2rem 16px;
+    width: 300px;
+    margin-bottom: 32px;
+    margin-right: 32px;
+    font-size: 1.2rem;
+    text-align: center;
+    
+    border-radius: 2px;
+    display: inline-block;
+    background-color: ${props => props.done ? transparentize(.3, theme.green) : theme.bg};
+    border: 1px solid ${props => props.done ? theme.green : theme.bg_d1};
+    word-wrap: break-word;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    &>span {
+        z-index: 1;
+        position: relative;
+    }
+
+    &::before {
+        content: "";
+        display: block;
+        width: 0;
+        padding-bottom: 0;
+        background-color: ${props => props.done ? transparentize(.2, theme.green) : theme.bg_l1};
+        position: absolute;
+        left: 0;
+        top: 100%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+
+        transition: width 500ms ease, padding-bottom 500ms ease;
+    }
+    &:hover::before {
+        width: 250%;
+        padding-bottom: 250%;
+    }
+
+    &::after {
+        content: "${props => props.points}";
+        display: block;
+        position: absolute;
+        right: 12px;
+        bottom: 6px;
+        z-index: 1;
+        font-size: .8em;
+        color: ${theme.bg_l3}
+    }
+`;
+
+const JeopardyChallenge = ({name, done, click, points}) => {
+    return <JCTheme onMouseDown={(e => (e.target.click && e.target.click()))} onClick={done ? click : null} done={done} points={points}>
+        <span>{name}</span>
+    </JCTheme>;
+}
+
+const JeopardySection = ({ title, children }) => {
+    const [open, setOpen] = useState(true);
+    const [height, setHeight] = useState('auto');
+    const childRef = createRef();
+
+    const onResize = () => {
+        if (childRef.current && childRef.current.scrollHeight)
+            setHeight(childRef.current.scrollHeight + "px");
+    }
+    useEffect(() => {
+        window.addEventListener("resize", onResize);
+
+        return () => {
+            window.removeEventListener("resize", onResize);
+        }
+    })
+
+    useEffect(() => {
+        onResize();
+    });
+    const click = e => {
+        if (open)
+            setHeight(childRef.current.scrollHeight + "px");
+        setOpen(!open);
+        e.preventDefault()
+    }
+
+    return <>
+        <JopardyRule open={open} onClick={click}>{title}</JopardyRule>
+        <JopardyChildren openHeight={height} ref={childRef} open={open}>{children}</JopardyChildren>
+    </>;
+}
 
 
-export default (props) => {
+export default () => {
     const [challenge, setChallenge] = useState(null);
 
     const showChallenge = (category, number, done) => {
@@ -287,8 +437,8 @@ export default (props) => {
 
             <CampaignWrap label="Campaign">
                 <SectionBlurb>
-                    These campaign-style challenges are new for RACTF 2020!<br/>
-                    Each challenge has a number of precursor challenges (except the first ones, of course), one of which must be completed before you can attempt the challenge.<br/>
+                    These campaign-style challenges are new for RACTF 2020!<br />
+                    Each challenge has a number of precursor challenges (except the first ones, of course), one of which must be completed before you can attempt the challenge.<br />
                     Please let us know what you think of this style on our <a href={"https://discord.gg/FfW2xXR"}>Discord server</a>.
                 </SectionBlurb>
 
@@ -319,11 +469,19 @@ export default (props) => {
                     <ChalNode left name={"???"} />
                 </CampaignRow>
             </CampaignWrap>
-            <div label="Categorical Challenges" />
+            <div label="Jeoprady Challenges">
+                <JeopardySection title={"Crypto"}>
+                    <JeopardyChallenge name={"Hey mate"} done={false} points={50} />
+                    <JeopardyChallenge name={"What's up?"} done={true} points={100} />
+                    <JeopardyChallenge name={"Do you not like crypto?"} done={true} points={50} />
+                    <JeopardyChallenge name={"Haha that sucks for you"} done={false} points={10} />
+                    <JeopardyChallenge name={"Imagine being so bad at crypto this challenge is hard"} done={false} points={999} />
+                </JeopardySection>
+            </div>
             <div label="RACTF 2019">
                 <SectionBlurb>
-                    A select number of challenges from RACTF 2019 have been resurrected for your enjoyment.<br/>
-                    Writeups are available for a number of these challenges, and most of the challenge authors would be happy to explain what's going on in some of these.<br/><br/>
+                    A select number of challenges from RACTF 2019 have been resurrected for your enjoyment.<br />
+                    Writeups are available for a number of these challenges, and most of the challenge authors would be happy to explain what's going on in some of these.<br /><br />
                     Note that these challenges aren't worth any points for RACTF 2020!
                 </SectionBlurb>
             </div>

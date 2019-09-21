@@ -54,7 +54,8 @@ export const SubtleText = styled.div`
 export const SectionBlurb = styled.div`
     margin: auto;    
     margin-bottom: 24px;
-    width: 800px;
+    width: 100%;
+    max-width: 800px;
     line-height: 1.25;
 
     &>br {
