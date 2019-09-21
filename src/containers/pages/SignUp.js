@@ -170,7 +170,7 @@ export const SignUp = () => {
         ).catch(
             message => {
                 if (message.response && message.response.data)
-                    setMessage(message.response.data.detail);
+                    setMessage(message.response.data.m);
                 else if (message.message)
                     setMessage(message.message);
                 else setMessage("Unknown error occured.")
@@ -221,7 +221,7 @@ export const LogIn = () => {
             message => {
                 window.msg = message;
                 if (message.response && message.response.data)
-                    setMessage(message.response.data.detail);
+                    setMessage(message.response.data.m);
                 else if (message.message)
                     setMessage(message.message);
                 else setMessage("Unknown error occured.")

@@ -18,7 +18,7 @@ export const APIContext = React.createContext({
 
 class APIClass extends Component {
     PROTOCOL = "http:";
-    DOMAIN = "//kylesbank.me:8000";
+    DOMAIN = "//nlaptop.local:8000";
     API_BASE = "";
     BASE_URL = this.PROTOCOL + this.DOMAIN + this.API_BASE;
 
@@ -187,7 +187,7 @@ class APIClass extends Component {
                 url: this.BASE_URL + this.ENDPOINTS.LOGIN,
                 method: "post",
                 headers: this.get_headers(),
-                data: {name: username, password: password}
+                data: {username: username, password: password}
             }).then(response => {
                 this.post_login(username, "", response.data.token);
                 resolve();
@@ -201,7 +201,7 @@ class APIClass extends Component {
                 url: this.BASE_URL + this.ENDPOINTS.REGISTER,
                 method: "post",
                 headers: this.get_headers(),
-                data: {name: username, password: password, email: email}
+                data: {username: username, password: password, email: email}
             }).then(response => {
                 this.props.history.push("/register/email");
                 resolve();

@@ -91,7 +91,7 @@ const Container = styled.div`
 
 function ensureAuth(C, api, needed=true) {
     return (props) => (
-        needed ^ 1//api.authenticated
+        needed ^ api.authenticated
             ? <Redirect to={needed ? "/login" : "/"} />
             : <C routeProps={props}/>
     )
