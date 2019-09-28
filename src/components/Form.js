@@ -31,7 +31,7 @@ export default ({ children, submit, button, handle }) => {
             components[i] = undefined;
             continue;
         }
-        if (children[i].type.prototype instanceof Input) {
+        if (children[i].props.name) {
             let ref = createRef();
             components[i] = cloneElement(children[i], {
                 key: i,

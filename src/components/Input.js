@@ -102,6 +102,8 @@ const Placeholder = styled.div`
 
 
 export default class Input extends Component {
+    isInput = true;
+
     constructor(props) {
         super(props);
 
@@ -113,6 +115,8 @@ export default class Input extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.inputRef = createRef();
+
+        this.isInput = true;
     }
 
     handleChange(event) {
