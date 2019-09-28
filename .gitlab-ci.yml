@@ -7,4 +7,4 @@ cache:
 build react:
   script:
     - npm install --progress=false
-    - npm run build
+    - CI=false npm run build
