@@ -163,11 +163,7 @@ export const SignUp = () => {
         if (!EMAIL_RE.test(email))
             return setMessage("Invalid email");
 
-        api.register(username, passwd1, email).then(
-            message => {
-                console.log(message);
-            }
-        ).catch(
+        api.register(username, passwd1, email).catch(
             message => {
                 if (message.response && message.response.data)
                     setMessage(message.response.data.m);
@@ -212,12 +208,7 @@ export const LogIn = () => {
         if (!password)
             return setMessage("No password provided");
 
-        api.login(username, password).then(
-            message => {
-                console.log(message);
-
-            }
-        ).catch(
+        api.login(username, password).catch(
             message => {
                 window.msg = message;
                 if (message.response && message.response.data)

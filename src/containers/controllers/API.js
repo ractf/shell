@@ -1,5 +1,5 @@
-import {withRouter} from "react-router-dom";
-import React, {Component} from "react";
+import { withRouter } from "react-router-dom";
+import React, { Component } from "react";
 import axios from "axios";
 
 
@@ -26,7 +26,7 @@ class APIClass extends Component {
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
 
-        CHALLENGES: "/challenges",
+        CHALLENGES: "/challenges/",
 
         USER_SELF: "/members/self",
         USER: "/members/id/",
@@ -35,21 +35,29 @@ class APIClass extends Component {
     constructor() {
         super();
 
+        let user_data, challenges;
+        try {
+            user_data = JSON.parse(localStorage.getItem("user"));
+        } catch {
+            user_data = undefined;
+        }
+        
+        try {
+            challenges = JSON.parse(localStorage.getItem("challenges"));
+        } catch {
+            challenges = [];
+        }
+
         this.state = {
             ready: false,
-            authenticated: false,
-            user: {
-                username: null,
-                id: null,
-                referal: null,
-            },
-            challenges: [],
-            categories: [],
+            authenticated: !!user_data,
+            user: user_data,
+            challenges: challenges,
 
             login: this.login,
             logout: this.logout,
             register: this.register,
-            
+
             getCategoryName: this.getCategoryName,
             challengesIn: this.challengesIn,
             getChallenge: this.getChallenge,
@@ -96,7 +104,6 @@ class APIClass extends Component {
                 method: "get",
                 headers: this.get_headers(),
             }).then(response => {
-                console.log(response)
                 resolve(response.data);
             }).catch(reject);
         });
@@ -104,49 +111,35 @@ class APIClass extends Component {
 
     reload_cache = async () => {
         // TODO: This
+        let user_data, challenges;
         try {
-            const user_data = await this.get_user("self");
+            user_data = (await this.get_user("self")).d;
         } catch (e) {
             console.error(e);
+            return this.logout();
         }
 
         try {
-            const challenges = await this.get_challenges();
-        } catch {
+            challenges = (await this.get_challenges()).d;
+        } catch (e) {
+            console.error(e);
             return this.logout();
         }
+
+        localStorage.setItem("user_data", JSON.stringify(user_data));
+        localStorage.setItem("challenges", JSON.stringify(challenges));
 
         this.setState({
             ready: true,
 
-            challenges: [{
-                category: "crypto",
-                number: "1",
-                name: "Crypto Chal 1",
-                description: "HI!!!<br>Notice me, senapi~~!!!"
-            }],
-            categories: [
-                ["Cryptography", "crypto"],
-                ["Miscelaneous", "misc"],
-                ["Reverse Engineering", "reveng"],
-                ["Steganography", "steg"],
-                ["GNU+Linux", "linux"],
-                ["World Wide Web", "www"],
-            ],
+            challenges: challenges,
+            authenticated: true,
+            user: user_data,
         });
     }
 
     post_login = (username, id, token) => {
         localStorage.setItem("token", token);
-        this.setState({
-            authenticated: true,
-            user: {
-                username: username,
-                id: id,
-                referal: "/join/imagineHavingABackend",
-            },
-        });
-
         this.reload_cache();
 
         this.props.history.push("/");
@@ -154,7 +147,7 @@ class APIClass extends Component {
 
     get_user = (id) => {
         let url = this.BASE_URL;
-        if (id === "self") 
+        if (id === "self")
             url += this.ENDPOINTS.USER_SELF;
         else
             url += this.ENDPOINTS.USER + id;
@@ -171,13 +164,14 @@ class APIClass extends Component {
     };
 
     logout = () => {
-        console.error("!!!!!REFUSING TO LOGOUT!!!!!")
-        return;
         localStorage.removeItem('token');
+        localStorage.removeItem('user_data');
+        localStorage.removeItem('challenges');
         this.setState({
             authenticated: false,
             user: null,
-            ready: false
+            ready: true,
+            challenges: [],
         })
     }
 
@@ -187,7 +181,7 @@ class APIClass extends Component {
                 url: this.BASE_URL + this.ENDPOINTS.LOGIN,
                 method: "post",
                 headers: this.get_headers(),
-                data: {username: username, password: password}
+                data: { username: username, password: password }
             }).then(response => {
                 this.post_login(username, "", response.data.token);
                 resolve();
@@ -201,7 +195,7 @@ class APIClass extends Component {
                 url: this.BASE_URL + this.ENDPOINTS.REGISTER,
                 method: "post",
                 headers: this.get_headers(),
-                data: {username: username, password: password, email: email}
+                data: { username: username, password: password, email: email }
             }).then(response => {
                 this.props.history.push("/register/email");
                 resolve();
