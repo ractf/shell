@@ -1,8 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 
-import { SectionTitle, SectionH2, SectionHeading, TextBlock } from "../../../components/Misc";
+import { SectionH2, SectionHeading, TextBlock } from "../../../components/Misc";
 import ListPage from "./ListPage";
 
 import Page from "./Page"

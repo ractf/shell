@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { transparentize } from "polished";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
 import { FaLink } from "react-icons/fa";
 import theme from "theme";
+import { APIContext } from "../../controllers/API";
 
 
 const PageHead = styled.div`
@@ -18,9 +19,6 @@ const PageHead = styled.div`
     text-align: center;
     font-size: 2em;
     position: relative;
-`;
-const H1 = styled.h1`
-    font-weight: 500;
 `;
 const PageContent = styled.div`
     padding: 32px 64px;
@@ -75,6 +73,8 @@ const LinkIcon = ({ url }) => {
 
 
 const Page = ({ title, url, children, vCentre }) => {
+    const api = useContext(APIContext);
+    
     return (
         <>
             <PageHead minimal={!title || title.length === 0}>
@@ -91,7 +91,9 @@ const Page = ({ title, url, children, vCentre }) => {
 
                     <HeadLink to={"/profile"}>Profile</HeadLink>
                     <HeadLink to={"/team"}>My Team</HeadLink>
-                    <HeadLink to={"/logout"}>Logout</HeadLink>
+                    {api.authenticated
+                        ? <HeadLink to={"/logout"}>Logout</HeadLink>
+                        : <HeadLink to={"/login"}>Login</HeadLink>}
                 </HeadLinks>
             </PageHead>
             <PageContent vCentre={vCentre}>

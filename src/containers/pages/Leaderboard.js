@@ -8,6 +8,10 @@ import Page from "./bases/Page";
 import { darken } from "polished";
 import theme from "theme";
 
+
+let Plotly;
+
+
 const GraphEl = styled.div`
     width: 100%;
     margin: auto;
@@ -51,13 +55,14 @@ export default () => {
     const teamGraphEl = React.createRef();
 
     useEffect(() => {
-        
+
     });
 
     let initDone = [false, false];
     const tabSwitch = i => {
         if (initDone[i]) return;
         initDone[i] = true;
+        if (!Plotly) return;
 
         if (i === 0) {
             Plotly.react(userGraphEl.current, userGraphData, {

@@ -120,9 +120,6 @@ const PageWrap = styled.div`
     min-height: 100vh;
     width: 100%;
 `;
-const PageBody = styled.div`
-    flex-grow: 1;
-`;
 
 class App extends Component {
     constructor(props) {
@@ -135,6 +132,10 @@ class App extends Component {
 
         this.magic = [27, 16, 186, 81, 16, 49, 13]
         this.current = [];
+
+        this.loaded = false;
+        // 3s grace period to connect to the server
+        setTimeout(() => {this.loaded = true}, 3000);
     }
 
     _handleKeyDown = (event) => {
@@ -169,7 +170,7 @@ Keyboard interrupt received, exiting.
                 <API><APIContext.Consumer>{api => <>
                     {/* TODO: Use api.ready */}
 
-                    {!api.ready ? <SiteWarning>
+                    {!api.ready && this.loaded ? <SiteWarning>
                         Site operating in offline mode:
                         Failed to connect to the CTF servers!<br />
                         Functionality will be limited until service is restored.

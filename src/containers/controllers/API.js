@@ -1,5 +1,5 @@
-import {withRouter} from "react-router-dom";
-import React, {Component} from "react";
+import { withRouter } from "react-router-dom";
+import React, { Component } from "react";
 import axios from "axios";
 
 
@@ -18,30 +18,46 @@ export const APIContext = React.createContext({
 
 class APIClass extends Component {
     PROTOCOL = "http:";
-    DOMAIN = "//localhost:5000";
-    API_BASE = "/";
+    DOMAIN = "//nlaptop.local:8000";
+    API_BASE = "";
     BASE_URL = this.PROTOCOL + this.DOMAIN + this.API_BASE;
 
     ENDPOINTS = {
-        VALIDATE_TOKEN: "/validate_token",
-        LOGIN: "/login",
+        REGISTER: "/auth/register",
+        LOGIN: "/auth/login",
+
+        CHALLENGES: "/challenges/",
+
+        USER_SELF: "/members/self",
+        USER: "/members/id/",
     };
 
     constructor() {
         super();
 
+        let user_data, challenges;
+        try {
+            user_data = JSON.parse(localStorage.getItem("user"));
+        } catch {
+            user_data = undefined;
+        }
+        
+        try {
+            challenges = JSON.parse(localStorage.getItem("challenges"));
+        } catch {
+            challenges = [];
+        }
+
         this.state = {
             ready: false,
-            authenticated: false,
-            user: {
-                username: null,
-                id: null,
-                referal: null,
-            },
-            challenges: [],
-            categories: [],
+            authenticated: !!user_data,
+            user: user_data,
+            challenges: challenges,
 
             login: this.login,
+            logout: this.logout,
+            register: this.register,
+
             getCategoryName: this.getCategoryName,
             challengesIn: this.challengesIn,
             getChallenge: this.getChallenge,
@@ -64,33 +80,10 @@ class APIClass extends Component {
         return results[0];
     }
 
-    componentWillMount() {
-        this.reload_cache();
-
+    async componentWillMount() {
         let token = localStorage.getItem('token');
         if (token) {
-            this.validate_token({token: token}, (data) => {
-                this.setState({
-                    user: {
-                        username: data.username,
-                        id: token.split(":")[0],
-                    },
-                    authenticated: true,
-                    ready: true,
-                });
-            }, () => {
-                this.setState({
-                    authenticated: false,
-                    ready: true,
-                });
-                console.warn("Previous token invalid!")
-            }, (error) => {
-                this.setState({
-                    authenticated: false,
-                    ready: true,
-                });
-                console.error("Failed to query API!\n" + error.toString());
-            });
+            this.reload_cache();
         } else {
             this.setState({
                 ready: true,
@@ -98,64 +91,117 @@ class APIClass extends Component {
         }
     }
 
-    reload_cache = () => {
-        // TODO: This
-        this.setState({
-            challenges: [{
-                category: "crypto",
-                number: "1",
-                name: "Crypto Chal 1",
-                description: "HI!!!<br>Notice me, senapi~~!!!"
-            }],
-            categories: [
-                ["Cryptography", "crypto"],
-                ["Miscelaneous", "misc"],
-                ["Reverse Engineering", "reveng"],
-                ["Steganography", "steg"],
-                ["GNU+Linux", "linux"],
-                ["World Wide Web", "www"],
-            ],
+    get_headers = () => {
+        return {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+        };
+    }
 
-            user: {
-                username: "Bottersnike",
-                id: null,
-                referal: "/join/imagineHavingABackend",
-            },
+    get_challenges = () => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.CHALLENGES,
+                method: "get",
+                headers: this.get_headers(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
         });
     }
 
-    validate_token = (data, success, failure, critical) => {
-        axios({
-            url: this.BASE_URL + this.ENDPOINTS.VALIDATE_TOKEN,
-            method: "post",
-            data: {token: data.token},
-        }).then(response => {
-            if (response.data.success) success(response.data, this);
-            else failure(response.data, this);
-        }).catch(critical);
+    reload_cache = async () => {
+        // TODO: This
+        let user_data, challenges;
+        try {
+            user_data = (await this.get_user("self")).d;
+        } catch (e) {
+            console.error(e);
+            return this.logout();
+        }
+
+        try {
+            challenges = (await this.get_challenges()).d;
+        } catch (e) {
+            console.error(e);
+            return this.logout();
+        }
+
+        localStorage.setItem("user_data", JSON.stringify(user_data));
+        localStorage.setItem("challenges", JSON.stringify(challenges));
+
+        this.setState({
+            ready: true,
+
+            challenges: challenges,
+            authenticated: true,
+            user: user_data,
+        });
+    }
+
+    post_login = (username, id, token) => {
+        localStorage.setItem("token", token);
+        this.reload_cache();
+
+        this.props.history.push("/");
+    }
+
+    get_user = (id) => {
+        let url = this.BASE_URL;
+        if (id === "self")
+            url += this.ENDPOINTS.USER_SELF;
+        else
+            url += this.ENDPOINTS.USER + id;
+
+        return new Promise((resolve, reject) => {
+            axios({
+                url: url,
+                method: "get",
+                headers: this.get_headers(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
     };
 
-    login = (data, success, failure, critical) => {
-        axios({
-            url: this.BASE_URL + this.ENDPOINTS.LOGIN,
-            method: "post",
-            data: {uname: data.username, password: data.password}
-        }).then(response => {
-            if (response.data.success) {
-                localStorage.setItem('token', response.data.token);
+    logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user_data');
+        localStorage.removeItem('challenges');
+        this.setState({
+            authenticated: false,
+            user: null,
+            ready: true,
+            challenges: [],
+        })
+    }
 
-                this.setState({
-                    authenticated: true,
-                    user: {
-                        username: data.username,
-                        id: response.data.token.split(":")[0]
-                    }
-                });
+    login = (username, password) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.LOGIN,
+                method: "post",
+                headers: this.get_headers(),
+                data: { username: username, password: password }
+            }).then(response => {
+                this.post_login(username, "", response.data.token);
+                resolve();
+            }).catch(reject);
+        });
+    };
 
-                success(response.data, this);
-            }
-            else failure(response.data, this);
-        }).catch(critical);
+    register = (username, password, email) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.REGISTER,
+                method: "post",
+                headers: this.get_headers(),
+                data: { username: username, password: password, email: email }
+            }).then(response => {
+                this.props.history.push("/register/email");
+                resolve();
+                return;
+            }).catch(reject)
+        });
     };
 
     render() {
@@ -163,4 +209,4 @@ class APIClass extends Component {
     }
 }
 
-export let API = withRouter(APIClass);
+export const API = withRouter(APIClass);

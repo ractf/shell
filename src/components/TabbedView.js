@@ -38,12 +38,12 @@ const TabWrap = styled.div`
 
     background-color: #2c2a4455;
     padding: 1em 2em;
-    border-radius: 0 2px 2px 2px;
+    border-radius: 2px;
     margin-top: -1px;
     min-height: 300px;
 `;
 
-export default ({center, children, callback, initial}) => {
+export default ({ center, children, callback, initial }) => {
     const [active, setActive] = useState(initial || 0);
 
     useEffect(() => {
@@ -54,16 +54,12 @@ export default ({center, children, callback, initial}) => {
         <>
             <TabButtonRow center={center}>
                 {children.map((c, i) =>
-                    <Button key={i} click={(() => {active !== i && setActive(i)})} medium
+                    <Button key={i} click={(() => { active !== i && setActive(i) })} medium
                         className={i === active ? "active" : ""}>
-                            {c.props.label}</Button>)}
+                        {c.props.label}</Button>)}
             </TabButtonRow>
             <TabWrap>
-                {children.map((c, i) =>
-                    <div key={i} style={{display: i === active ? "block" : "none"}}>
-                        {c.props.children}
-                    </div>
-                )}
+                {children[active]}
             </TabWrap>
         </>
     )

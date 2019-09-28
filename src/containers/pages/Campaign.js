@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, createRef, useEffect } from "react";
+import { Redirect, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { transparentize } from "polished";
-import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaCheck, FaLockOpen, FaLock, FaFile, FaInfoCircle } from "react-icons/fa";
 
 import { APIContext } from "../controllers/API";
 
@@ -22,6 +22,19 @@ const link_size = "5rem";
 const link_part = "1.3rem";
 const node_margin = "2.5rem";
 const icon_size = "1.5rem";
+
+
+const ChalSpacer = styled.div`
+    width: ${node_size};
+    height: ${node_size};
+    margin: 0 ${node_margin};
+    &:first-child {
+        margin-left: 0;
+    }
+    &:last-child {
+        margin-right: 0;
+    }
+`;
 
 const ChalNode_ = styled.div`
     width: ${node_size};
@@ -110,23 +123,24 @@ const LockRight = styled.div`
         left: calc(100% + ${node_margin} + 4px);
         transform: translate(-50%, -50%);
 
-        color: ${props => props.lockDone ? "#6b6" : props.lockUnlocked ? theme.bg_l3 : theme.bg_l2};
+        color: ${props => props.lockDoneR ? "#6b6" : props.lockUnlockedR ? theme.bg_l3 : theme.bg_l2};
     }
 `;
 const LockDown = styled(LockRight)`
     &>svg {
         left: 50%;
         top: calc(100% + ${node_margin} + 4px);
+        color: ${props => props.lockDoneD ? "#6b6" : props.lockUnlockedD ? theme.bg_l3 : theme.bg_l2};
     }
 `;
 const ChalNode = props => {
     return (
-        <ChalNode_ tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) && props.click} {...props}>
+        <ChalNode_ tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) ? props.click : null} {...props}>
             <div>{props.name}</div>
 
-            
-            {props.right && <LockRight {...props}>{props.lockDone ? <FaCheck /> : props.lockUnlocked ? <FaLockOpen /> : <FaLock />}</LockRight>}
-            {props.down && <LockDown {...props}>{props.lockDone ? <FaCheck /> : props.lockUnlocked ? <FaLockOpen /> : <FaLock />}</LockDown>}
+
+            {props.right && <LockRight {...props}>{props.lockDoneR ? <FaCheck /> : props.lockUnlockedR ? <FaLockOpen /> : <FaLock />}</LockRight>}
+            {props.down && <LockDown {...props}>{props.lockDoneD ? <FaCheck /> : props.lockUnlockedD ? <FaLockOpen /> : <FaLock />}</LockDown>}
 
             {props.left && <ChalNodeLink left done={props.done} unlocked={props.unlocked} />}
             {props.right && <ChalNodeLink right done={props.done} unlocked={props.unlocked} />}
@@ -146,9 +160,6 @@ const CampaignRow = styled.div`
     margin-bottom: ${link_size};
     &:last-child {margin-bottom: 0;}
     justify-content: center;
-`;
-const NodeSpacer = styled.div`
-    margin-left: ${props => props.link ? link_size : node_size};
 `;
 
 const Darken = styled.div`
@@ -173,15 +184,16 @@ const ModalWrap = styled.div`
 `;
 const ModalBox = styled.div`
     border: 1px solid ${theme.bg_l1};
-    padding: 20px 40px;
+    padding: 32px 48px;
     background-color: ${theme.bg};
     box-shadow: 0 0 25px -10px #000;
     display: flex;
     flex-direction: column;
     align-items: center;
     max-width: 75vw;
+    width: 930px;
 `;
-const Modal = ({onHide, children}) =>
+const Modal = ({ onHide, children }) =>
     <ModalWrap>
         <Darken onMouseDown={(e => e.target.click())} onClick={onHide || (() => null)} />
         <ModalBox>
@@ -194,7 +206,7 @@ const HintWarn = styled.div`
     margin-top: 8px;
     font-size: 1.2em;
 `;
-const HintModal = ({okay, cancel}) =>
+const HintModal = ({ okay, cancel }) =>
     <Modal>
         <SectionTitle2>Are you sure you want to use a hint?</SectionTitle2>
         <HintWarn>This is irrevocable and will halve your points for this challenge.</HintWarn>
@@ -212,9 +224,76 @@ const ChalWorth = styled.div`
 const ChalMeta = styled.div`
     margin-top: 8px;
     font-size: .8em;
-    margin-bottom: 2em;
 `;
-const Challenge = ({challenge, doHide}) => {
+const ChallengeExtItem = styled.div`
+    border: 1px solid ${theme.bg_l1};
+    background-color: ${theme.bg_d0};
+    width: 100%;
+    padding: 8px 16px;
+    text-align: left;
+    text-decoration: none;
+    margin-top: 16px;
+    color: ${theme.fg};
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    margin-right: 16px;
+
+    &:hover {
+        color: ${theme.fg};
+        text-decoration: none;
+    }
+
+    &>svg {
+        flex-shrink: 0;
+        font-size: 1.5em;
+        opacity: .6;
+        margin-right: 16px;
+    }
+    &>div {
+        flex-grow: 1;
+    }
+`;
+const CEIMeta = styled.div`
+    opacity: .8;
+    font-size: .8em;
+    margin-top: 4px;
+`;
+const CEIs = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+`;
+const File = ({ name, url, size }) => {
+    const formatBytes = bytes => {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    return <ChallengeExtItem>
+        <FaFile />
+        <div>
+            <a href={url} target={"_blank"}>{name}</a>
+            <CEIMeta>{formatBytes(size)}</CEIMeta>
+        </div>
+    </ChallengeExtItem>;
+}
+const Hint = ({ name, points }) => {
+    return <ChallengeExtItem>
+        <FaInfoCircle />
+        <div>
+            {name}
+            <CEIMeta>-{points} points.</CEIMeta>
+        </div>
+    </ChallengeExtItem>;
+}
+const Challenge = ({ challenge, doHide }) => {
     const [flag, setFlag] = useState("");
     const [flagValid, setFlagValid] = useState(false);
     const [promptHint, setPromptHint] = useState(false);
@@ -236,51 +315,292 @@ const Challenge = ({challenge, doHide}) => {
         {promptHint && <HintModal cancel={(() => setPromptHint(false))} okay={useHint} />}
 
         <SectionTitle>{challenge.name}</SectionTitle>
-        <SectionTitle2>Challenge {challenge.number}</SectionTitle2>
         <ChalWorth>{challenge.points} Points</ChalWorth>
 
         <ChalMeta>
-            12 people have solved this challenge.<br />
-            First solved by Xela
+            {challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet"}
         </ChalMeta>
 
-        <TextBlock dangerouslySetInnerHTML={{ __html: challenge.description }} />
+        <TextBlock dangerouslySetInnerHTML={{ __html: challenge.desc }} />
 
-        {!challenge.done && <>
+        {!challenge.solve && <>
             <Input callback={changeFlag}
                 placeholder="Flag format: ractf{...}"
                 format={partial}
                 center width={"80%"} />
             <Button disabled={!flagValid}>Attempt flag</Button>
-            <Button click={(() => setPromptHint(true))}>Get hint</Button>
+            {/*<Button click={(() => setPromptHint(true))}>Get hint</Button>*/}
         </>}
+
+        {challenge.files && !!challenge.files.length && <CEIs>
+            {challenge.files.map(file => {
+                return <File name={file.name} url={file.url} size={file.size} />;
+            })}
+        </CEIs>}
+        {challenge.hint && !!challenge.hint.length && <CEIs>
+            {challenge.hint && !challenge.solve && challenge.hint.map((hint, n) => {
+                return <Hint name={"Hint " + (n + 1)} points={hint.cost} />;
+            })}
+        </CEIs>}
     </Modal>;
 };
 
 
 const CampaignWrap = styled.div`
     margin: auto;
-    padding: 4rem 0;
+    padding-top: 1rem;
+    padding-bottom: 4rem;
 `;
 
 
+const JopardyRule = styled.div`
+    font-size: 2em;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    padding-left: 16px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+
+    &::before {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        margin-top: -4px;
+        left: 0;
+        top: 50%;
+        border: 5px solid ${theme.fg};
+        border-left-color: transparent;
+        border-top-color: transparent;
+        transform: translate(-50%, -50%) rotate(45deg);
+        transition: transform 200ms ease;
+    }
+
+    &::after {
+        position: absolute;
+        content: "";
+        display: block;
+        top: 100%;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: ${theme.bg_l3};
+        transition: width 100ms ease;
+    }
+
+    ${props => !props.open && css`
+        &::after {
+            width: 100%;
+        }
+
+        &::before {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+    `}
+`;
+const JopardyChildren = styled.div`
+    text-align: left;
+
+    max-height: ${props => props.openHeight};
+    transition: max-height 200ms ease;
+    overflow-y: hidden;
+
+    ${props => !props.open && css`
+        max-height: 0;
+    `}
+`;
+
+const JCTheme = styled.div`
+    padding: 2rem 16px;
+    width: 300px;
+    margin-bottom: 32px;
+    margin-right: 32px;
+    font-size: 1.2rem;
+    text-align: center;
+    
+    border-radius: 2px;
+    display: inline-block;
+    background-color: ${props => props.done ? transparentize(.3, theme.green) : theme.bg};
+    border: 1px solid ${props => props.done ? theme.green : theme.bg_d1};
+    word-wrap: break-word;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    &>span {
+        z-index: 1;
+        position: relative;
+    }
+
+    &::before {
+        content: "";
+        display: block;
+        width: 0;
+        padding-bottom: 0;
+        background-color: ${props => props.done ? transparentize(.2, theme.green) : theme.bg_l1};
+        position: absolute;
+        left: 0;
+        top: 100%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+
+        transition: width 500ms ease, padding-bottom 500ms ease;
+    }
+    &:hover::before {
+        width: 250%;
+        padding-bottom: 250%;
+    }
+
+    &::after {
+        content: "${props => props.points}";
+        display: block;
+        position: absolute;
+        right: 12px;
+        bottom: 6px;
+        z-index: 1;
+        font-size: .8em;
+        color: ${theme.bg_l3}
+    }
+`;
+
+const JeopardyChallenge = ({ name, done, click, points }) => {
+    return <JCTheme onMouseDown={(e => (e.target.click && e.target.click()))} onClick={done ? click : null} done={done} points={points}>
+        <span>{name}</span>
+    </JCTheme>;
+}
+
+const JeopardySection = ({ title, children }) => {
+    const [open, setOpen] = useState(true);
+    const [height, setHeight] = useState('auto');
+    const childRef = createRef();
+
+    const onResize = () => {
+        if (childRef.current && childRef.current.scrollHeight)
+            setHeight(childRef.current.scrollHeight + "px");
+    }
+    useEffect(() => {
+        window.addEventListener("resize", onResize);
+
+        return () => {
+            window.removeEventListener("resize", onResize);
+        }
+    })
+
+    useEffect(() => {
+        onResize();
+    });
+    const click = e => {
+        if (open)
+            setHeight(childRef.current.scrollHeight + "px");
+        setOpen(!open);
+        e.preventDefault()
+    }
+
+    return <>
+        <JopardyRule open={open} onClick={click}>{title}</JopardyRule>
+        <JopardyChildren openHeight={height} ref={childRef} open={open}>{children}</JopardyChildren>
+    </>;
+}
 
 
-export default (props) => {
+const TYPE_CAMPAIGN = 0,
+    TYPE_JEOPRADY = 1;
+const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
+
+export default () => {
     const [challenge, setChallenge] = useState(null);
 
-    const showChallenge = (category, number, done) => {
+    const showChallenge = (challenge) => {
         return () => {
-            setChallenge({
-                name: "[Object object]",
-                number: number,
-                points: "[Object object]",
-                description: "[Object object]",
-                category: category,
-                done: done,
-            })
+            setChallenge(challenge);
         }
     }
+
+    let challengeTabs = [];
+    const api = useContext(APIContext);
+
+    if (!api.challenges)
+        return <Redirect to={"/login"} />;
+
+    api.challenges.forEach((tab, n) => {
+        let blurb = <SectionBlurb>{tab.desc}</SectionBlurb>
+
+        switch (tab.type) {
+            case TYPE_CAMPAIGN:
+                const getChal = (x, y) => {
+                    for (let i = 0; i < tab.chal.length; i++) {
+                        if (tab.chal[i].x == x && tab.chal[i].y == y)
+                            return tab.chal[i];
+                    }
+                    return {};
+                }
+
+                let rows = [];
+                let max_x = 0;
+                tab.chal.forEach((chal, n) => {
+                    max_x = Math.max(chal.x, max_x);
+                    while (rows.length <= chal.y)
+                        rows.push([]);
+                    while (rows[chal.y].length <= chal.x)
+                        rows[chal.y].push(<ChalSpacer key={n} />);
+
+                    rows[chal.y][chal.x] = <ChalNode key={n} unlocked={!chal.lock} done={chal.solve}
+                        lockDoneR={chal.solve && !(chal.link & EAST && !getChal(chal.x + 1, chal.y).solve)}
+                        lockDoneD={chal.solve && !(chal.link & SOUTH && !getChal(chal.x, chal.y + 1).solve)}
+
+                        lockUnlockedR={chal.solve || (chal.link & EAST && getChal(chal.x + 1, chal.y).solve)}
+                        lockUnlockedD={chal.solve || (chal.link & SOUTH && getChal(chal.x, chal.y + 1).solve)}
+
+                        click={showChallenge(chal)}
+
+                        up={!!(chal.link & NORTH)} down={!!(chal.link & SOUTH)}
+                        right={!!(chal.link & EAST)} left={!!(chal.link & WEST)}
+                        name={chal.lock ? "???" : chal.name} />;
+                });
+                rows.forEach((row, n) => {
+                    while (row.length <= max_x) {
+                        row.push(<ChalSpacer key={row.length} />)
+                    }
+                    rows[n] = <CampaignRow key={n}>
+                        {row}
+                    </CampaignRow>;
+                });
+                challengeTabs.push(
+                    <CampaignWrap key={n} label={tab.title}>
+                        {blurb}
+                        {rows}
+                    </CampaignWrap>
+                );
+                break;
+            case TYPE_JEOPRADY:
+                let sections = [];
+                tab.cats.forEach((cat, n) => {
+                    let challenges = [];
+                    cat.chal.forEach((chal, n) => {
+                        challenges.push(
+                            <JeopardyChallenge key={n} name={chal.name} done={chal.done} points={chal.points} />
+                        );
+                    });
+                    sections.push(
+                        <JeopardySection key={n} title={cat.name}>
+                            {challenges}
+                        </JeopardySection>
+                    );
+                });
+                challengeTabs.push(
+                    <div label={tab.title} key={n}>
+                        {blurb}
+                        {sections}
+                    </div>
+                );
+                break;
+            default:
+                console.warn("Unkown challenge type: " + tab.type);
+                break;
+        }
+    })
 
     return <Page title={"Challenges"}>
         {challenge
@@ -288,11 +608,13 @@ export default (props) => {
             : null}
 
         <TabbedView center>
+            {challengeTabs}
 
+            {/*
             <CampaignWrap label="Campaign">
                 <SectionBlurb>
-                    These campaign-style challenges are new for RACTF 2020!<br/>
-                    Each challenge has a number of precursor challenges (except the first ones, of course), one of which must be completed before you can attempt the challenge.<br/>
+                    These campaign-style challenges are new for RACTF 2020!<br />
+                    Each challenge has a number of precursor challenges (except the first ones, of course), one of which must be completed before you can attempt the challenge.<br />
                     Please let us know what you think of this style on our <a href={"https://discord.gg/FfW2xXR"}>Discord server</a>.
                 </SectionBlurb>
 
@@ -323,14 +645,23 @@ export default (props) => {
                     <ChalNode left name={"???"} />
                 </CampaignRow>
             </CampaignWrap>
-            <div label="Categorical Challenges" />
+            <div label="Jeoprady Challenges">
+                <JeopardySection title={"Crypto"}>
+                    <JeopardyChallenge name={"Hey mate"} done={false} points={50} />
+                    <JeopardyChallenge name={"What's up?"} done={true} points={100} />
+                    <JeopardyChallenge name={"Do you not like crypto?"} done={true} points={50} />
+                    <JeopardyChallenge name={"Haha that sucks for you"} done={false} points={10} />
+                    <JeopardyChallenge name={"Imagine being so bad at crypto this challenge is hard"} done={false} points={999} />
+                </JeopardySection>
+            </div>
             <div label="RACTF 2019">
                 <SectionBlurb>
-                    A select number of challenges from RACTF 2019 have been resurrected for your enjoyment.<br/>
-                    Writeups are available for a number of these challenges, and most of the challenge authors would be happy to explain what's going on in some of these.<br/><br/>
+                    A select number of challenges from RACTF 2019 have been resurrected for your enjoyment.<br />
+                    Writeups are available for a number of these challenges, and most of the challenge authors would be happy to explain what's going on in some of these.<br /><br />
                     Note that these challenges aren't worth any points for RACTF 2020!
                 </SectionBlurb>
             </div>
+            */}
         </TabbedView>
     </Page>;
 };

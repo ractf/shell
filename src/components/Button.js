@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 
@@ -52,17 +52,26 @@ export const ButtonRow = styled.div`
     flex-wrap: wrap;
 
     >* {
+        margin-left: 0;
         margin-right: 16px;
     }
     >*:last-child {
         margin-right: 0;
     }
+
 `;
 
-export default (props) =>
-    props.to ?
-        <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
-            <Button onMouseDown={(e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
-        </NoUnderline>
-        : <Button onMouseDown={(e => e.target.click())} onClick={props.click || (()=>{})} {...props}>{props.children}</Button>
-;
+export default forwardRef((props, ref) => {
+    const clickFunc = () => {
+        if (props.click)
+            props.click();
+        if (props.form && props.form.callback)
+            props.form.callback();
+    }
+    return (props.to ?
+            <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
+                <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</Button>
+            </NoUnderline>
+            : <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</Button>
+    );
+})
