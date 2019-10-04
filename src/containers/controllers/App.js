@@ -169,7 +169,6 @@ Keyboard interrupt received, exiting.
             <BrowserRouter>
                 <API><APIContext.Consumer>{api => <>
                     {/* TODO: Use api.ready */}
-
                     {!api.ready && this.loaded ? <SiteWarning>
                         Site operating in offline mode:
                         Failed to connect to the CTF servers!<br />

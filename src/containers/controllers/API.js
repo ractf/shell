@@ -37,7 +37,7 @@ class APIClass extends Component {
 
         let user_data, challenges;
         try {
-            user_data = JSON.parse(localStorage.getItem("user"));
+            user_data = JSON.parse(localStorage.getItem("user_data"));
         } catch {
             user_data = undefined;
         }
