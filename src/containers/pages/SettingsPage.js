@@ -8,7 +8,7 @@ import { HR, SectionTitle, CTFContainer } from "../../components/Misc";
 
 import TabbedView from "../../components/TabbedView";
 
-import { APIContext } from "../controllers/API";
+import { APIContext } from "../controllers/Contexts";
 
 const OptionTitle = styled.div`
     font-size: 1.3em;

@@ -2,9 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './containers/controllers/App';
 import * as serviceWorker from './serviceWorker';
+import setupPlugins from "./plugins";
 
 import { AppContainer } from 'react-hot-loader';
 
+
+setupPlugins();
 
 const render = () => {
     ReactDOM.render(<AppContainer><App /></AppContainer>, document.getElementById("root"));

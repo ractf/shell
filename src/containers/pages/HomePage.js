@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import Button from "../../components/Button";
 import { HR, SectionTitle, SectionTitle2 } from "../../components/Misc";
-import { APIContext } from "../controllers/API";
+import { APIContext } from "../controllers/Contexts";
 
 import Page from "./bases/Page";
 

@@ -5,10 +5,13 @@ import Particles from 'react-particles-js';
 import { BrowserRouter } from "react-router-dom";
 
 import particles_js_config from "../../partices_js_config.js";
-import Routes from "./Routes";
+import { ModalPrompt } from "../../components/Modal";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { API, APIContext } from "./API";
+
+import { APIContext, AppContext } from "./Contexts";
+import Routes from "./Routes";
+import { API } from "./API";
 
 import theme from "theme";
 
@@ -121,13 +124,17 @@ const PageWrap = styled.div`
     width: 100%;
 `;
 
-class App extends Component {
+
+export default class App extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             particles_js: false,
-            console: false
+            console: false,
+
+            currentPrompt: null,
+            promptConfirm: this.promptConfirm,
         }
 
         this.magic = [27, 16, 186, 81, 16, 49, 13]
@@ -136,6 +143,28 @@ class App extends Component {
         this.loaded = false;
         // 3s grace period to connect to the server
         setTimeout(() => {this.loaded = true}, 3000);
+    }
+
+    hideModal = () => {
+        this.setState({currentPrompt: null});
+    }
+
+    promptConfirm = (body) => {
+        return new Promise((resolveOuter, rejectOuter) => {
+            let innerPromise = new Promise((resolve, reject) => {
+                this.setState({
+                    currentPrompt: {body: body, promise: {resolve: resolve, reject: reject}}
+                });
+            });
+
+            innerPromise.then(() => {
+                this.hideModal();
+                resolveOuter();
+            }).catch(() => {
+                this.hideModal();
+                rejectOuter();
+            });
+        });
     }
 
     _handleKeyDown = (event) => {
@@ -166,27 +195,33 @@ Keyboard interrupt received, exiting.
 [www-data@ractfhost1 shell]$ `}
         </VimMode>;
         return (
-            <BrowserRouter>
-                <API><APIContext.Consumer>{api => <>
-                    {/* TODO: Use api.ready */}
-                    {!api.ready && this.loaded ? <SiteWarning>
-                        Site operating in offline mode:
-                        Failed to connect to the CTF servers!<br />
-                        Functionality will be limited until service is restored.
-                    </SiteWarning> : null}
+            <AppContext.Provider value={this.state}>
+                <BrowserRouter>
+                    <API><APIContext.Consumer>{api => <>
+                        {/* TODO: Use api.ready */}
+                        {!api.ready && this.loaded ? <SiteWarning>
+                            Site operating in offline mode:
+                            Failed to connect to the CTF servers!<br />
+                            Functionality will be limited until service is restored.
+                        </SiteWarning> : null}
 
-                    {this.state.particles_js ? <StyledParticles params={particles_js_config} /> : null}
-                    <Normalize />
-                    <GlobalStyle />
-                    <PageWrap>
-                        <Header />
-                        <Routes />
-                        <Footer />
-                    </PageWrap>
-                </>}</APIContext.Consumer></API>
-            </BrowserRouter>
+                        {this.state.particles_js ? <StyledParticles params={particles_js_config} /> : null}
+                        <Normalize />
+                        <GlobalStyle />
+                        <PageWrap>
+                            <Header />
+                            <Routes />
+                            <Footer />
+                        </PageWrap>
+                    </>}</APIContext.Consumer></API>
+                </BrowserRouter>
+                
+                {this.state.currentPrompt ? <ModalPrompt
+                    body={this.state.currentPrompt.body}
+                    promise={this.state.currentPrompt.promise}
+                    onHide={this.hideModal}
+                /> : null}
+            </AppContext.Provider>
         );
     }
 }
-
-export default App;

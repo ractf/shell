@@ -2,18 +2,7 @@ import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import axios from "axios";
 
-
-export const APIContext = React.createContext({
-    ready: false,
-    authenticated: false,
-    user: {
-        username: null,
-        id: null,
-        referal: null,
-    },
-    challenges: [],
-    categories: [],
-});
+import { APIContext } from "./Contexts";
 
 
 class APIClass extends Component {

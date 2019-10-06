@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import { FaLink } from "react-icons/fa";
 import theme from "theme";
-import { APIContext } from "../../controllers/API";
+import { APIContext } from "../../controllers/Contexts";
 
 
 const PageHead = styled.div`

@@ -7,7 +7,7 @@ import beta from "../../static/img/beta.png";
 
 import Page from "./bases/Page";
 import { transparentize } from "polished";
-import { APIContext } from "../controllers/API";
+import { APIContext } from "../controllers/Contexts";
 import theme from "theme";
 
 const Split = styled.div`

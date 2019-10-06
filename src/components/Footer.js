@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled, { css } from 'styled-components';
 import { transparentize } from "polished";
 
-import { APIContext } from "../containers/controllers/API";
+import { APIContext } from "../containers/controllers/Contexts";
 
 import theme from "theme";
 

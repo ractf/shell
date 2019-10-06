@@ -14,7 +14,7 @@ import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
 import Profile from "../pages/Profile";
 import About from "../pages/About";
-import { APIContext } from "./API";
+import { APIContext } from "./Contexts";
 
 
 class Fader extends React.Component {
