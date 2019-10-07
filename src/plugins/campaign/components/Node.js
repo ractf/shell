@@ -9,7 +9,7 @@ import * as plugin_theme from "../plugin_theme";
 import { theme } from "ractf";
 
 
-const ChalNode_ = styled.div`
+const ChalNode = styled.div`
     width: ${plugin_theme.node_size};
     height: ${plugin_theme.node_size};
     border-radius: 50%;
@@ -91,7 +91,7 @@ const LockDown = styled(LockRight)`
 
 export default props => {
     return (
-        <ChalNode_ tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) ? props.click : null} {...props}>
+        <ChalNode tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) ? props.click : null} {...props}>
             <div>{props.name}</div>
 
             {props.right && <LockRight {...props}>{props.lockDoneR ? <FaCheck /> : props.lockUnlockedR ? <FaLockOpen /> : <FaLock />}</LockRight>}
@@ -101,6 +101,6 @@ export default props => {
             {props.right && <NodeLink right done={props.done} unlocked={props.unlocked} />}
             {props.up && <NodeLink up done={props.done} unlocked={props.unlocked} />}
             {props.down && <NodeLink down done={props.done} unlocked={props.unlocked} />}
-        </ChalNode_>
+        </ChalNode>
     );
 };

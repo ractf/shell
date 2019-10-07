@@ -2,9 +2,7 @@ import React, { useContext } from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import styled from "styled-components";
 
-import { CampaignChallengePage } from "../pages/ChallengePage";
 import { TeamsList, UsersList } from "../pages/Lists";
-import { Conduct, Privacy } from "../pages/Conduct";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
 import Leaderboard from "../pages/Leaderboard";
@@ -13,8 +11,9 @@ import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
 import Profile from "../pages/Profile";
-import About from "../pages/About";
 import { APIContext } from "./Contexts";
+
+import { plugins } from "ractf";
 
 
 class Fader extends React.Component {
@@ -119,7 +118,6 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/home" exact component={HomePage} />
         <Route path="/settings" exact render={ensureAuth(SettingsPage, api, true)} />
         <Route path="/campaign" exact component={Campaign} />
-        <Route path="/campaign/:challenge" exact component={CampaignChallengePage} />
 
         <Route path="/profile" exact render={() => <Redirect to={"/profile/me"} />} />
         <Route path="/profile/:user" exact render={ensureAuth(Profile, api, true)} />
@@ -128,10 +126,9 @@ const CTFRouter = ({ location, doAnimations }) => {
         <Route path="/team" exact render={ensureAuth(TeamPage, api, true)} />
         <Route path="/leaderboard" exact component={Leaderboard} />
 
-        <Route path="/conduct" exact component={Conduct} />
-        <Route path="/privacy" exact component={Privacy} />
-
-        <Route path="/about" exact component={About} />
+        { Object.keys(plugins.page).map(url =>
+            <Route path={url} key={url} exact component={plugins.page[url]} />
+        ) }
 
         {/*
         <Route path="/login" exact render={checkAuth(Login, api, false)}/>

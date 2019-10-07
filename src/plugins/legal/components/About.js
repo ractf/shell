@@ -1,10 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import Page from "./bases/Page";
-import Table from "../../components/Table"
+import { Page, Table, SectionH2, HR } from "ractf";
 
-import { SectionH2, HR } from "../../components/Misc";
 
 const Text = styled.p`
     margin-bottom: 2em;
