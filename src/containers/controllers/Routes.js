@@ -6,7 +6,12 @@ import { TeamsList, UsersList } from "../pages/Lists";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
 import Leaderboard from "../pages/Leaderboard";
-import { SignUp, LogIn, EmailVerif, JoinTeam, CreateTeam, EmailMessage } from "../pages/SignUp";
+
+import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
+import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
+import SignUp from "../pages/auth/SignUp";
+import Login from "../pages/auth/Login";
+
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
@@ -107,7 +112,7 @@ const CTFRouter = ({ location, doAnimations }) => {
     const body = <Switch location={location}>
         <Route path="/" exact render={() => <Redirect to={"/home"} />} />
 
-        <Route path="/login" exact render={ensureAuth(LogIn, api, false)} />
+        <Route path="/login" exact render={ensureAuth(Login, api, false)} />
         <Route path="/logout" exact render={ensureAuth(Logout, api)} />
         <Route path="/register" exact render={ensureAuth(SignUp, api, false)} />
         <Route path="/register/email" exact render={ensureAuth(EmailMessage, api, false)} />
@@ -129,20 +134,6 @@ const CTFRouter = ({ location, doAnimations }) => {
         { Object.keys(plugins.page).map(url =>
             <Route path={url} key={url} exact component={plugins.page[url]} />
         ) }
-
-        {/*
-        <Route path="/login" exact render={checkAuth(Login, api, false)}/>
-        <Route path="/register" exact render={checkAuth(Register, api, false)}/>
-
-        <Route path="/new" exact render={checkAuth(NewTwow, api)}/>
-        <Route path="/join" exact render={checkAuth(WIP, api)}/>
-        <Route path="/browse" exact render={checkAuth(TWOWBrowse, api)}/>
-        <Route path="/manage" exact render={checkAuth(BrowseMine, api)}/>
-        <Route path="/settings" exact render={checkAuth(ProfileSettings, api)}/>
-        <Route path="/me" exact render={checkAuth(MyProfile, api)}/>
-        <Route path="/my_plugins" exact render={checkAuth(WIP, api)}/>
-        <Route path="/logout" exact render={logout(auth, api)}/>
-        */}
         <Route component={NotFound} />
     </Switch>;
 
