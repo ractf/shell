@@ -164,13 +164,16 @@ class APIClass extends Component {
         })
     }
 
-    login = (username, password) => {
+    login = (username, password, otp=null) => {
+        let payload = {username: username, password: password}
+        if (otp) payload.otp = otp;
+
         return new Promise((resolve, reject) => {
             axios({
                 url: this.BASE_URL + this.ENDPOINTS.LOGIN,
                 method: "post",
                 headers: this.get_headers(),
-                data: { username: username, password: password }
+                data: payload
             }).then(response => {
                 this.post_login(username, "", response.data.token);
                 resolve();

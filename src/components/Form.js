@@ -24,27 +24,30 @@ export default ({ children, submit, button, handle }) => {
     
     if (submit) submit.callback = submitFunc;
 
-    for (let i = children.length - 1; i >= 0; i--) {
-        if (!children[i]) {
-            components[i] = undefined;
-            continue;
-        }
-        if (children[i].props.name) {
-            let ref = createRef();
-            components[i] = cloneElement(children[i], {
-                key: i,
-                ref: ref,
-                next: refs.length > 0 ? refs[refs.length - 1] : button
-            });
-            refs.push(ref);
-        } else {
-            components[i] = cloneElement(children[i], {
-                key: i
-            });
-        }
-    }
+    children.slice().reverse().forEach(i => {
+        let list = (i instanceof Array) ? i : [i];
+        
+        list.slice().reverse().forEach(j => {
+            if (!j) {
+                components.push(null);
+            } else if (j.props.name) {
+                let ref = createRef();
+
+                components.push(cloneElement(j, {
+                    key: components.length,
+                    ref: ref,
+                    next: refs.length > 0 ? refs[refs.length - 1] : button
+                }));
+                refs.push(ref);
+            } else {
+                components.push(cloneElement(j, {
+                    key: components.length
+                }));
+            }
+        });
+    });
 
     return <>
-        {components}
+        {components.reverse()}
     </>;
 }

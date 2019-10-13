@@ -1,27 +1,42 @@
 import React, { useContext, useState, createRef } from "react";
 
-import { Form, Page, SectionTitle2, Input, Button, ButtonRow, apiContext, formAction } from "ractf";
+import { Form, Page, SectionTitle2, Input, Button, ButtonRow, apiContext, formAction, appContext } from "ractf";
 import { Wrap, FormError } from "./Parts";
 
 
 export default () => {
     const api = useContext(apiContext);
+    const app = useContext(appContext);
     const [message, setMessage] = useState("");
 
-    const doRegister = ({ username, password }) => {
+    const doLogin = ({ username, password, pin=null }) => {
         if (!username)
             return setMessage("No username provided");
         if (!password)
             return setMessage("No password provided");
-
-        api.login(username, password).catch(
+        
+        api.login(username, password, pin).catch(
             message => {
-                window.msg = message;
-                if (message.response && message.response.data)
+                window.m = message;
+                if (message.response && message.response.data && message.response.status === 401) {
+                    // 2fa required
+                    const faPrompt = () => {
+                        app.promptConfirm({message: "2-Factor Code Required", small: true},
+                                        [{name: 'pin', placeholder: '6-digit code', format: /^\d{6}$/, limit: 6}]).then(({ pin }) => {
+                            if (pin.length !== 6) return faPrompt();
+                            doLogin({username: username, password: password, pin: pin})
+                        }).catch(() => {
+                            setMessage("2-Factor Authentication Required!")
+                        });
+                    }
+                    faPrompt();
+                } else if (message.response && message.response.data) {
+                    // We got a response from the server, but it wasn't happy with something
                     setMessage(message.response.data.m);
-                else if (message.message)
+                } else if (message.message) {
+                    // We didn't get a response from the server, but the browser is happy to tell us why
                     setMessage(message.message);
-                else setMessage("Unknown error occured.")
+                } else setMessage("Unknown error occured.")
             }
         );
     }
@@ -33,7 +48,7 @@ export default () => {
         <Wrap>
             <SectionTitle2>Login to RACTF</SectionTitle2>
 
-            <Form submit={submit} handle={doRegister} button={button}>
+            <Form submit={submit} handle={doLogin} button={button}>
                 <Input name={"username"} placeholder={"Username"} />
                 <Input name={"password"} placeholder={"Password"} password />
 

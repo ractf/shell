@@ -39,7 +39,7 @@ export default ({ challenge, doHide }) => {
                 Are you sure you want to use a hint?<br/><br/>
                 This hint will deduct {hint.cost} points from this challenge.
             </>;
-            app.promptConfirm({message: msg}).then(() => {
+            app.promptConfirm({message: msg, small: true}).then(() => {
                 alert("Hint!!!!");
             }).catch(() => {});
         };

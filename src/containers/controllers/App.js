@@ -4,8 +4,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import Particles from 'react-particles-js';
 import { BrowserRouter } from "react-router-dom";
 
-import particles_js_config from "../../partices_js_config.js";
 import { ModalPrompt } from "../../components/Modal";
+import particles_js_config from "../../partices_js_config.js";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -149,20 +149,22 @@ export default class App extends Component {
         this.setState({currentPrompt: null});
     }
 
-    promptConfirm = (body) => {
+    promptConfirm = (body, inputs=0) => {
+        if (inputs === 0) inputs = [];
+
         return new Promise((resolveOuter, rejectOuter) => {
             let innerPromise = new Promise((resolve, reject) => {
                 this.setState({
-                    currentPrompt: {body: body, promise: {resolve: resolve, reject: reject}}
+                    currentPrompt: {body: body, promise: {resolve: resolve, reject: reject}, inputs: inputs}
                 });
             });
 
-            innerPromise.then(() => {
+            innerPromise.then(values => {
                 this.hideModal();
-                resolveOuter();
-            }).catch(() => {
+                resolveOuter(values);
+            }).catch(values => {
                 this.hideModal();
-                rejectOuter();
+                rejectOuter(values);
             });
         });
     }
@@ -219,6 +221,7 @@ Keyboard interrupt received, exiting.
                 {this.state.currentPrompt ? <ModalPrompt
                     body={this.state.currentPrompt.body}
                     promise={this.state.currentPrompt.promise}
+                    inputs={this.state.currentPrompt.inputs}
                     onHide={this.hideModal}
                 /> : null}
             </AppContext.Provider>
