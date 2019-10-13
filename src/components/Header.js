@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { transparentize } from "polished";
 
-import logo from "../static/wordmark.png";
 import { APIContext } from "../containers/controllers/Contexts";
+import logo from "../static/wordmark_35px.png";
 
 import theme from "theme";
 

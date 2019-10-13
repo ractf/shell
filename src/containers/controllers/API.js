@@ -27,13 +27,13 @@ class APIClass extends Component {
         let user_data, challenges;
         try {
             user_data = JSON.parse(localStorage.getItem("user_data"));
-        } catch {
+        } catch(e) {
             user_data = undefined;
         }
         
         try {
             challenges = JSON.parse(localStorage.getItem("challenges"));
-        } catch {
+        } catch(e) {
             challenges = [];
         }
 
