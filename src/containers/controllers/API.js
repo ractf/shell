@@ -7,7 +7,7 @@ import { APIContext } from "./Contexts";
 
 class APIClass extends Component {
     PROTOCOL = "http:";
-    DOMAIN = "//nlaptop.local:8000";
+    DOMAIN = "//kylesbank.me:8889";
     API_BASE = "";
     BASE_URL = this.PROTOCOL + this.DOMAIN + this.API_BASE;
 
@@ -81,9 +81,10 @@ class APIClass extends Component {
     }
 
     get_headers = () => {
-        return {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        };
+        let headers = {};
+        if (localStorage.getItem("token"))
+            headers.Authorization = localStorage.getItem("token");
+        return headers;
     }
 
     get_challenges = () => {
@@ -127,9 +128,9 @@ class APIClass extends Component {
         });
     }
 
-    post_login = (username, id, token) => {
+    post_login = async (username, id, token) => {
         localStorage.setItem("token", token);
-        this.reload_cache();
+        await this.reload_cache();
 
         this.props.history.push("/");
     }
@@ -175,7 +176,7 @@ class APIClass extends Component {
                 headers: this.get_headers(),
                 data: payload
             }).then(response => {
-                this.post_login(username, "", response.data.token);
+                this.post_login(username, "", response.data.d.token);
                 resolve();
             }).catch(reject);
         });

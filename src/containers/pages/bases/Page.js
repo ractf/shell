@@ -87,12 +87,13 @@ const Page = ({ title, url, children, vCentre }) => {
                     <HeadLink to={"/teams"}>Teams</HeadLink>
                     <HeadLink to={"/leaderboard"}>Leaderboard</HeadLink>
 
-                    <HeadLink to={"/campaign"}>Challenges</HeadLink>
-
-                    <HeadLink to={"/profile"}>Profile</HeadLink>
-                    <HeadLink to={"/team"}>My Team</HeadLink>
                     {api.authenticated
-                        ? <HeadLink to={"/logout"}>Logout</HeadLink>
+                        ? <>
+                            <HeadLink to={"/campaign"}>Challenges</HeadLink>
+                            <HeadLink to={"/profile"}>Profile</HeadLink>
+                            <HeadLink to={"/team"}>My Team</HeadLink>
+                            <HeadLink to={"/logout"}>Logout</HeadLink>
+                        </>
                         : <HeadLink to={"/login"}>Login</HeadLink>}
                 </HeadLinks>
             </PageHead>

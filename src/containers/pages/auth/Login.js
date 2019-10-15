@@ -8,13 +8,15 @@ export default () => {
     const api = useContext(apiContext);
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
+    const [locked, setLocked] = useState(false);
 
     const doLogin = ({ username, password, pin=null }) => {
         if (!username)
             return setMessage("No username provided");
         if (!password)
             return setMessage("No password provided");
-        
+
+        setLocked(true);
         api.login(username, password, pin).catch(
             message => {
                 window.m = message;
@@ -27,16 +29,22 @@ export default () => {
                             doLogin({username: username, password: password, pin: pin})
                         }).catch(() => {
                             setMessage("2-Factor Authentication Required!")
+                            setLocked(false);
                         });
                     }
                     faPrompt();
                 } else if (message.response && message.response.data) {
                     // We got a response from the server, but it wasn't happy with something
                     setMessage(message.response.data.m);
+                    setLocked(false);
                 } else if (message.message) {
                     // We didn't get a response from the server, but the browser is happy to tell us why
                     setMessage(message.message);
-                } else setMessage("Unknown error occured.")
+                    setLocked(false);
+                } else {
+                    setMessage("Unknown error occured.");
+                    setLocked(false);
+                }
             }
         );
     }
@@ -45,7 +53,7 @@ export default () => {
     const button = createRef();
 
     return <Page vCentre>
-        <Wrap>
+        <Wrap locked={locked}>
             <SectionTitle2>Login to RACTF</SectionTitle2>
 
             <Form submit={submit} handle={doLogin} button={button}>
