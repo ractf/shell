@@ -24,11 +24,11 @@ class APIClass extends Component {
     constructor() {
         super();
 
-        let user_data, challenges;
+        let userData, challenges, teamData;
         try {
-            user_data = JSON.parse(localStorage.getItem("user_data"));
+            userData = JSON.parse(localStorage.getItem("userData"));
         } catch(e) {
-            user_data = undefined;
+            userData = undefined;
         }
         
         try {
@@ -37,42 +37,35 @@ class APIClass extends Component {
             challenges = [];
         }
 
+        teamData = {
+            name: "PWN to 0xE4",
+            members: [
+                {name: "Bottersnike", isCaptain: true},
+                {name: "Sai", isCaptain: false},
+                {name: "Beano", isCaptain: false},
+                {name: "<b>Lol</b>", isCaptain: false},
+            ],
+            isOwner: true,
+        };
+
         this.state = {
             ready: false,
-            authenticated: !!user_data,
-            user: user_data,
+            authenticated: !!userData,
+            user: userData,
             challenges: challenges,
+            team: teamData,
 
             login: this.login,
             logout: this.logout,
             register: this.register,
-
-            getCategoryName: this.getCategoryName,
-            challengesIn: this.challengesIn,
-            getChallenge: this.getChallenge,
+            modifyUser: this.modifyUser,
         };
-    }
-
-    getCategoryName = (category_code) => {
-        return "Crypto";
-    }
-
-    challengesIn = (category_code) => {
-        return this.state.challenges.filter(c => c.category === category_code);
-    }
-
-    getChallenge = (category, challenge) => {
-        let results = this.state.challenges.filter(c => (
-            c.category === category && c.number === challenge
-        ));
-        if (!results.length) return {};
-        return results[0];
     }
 
     async componentWillMount() {
         let token = localStorage.getItem('token');
         if (token) {
-            this.reload_cache();
+            this._reloadCache();
         } else {
             this.setState({
                 ready: true,
@@ -80,43 +73,43 @@ class APIClass extends Component {
         }
     }
 
-    get_headers = () => {
+    _getHeaders = () => {
         let headers = {};
         if (localStorage.getItem("token"))
             headers.Authorization = localStorage.getItem("token");
         return headers;
-    }
+    };
 
-    get_challenges = () => {
+    _getChallenges = () => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.BASE_URL + this.ENDPOINTS.CHALLENGES,
                 method: "get",
-                headers: this.get_headers(),
+                headers: this._getHeaders(),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
-    }
+    };
 
-    reload_cache = async () => {
+    _reloadCache = async () => {
         // TODO: This
-        let user_data, challenges;
+        let userData, challenges;
         try {
-            user_data = (await this.get_user("self")).d;
+            userData = (await this.getUser("self")).d;
         } catch (e) {
             console.error(e);
             return this.logout();
         }
 
         try {
-            challenges = (await this.get_challenges()).d;
+            challenges = (await this._getChallenges()).d;
         } catch (e) {
             console.error(e);
             return this.logout();
         }
 
-        localStorage.setItem("user_data", JSON.stringify(user_data));
+        localStorage.setItem("userData", JSON.stringify(userData));
         localStorage.setItem("challenges", JSON.stringify(challenges));
 
         this.setState({
@@ -124,18 +117,24 @@ class APIClass extends Component {
 
             challenges: challenges,
             authenticated: true,
-            user: user_data,
+            user: userData,
         });
-    }
+    };
 
-    post_login = async (username, id, token) => {
+    _postLogin = async (username, id, token) => {
         localStorage.setItem("token", token);
-        await this.reload_cache();
+        await this._reloadCache();
 
         this.props.history.push("/");
+    };
+
+    modifyUser = ({ oPass=null, nPass=null }) => {
+        return new Promise((resolve, reject) => {
+            reject("Nope.");
+        })
     }
 
-    get_user = (id) => {
+    getUser = (id) => {
         let url = this.BASE_URL;
         if (id === "self")
             url += this.ENDPOINTS.USER_SELF;
@@ -146,7 +145,7 @@ class APIClass extends Component {
             axios({
                 url: url,
                 method: "get",
-                headers: this.get_headers(),
+                headers: this._getHeaders(),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
@@ -155,7 +154,7 @@ class APIClass extends Component {
 
     logout = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('user_data');
+        localStorage.removeItem('userData');
         localStorage.removeItem('challenges');
         this.setState({
             authenticated: false,
@@ -163,7 +162,7 @@ class APIClass extends Component {
             ready: true,
             challenges: [],
         })
-    }
+    };
 
     login = (username, password, otp=null) => {
         let payload = {username: username, password: password}
@@ -173,10 +172,10 @@ class APIClass extends Component {
             axios({
                 url: this.BASE_URL + this.ENDPOINTS.LOGIN,
                 method: "post",
-                headers: this.get_headers(),
+                headers: this._getHeaders(),
                 data: payload
             }).then(response => {
-                this.post_login(username, "", response.data.d.token);
+                this._postLogin(username, "", response.data.d.token);
                 resolve();
             }).catch(reject);
         });
@@ -187,7 +186,7 @@ class APIClass extends Component {
             axios({
                 url: this.BASE_URL + this.ENDPOINTS.REGISTER,
                 method: "post",
-                headers: this.get_headers(),
+                headers: this._getHeaders(),
                 data: { username: username, password: password, email: email }
             }).then(response => {
                 this.props.history.push("/register/email");

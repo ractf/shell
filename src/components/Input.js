@@ -53,6 +53,9 @@ const InputWrap = styled.div`
     ${props => props.password && css`
         padding-left: 38px;
     `}
+    ${props => props.disabled && css`
+        background-color: #18162411;
+    `}
 
     &:focus-within > div:nth-of-type(1) {
         opacity: .8;
@@ -158,13 +161,15 @@ export default class Input extends Component {
                     ref={this.inputRef}
                     value={this.state.val}
                     onChange={this.handleChange}
-                    rows={this.props.rows} />
+                    rows={this.props.rows}
+                    disabled={this.props.disabled} />
                 : <StyledInput
                     onKeyDown={this.keyDown}
                     ref={this.inputRef}
                     value={this.state.val}
                     type={(this.props.password && !this.state.showPass) ? "password" : "text"}
-                    onChange={this.handleChange}/>}
+                    onChange={this.handleChange}
+                    disabled={this.props.disabled} />}
             {this.props.center || this.props.noCount ? null
                 : <LengthCounter>{this.state.val.length}{this.props.limit
                     ? "/" + this.props.limit

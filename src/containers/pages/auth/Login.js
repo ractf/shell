@@ -1,7 +1,7 @@
-import React, { useContext, useState, createRef } from "react";
+import React, { useContext, useState } from "react";
 
-import { Form, Page, SectionTitle2, Input, Button, ButtonRow, apiContext, formAction, appContext } from "ractf";
-import { Wrap, FormError } from "./Parts";
+import { Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, apiContext, appContext } from "ractf";
+import { Wrap } from "./Parts";
 
 
 export default () => {
@@ -49,21 +49,18 @@ export default () => {
         );
     }
 
-    const submit = formAction();
-    const button = createRef();
-
     return <Page vCentre>
-        <Wrap locked={locked}>
-            <SectionTitle2>Login to RACTF</SectionTitle2>
-
-            <Form submit={submit} handle={doLogin} button={button}>
+        <Wrap>
+            <Form locked={locked} handle={doLogin}>
+                <SectionTitle2>Login to RACTF</SectionTitle2>
+    
                 <Input name={"username"} placeholder={"Username"} />
                 <Input name={"password"} placeholder={"Password"} password />
 
                 {message && <FormError>{message}</FormError>}
 
                 <ButtonRow>
-                    <Button ref={button} form={submit} medium>Login</Button>
+                    <Button medium submit>Login</Button>
                     <Button medium lesser to={"/register"}>Register</Button>
                 </ButtonRow>
             </Form>

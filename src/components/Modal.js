@@ -1,8 +1,8 @@
-import React, { createRef } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import Button, { ButtonRow } from "./Button";
-import Form, { formAction } from "./Form";
+import Form from "./Form";
 import Input from "./Input";
 
 import theme from "theme";
@@ -47,6 +47,7 @@ const ModalBox = styled.div`
 
 const ModalP = styled.p`
     margin-top: 0;
+    white-space: pre-wrap;
 `;
 
 
@@ -60,20 +61,17 @@ const Modal = ({ onHide, children, centre, small }) =>
 
 
 export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
-    const submit = formAction();
-    const button = createRef();
-
-    return <Modal onHide={onHide} small={body.small} centre>
+    return <Modal onHide={() => {promise.reject(); onHide && onHide()}} small={body.small} centre>
         <ModalP>
             { body.message }
             { inputs.length ? <br/> : null }
         </ModalP>
 
-        <Form submit={submit} handle={promise.resolve} button={button}>
+        <Form handle={promise.resolve}>
             {inputs.map((i, n) => <Input key={n} width={'auto'} {...i} />)}
 
             <ButtonRow>
-                <Button ref={button} form={submit}>{ body.okay || "Okay" }</Button>
+                <Button submit>{ body.okay || "Okay" }</Button>
                 <Button onClick={promise.reject}>{ body.cancel || "Cancel" }</Button>
             </ButtonRow>
         </Form>

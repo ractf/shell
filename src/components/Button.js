@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import theme from "theme";
 
 
-const Button = styled.button`
+const ButtonTheme = styled.button`
     background-color: #2c2a44;
     border-radius: 2px;
     border: 1px solid #373354;
@@ -61,7 +61,7 @@ export const ButtonRow = styled.div`
 
 `;
 
-export default forwardRef((props, ref) => {
+const Button = (props, ref) => {
     const clickFunc = () => {
         if (props.click)
             props.click();
@@ -70,8 +70,11 @@ export default forwardRef((props, ref) => {
     }
     return (props.to ?
             <NoUnderline to={props.to} onMouseDown={(e => e.target.click())}>
-                <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</Button>
+                <ButtonTheme ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</ButtonTheme>
             </NoUnderline>
-            : <Button ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</Button>
+            : <ButtonTheme ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc} {...props}>{props.children}</ButtonTheme>
     );
-})
+};
+
+
+export default forwardRef(Button);

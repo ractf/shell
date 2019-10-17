@@ -18,15 +18,6 @@ const WrapDiv = styled.div`
     border-radius: 2px;
     position: relative;
 
-    >div {
-        margin-bottom: 16px;
-    }
-    >div:last-child {
-        margin-bottom: 0;
-    }
-    >div:nth-last-child(2) {
-        margin-bottom: 8px;
-    }
 `;
 
 const Darken = styled.div`
@@ -48,10 +39,3 @@ export const Wrap = ({ locked = false, children }) => {
         { locked && <Darken><Spinner /></Darken>}
     </WrapDiv>
 }
-
-
-export const FormError = styled.div`
-    color: #ac3232;
-    font-weight: 500;
-    font-size: 1.2em;
-`;

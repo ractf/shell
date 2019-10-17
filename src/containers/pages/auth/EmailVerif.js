@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { Page, SectionTitle2, Button, ButtonRow, Spinner } from "ractf";
-import { Wrap, FormError } from "./Parts";
+import { Page, FormError, SectionTitle2, Button, ButtonRow, Spinner } from "ractf";
+import { Wrap } from "./Parts";
 
 
 export const EmailVerif = () => {

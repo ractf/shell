@@ -11,7 +11,7 @@ import { APIContext } from "../../controllers/Contexts";
 const PageHead = styled.div`
     width: 100%;
     background-color: ${transparentize(.27, theme.bg_d1)};
-    padding: 48px;
+    padding: 24px;
     padding-bottom: 8px;
     ${props => props.minimal && css`
         padding-top: 0;
@@ -34,7 +34,7 @@ const PageContent = styled.div`
     `}
 `;
 const HeadTitle = styled.div`
-    margin-bottom: 64px;
+    margin-bottom: 36px;
 `;
 
 const HeadLinks = styled.div`
@@ -42,9 +42,9 @@ const HeadLinks = styled.div`
     flex-wrap: wrap;
     justify-content: center;
 `;
-const HeadLink = styled(Link)`
+const linkStyle = css`
     font-size: .9rem;
-    margin: .2em .8em;
+    padding: .2em .8em;
     color: #bbb;
     cursor: pointer;
 
@@ -52,6 +52,17 @@ const HeadLink = styled(Link)`
         color: #eee;
         text-decoration: none;
     }
+
+    &:hover > ul {
+        display: flex;
+    }
+`
+const HeadLink = styled(Link)`
+    ${ linkStyle}
+`;
+const HeadItem = styled.div`
+    ${ linkStyle}
+    position: relative;
 `;
 
 const FaLinkIcon = styled(FaLink)`
@@ -72,9 +83,41 @@ const LinkIcon = ({ url }) => {
 };
 
 
+const DropdownBody = styled.ul`
+    position: absolute;
+    flex-direction: column;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100%;
+    padding: 8px 0;
+    display: none;
+    margin: 0;
+    text-align: center;
+    min-width: 100%;
+    z-index: 100;
+
+    &:hover {
+        display: flex;
+    }
+
+    >* {
+        margin: 2px 0;
+    }
+
+    background-color: ${transparentize(.27, theme.bg_d1)};
+`;
+const LinkDropdown = ({ name, children }) => {
+    return <HeadItem style={{ position: "relative" }}>{name}
+        <DropdownBody>
+            {children}
+        </DropdownBody>
+    </HeadItem>
+}
+
+
 const Page = ({ title, url, children, vCentre }) => {
     const api = useContext(APIContext);
-    
+
     return (
         <>
             <PageHead minimal={!title || title.length === 0}>
@@ -90,8 +133,11 @@ const Page = ({ title, url, children, vCentre }) => {
                     {api.authenticated
                         ? <>
                             <HeadLink to={"/campaign"}>Challenges</HeadLink>
-                            <HeadLink to={"/profile"}>Profile</HeadLink>
                             <HeadLink to={"/team"}>My Team</HeadLink>
+                            <LinkDropdown name={api.user.username}>
+                                <HeadLink to={"/profile"}>Profile</HeadLink>
+                                <HeadLink to={"/settings"}>Settings</HeadLink>
+                            </LinkDropdown>
                             <HeadLink to={"/logout"}>Logout</HeadLink>
                         </>
                         : <HeadLink to={"/login"}>Login</HeadLink>}

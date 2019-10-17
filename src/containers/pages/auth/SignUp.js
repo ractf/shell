@@ -1,7 +1,7 @@
-import React, { useContext, useState, createRef } from "react";
+import React, { useContext, useState } from "react";
 
-import { Form, Page, SectionTitle2, Input, Button, ButtonRow, apiContext, formAction } from "ractf";
-import { Wrap, FormError, EMAIL_RE } from "./Parts";
+import { Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, apiContext } from "ractf";
+import { Wrap, EMAIL_RE } from "./Parts";
 
 
 export default () => {
@@ -34,14 +34,11 @@ export default () => {
         );
     }
 
-    const submit = formAction();
-    const button = createRef();
-
     return <Page vCentre>
-        <Wrap locked={locked}>
-            <SectionTitle2>Register for RACTF</SectionTitle2>
-
-            <Form submit={submit} handle={doRegister} button={button}>
+        <Wrap>
+            <Form locked={locked} handle={doRegister}>
+                <SectionTitle2>Register for RACTF</SectionTitle2>
+    
                 <Input name={"username"} placeholder={"Username"} />
                 <Input format={EMAIL_RE} name={"email"} placeholder={"Email"} />
                 <Input name={"passwd1"} placeholder={"Password"} password />
@@ -50,7 +47,7 @@ export default () => {
                 {message && <FormError>{message}</FormError>}
 
                 <ButtonRow>
-                    <Button ref={button} form={submit} medium>Register</Button>
+                    <Button medium submit>Register</Button>
                     <Button medium lesser to={"/login"}>Login</Button>
                 </ButtonRow>
             </Form>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const HR = styled.div`
     width: 400px;
     max-width: 80%;
-    margin: 1rem auto 0;
+    margin: 1rem auto;
     height: 1px;
     background-color: #181624;
 `;

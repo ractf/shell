@@ -1,14 +1,12 @@
-import React, { useState, createRef } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Form, Page, SectionTitle2, Input, Button, ButtonRow, SubtleText, formAction } from "ractf";
-import { Wrap, FormError } from "./Parts";
+import { Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, SubtleText } from "ractf";
+import { Wrap } from "./Parts";
 
 
 export const JoinTeam = () => {
     const [message, setMessage] = useState("");
-    const button = createRef();
-    const submit = formAction();
 
     const doJoinTeam = ({ name, password }) => {
 
@@ -21,14 +19,14 @@ export const JoinTeam = () => {
                 Did you want to <Link to={"/team/new"}>create a team</Link> instead?
             </SubtleText>
 
-            <Form submit={submit} handle={doJoinTeam} button={button}>
+            <Form handle={doJoinTeam}>
                 <Input name={"name"} placeholder={"Team Name"} />
                 <Input name={"password"} placeholder={"Team Password"} password />
 
                 {message && <FormError>{message}</FormError>}
 
                 <ButtonRow>
-                    <Button ref={button} form={submit} medium>Join Team</Button>
+                    <Button medium submit>Join Team</Button>
                 </ButtonRow>
             </Form>
         </Wrap>
@@ -38,8 +36,6 @@ export const JoinTeam = () => {
 
 export const CreateTeam = () => {
     const [message, setMessage] = useState("");
-    const button = createRef();
-    const submit = formAction();
 
     const doCreateTeam = ({ name, affil, web, password }) => {
 
@@ -52,7 +48,7 @@ export const CreateTeam = () => {
                 Did you want to <Link to={"/team/join"}>join a team</Link> instead?
             </SubtleText>
 
-            <Form submit={submit} handle={doCreateTeam} button={button}>
+            <Form handle={doCreateTeam}>
                 <Input name={"name"} placeholder={"Team Name"} />
                 <Input name={"affil"} placeholder={"Affiliation"} />
                 <Input name={"web"} placeholder={"Website"} />
@@ -61,7 +57,7 @@ export const CreateTeam = () => {
                 {message && <FormError>{message}</FormError>}
 
                 <ButtonRow>
-                    <Button ref={button} form={submit} medium>Create Team</Button>
+                    <Button medium submit>Create Team</Button>
                 </ButtonRow>
             </Form>
         </Wrap>
