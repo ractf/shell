@@ -108,7 +108,7 @@ class APIClass extends Component {
         try {
             challenges = (await this._getChallenges()).d;
         } catch (e) {
-            if (e.response && message.response.data)
+            if (e.response && e.response.data)
                 return this.logout();
             ready = false;
         }
