@@ -12,6 +12,9 @@ const PageHead = styled.div`
     width: 100%;
     background-color: ${transparentize(.27, theme.bg_d1)};
     padding: 24px;
+    @media (max-width: 600px) {
+        padding: 4px
+    }
     padding-bottom: 8px;
     ${props => props.minimal && css`
         padding-top: 0;
@@ -32,9 +35,19 @@ const PageContent = styled.div`
         justify-content: center;
         height: 100%;
     `}
+
+    @media only screen and (max-width: 600px) {
+        padding: 16px 32px;
+    }
+    @media only screen and (max-width: 450px) {
+        padding: 16px 4px;
+    }
 `;
 const HeadTitle = styled.div`
     margin-bottom: 36px;
+    @media (max-width: 600px) {
+        margin-bottom: 24px
+    }
 `;
 
 const HeadLinks = styled.div`

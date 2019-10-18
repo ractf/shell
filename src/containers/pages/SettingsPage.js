@@ -50,6 +50,8 @@ const MemberTheme = styled.div`
 
     >*:last-child {
         flex-grow: 1;
+        width: 100%;
+        word-break: break-all;
     }
     >* {
         flex-shrink: 0;
@@ -100,9 +102,9 @@ const TeamMember = ({ api, app, member, isOwner }) => {
     return <MemberTheme>
         <MemberIcon clickable={isOwner} onClick={isOwner && makeOwner(api, app, member)} active={member.isCaptain}><GiCaptainHatProfile /></MemberIcon>
         {(isOwner && !member.isCaptain) && <MemberIcon onClick={kickMember(api, app, member)} clickable bad><GiThorHammer /></MemberIcon>}
-        <span>
+        <div>
             {member.name}
-        </span>
+        </div>
     </MemberTheme>
 }
 

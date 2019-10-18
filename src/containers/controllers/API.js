@@ -41,6 +41,7 @@ class APIClass extends Component {
             name: "PWN to 0xE4",
             members: [
                 {name: "Bottersnike", isCaptain: true},
+                {name: "m".repeat(36), isCaptain: true},
                 {name: "Sai", isCaptain: false},
                 {name: "Beano", isCaptain: false},
                 {name: "<b>Lol</b>", isCaptain: false},
@@ -94,31 +95,33 @@ class APIClass extends Component {
 
     _reloadCache = async () => {
         // TODO: This
-        let userData, challenges;
+        let userData, challenges, ready = true;
         try {
             userData = (await this.getUser("self")).d;
         } catch (e) {
-            console.error(e);
-            return this.logout();
+            if (e.response && e.response.data)
+                return this.logout();
+            ready = false;
+            this.setState({ready: false});
         }
 
         try {
             challenges = (await this._getChallenges()).d;
         } catch (e) {
-            console.error(e);
-            return this.logout();
+            if (e.response && message.response.data)
+                return this.logout();
+            ready = false;
         }
 
-        localStorage.setItem("userData", JSON.stringify(userData));
-        localStorage.setItem("challenges", JSON.stringify(challenges));
+        if (userData)
+            localStorage.setItem("userData", JSON.stringify(userData));
+        if (challenges)
+            localStorage.setItem("challenges", JSON.stringify(challenges));
 
-        this.setState({
-            ready: true,
-
-            challenges: challenges,
-            authenticated: true,
-            user: userData,
-        });
+        let newState = {ready: ready, authenticated: true};
+        if (userData) newState.user = userData;
+        if (challenges) newState.challenges = challenges;
+        this.setState(newState);
     };
 
     _postLogin = async (username, id, token) => {

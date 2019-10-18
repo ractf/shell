@@ -18,6 +18,9 @@ const WrapDiv = styled.div`
     border-radius: 2px;
     position: relative;
 
+    @media only screen and (max-width: 600px) {
+        padding: 56px 24px;
+    }
 `;
 
 const Darken = styled.div`

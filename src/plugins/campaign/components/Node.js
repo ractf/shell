@@ -12,6 +12,10 @@ import { theme } from "ractf";
 const ChalNode = styled.div`
     width: ${plugin_theme.node_size};
     height: ${plugin_theme.node_size};
+    @media only screen and (max-width: 600px) {
+        width: ${plugin_theme.node_size_small};
+        height: ${plugin_theme.node_size_small};    
+    }
     border-radius: 50%;
     border: 4px solid ${theme.bg_l1};
     background-color: ${transparentize(.4, theme.bg)};
