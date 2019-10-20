@@ -6,6 +6,7 @@ import { TeamsList, UsersList } from "../pages/Lists";
 import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
 import Leaderboard from "../pages/Leaderboard";
+import TwoFA from "../pages/TwoFA";
 
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
@@ -122,6 +123,7 @@ const CTFRouter = ({ location, doAnimations }) => {
 
         <Route path="/home" exact component={HomePage} />
         <Route path="/settings" exact render={ensureAuth(SettingsPage, api, true)} />
+        <Route path="/settings/2fa" exact render={ensureAuth(TwoFA, api, true)} />
         <Route path="/campaign" exact component={Campaign} />
 
         <Route path="/profile" exact render={() => <Redirect to={"/profile/me"} />} />

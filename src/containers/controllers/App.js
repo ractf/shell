@@ -88,6 +88,10 @@ export const GlobalStyle = createGlobalStyle`
     ul > li {
         margin: 16px 0;
     }
+
+    b {
+        font-weight: 500;
+    }
 `;
 
 const StyledParticles = styled(Particles)`
@@ -205,6 +209,10 @@ Keyboard interrupt received, exiting.
                             Site operating in offline mode:
                             Failed to connect to the CTF servers!<br />
                             Functionality will be limited until service is restored.
+                        </SiteWarning> : null}
+                        {(api.user && api.user['2fa_status'] === "needs_verify") ? <SiteWarning>
+                            A previous attempt to add 2-factor authentication to your account failed!<br />
+                            Please visit settings to finish configuration!
                         </SiteWarning> : null}
 
                         {this.state.particles_js ? <StyledParticles params={particles_js_config} /> : null}

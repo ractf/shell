@@ -14,6 +14,8 @@ class APIClass extends Component {
     ENDPOINTS = {
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
+        ADD_2FA: "/auth/add_2fa",
+        VERIFY_2FA: "/auth/verify_2fa",
 
         CHALLENGES: "/challenges/",
 
@@ -58,8 +60,12 @@ class APIClass extends Component {
 
             login: this.login,
             logout: this.logout,
+            add_2fa: this.add_2fa,
             register: this.register,
+            verify_2fa: this.verify_2fa,
             modifyUser: this.modifyUser,
+
+            _reloadCache: this._reloadCache,
         };
     }
 
@@ -94,7 +100,6 @@ class APIClass extends Component {
     };
 
     _reloadCache = async () => {
-        // TODO: This
         let userData, challenges, ready = true;
         try {
             userData = (await this.getUser("self")).d;
@@ -183,6 +188,31 @@ class APIClass extends Component {
             }).catch(reject);
         });
     };
+
+    add_2fa = () => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.ADD_2FA,
+                method: "post",
+                headers: this._getHeaders()
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    };
+
+    verify_2fa = (otp) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.VERIFY_2FA,
+                method: "post",
+                headers: this._getHeaders(),
+                data: {otp: otp}
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    }
 
     register = (username, password, email) => {
         return new Promise((resolve, reject) => {

@@ -2,14 +2,8 @@ import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile, GiThorHammer } from "react-icons/gi";
 import styled, { css } from "styled-components";
 
-import { HR, SectionTitle } from "../../components/Misc";
-import Button, { ButtonRow } from "../../components/Button";
-import ToggleButton from "../../components/ToggleButton";
-import TabbedView from "../../components/TabbedView";
+import { Page, HR, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
 
-import { Form, FormError, Input, apiContext, appContext } from "ractf";
-
-import Page from "./bases/Page";
 import theme from "theme";
 
 const OptionTitle = styled.p`
@@ -152,7 +146,15 @@ export default () => {
     return <Page title={"Settings for " + api.user.username}>
         <TabbedView>
             <div label="User">
-                <Form handle={changeUsername} locked>
+                {
+                    api.user['2fa_status'] !== "on" && <>
+                        <FormError>Your account has 2 factor authentication <b>DISABLED</b></FormError>
+                        <Button to={"/settings/2fa"}>Enable 2FA Now!</Button>
+                        <HR />
+                    </>
+                }
+
+                <Form handle={changeUsername}>
                     <OptionTitle>Username</OptionTitle>
                     <Input name={"name"} val={api.user.username} limit={36} placeholder={"Username"} />
 
