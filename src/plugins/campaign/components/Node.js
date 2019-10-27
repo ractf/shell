@@ -11,28 +11,34 @@ import { theme } from "ractf";
 
 const ChalNode = styled.div`
     width: ${plugin_theme.node_size};
-    height: ${plugin_theme.node_size};
-    @media only screen and (max-width: 600px) {
-        width: ${plugin_theme.node_size_small};
-        height: ${plugin_theme.node_size_small};    
-    }
-    border-radius: 50%;
+    padding-bottom: ${plugin_theme.node_size};
+    box-sizing: content-box;
+    border-radius: 5%;
     border: 4px solid ${theme.bg_l1};
     background-color: ${transparentize(.4, theme.bg)};
     position: relative;
     color: ${theme.fg};
-    padding: 16px;
+    position: relative;
+
+    @media (max-width: 600px) {
+        border-width: 2px;
+        font-size: .6em;
+    }
 
     >*:first-child {
-        position: relative;
-        font-size: 1.2em;
+        position: absolute;
+        font-size: ${props => props.largeName ? "2.4em" : "1.2em"};
         width: ${plugin_theme.node_inner};
 
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        width: 90%;
+        max-height: 90%;
+        overflow: hidden;
+        overflow-wrap: break-word;
 
-        z-index: 50;
+        z-index: 20;
         color: ${theme.fg};
         font-weight: 400;
     }
@@ -68,6 +74,9 @@ const ChalNode = styled.div`
             background-color: #66bb6633;
         }
     `}
+    ${props => props.orange && css`
+        border-color: #740;
+    `}
 `;
 
 
@@ -76,7 +85,10 @@ const LockRight = styled.div`
         font-size: ${plugin_theme.icon_size};
         position: absolute;
         top: 50%;
-        left: calc(100% + ${plugin_theme.node_margin} + 4px);
+        left: calc(120% + 4px);
+        @media (max-width: 600px) {
+            left: calc(120% + 2px);
+        }
         transform: translate(-50%, -50%);
 
         color: ${props => props.lockDoneR ? "#6b6" : props.lockUnlockedR ? theme.bg_l3 : theme.bg_l2};
@@ -87,13 +99,26 @@ const LockRight = styled.div`
 const LockDown = styled(LockRight)`
     &>svg {
         left: 50%;
-        top: calc(100% + ${plugin_theme.node_margin} + 4px);
+        top: calc(120% + 4px);
+        @media (max-width: 600px) {
+            top: calc(120% + 2px);
+        }
         color: ${props => props.lockDoneD ? "#6b6" : props.lockUnlockedD ? theme.bg_l3 : theme.bg_l2};
     }
 `;
 
 
 export default props => {
+    const toggle = side => {
+        return e => {
+            if (props.isEdit) {
+                e.preventDefault();
+                e.stopPropagation();
+                props.toggleLink(side);
+            }
+        };
+    };
+
     return (
         <ChalNode tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) ? props.click : null} {...props}>
             <div>{props.name}</div>
@@ -101,10 +126,10 @@ export default props => {
             {props.right && <LockRight {...props}>{props.lockDoneR ? <FaCheck /> : props.lockUnlockedR ? <FaLockOpen /> : <FaLock />}</LockRight>}
             {props.down && <LockDown {...props}>{props.lockDoneD ? <FaCheck /> : props.lockUnlockedD ? <FaLockOpen /> : <FaLock />}</LockDown>}
 
-            {props.left && <NodeLink left done={props.done} unlocked={props.unlocked} />}
-            {props.right && <NodeLink right done={props.done} unlocked={props.unlocked} />}
-            {props.up && <NodeLink up done={props.done} unlocked={props.unlocked} />}
-            {props.down && <NodeLink down done={props.done} unlocked={props.unlocked} />}
+            <NodeLink onMouseDown={(e=>{e.preventDefault(); e.stopPropagation()})} onClick={toggle('left')} isEdit={props.isEdit} show={props.left} left done={props.done} unlocked={props.unlocked} />
+            <NodeLink onMouseDown={(e=>{e.preventDefault(); e.stopPropagation()})} onClick={toggle('right')} isEdit={props.isEdit} show={props.right} right done={props.done} unlocked={props.unlocked} />
+            <NodeLink onMouseDown={(e=>{e.preventDefault(); e.stopPropagation()})} onClick={toggle('up')} isEdit={props.isEdit} show={props.up} up done={props.done} unlocked={props.unlocked} />
+            <NodeLink onMouseDown={(e=>{e.preventDefault(); e.stopPropagation()})} onClick={toggle('down')} isEdit={props.isEdit} show={props.down} down done={props.done} unlocked={props.unlocked} />
         </ChalNode>
     );
 };

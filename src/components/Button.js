@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { transparentize } from "polished";
 
 import theme from "theme";
 
@@ -27,6 +28,10 @@ const ButtonTheme = styled.button`
     `}
     ${props => props.lesser && css`
         background: none;
+    `}
+    ${props => props.warning && css`
+        background: ${transparentize(.7, theme.red)};
+        border-color: ${transparentize(.6, theme.red)};
     `}
 
     ${props => props.disabled ? css`

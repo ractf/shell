@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import admin from "../../static/img/admin.png";
@@ -7,7 +7,6 @@ import beta from "../../static/img/beta.png";
 
 import Page from "./bases/Page";
 import { transparentize } from "polished";
-import { APIContext } from "../controllers/Contexts";
 import theme from "theme";
 
 const Split = styled.div`
@@ -53,7 +52,7 @@ const UserSolves = styled.div`
     flex-grow: 1;
 `;
 
-const UserSpecial_ = styled.div`
+const UserSpecialTheme = styled.div`
     padding: 12px 16px;
     background-color: ${props => transparentize(.7, props.col)};
     border-radius: 21px;
@@ -61,55 +60,57 @@ const UserSpecial_ = styled.div`
     width: 100%;
     text-align: left;
     display: flex;
-`;
-const USIcon = styled.div`
-    width: 42px;
-    height: 42px;
-    border-radius: 21px;
-    background-color: #fff3;
-    margin: -12px -16px;
-    margin-right: 8px;
 
-    background-image: url(${props => props.ico});
-    background-repeat: no-repeat;
-    background-position: center;
+    &>div:first-child {
+        width: 42px;
+        height: 42px;
+        border-radius: 21px;
+        background-color: #fff3;
+        margin: -12px -16px;
+        margin-right: 8px;
+
+        background-image: url(${props => props.ico});
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 `;
 
 const UserSpecial = ({ children, col, ico }) => (
-    <UserSpecial_ col={col}>
-        <USIcon ico={ico} />
+    <UserSpecialTheme col={col} ico={ico}>
+        <div />
         {children}
-    </UserSpecial_>
+    </UserSpecialTheme>
 );
 
-const UserSolve_ = styled.div`
+const UserSolveTheme = styled.div`
     padding: 12px 16px;
     background-color: ${transparentize(.7, theme.bg_d1)};
     margin-bottom: 4px;
     width: 100%;
     text-align: left;
-`;
-const USTitle = styled.div`
-    margin-bottom: 4px;
-`;
-const USPoints = styled.div`
-    font-size: .8em;
+
+    &>div:first-child {
+        margin-bottom: 4px;
+    }
+    &>div:last-child {
+        font-size: .8em;
+    }
 `;
 const UserSolve = ({ challenge }) => {
-    const api = useContext(APIContext);
     // TODO: Properly API this.
     const points = "69696 points";
     const title = "Perculiar Post-it";
 
     return (
-        <UserSolve_>
-            <USTitle>{ title }</USTitle>
-            <USPoints>{ points }</USPoints>
-        </UserSolve_>
+        <UserSolveTheme>
+            <div>{ title }</div>
+            <div>{ points }</div>
+        </UserSolveTheme>
     )
 }
 
 export default () => {
+    document.title = "Bottersnike"
     return <Page title={"Bottersnike's Profile"}>
         <Split>
             <UserMeta>

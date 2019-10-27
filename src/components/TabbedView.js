@@ -54,7 +54,7 @@ export default ({ center, children, callback, initial }) => {
         <>
             <TabButtonRow center={center}>
                 {children.map((c, i) =>
-                    <Button key={i} click={(() => { active !== i && setActive(i) })} medium
+                    c && <Button key={i} click={(() => { active !== i && setActive(i) })} medium
                         className={i === active ? "active" : ""}>
                         {c.props.label}</Button>)}
             </TabButtonRow>

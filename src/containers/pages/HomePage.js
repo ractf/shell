@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Button from "../../components/Button";
-import { HR, SectionTitle, SectionTitle2 } from "../../components/Misc";
-import { APIContext } from "../controllers/Contexts";
+import { HR, SectionTitle } from "../../components/Misc";
 
 import Page from "./bases/Page";
 
@@ -67,18 +66,16 @@ const Block = styled.div`
 `;
 
 export default () => {
-    const api = useContext(APIContext);
-
     return <Page vCentre>
 
         <SectionTitle>Welcome to RACTF!</SectionTitle>
         <Block>
-            To get started, head on over to the <Link to={"/campaign"}>challenges page</Link>!<br/>
+            To get started, head on over to the <Link to={"/campaign"}>challenges page</Link>!<br />
             Alternatively, check the <Link to={"/leaderboard"}>leaderboard</Link> to see how everyone's getting on.
         </Block>
 
         <NewsContainer>
-                <NewsTitle>News</NewsTitle>
+            <NewsTitle>News</NewsTitle>
             <div>
                 <NewsFlexbox>
                     <NewsBlock><News1 /></NewsBlock>

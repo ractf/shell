@@ -29,6 +29,7 @@ const PageContent = styled.div`
     margin: auto;
     flex-grow: 1;
     width: 100%;
+    text-align: center;
     ${props => props.vCentre && css`
         display: flex;
         flex-direction: column;
@@ -128,7 +129,7 @@ const LinkDropdown = ({ name, children }) => {
 }
 
 
-const Page = ({ title, url, children, vCentre }) => {
+const Page = ({ title, url, children, vCentre, selfContained }) => {
     const api = useContext(APIContext);
 
     return (
@@ -146,7 +147,7 @@ const Page = ({ title, url, children, vCentre }) => {
                     {api.authenticated
                         ? <>
                             <HeadLink to={"/campaign"}>Challenges</HeadLink>
-                            <HeadLink to={"/team"}>My Team</HeadLink>
+                            <HeadLink to={api.team ? "/team" : "/team/join"}>My Team</HeadLink>
                             <LinkDropdown name={api.user.username}>
                                 <HeadLink to={"/profile"}>Profile</HeadLink>
                                 <HeadLink to={"/settings"}>Settings</HeadLink>
@@ -156,9 +157,11 @@ const Page = ({ title, url, children, vCentre }) => {
                         : <HeadLink to={"/login"}>Login</HeadLink>}
                 </HeadLinks>
             </PageHead>
-            <PageContent vCentre={vCentre}>
-                {children}
-            </PageContent>
+            {selfContained ? children :
+                <PageContent vCentre={vCentre}>
+                    {children}
+                </PageContent>
+            }
         </>
     );
 }

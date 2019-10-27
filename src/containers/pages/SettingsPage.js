@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile, GiThorHammer } from "react-icons/gi";
 import styled, { css } from "styled-components";
 
-import { Page, HR, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
+import { Page, HR, ButtonRow, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
 
 import theme from "theme";
 
@@ -92,10 +92,10 @@ const makeOwner = (api, app, member) => {
 }
 
 
-const TeamMember = ({ api, app, member, isOwner }) => {
+const TeamMember = ({ api, app, member, isOwner, isCaptain }) => {
     return <MemberTheme>
-        <MemberIcon clickable={isOwner} onClick={isOwner && makeOwner(api, app, member)} active={member.isCaptain}><GiCaptainHatProfile /></MemberIcon>
-        {(isOwner && !member.isCaptain) && <MemberIcon onClick={kickMember(api, app, member)} clickable bad><GiThorHammer /></MemberIcon>}
+        <MemberIcon clickable={isOwner} onClick={isOwner ? makeOwner(api, app, member) : null} active={isCaptain}><GiCaptainHatProfile /></MemberIcon>
+        {(isOwner && !isCaptain) && <MemberIcon onClick={kickMember(api, app, member)} clickable bad><GiThorHammer /></MemberIcon>}
         <div>
             {member.name}
         </div>
@@ -141,7 +141,7 @@ export default () => {
         setTeamError("Not implemented!");
     }
 
-    const teamOwner = api.team.isOwner;
+    const teamOwner = (api.team ? api.team.owner.id === api.user.id : null);
 
     return <Page title={"Settings for " + api.user.username}>
         <TabbedView>
@@ -172,24 +172,37 @@ export default () => {
                 </Form>
             </div>
             <div label="Team">
-                <Form handle={alterTeam} locked={!teamOwner}>
-                    {teamOwner ?
-                        <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
-                        : <Row>
+                {api.team ? <>
+                    <Form handle={alterTeam} locked={!teamOwner}>
+                        {teamOwner ?
                             <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
-                            <Button warning>Leave Team</Button>
-                        </Row>}
-                    <Input val={api.team.description} name={"desc"} rows={5} placeholder={"Team Description"} />
-                    <Input val={api.team.password} name={"pass"} password placeholder={"Team Password"} />
+                            : <Row>
+                                <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
+                                <Button warning>Leave Team</Button>
+                            </Row>}
+                        <Input val={api.team.description} name={"desc"} rows={5} placeholder={"Team Description"} />
+                        <Input val={api.team.password} name={"pass"} password placeholder={"Team Password"} />
 
-                    {teamError && <FormError>{teamError}</FormError>}
-                    {teamOwner && <Button submit>Modify Team</Button>}
-                </Form>
+                        {teamError && <FormError>{teamError}</FormError>}
+                        {teamOwner && <Button submit>Modify Team</Button>}
+                    </Form>
+                </> : <div label="Team">
+                    You are not in a team!
+                    <br /><br />
+                    To be able to participate, you must join or create a team (even if you never invite anyone).
+                    <HR />
+                    <ButtonRow>
+                        <Button to={"/team/join"}>Join a Team</Button>
+                        <Button to={"/team/new"}>Create a Team</Button>
+                    </ButtonRow>
+                </div>}
             </div>
-            <div label="Team Members">
-                <br />
-                {api.team.members.map((i, n) => <TeamMember key={n} api={api} app={app} isOwner={teamOwner} member={i} />)}
-            </div>
+            {api.team &&
+                <div label="Team Members">
+                    <br />
+                    {api.team.members.map((i, n) => <TeamMember key={n} api={api} app={app} isCaptain={i.id === api.team.owner.id} isOwner={teamOwner} member={i} />)}
+                </div>
+            }
         </TabbedView>
     </Page>;
 };

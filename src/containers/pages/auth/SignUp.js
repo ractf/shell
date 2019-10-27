@@ -24,11 +24,7 @@ export default () => {
         setLocked(true);
         api.register(username, passwd1, email).catch(
             message => {
-                if (message.response && message.response.data)
-                    setMessage(message.response.data.m);
-                else if (message.message)
-                    setMessage(message.message);
-                else setMessage("Unknown error occured.");
+                setMessage(api.getError(message))
                 setLocked(false);
             }
         );

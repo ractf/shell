@@ -74,6 +74,7 @@ const LogoutLink = styled(Link)`
 const FootMainWrap = styled.div`
     display: flex;
     flex-wrap: wrap;
+    padding-top: 8px;
 `;
 const FG = styled.div`flex-grow: 1`;
 
@@ -103,7 +104,7 @@ const FootMain = () => <FootMainWrap>
 export default () => {
     const api = useContext(APIContext);
     return <Foot>
-        {api.authenticated ? <FootText /> : null}
+        {/*api.authenticated ? <FootText /> : null*/}
         <FootMain />
     </Foot>
 };

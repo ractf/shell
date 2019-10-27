@@ -9,7 +9,7 @@ import Page from "./Page"
 export default (props) =>
     <Page title={props.title} url={props.website}>
         {props.underTitle
-            ? <SectionHeading>69th Place</SectionHeading>
+            ? <SectionHeading>{props.underTitle}</SectionHeading>
             : null}
         {props.description
             ? <TextBlock>{props.description}</TextBlock>

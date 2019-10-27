@@ -14,7 +14,7 @@ export default styled.div`
     color: ${theme.fg};
     display: flex;
     align-items: center;
-    max-width: 400px;
+    max-width: 300px;
     margin-right: 16px;
 
     &:hover {

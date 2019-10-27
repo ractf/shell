@@ -69,6 +69,9 @@ export const GlobalStyle = createGlobalStyle`
         width: 100%;
         align-items: center;
     }
+    #root>* {
+        width: 100%;
+    }
 
     a {
         text-decoration: none;
@@ -91,6 +94,22 @@ export const GlobalStyle = createGlobalStyle`
 
     b {
         font-weight: 500;
+    }
+    
+    .redacted {
+        user-select: none;
+        position: relative;
+    }
+    .redacted::after {
+        background: #000;
+        border-radius: .1em;
+        box-shadow: 0 0 1px rgba(0, 0, 0, .35);
+        content: " ";
+        width: 100%;
+        height: 1.2em;
+        left: 0;
+        position: absolute;
+        transform: skewY(-5deg) rotate(5deg);
     }
 `;
 
@@ -122,10 +141,6 @@ const SiteWarning = styled.div`
 `;
 
 const PageWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
 `;
 
 
@@ -218,11 +233,10 @@ Keyboard interrupt received, exiting.
                         {this.state.particles_js ? <StyledParticles params={particles_js_config} /> : null}
                         <Normalize />
                         <GlobalStyle />
-                        <PageWrap>
-                            <Header />
-                            <Routes />
-                            <Footer />
-                        </PageWrap>
+
+                        <Header />
+                        <Routes />
+                        <Footer />
                     </>}</APIContext.Consumer></API>
                 </BrowserRouter>
                 

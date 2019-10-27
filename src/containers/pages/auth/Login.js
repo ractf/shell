@@ -33,17 +33,9 @@ export default () => {
                         });
                     }
                     faPrompt();
-                } else if (message.response && message.response.data) {
-                    // We got a response from the server, but it wasn't happy with something
-                    setMessage(message.response.data.m);
-                    setLocked(false);
-                } else if (message.message) {
-                    // We didn't get a response from the server, but the browser is happy to tell us why
-                    setMessage(message.message);
-                    setLocked(false);
                 } else {
-                    setMessage("Unknown error occured.");
-                    setLocked(false);
+                    setMessage(api.getError(message));
+                    setLocked(false);   
                 }
             }
         );

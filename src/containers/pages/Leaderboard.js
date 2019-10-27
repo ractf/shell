@@ -9,9 +9,6 @@ import { darken } from "polished";
 import theme from "theme";
 
 
-let Plotly;
-
-
 const GraphEl = styled.div`
     width: 100%;
     margin: auto;
@@ -61,11 +58,11 @@ export default () => {
     let initDone = [false, false];
     const tabSwitch = i => {
         if (initDone[i]) return;
+        if (!window.Plotly) return setTimeout(() => {tabSwitch(i)}, 500);
         initDone[i] = true;
-        if (!Plotly) return;
 
         if (i === 0) {
-            Plotly.react(userGraphEl.current, userGraphData, {
+            window.Plotly.react(userGraphEl.current, userGraphData, {
                 plot_bgcolor: theme.bg,
                 paper_bgcolor: theme.bg,
                 font: {
@@ -76,7 +73,7 @@ export default () => {
                 responsive: true
             });
         } else {
-            Plotly.react(teamGraphEl.current, teamGraphData, {
+            window.Plotly.react(teamGraphEl.current, teamGraphData, {
                 plot_bgcolor: theme.bg,
                 paper_bgcolor: theme.bg,
                 font: {

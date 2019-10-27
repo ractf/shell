@@ -5,6 +5,7 @@ import Button, { ButtonRow } from "./Button";
 import Form from "./Form";
 import Input from "./Input";
 
+//import { appContext } from "ractf";
 import theme from "theme";
 
 
@@ -40,9 +41,14 @@ const ModalBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 75vw;
     width: ${props => props.small ? "auto" :" 930px"};
     text-align: ${props => props.centre ? "center" : "inherit"};
+    max-height: 100vh;
+    overflow-y: auto;
+
+    @media only screen and (max-width: 600px) {
+        padding: 32px 12px;
+    }
 `;
 
 const ModalP = styled.p`
@@ -51,13 +57,23 @@ const ModalP = styled.p`
 `;
 
 
-const Modal = ({ onHide, children, centre, small }) =>
-    <ModalWrap>
-        <Darken onMouseDown={(e => e.target.click())} onClick={onHide || (() => null)} />
+const Modal = ({ onHide, children, centre, small }) => {
+    //const app = useContext(appContext);
+    const doHide = hider => {
+        return e => {
+            //app.setModalOpen(false);
+            if (hider)
+                hider(e);
+        }
+    };
+
+    return <ModalWrap>
+        <Darken onMouseDown={(e => e.target.click())} onClick={doHide(onHide)} />
         <ModalBox centre={centre} small={small}>
             {children}
         </ModalBox>
     </ModalWrap>;
+}
 
 
 export const ModalPrompt = ({ body, promise, onHide, inputs }) => {

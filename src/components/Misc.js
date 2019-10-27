@@ -37,12 +37,16 @@ export const CTFContainer = styled.div`
 `;
 
 export const TextBlock = styled.div`
-    margin: 1.5em;
+    margin: 1.5em .5em;
     font-size: 1rem;
     background-color: rgba(24,22,36,0.4);
     padding: 1em 2em;
     border-radius: 2px;
     white-space: pre-wrap;
+
+    @media only screen and (max-width: 600px) {
+        margin: 1.5em 8px;
+    }
 `;
 
 export const SubtleText = styled.div`
@@ -55,7 +59,7 @@ export const SectionBlurb = styled.div`
     margin: auto;    
     margin-bottom: 24px;
     width: 100%;
-    max-width: 800px;
+    max-width: calc(100% - 72px);
     line-height: 1.25;
 
     &>br {

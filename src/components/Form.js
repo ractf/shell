@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 
 const FormWrap = styled.div`
+    width: 100%;
+
     >div {
         margin-bottom: 16px;
     }
@@ -56,7 +58,7 @@ export default ({ children, submit, button, handle, locked }) => {
                 newArray[n] = cloneElement(i, {
                     key: key++,
                     ref: ref,
-                    disabled: locked,
+                    disabled: i.props.disabled || locked,
                     click: submitFunc
                 });
                 button = ref;
@@ -68,7 +70,7 @@ export default ({ children, submit, button, handle, locked }) => {
                 newArray[n] = cloneElement(i, {
                     key: key++,
                     ref: ref,
-                    disabled: locked,
+                    disabled: i.props.disabled || locked,
                     next: refs.length > 0 ? refs[refs.length - 1] : button
                 });
                 refs.push(ref);
