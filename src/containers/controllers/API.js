@@ -6,11 +6,9 @@ import { APIContext } from "./Contexts";
 
 
 class APIClass extends Component {
-    PROTOCOL = "http:";
-    DOMAIN = "//kylesbank.me:8889";
-    API_BASE = "";
-    BASE_URL = this.PROTOCOL + this.DOMAIN + this.API_BASE;
-
+    DOMAIN = process.env.REACT_APP_API_DOMAIN;
+    API_BASE = process.env.REACT_APP_API_BASE;
+    BASE_URL = this.DOMAIN + this.API_BASE;
     ENDPOINTS = {
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
@@ -32,23 +30,23 @@ class APIClass extends Component {
 
     constructor() {
         super();
-
+        
         let userData, challenges, teamData;
         try {
             userData = JSON.parse(localStorage.getItem("userData"));
-        } catch(e) {
+        } catch (e) {
             userData = undefined;
         }
-        
+
         try {
             challenges = JSON.parse(localStorage.getItem("challenges"));
-        } catch(e) {
+        } catch (e) {
             challenges = [];
         }
-        
+
         try {
             teamData = JSON.parse(localStorage.getItem("teamData"));
-        } catch(e) {
+        } catch (e) {
             teamData = {};
         }
 
@@ -99,7 +97,32 @@ class APIClass extends Component {
         }
         // TITSUP!
         return "Unknown error occured.";
-    }
+    };
+
+    get = url => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + url,
+                method: "get",
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    };
+
+    post = (url, data) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + url,
+                method: "post",
+                data: data,
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    };
 
     _getHeaders = () => {
         let headers = {};
@@ -108,17 +131,7 @@ class APIClass extends Component {
         return headers;
     };
 
-    _getChallenges = () => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.CHALLENGES,
-                method: "get",
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
+    _getChallenges = () => this.get(this.ENDPOINTS.CHALLENGES);
 
     _reloadCache = async () => {
         let userData, teamData, challenges, ready = true;
@@ -128,7 +141,7 @@ class APIClass extends Component {
             if (e.response && e.response.data)
                 return this.logout();
             ready = false;
-            this.setState({ready: false});
+            this.setState({ ready: false });
         }
 
         try {
@@ -140,7 +153,7 @@ class APIClass extends Component {
                 if (e.response && e.response.data)
                     return this.logout();
                 ready = false;
-                this.setState({ready: false});
+                this.setState({ ready: false });
             }
         }
 
@@ -152,7 +165,7 @@ class APIClass extends Component {
             ready = false;
         }
 
-        let newState = {ready: ready, authenticated: true};
+        let newState = { ready: ready, authenticated: true };
         if (ready) {
             localStorage.setItem("userData", JSON.stringify(userData));
             localStorage.setItem("teamData", JSON.stringify(teamData));
@@ -172,78 +185,42 @@ class APIClass extends Component {
         this.props.history.push("/home");
     };
 
-    modifyUser = ({ oPass=null, nPass=null }) => {
+    modifyUser = ({ oPass = null, nPass = null }) => {
         return new Promise((resolve, reject) => {
             reject("Nope.");
         })
     }
 
     getUser = (id) => {
-        let url = this.BASE_URL;
-        if (id === "self")
-            url += this.ENDPOINTS.USER_SELF;
-        else
-            url += this.ENDPOINTS.USER + id;
-
-        return new Promise((resolve, reject) => {
-            axios({
-                url: url,
-                method: "get",
-                headers: this._getHeaders()
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
+        return this.get(id === "self" ? this.ENDPOINTS.USER_SELF : this.ENDPOINTS.USER + id);
     };
 
     getTeam = (id) => {
-        let url = this.BASE_URL;
-        if (id === "self")
-            url += this.ENDPOINTS.TEAM_SELF;
-        else
-            url += this.ENDPOINTS.TEAM + id;
-
-        return new Promise((resolve, reject) => {
-            axios({
-                url: url,
-                method: "get",
-                headers: this._getHeaders()
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
+        return this.get(id === "self" ? this.ENDPOINTS.TEAM_SELF : this.ENDPOINTS.TEAM + id);
     };
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.TEAM_CREATE,
-                method: "post",
-                headers: this._getHeaders(),
-                data: {name: name, password: password}
-            }).then(async response => {
+            this.post(this.ENDPOINTS.TEAM_CREATE, { name: name, password: password }
+            ).then(async data => {
                 let team = (await this.getTeam("self")).d
-                this.setState({team: team});
+                this.setState({ team: team });
                 localStorage.setItem("teamData", team);
 
-                resolve(response.data);
+                resolve(data);
             }).catch(reject);
         });
     };
 
     joinTeam = (name, password) => {
         return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.TEAM_JOIN,
-                method: "post",
-                headers: this._getHeaders(),
-                data: {name: name, password: password}
-            }).then(async response => {
+            this.post(this.ENDPOINTS.TEAM_JOIN, { name: name, password: password }
+            ).then(async data => {
                 let team = (await this.getTeam("self")).d
-                this.setState({team: team});
+                this.setState({ team: team });
                 localStorage.setItem("teamData", team);
 
-                resolve(response.data);
+                resolve(data);
             }).catch(reject);
         });
     };
@@ -260,69 +237,28 @@ class APIClass extends Component {
         })
     };
 
-    login = (username, password, otp=null) => {
-        let payload = {username: username, password: password}
+    login = (username, password, otp = null) => {
+        let payload = { username: username, password: password }
         if (otp) payload.otp = otp;
 
         return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.LOGIN,
-                method: "post",
-                headers: this._getHeaders(),
-                data: payload
-            }).then(response => {
-                this._postLogin(response.data.d.token);
+            this.post(this.ENDPOINTS.LOGIN, payload
+            ).then(data => {
+                this._postLogin(data.d.token);
                 resolve();
             }).catch(reject);
         });
     };
 
-    add_2fa = () => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.ADD_2FA,
-                method: "post",
-                headers: this._getHeaders()
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
-
-    verify_2fa = (otp) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.VERIFY_2FA,
-                method: "post",
-                headers: this._getHeaders(),
-                data: {otp: otp}
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    }
-
-    verify = (uuid) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.VERIFY,
-                method: "post",
-                headers: this._getHeaders(),
-                data: {uuid: uuid}
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    }
+    add_2fa = () => this.post(this.ENDPOINTS.ADD_2FA);
+    verify_2fa = (otp) => this.post(this.ENDPOINTS.VERIFY_2FA, { otp: otp });
+    verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid });
 
     register = (username, password, email) => {
         return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.REGISTER,
-                method: "post",
-                headers: this._getHeaders(),
-                data: { username: username, password: password, email: email }
-            }).then(response => {
+            this.post(this.ENDPOINTS.REGISTER,
+                { username: username, password: password, email: email }
+            ).then(response => {
                 this.props.history.push("/register/email");
                 resolve();
                 return;
@@ -330,16 +266,10 @@ class APIClass extends Component {
         });
     };
 
-    attemptFlag = (flag, challenge) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.BASE_URL + this.ENDPOINTS.FLAG_TEST.replace('<uuid>', challenge.uuid),
-                method: "post",
-                headers: this._getHeaders(),
-                data: {flag: flag}
-            }).then(resolve).catch(reject);
-        });
-    };
+    attemptFlag = (flag, challenge) => this.post(
+        this.ENDPOINTS.FLAG_TEST.replace('<uuid>', challenge.uuid),
+        { flag: flag }
+    );
 
     render() {
         return <APIContext.Provider value={this.state}>{this.props.children}</APIContext.Provider>;

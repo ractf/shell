@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-import * as plugin_theme from "../plugin_theme";
-
 
 const Row = styled.div`
     display: flex;

@@ -57,10 +57,10 @@ export default withRouter(({ location }) => {
         </Route>
 
         <Route exact path={"/team/join"}>
-            <Page title={"Join Team"} noAuth C={JoinTeam} />
+            <Page title={"Join Team"} auth C={JoinTeam} />
         </Route>
         <Route exact path={"/team/new"}>
-            <Page title={"New Team"} noAuth C={CreateTeam} />
+            <Page title={"New Team"} auth C={CreateTeam} />
         </Route>
 
         <Route exact path={"/home"}>

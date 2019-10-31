@@ -98,7 +98,7 @@ export const CreateTeam = () => {
                     <Button medium lesser to={"/settings"}>Settings</Button>
                 </ButtonRow>
             </> : <>
-                <SectionTitle2>Created a Team</SectionTitle2>
+                <SectionTitle2>Create a Team</SectionTitle2>
                 <SubtleText>
                     Did you want to <Link to={"/team/join"}>join a team</Link> instead?
                     </SubtleText>

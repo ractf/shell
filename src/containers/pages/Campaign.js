@@ -1,15 +1,12 @@
 import React, { useState, useContext } from "react";
-import { Redirect } from "react-router-dom";
-import { transparentize } from "polished";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import styled from "styled-components";
 
 import { SectionBlurb } from "../../components/Misc";
-import { APIContext } from "../controllers/Contexts";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button } from "ractf";
+import { plugins, Button, apiContext } from "ractf";
 import theme from "theme";
 
 
@@ -26,7 +23,7 @@ const SBWrap = styled.div`
     position: relative;
     height: 100%;
 
-    @media (max-width: 600px) {
+    @media (max-width: 980px) {
         position: absolute;
         left: 0;
         top: 0;
@@ -125,6 +122,7 @@ export default () => {
     const [activeTab, setActiveTab] = useState(0);
     const [sbHidden, setSbHidden] = useState(false);
     //const app = useContext(appContext);
+    const api = useContext(apiContext);
 
     const showChallenge = (challenge) => {
         return () => {
@@ -132,7 +130,7 @@ export default () => {
             setChallenge(challenge);
             setIsEditor(false);
         }
-    }
+    };
 
     const showEditor = (challenge, saveTo) => {
         return () => {
@@ -144,7 +142,7 @@ export default () => {
             })
             setIsEditor(true);
         }
-    }
+    };
 
     const hideChal = () => {
         setChallenge(null);
@@ -165,30 +163,25 @@ export default () => {
             setIsEditor(false);
             setChallenge(null);
         }
-    }
-
-    const api = useContext(APIContext);
+    };
 
     if (!api.challenges)
         api.challenges = [];
 
-    let handler;
-    let challengeTabs = api.challenges.map((tab, n) => {
-        handler = plugins.categoryType[tab.type];
-        return <div key={n} style={{display: n === activeTab ? "block" : "none"}}>
-            { edit ? 
-                <EditButton click={() => {setEdit(false)}} warning>Stop Editing</EditButton>
-                : <EditButton click={() => {setEdit(true)}} warning>Edit</EditButton>}
-
-            { handler ? <>
-                <SectionBlurb>{tab.desc}</SectionBlurb>
-                { handler.generator(tab, showChallenge, showEditor, edit) }
-            </> : <>
-                Category renderer for type "{ tab.type }" missing!<br/><br/>
-                Did you forget to install a plugin?
-            </>}
-        </div>;
-    });
+    let tab = api.challenges[activeTab];
+    let handler = plugins.categoryType[tab.type];
+    let challengeTab;
+    if (!handler) {
+        challengeTab = <>
+            Category renderer for type "{tab.type}" missing!<br /><br />
+            Did you forget to install a plugin?
+        </>
+    } else {
+        challengeTab = <>
+            <SectionBlurb>{tab.desc}</SectionBlurb>
+            {React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit })}
+        </>
+    }
 
     let chalEl;
     if (challenge || isEditor) {
@@ -199,35 +192,43 @@ export default () => {
 
         if (!handler)
             chalEl = <>
-                Challenge renderer for type "{ challenge.type }" missing!<br/><br/>
+                Challenge renderer for type "{challenge.type}" missing!<br /><br />
                 Did you forget to install a plugin?
             </>;
-        else chalEl = handler.generator(challenge, hideChal, isEditor, saveEdit);
-        
+        else {
+            chalEl = React.createElement(
+                handler.component, {
+                challenge: challenge, hideChal: hideChal,
+                isEditor: isEditor, saveEdit: saveEdit
+            })
+        }
+
         chalEl = <Modal onHide={hideChal}>
-            { chalEl }
+            {chalEl}
         </Modal>;
     }
 
     return <Page title={"Challenges"} selfContained>
-        { chalEl }
-        <div style={{display: "flex", flexGrow: "1"}}>
+        {chalEl}
+        <div style={{ display: "flex", flexGrow: "1" }}>
             <SBWrapWrap><SBWrap>
-            <Sidebar sbHidden={sbHidden}>
-                <div className={"head"}>Categories</div>
-                {
-                    api.challenges.map((tab, n) => 
+                <Sidebar sbHidden={sbHidden}>
+                    <div className={"head"}>Categories</div>
+                    {api.challenges.map((tab, n) =>
                         <div key={n} className={activeTab === n ? "active" : ""}
-                            onClick={() => {setActiveTab(n)}}
+                            onClick={() => { setActiveTab(n) }}
                         >{tab.title}</div>
-                    )
-                }
-            </Sidebar>
-            <SBBurger sbHidden={sbHidden} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft/></SBBurger>
+                    )}
+                </Sidebar>
+                <SBBurger sbHidden={sbHidden} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></SBBurger>
             </SBWrap></SBWrapWrap>
-            <ChallengeBody>
-                { challengeTabs }
-            </ChallengeBody>
+            <ChallengeBody><div>
+                { api.user.admin ? edit ? 
+                    <EditButton click={() => {setEdit(false)}} warning>Stop Editing</EditButton>
+                    : <EditButton click={() => {setEdit(true)}} warning>Edit</EditButton> : null}
+
+                {challengeTab}
+            </div></ChallengeBody>
         </div>
     </Page>;
 };

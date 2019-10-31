@@ -14,7 +14,7 @@ const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
 const getChal = (tab, x, y) => {
     for (let i = 0; i < tab.chal.length; i++) {
         if (tab.chal[i].x === x && tab.chal[i].y === y)
-        return tab.chal[i];
+            return tab.chal[i];
     }
     return {};
 };
@@ -28,7 +28,7 @@ const emptyChallenge = (x, y) => ({
 });
 
 
-const MakeChallenges = (challenges, showChallenge, showEditor, isEdit) => {
+const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) => {
     const [reRender, setReRender] = useState(0);
 
     const toggleLink = chal => {
@@ -78,7 +78,7 @@ const MakeChallenges = (challenges, showChallenge, showEditor, isEdit) => {
             right={!!(chal.link & EAST)} left={!!(chal.link & WEST)}
             name={chal.lock ? "???" : chal.name} />;
     });
-    if (isEdit && max_x < 2) max_x ++;
+    if (isEdit && max_x < 2) max_x++;
 
     rows.forEach((row, n) => {
         while (row.length <= max_x)
@@ -87,18 +87,18 @@ const MakeChallenges = (challenges, showChallenge, showEditor, isEdit) => {
             else row.push(<Spacer key={row.length} />);
 
         rows[n] = <Row key={n}>
-            { row }
+            {row}
         </Row>;
     });
     if (isEdit) {
         let row = [];
-        while (row.length <= max_x) 
+        while (row.length <= max_x)
             if (isEdit)
                 row.push(<AddNode click={showEditor(emptyChallenge(row.length, rows.length), challenges.chal)} key={row.length} />);
             else row.push(<Spacer key={row.length} />);
 
         rows[rows.length] = <Row key={rows.length + 1}>
-            { row }
+            {row}
         </Row>;
     }
 
@@ -107,5 +107,5 @@ const MakeChallenges = (challenges, showChallenge, showEditor, isEdit) => {
 
 
 export default () => {
-    registerPlugin("categoryType", 0, {generator: MakeChallenges});
+    registerPlugin("categoryType", 0, { component: CampaignChallenges });
 }

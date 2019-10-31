@@ -140,9 +140,6 @@ const SiteWarning = styled.div`
     }
 `;
 
-const PageWrap = styled.div`
-`;
-
 
 export default class App extends Component {
     constructor(props) {

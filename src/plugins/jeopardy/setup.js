@@ -7,7 +7,7 @@ import Section from "./components/Section";
 import Challenge from "./components/Challenge";
 
 
-const makeChallenges = (challenges) => {
+const JeopardyChallenges = ({ challenges }) => {
     let sections = [];
 
     challenges.cats.forEach((cat, n) => {
@@ -29,5 +29,5 @@ const makeChallenges = (challenges) => {
 
 
 export default () => {
-    registerPlugin("categoryType", 1, {generator: makeChallenges});
+    registerPlugin("categoryType", 1, { component: JeopardyChallenges });
 }
