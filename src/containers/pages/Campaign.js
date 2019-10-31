@@ -20,15 +20,11 @@ const SBWrapWrap = styled.div`
     position: relative;
 `;
 const SBWrap = styled.div`
-    position: relative;
     height: 100%;
-
-    @media (max-width: 980px) {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 30;
-    }
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 30;
 `;
 const SBBurger = styled.div`
     position: absolute;
