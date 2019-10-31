@@ -223,7 +223,7 @@ export default () => {
                 <SBBurger sbHidden={sbHidden} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></SBBurger>
             </SBWrap></SBWrapWrap>
             <ChallengeBody><div>
-                { api.user.admin ? edit ? 
+                { api.user.is_admin ? edit ? 
                     <EditButton click={() => {setEdit(false)}} warning>Stop Editing</EditButton>
                     : <EditButton click={() => {setEdit(true)}} warning>Edit</EditButton> : null}
 
