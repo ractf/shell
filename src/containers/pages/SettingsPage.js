@@ -1,75 +1,9 @@
 import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile, GiThorHammer } from "react-icons/gi";
-import styled, { css } from "styled-components";
 
 import { Page, HR, ButtonRow, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
 
-import theme from "theme";
-
-const OptionTitle = styled.p`
-    font-size: 1.3em;
-    text-align: left;
-    margin: .3em 8px;
-    margin-top: 16px;
-    &:first-child {
-        margin-top: 8px;
-    }
-`;
-
-
-const Row = styled.div`
-    display: flex;
-    margin-bottom: 16px;
-    
-    &>* {
-        flex-grow: 1;
-        min-width: auto;
-        width: auto;
-        margin: 0;
-        margin-right: 8px;
-    }
-    &>*:last-child {
-        flex-grow: 0;
-        margin-right: 0;
-    }
-`;
-
-
-
-const MemberTheme = styled.div`
-    display: flex;
-    text-align: left;
-    font-size: 1.2em;
-    padding: 2px 16px;
-
-    >*:last-child {
-        flex-grow: 1;
-        width: 100%;
-        word-break: break-all;
-    }
-    >* {
-        flex-shrink: 0;
-    }
-`;
-
-
-const MemberIcon = styled.div`
-    font-size: 1.5em;
-    margin-right: 12px;
-    opacity: .2;
-
-    ${props => props.clickable && css`
-        cursor: pointer;
-        transition: 200ms ease opacity;
-
-        &:hover {
-            opacity: 1;
-        }
-    `}
-        
-    ${props => props.bad && css`color: ${theme.red}`}
-    ${props => props.active && css`opacity: 1; cursor: default; color: ${theme.bgreen}`}
-`;
+import "./SettingsPage.scss";
 
 
 const kickMember = (api, app, member) => {
@@ -79,7 +13,7 @@ const kickMember = (api, app, member) => {
         }).catch(() => {
         });
     }
-}
+};
 
 
 const makeOwner = (api, app, member) => {
@@ -89,18 +23,18 @@ const makeOwner = (api, app, member) => {
         }).catch(() => {
         });
     }
-}
+};
 
 
 const TeamMember = ({ api, app, member, isOwner, isCaptain }) => {
-    return <MemberTheme>
-        <MemberIcon clickable={isOwner} onClick={isOwner ? makeOwner(api, app, member) : null} active={isCaptain}><GiCaptainHatProfile /></MemberIcon>
-        {(isOwner && !isCaptain) && <MemberIcon onClick={kickMember(api, app, member)} clickable bad><GiThorHammer /></MemberIcon>}
+    return <div className={"memberTheme"}>
+        <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")} onClick={isOwner ? makeOwner(api, app, member) : null}><GiCaptainHatProfile /></div>
+        {(isOwner && !isCaptain) && <div className={"memberIcon clickable bad"} onClick={kickMember(api, app, member)}><GiThorHammer /></div>}
         <div>
             {member.name}
         </div>
-    </MemberTheme>
-}
+    </div>
+};
 
 
 export default () => {
@@ -155,7 +89,7 @@ export default () => {
                 }
 
                 <Form handle={changeUsername}>
-                    <OptionTitle>Username</OptionTitle>
+                    <div className={"optionTitle"}>Username</div>
                     <Input name={"name"} val={api.user.username} limit={36} placeholder={"Username"} />
 
                     {unError && <FormError>{unError}</FormError>}
@@ -176,10 +110,10 @@ export default () => {
                     <Form handle={alterTeam} locked={!teamOwner}>
                         {teamOwner ?
                             <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
-                            : <Row>
+                            : <div className={"row"}>
                                 <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
                                 <Button warning>Leave Team</Button>
-                            </Row>}
+                            </div>}
                         <Input val={api.team.description} name={"desc"} rows={5} placeholder={"Team Description"} />
                         <Input val={api.team.password} name={"pass"} password placeholder={"Team Password"} />
 

@@ -1,20 +1,6 @@
 import React, { cloneElement, createRef } from "react";
-import styled from "styled-components";
 
-
-const FormWrap = styled.div`
-    width: 100%;
-
-    >div {
-        margin-bottom: 16px;
-    }
-    >div:last-child {
-        margin-bottom: 0;
-    }
-    >div:nth-last-child(2) {
-        margin-bottom: 8px;
-    }
-`;
+import "./Form.scss";
 
 
 export default ({ children, submit, button, handle, locked }) => {
@@ -32,7 +18,7 @@ export default ({ children, submit, button, handle, locked }) => {
         if (handle)
             handle(data);
     }
-    
+
     if (submit) submit.callback = submitFunc;
 
     let key = 0;
@@ -91,15 +77,11 @@ export default ({ children, submit, button, handle, locked }) => {
     }
     let [components] = recursor(children);
 
-    return <FormWrap>
+    return <div className={"formWrapper"}>
         {components}
-    </FormWrap>;
+    </div>;
 }
 
-export const FormError = styled.div`
-    color: #ac3232;
-    font-weight: 500;
-    font-size: 1.2em;
-    white-space: pre-wrap;
-    line-height: 1.5;
-`;
+export const FormError = ({ children }) => (
+    <div className={"formError"}>{children}</div>
+);

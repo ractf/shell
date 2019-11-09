@@ -1,0 +1,76 @@
+@import "../Colours.scss";
+
+
+.hr {
+    width: 400px;
+    max-width: 80%;
+    margin: 1rem auto;
+    height: 1px;
+    background-color: #181624;
+}
+
+.sectionTitle {
+    font-family: $titleStack;
+    font-size: 3rem;
+}
+.sectionTitle2 {
+    font-family: $titleStack;
+    font-size: 2rem;
+}
+
+.sectionHeading {
+    font-family: $titleStack;    
+    font-size: 2.3rem;
+    margin-bottom: .5em;
+}
+
+.sectionH2 {
+    font-family: $titleStack;
+    font-size: 1.5rem;
+    margin-bottom: .5em;
+    margin-top: 1em;
+}
+
+.sectionSub {
+    margin-bottom: 2rem;
+}
+
+.ctfContainer {
+    max-width: 1000px;
+    width: 100%;
+    height: auto;
+}
+
+.textBlock {
+    margin: 1.5em .5em;
+    font-size: 1rem;
+    background-color: rgba(24,22,36,0.4);
+    padding: 1em 2em;
+    border-radius: 2px;
+    white-space: pre-wrap;
+    font-family: $monoStack;
+
+    @media only screen and (max-width: 600px) {
+        & {
+            margin: 1.5em 8px;
+        }
+    }
+}
+
+.subtleText {
+    opacity: .9;
+    font-size: .9em;
+    margin-top: 1em;
+}
+
+.sectionBlurb {
+    margin: auto;    
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: calc(100% - 72px);
+    line-height: 1.25;
+
+    &>br {
+        line-height: 1.8;
+    }
+}

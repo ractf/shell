@@ -1,25 +1,14 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
 
 import { apiContext, appContext, Button, Input, TextBlock, Form, FormError } from "ractf";
 
-import { Title, ChalWorth, ChalMeta } from "./Text";
-
 import File from "./File";
 import Hint from "./Hint";
-import { LinkGroup } from "./ChallengeLinks"
+
+import "./Challenge.scss";
 
 
 const HintModal = () => <h1>hi</h1>
-
-
-const ChallengeBrief = styled(TextBlock)`
-    font-family: 'Special Elite', 'Robot Mono', monospace;
-    text-align: left;
-    line-height: 1.5;
-`;
-
-const EditorForm = styled.div`width: 100%;`;
 
 
 export default ({ challenge, doHide, isEditor, saveEdit }) => {
@@ -70,10 +59,10 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
     return <>
         {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
 
-        { isEditor ? <EditorForm><Form handle={saveEdit(challenge)}>
+        { isEditor ? <div style={{width: "100%"}}><Form handle={saveEdit(challenge)}>
             <Input val={challenge.uuid} name={"uuid"} hidden />
             <Input val={challenge.name} name={"name"} placeholder={"Challenge Name"} />
-            <ChalWorth><Input val={challenge.points} name={"points"} placeholder={"Challenge Points"} format={/\d+/} /> Points</ChalWorth>
+            <div className={"challengeWorth"}><Input val={challenge.points} name={"points"} placeholder={"Challenge Points"} format={/\d+/} /> Points</div>
 
             <br/>
             <Input rows={5} val={challenge.desc} name={"desc"} placeholder={"Description"}/>
@@ -83,15 +72,15 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
                 val={challenge.flag} />
             
             <Button submit>Save Challenge</Button>
-        </Form></EditorForm> : <>
-            <Title>{challenge.name}</Title>
-            <ChalWorth>{challenge.points} Points</ChalWorth>
+        </Form></div> : <>
+            <div className={"challengeTitle"}>{challenge.name}</div>
+            <div className={"challengeWorth"}>{challenge.points} Points</div>
 
-            <ChalMeta>
+            <div className={"challengeMeta"}>
                 {challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet"}
-            </ChalMeta>
+            </div>
 
-            <ChallengeBrief dangerouslySetInnerHTML={{ __html: challenge.desc }} />
+            <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.desc }} />
 
             {!challenge.solve && <Form handle={tryFlag(challenge)} locked={locked}>
                 <Input placeholder="Flag format: ractf{...}"
@@ -102,16 +91,16 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
                 <Button disabled={!flagValid} submit>Attempt flag</Button>
             </Form>}
 
-            {challenge.files && !!challenge.files.length && <LinkGroup>
+            {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                 {challenge.files.map(file => {
                     return <File name={file.name} url={file.url} size={file.size} />;
                 })}
-            </LinkGroup>}
-            {challenge.hint && !!challenge.hint.length && <LinkGroup>
+            </div>}
+            {challenge.hint && !!challenge.hint.length && <div className={"challengeLinkGroup"}>
                 {challenge.hint && !challenge.solve && challenge.hint.map((hint, n) => {
                     return <Hint name={"Hint " + (n + 1)} onClick={promptHint(hint)} points={hint.cost} />;
                 })}
-            </LinkGroup>}
+            </div>}
         </>}
     </>;
 };

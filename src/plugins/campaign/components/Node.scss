@@ -1,0 +1,116 @@
+@import "../../../Colours.scss";
+@import "./Theme.scss";
+
+
+.chalNode {
+    width: $nodeSize;
+    padding-bottom: $nodeSize;
+    box-sizing: content-box;
+    border-radius: 5%;
+    border: 4px solid $bg_l1;
+    background-color: rgba($bg, .6);
+    position: relative;
+    color: $fg;
+    position: relative;
+
+    &>*:first-child {
+        position: absolute;
+        font-size: 1.2em;
+        width: $nodeInner;
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-height: 90%;
+        overflow: hidden;
+        overflow-wrap: break-word;
+
+        z-index: 20;
+        color: $fg;
+        font-weight: 400;
+    }
+    &.largeName>*:first-child {
+        font-size: 2.4em;
+    }
+
+    +div::after, +div::before {
+        background-color: $bg_l1;
+    }
+    margin: 0 $nodeMargin;
+    &:first-child {
+        margin-left: 0;
+    }
+    &:last-child {
+        margin-right: 0;
+    }
+
+    &:not(.done):not(.unlocked) {
+        color: $bg_l2;
+        user-select: none;
+    }
+    &.done, &.unlocked {
+        cursor: pointer;
+        color: $bg_l3;
+        border-color: $bg_l3;
+
+        &:hover {
+            background-color: rgba($bg_l1, .33);
+        }
+    }
+
+    &.done {
+        border-color: #6b6;
+        color: #6b6;
+        
+        &:hover {
+            background-color: #66bb6633;
+        }
+    }
+    &.orange {
+        border-color: #740;
+    }
+}
+
+.lockRight, .lockDown {
+    &>svg {
+        font-size: $iconSize;
+        position: absolute;
+        top: 50%;
+        left: calc(120% + 4px);
+        transform: translate(-50%, -50%);
+        color: $bg_l2;
+    }
+    &.lockUnlockedR>svg {
+        color: $bg_l3;
+    }
+    &.lockDoneR>svg {
+        color: #6b6;
+    }
+}
+.lockDown {
+    &>svg {
+        left: 50%;
+        top: calc(120% + 4px);
+        color: $bg_l2;
+    }
+    &.lockUnlockedD>svg {
+        color: $bg_l3;
+    }
+    &.lockDoneD>svg {
+        color: #6b6;
+    }
+}
+
+@media (max-width: 600px) {
+    .chalNode {
+        border-width: 2px;
+        font-size: .6em;
+    }
+    .lockRight>svg {
+        left: calc(120% + 2px);
+    }
+    .lockDown>svg {
+        top: calc(120% + 2px);
+    }
+}

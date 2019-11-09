@@ -1,0 +1,141 @@
+@import "../../Colours.scss";
+
+* {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 100%;
+}
+
+body,
+html {
+    font-family: $fontStack;
+    background-color: $bg;
+    color: $fg;
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-size: 1.05rem;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    align-items: center;
+}
+#root > * {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: #337ab7;
+    margin: 0;
+    padding: 0;
+
+    &:hover {
+        color: #23527c;
+        text-decoration: underline;
+    }
+}
+
+ul {
+    text-align: left;
+}
+ul > li {
+    margin: 16px 0;
+}
+
+b {
+    font-weight: 500;
+}
+
+.redacted {
+    user-select: none;
+    position: relative;
+}
+.redacted::after {
+    background: #000;
+    border-radius: 0.1em;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
+    content: " ";
+    width: 100%;
+    height: 1.2em;
+    left: 0;
+    position: absolute;
+    transform: skewY(-5deg) rotate(5deg);
+}
+
+.monospaced {
+    font-family: $monoStack;
+}
+
+.vimDiv {
+    background-color: #000;
+    color: #0f0;
+    width: 100vw;
+    height: 100vh;
+    white-space: pre-line;
+    font-family: $fontStack;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 16px;
+
+    &::after {
+        content: "█";
+        animation: 1s blink step-end infinite;
+    }
+}
+@keyframes blink {
+    from,
+    to {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.siteWarning {
+    position: fixed;
+    background-color: #ac1010;
+    box-shadow: 5px 0 5px #000;
+    top: 0;
+    z-index: 1000;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    transition: 300ms opacity ease;
+    cursor: default;
+
+    &:hover {
+        opacity: 0.5;
+    }
+}
+
+.eventsWrap {
+    position: fixed;
+    bottom: 64px;
+    right: 32px;
+    display: flex;
+    max-height: 80vh;
+    overflow-y: hidden;
+    z-index: 200;
+    width: auto !important;
+    flex-direction: column-reverse;
+}
+
+.eventPopup {
+    background-color: $bg_d1;
+    border: 1px solid $bg_l1;
+    display: inline-block;
+    width: 300px;
+    margin-top: 16px;
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFile } from "react-icons/fa";
 
-import ChallengeLink, { LinkMeta } from "./ChallengeLinks";
+import "./Challenge.scss";
 
 
 export default ({ name, url, size }) => {
@@ -16,11 +16,11 @@ export default ({ name, url, size }) => {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    return <ChallengeLink>
+    return <div className={"challengeLink"}>
         <FaFile />
         <div>
             <a href={url} target={"_blank"}>{name}</a>
-            <LinkMeta>{formatBytes(size)}</LinkMeta>
+            <div className={"challengeLinkMeta"}>{formatBytes(size)}</div>
         </div>
-    </ChallengeLink>;
+    </div>;
 }

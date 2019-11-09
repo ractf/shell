@@ -1,14 +1,10 @@
-import styled, { css } from "styled-components";
+import React from "react";
+
+import "./Children.scss"
 
 
-export default styled.div`
-    text-align: left;
-
-    max-height: ${props => props.openHeight};
-    transition: max-height 200ms ease;
-    overflow-y: hidden;
-
-    ${props => !props.open && css`
-        max-height: 0;
-    `}
-`;
+export default ({open, openHeight, children}) => {
+    let cn = "jpChildren";
+    if (open) cn += " open";
+    return <div className={cn} style={{maxHeight: openHeight}}>{children}</div>
+};

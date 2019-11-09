@@ -1,168 +1,62 @@
 import React, { useContext } from "react";
-import { transparentize } from "polished";
-import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 
 import { FaLink } from "react-icons/fa";
-import theme from "theme";
-import { APIContext } from "../../controllers/Contexts";
+import { apiContext } from "ractf";
 
+import "./Page.scss";
 
-const PageHead = styled.div`
-    width: 100%;
-    background-color: ${transparentize(.27, theme.bg_d1)};
-    padding: 24px;
-    @media (max-width: 600px) {
-        padding: 4px
-    }
-    padding-bottom: 8px;
-    ${props => props.minimal && css`
-        padding-top: 0;
-    `}
-    text-align: center;
-    font-size: 2em;
-    position: relative;
-`;
-const PageContent = styled.div`
-    padding: 32px 64px;
-    max-width: 1200px;
-    margin: auto;
-    flex-grow: 1;
-    width: 100%;
-    text-align: center;
-    ${props => props.vCentre && css`
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
-    `}
-
-    @media only screen and (max-width: 600px) {
-        padding: 16px 32px;
-    }
-    @media only screen and (max-width: 450px) {
-        padding: 16px 4px;
-    }
-`;
-const HeadTitle = styled.div`
-    margin-bottom: 36px;
-    @media (max-width: 600px) {
-        margin-bottom: 24px
-    }
-`;
-
-const HeadLinks = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-`;
-const linkStyle = css`
-    font-size: .9rem;
-    padding: .2em .8em;
-    color: #bbb;
-    cursor: pointer;
-
-    &:hover {
-        color: #eee;
-        text-decoration: none;
-    }
-
-    &:hover > ul {
-        display: flex;
-    }
-`
-const HeadLink = styled(Link)`
-    ${ linkStyle}
-`;
-const HeadItem = styled.div`
-    ${ linkStyle}
-    position: relative;
-`;
-
-const FaLinkIcon = styled(FaLink)`
-    font-size: .5em;
-    color: ${theme.fg};
-    margin-left: .4em;
-
-    :hover {
-        color: #ddd;
-    }
-`;
 
 const LinkIcon = ({ url }) => {
     if (!url) return null;
     return <a href={url}>
-        <FaLinkIcon />
+        <FaLink className={"headLinkIcon"} />
     </a>;
 };
 
 
-const DropdownBody = styled.ul`
-    position: absolute;
-    flex-direction: column;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 100%;
-    padding: 8px 0;
-    display: none;
-    margin: 0;
-    text-align: center;
-    min-width: 100%;
-    z-index: 100;
-
-    &:hover {
-        display: flex;
-    }
-
-    >* {
-        margin: 2px 0;
-    }
-
-    background-color: ${transparentize(.27, theme.bg_d1)};
-`;
 const LinkDropdown = ({ name, children }) => {
-    return <HeadItem style={{ position: "relative" }}>{name}
-        <DropdownBody>
+    return <div className={"headLink"} style={{ position: "relative" }}>{name}
+        <ul className={"headDropdownBody"}>
             {children}
-        </DropdownBody>
-    </HeadItem>
-}
+        </ul>
+    </div>
+};
 
 
-const Page = ({ title, url, children, vCentre, selfContained }) => {
-    const api = useContext(APIContext);
+export default ({ title, url, children, vCentre, selfContained }) => {
+    const api = useContext(apiContext);
 
     return (
         <>
-            <PageHead minimal={!title || title.length === 0}>
-                {title ? <HeadTitle>
+            <div className={"pageHead" + ((!title || title.length === 0) ? " minimal" : "")}>
+                {title ? <div className={"headTitle"}>
                     {title}
                     {url ? <LinkIcon url={url} /> : null}
-                </HeadTitle> : null}
-                <HeadLinks>
-                    <HeadLink to={"/users"}>Users</HeadLink>
-                    <HeadLink to={"/teams"}>Teams</HeadLink>
-                    <HeadLink to={"/leaderboard"}>Leaderboard</HeadLink>
+                </div> : null}
+                <div className={"headLinks"}>
+                    <Link className={"headLink"} to={"/users"}>Users</Link>
+                    <Link className={"headLink"} to={"/teams"}>Teams</Link>
+                    <Link className={"headLink"} to={"/leaderboard"}>Leaderboard</Link>
 
                     {api.authenticated
                         ? <>
-                            <HeadLink to={"/campaign"}>Challenges</HeadLink>
-                            <HeadLink to={api.team ? "/team" : "/team/join"}>My Team</HeadLink>
+                            <Link className={"headLink"} to={"/campaign"}>Challenges</Link>
+                            <Link className={"headLink"} to={api.team ? "/team" : "/team/join"}>My Team</Link>
                             <LinkDropdown name={api.user.username}>
-                                <HeadLink to={"/profile"}>Profile</HeadLink>
-                                <HeadLink to={"/settings"}>Settings</HeadLink>
+                                <Link className={"headLink"} to={"/profile"}>Profile</Link>
+                                <Link className={"headLink"} to={"/settings"}>Settings</Link>
                             </LinkDropdown>
-                            <HeadLink to={"/logout"}>Logout</HeadLink>
+                            <Link className={"headLink"} to={"/logout"}>Logout</Link>
                         </>
-                        : <HeadLink to={"/login"}>Login</HeadLink>}
-                </HeadLinks>
-            </PageHead>
+                        : <Link className={"headLink"} to={"/login"}>Login</Link>}
+                </div>
+            </div>
             {selfContained ? children :
-                <PageContent vCentre={vCentre}>
+                <div className={"pageContent" + (vCentre ? " vCentre" : "")}>
                     {children}
-                </PageContent>
+                </div>
             }
         </>
     );
-}
-export default Page;
+};

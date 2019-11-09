@@ -1,35 +1,13 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 
 import TabbedView from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
-import { darken } from "polished";
 import theme from "theme";
 
+import "./Leaderboard.scss";
 
-const GraphEl = styled.div`
-    width: 100%;
-    margin: auto;
-    margin-top: 1em;
-    height: 300px;
-    box-shadow: 0 0 1px ${darken(.05, theme.bg)};
-    background-color: ${darken(.035, theme.bg)};
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 32px;
-
-    &::before{
-        content: "Loading chart...";
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.2em;
-    }
-`;
 
 export default () => {
     const userData = [
@@ -89,12 +67,12 @@ export default () => {
     return <Page title={"Leaderboard"}>
         <TabbedView center callback={tabSwitch} initial={1}>
             <div label='Users'>
-                <GraphEl ref={userGraphEl} />
+                <div className={"graphEl"} ref={userGraphEl} />
                 <Table headings={["Ranking", "User", "Website", "Team", "Affiliation", "Points"]} data={userData} />
             </div>
 
             <div label='Teams'>
-                <GraphEl ref={teamGraphEl} />
+                <div className={"graphEl"} ref={teamGraphEl} />
                 <Table headings={["Ranking", "Team", "Country", "Website", "Affiliation", "Points"]} data={teamData} />
             </div>
         </TabbedView>

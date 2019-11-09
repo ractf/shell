@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { registerPlugin } from "ractf";
 
 import AddNode from "./components/AddNode";
-import Spacer from "./components/Spacer";
 import Node from "./components/Node";
 import Row from "./components/Row";
+import "./components/Spacer.scss";
 
 
 const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
@@ -62,7 +62,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
             rows.push([]);
         while (rows[chal.y].length <= chal.x)
             if (isEdit) rows[chal.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.y].length, chal.y), challenges.chal)} key={rows[chal.y].length} />);
-            else rows[chal.y].push(<Spacer key={rows[chal.y].length} />);
+            else rows[chal.y].push(<div className={"campaignSpacer"} key={rows[chal.y].length} />);
 
         rows[chal.y][chal.x] = <Node key={chal.x} unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solve}
             lockDoneR={isEdit ? false : chal.solve && !(chal.link & EAST && !getChal(challenges, chal.x + 1, chal.y).solve)}
@@ -84,7 +84,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
         while (row.length <= max_x)
             if (isEdit)
                 row.push(<AddNode click={showEditor(emptyChallenge(row.length, n), challenges.chal)} key={row.length} />);
-            else row.push(<Spacer key={row.length} />);
+            else row.push(<div className={"campaignSpacer"} key={row.length} />);
 
         rows[n] = <Row key={n}>
             {row}
@@ -95,7 +95,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
         while (row.length <= max_x)
             if (isEdit)
                 row.push(<AddNode click={showEditor(emptyChallenge(row.length, rows.length), challenges.chal)} key={row.length} />);
-            else row.push(<Spacer key={row.length} />);
+            else row.push(<div className={"campaignSpacer"} key={row.length} />);
 
         rows[rows.length] = <Row key={rows.length + 1}>
             {row}

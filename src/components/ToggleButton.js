@@ -1,37 +1,7 @@
 import React, { Component } from "react";
-import styled from "styled-components";
 import Button from "./Button";
 
-
-const SwitchButtonWrap = styled.div`
-    font-size: 0;
-
-    >button {
-        border-radius: 0;
-        display: inline-block;
-        margin: 0;
-        min-width: 100px;
-        opacity: .5;
-        transition: none;
-    }
-
-    >button:first-child {
-        border-radius: 2px 0 0 2px;
-    }
-
-    >button:last-child {
-        border-radius: 0 2px 2px 0;
-    }
-
-    >button.active {
-        opacity: 1;
-    }
-`;
-
-const SwitchCaption = styled.div`
-    font-size: 1.2em;
-    margin-bottom: 8px;
-`;
+import "./ToggleButton.scss";
 
 
 export default class SwitchButton extends Component {
@@ -65,10 +35,10 @@ export default class SwitchButton extends Component {
         );
 
         return <div>
-            <SwitchCaption>{this.props.children}</SwitchCaption>
-            <SwitchButtonWrap>
+            <div className={"switchCaption"}>{this.props.children}</div>
+            <div className={"switchButtonWrap"}>
                 {buttons}
-            </SwitchButtonWrap>
+            </div>
         </div>;
     }
 }

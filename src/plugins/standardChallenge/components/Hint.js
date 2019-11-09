@@ -1,15 +1,15 @@
 import React from "react";
 import { FaInfoCircle } from "react-icons/fa";
 
-import ChallengeLink, { LinkMeta } from "./ChallengeLinks";
+import "./Challenge.scss";
 
 
 export default ({ name, points, onClick }) => {
-    return <ChallengeLink onClick={onClick}>
+    return <div className={"challengeLink clickable"}>
         <FaInfoCircle />
         <div>
             {name}
-            <LinkMeta>-{points} points.</LinkMeta>
+            <div className={"challengeLinkMeta"}>-{points} points.</div>
         </div>
-    </ChallengeLink>;
+    </div>;
 };

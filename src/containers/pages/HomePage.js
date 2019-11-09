@@ -1,144 +1,76 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 
 import Page from "./bases/Page";
 
 import { apiContext } from "ractf";
-import theme from "theme";
 
-
-const CardRow = styled.div`
-    display: flex;
-    flex-direction: row;
-    &>* {
-        height: 100%;
-    }
-
-    @media (max-width: 700px) {
-        flex-direction: column;
-    }
-`;
-const CardTypeLink = styled(Link)`
-    background-color: #292740;
-    position: relative;
-    display: block;
-    color: ${theme.foregound};
-    padding: 16px;
-    flex-grow: 1;
-    margin: 16px;
-    text-align: left;
-    flex-basis: 0;
-    border-radius: 1px;
-
-    >* {
-        margin-bottom: 8px;
-    }
-
-    &::before {
-        position: absolute;
-        left: 3px;
-        height: 100%;
-        top: 5px;
-        width: 100%;
-        content: "";
-        display: block;
-        background-color: ${theme.bg_d1};
-        z-index: -1;
-        border-radius: 1px;
-        transition: 100ms top ease-out, 100ms left ease-out;
-    }
-    &:hover {
-        text-decoration: none;
-        color: ${theme.foregound};
-    }
-    cursor: pointer;
-
-    &:hover::before, &:focus::before {
-        left: 5px;
-        top: 8px;
-    }
-`;
-const CardTitle = styled.div`
-    font-size: 1.3em;
-    font-weight: 600;
-    font-family: ${theme.title_stack};
-`;
-const HomeLead = styled.div`
-    font-size: 3em;
-    margin-bottom: 24px;
-    font-family: ${theme.title_stack};
-
-    @media (max-width: 700px) {
-        margin-top: 16px;
-        margin-bottom: 8px;
-    }
-`;
+import "./HomePage.scss";
 
 
 export default () => {
     const api = useContext(apiContext);
 
     return <Page vCentre>
-        <HomeLead>Welcome to RACTF!</HomeLead>
-        <CardRow>
+        <div className={"homeLead"}>Welcome to RACTF!</div>
+        <div className={"cardRow"}>
             {api.user ? <>
-                <CardTypeLink to={"/campaign"}>
-                    <CardTitle>Get started on challenges</CardTitle>
+                <Link className={"cardTypeLink"} to={"/campaign"}>
+                    <div className={"cardTitle"}>Get started on challenges</div>
                     <div>
                         With over 50 challenges, there's something for everyone!
                     </div>
-                </CardTypeLink>
-                <CardTypeLink to={"/leaderboard"}>
-                    <CardTitle>Check the leaderboard</CardTitle>
+                </Link>
+                <Link className={"cardTypeLink"} to={"/leaderboard"}>
+                    <div className={"cardTitle"}>Check the leaderboard</div>
                     <div>
                         Compare yourself to others, or just see how everyone is getting on!
                     </div>
-                </CardTypeLink>
+                </Link>
             </> : <>
-                <CardTypeLink to={"/login"}>
-                    <CardTitle>Login</CardTitle>
+                <Link className={"cardTypeLink"} to={"/login"}>
+                    <div className={"cardTitle"}>Login</div>
                     <div>
                         Been here before? Login to get the most out of the site!
                     </div>
-                </CardTypeLink>
-                <CardTypeLink to={"/register"}>
-                    <CardTitle>Register</CardTitle>
+                </Link>
+                <Link className={"cardTypeLink"} to={"/register"}>
+                    <div className={"cardTitle"}>Register</div>
                     <div>
                         If you want to solve challenges you're going to need to get yourself an account
                     </div>
-                    </CardTypeLink>
+                    </Link>
                 </>}
-        </CardRow>
-        <CardRow>
-            <CardTypeLink to={"/users"}>
-                <CardTitle>69 Users...</CardTitle>
+        </div>
+        <div className={"cardRow"}>
+            <Link className={"cardTypeLink"} to={"/users"}>
+                <div className={"cardTitle"}>69 Users...</div>
                 <div>
                     ...have solved 5 challenges, 72 times!
                 </div>
-            </CardTypeLink>
-            <CardTypeLink to={"/teams"}>
-                <CardTitle>32 Teams...</CardTitle>
+            </Link>
+            <Link className={"cardTypeLink"} to={"/teams"}>
+                <div className={"cardTitle"}>32 Teams...</div>
                 <div>
                     ...have an average of 2.3 members each!
                 </div>
-            </CardTypeLink>
-            <CardTypeLink to={"/privacy"}>
-                <CardTitle>420 people...</CardTitle>
+            </Link>
+            <Link className={"cardTypeLink"} to={"/privacy"}>
+                <div className={"cardTitle"}>420 people...</div>
                 <div>
                     ...have viewed the privacy policy!
                 </div>
-            </CardTypeLink>
-        </CardRow>
+            </Link>
+        </div>
         {api.user && api.user.isAdmin &&
-            <CardRow>
-                <CardTypeLink to={"/admin"}>
-                    <CardTitle>Admin Panel</CardTitle>
+            <div className={"cardRow"}>
+                <Link className={"cardTypeLink"} to={"/admin"}>
+                    <div className={"cardTitle"}>Admin Panel</div>
                     <div>
                         Look at you, you fancy admin. Go do your admin things, why don't you. smh.
                     </div>
-                </CardTypeLink>
-            </CardRow>
+                </Link>
+            </div>
         }
     </Page>;
 }

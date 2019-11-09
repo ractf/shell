@@ -1,0 +1,72 @@
+@import "../../../Colours.scss";
+@import "./Theme.scss";
+
+.nodeLink {
+    position: relative;
+    &::before {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 64px;
+        height: 64px;
+        content: "";
+    }
+
+    &.left, &.right {
+        height: 4px;
+        width: $linkPart;
+        position: absolute;
+        left: calc(100% + 4px);
+        @media (max-width: 600px)   {
+            left: calc(100% + 2px);
+        }
+        top: calc(50% - 2px);
+
+        &::before {
+            width: 100%;
+        }
+    }
+    &.left {
+        left: auto; right: calc(100% + 4px);
+        @media (max-width: 600px)   {
+            left: auto; right: calc(100% + 2px);
+        }
+    }
+    &.up, &.down {
+        width: 4px;
+        height: $linkPart;
+        position: absolute;
+        top: calc(100% + 4px);
+        @media (max-width: 600px) {
+            top: calc(100% + 2px);
+        }
+        left: calc(50% - 2px);
+
+        &::before {
+            height: 100%;
+        }
+    }
+    &.up {
+        top: auto; bottom: calc(100% + 4px);
+        @media (max-width: 600px) {
+            top: auto; bottom: calc(100% + 2px);
+        }
+    }
+
+    background-color: $bg_l1;
+    &.unlocked {
+        background-color: $bg_l3;
+    }
+    &.done {
+        background-color: #6b6;
+    }
+
+    &:not(.show) {
+        opacity: 0;
+    }
+    &.isEdit:hover {
+        opacity: 1;
+    }
+}

@@ -1,112 +1,13 @@
 import React, { useState, useContext } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import styled from "styled-components";
 
 import { SectionBlurb } from "../../components/Misc";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
 import { plugins, Button, apiContext } from "ractf";
-import theme from "theme";
 
-
-const EditButton = styled(Button)`
-    position: absolute;
-    top: 8px;
-    right: 32px;
-`;
-
-const SBWrapWrap = styled.div`
-    position: relative;
-`;
-const SBWrap = styled.div`
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 30;
-`;
-const SBBurger = styled.div`
-    position: absolute;
-    left: 100%;
-    top: 8px;
-    width: 36px;
-    height: 36px;
-    background-color: ${theme.bg_d0};
-    border-radius: 0 8px 8px 0;
-    cursor: pointer;
-    z-index: 2;
-
-    &>* {
-        width: 24px;
-        height: 24px;
-        position: absolute;
-        left: 6px;
-        top: 6px;
-        transition: transform 200ms ease;
-        transform: rotateY(${props => props.sbHidden ? "180deg" : "0"});
-    }
-
-    @media (max-width: 600px) {
-        width: 48px;
-        height: 48px;
-        
-        &>* {
-            width: 38px;
-            height: 38px;
-            left: 6px;
-            top: 6px;
-        }
-    }
-`;
-const Sidebar = styled.div`
-    background-color: ${theme.bg_d0};
-    flex-shrink: 0;
-    width: 250px;
-    margin-left: ${props => props.sbHidden ? "-250px" : "0"};
-    box-shadow: 0 0 2px #0005;
-    transition: margin-left 200ms ease;
-    text-align: left;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    height: 100%;
-
-    &>* {
-        flex-shrink: 0;
-    }
-
-    &>*:not(.head) {
-        padding: 8px 24px;
-        border-bottom: 1px solid ${theme.bg_l1};
-        transition: padding 100ms ease, background-color 100ms ease;
-        cursor: pointer;
-    }
-    &>*:not(.head):not(.active):hover {
-        padding-left: 32px;
-        background-color: ${theme.bg_d1}
-    }
-    &>*.active {
-        padding-left: 32px;
-        background-color: ${theme.bg_d05}
-    }
-    &>*.head {
-        padding: 12px 16px;
-        border-bottom: 2px solid ${theme.bg_l2};
-        font-weight: 500;
-    }
-`;
-
-const ChallengeBody = styled.div`
-    text-align: center;
-    width: 100%;
-    position: relative;
-    padding: 24px 64px;
-    @media (max-width: 600px) {
-        padding: 24px 16px;
-    }
-`;
+import "./Campaign.scss";
 
 
 export default () => {
@@ -207,24 +108,24 @@ export default () => {
     return <Page title={"Challenges"} selfContained>
         {chalEl}
         <div style={{ display: "flex", flexGrow: "1" }}>
-            <SBWrapWrap><SBWrap>
-                <Sidebar sbHidden={sbHidden}>
+            <div className={"sbWrapWrap"}><div className={"sbWrap"}>
+                <div className={"campSidebar" + (sbHidden ? " sbHidden" : "")}>
                     <div className={"head"}>Categories</div>
                     {api.challenges.map((tab, n) =>
                         <div key={n} className={activeTab === n ? "active" : ""}
                             onClick={() => { setActiveTab(n) }}
                         >{tab.title}</div>
                     )}
-                </Sidebar>
-                <SBBurger sbHidden={sbHidden} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></SBBurger>
-            </SBWrap></SBWrapWrap>
-            <ChallengeBody><div>
-                { api.user.is_admin ? edit ? 
-                    <EditButton click={() => {setEdit(false)}} warning>Stop Editing</EditButton>
-                    : <EditButton click={() => {setEdit(true)}} warning>Edit</EditButton> : null}
+                </div>
+                <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
+            </div></div>
+            <div className={"challengeBody"}><div>
+                { api.user.is_admin || 1 ? edit ? 
+                    <Button className={"campEditButton"} click={() => {setEdit(false)}} warning>Stop Editing</Button>
+                    : <Button className={"campEditButton"} click={() => {setEdit(true)}} warning>Edit</Button> : null}
 
                 {challengeTab}
-            </div></ChallengeBody>
+            </div></div>
         </div>
     </Page>;
 };

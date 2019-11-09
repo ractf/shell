@@ -1,0 +1,67 @@
+@import "../../../Colours.scss";
+
+
+.challengeBrief {
+    font-family: "Special Elite", "Robot Mono", monospace;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.challengeTitle {
+    font-size: 3rem;
+}
+
+.challengeWorth {
+    margin-top: 0.5em;
+    font-size: 1rem;
+}
+
+.challengeMeta {
+    margin-top: 8px;
+    font-size: 0.8em;
+}
+
+.challengeLink {
+    border: 1px solid $bg_l1;
+    background-color: $bg_d0;
+    width: 100%;
+    padding: 8px 16px;
+    text-align: left;
+    text-decoration: none;
+    margin-top: 16px;
+    color: $fg;
+    display: flex;
+    align-items: center;
+    max-width: 300px;
+    margin-right: 16px;
+
+    &:hover {
+        color: $fg;
+        text-decoration: none;
+    }
+
+    &>svg {
+        flex-shrink: 0;
+        font-size: 1.5em;
+        opacity: .6;
+        margin-right: 16px;
+    }
+    &>div {
+        flex-grow: 1;
+    }
+
+    &.clickable {
+        cursor: pointer;
+    }
+}
+.challengeLinkMeta {
+    opacity: .8;
+    font-size: .8em;
+    margin-top: 4px;
+}
+
+.challengeLinkGroup {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}

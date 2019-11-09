@@ -1,0 +1,27 @@
+.errorImg {
+    max-width: 80vw;
+    width: 500px;
+    margin: 32px auto 64px;
+}
+
+.errorWrap {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    &>div:first-child {
+        font-size: 7em;
+        font-weight: 500;
+    }
+    &>div:nth-child(2) {
+        font-size: 1.5em;
+        font-weight: 500;
+    }
+    &>*:nth-child(3) {
+        margin-top: 16px;
+        font-size: 1.2em;
+        font-weight: 400;
+    }
+}

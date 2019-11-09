@@ -1,0 +1,35 @@
+@import "../Colours.scss";
+
+
+footer {
+    width: 100%;
+    background-color: rgba($bg_d1, .78);
+    flex-shrink: 0;
+
+    padding: 10px 20px;
+    padding-top: 8px;
+    color: $fg;
+    font-size: .8em;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    &>* {
+        flex-shrink: 0;
+        flex-grow: 1;
+        min-width: 150px;
+
+        &.right {
+            text-align: right;
+        }
+
+        &>* {
+            margin: 5px 10px;
+        }
+
+        &>.head {
+            font-family: $titleStack;
+            font-weight: 600;
+        }
+    }
+}

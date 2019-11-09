@@ -1,46 +1,17 @@
 import React from "react";
-import styled from 'styled-components';
 import { Link } from "react-router-dom";
 
 import broken from "../../static/broken.png" 
+import "./ErrorPages.scss";
 
 
-const ErrorImg = styled.img`
-    max-width: 80vw;
-    width: 500px;
-    margin: 32px auto 64px;
-`;
-
-export const BrokenShards = () => <ErrorImg src={broken} />
+export const BrokenShards = () => <img alt={""} className={"errorImg"} src={broken} />
 
 
-const ErrorWrap = styled.div`
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-
-    &>div:first-child {
-        font-size: 7em;
-        font-weight: 500;
-    }
-    &>div:nth-child(2) {
-        font-size: 1.5em;
-        font-weight: 500;
-    }
-    &>*:nth-child(3) {
-        margin-top: 16px;
-        font-size: 1.2em;
-        font-weight: 400;
-    }
-`;
-
-
-export const ErrorPage = (props) => <ErrorWrap>
+export const ErrorPage = (props) => <div className={"errorWrap"}>
     <div>{props.code || "Something went wrong"}</div>
     <div>{props.details}</div>
     <Link to={"/"}>Back to safety</Link>
-</ErrorWrap>;
+</div>;
 
 export const NotFound = () => <ErrorPage code={404} details={"Page not found"} />

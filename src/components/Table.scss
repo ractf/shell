@@ -1,0 +1,77 @@
+@import "../Colours.scss";
+
+
+.tableWrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+tr {
+    &.heading > td {
+        background-color: rgba($bg_d1, .33);
+        font-weight: 500;
+    }
+        
+    &:nth-child(2n) > td {
+        background-color: rgba($bg_d1, .33);
+    }
+    &:not(.heading) {
+        &:last-child > td {
+            border: none;
+        }
+
+        > td {
+            color: #eee;
+        }
+
+        &:hover > td {
+            color: #fff;
+            background-color: rgba($bg_d1, .96);
+        }
+    }
+}
+
+td {
+    background-color: rgba($bg_d1, .13);
+    border-bottom: 1px solid rgba($bg_d1, .47);
+    vertical-align: top;
+    padding: .75rem;
+
+    &.sortable {
+        position: relative;
+        cursor: pointer;
+        padding-right: 1.5rem;
+
+        &::before, &::after {
+            border: 4px solid transparent;
+            content: "";
+            display: block;
+            height: 0;
+            right: .75rem;
+            top: 50%;
+            position: absolute;
+            width: 0;
+        }
+        &::before {
+            border-bottom-color: #999;
+            margin-top: -9px;
+        }
+        &::after {
+            border-top-color: #999;
+            margin-top: 1px;
+        }
+
+        &:hover::before {
+            border-bottom-color: #ccc;
+        }
+        &:hover::after {
+            border-top-color: #ccc;
+        }
+    }
+}

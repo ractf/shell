@@ -1,0 +1,21 @@
+.formWrapper {
+    width: 100%;
+
+    &>div {
+        margin-bottom: 16px;
+    }
+    &>div:last-child {
+        margin-bottom: 0;
+    }
+    &>div:nth-last-child(2) {
+        margin-bottom: 8px;
+    }
+}
+
+.formError {
+    color: #ac3232;
+    font-weight: 500;
+    font-size: 1.2em;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}

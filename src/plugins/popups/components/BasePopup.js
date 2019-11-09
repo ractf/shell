@@ -1,18 +1,9 @@
 import React from "react";
-import styled from "styled-components";
+
+import "./Style.scss";
 
 
-const Wrap = styled.div`
-    padding: 24px 32px;
-    font-size: .9em;
-    &>div:first-child {
-        font-size: 1.3em;
-        margin-bottom: 12px;
-    }
-`;
-
-
-export default ({ popup }) => <Wrap>
+export default ({ popup }) => <div className={"basePopupWrap"}>
     <div>{ popup.title }</div>
     <div>{ popup.body }</div>
-</Wrap>;
+</div>;

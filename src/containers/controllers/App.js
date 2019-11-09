@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import { Normalize } from 'styled-normalize';
-import styled, { createGlobalStyle } from 'styled-components';
-import Particles from 'react-particles-js';
 import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
-import particles_js_config from "../../partices_js_config.js";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -14,153 +10,9 @@ import Routes from "./Routes";
 import { API } from "./API";
 
 import { plugins } from "ractf";
-import theme from "theme";
 
+import "./App.scss";
 
-const VimMode = styled.div`
-    background-color: #000;
-    color: #0f0;
-    width: 100vw;
-    height: 100vh;
-    white-space: pre-line;
-    font-family: ${theme.font_stack};
-    position: fixed;
-    left: 0;
-    top: 0; 
-    padding: 16px;
-
-    ::after {
-        content: "█";
-        animation: 1s blink step-end infinite;
-      }
-      
-    @keyframes "blink" {
-        from, to {
-          opacity: 0;
-        }
-        50% {
-          opacity: 1;
-        }
-    }
-`;
-
-export const GlobalStyle = createGlobalStyle`
-    * {
-        box-sizing: border-box;
-        font-family: inherit;
-    }
-
-    body, html {
-        font-family: ${theme.font_stack};
-        background-color: ${theme.bg};
-        color: ${theme.fg};
-        min-height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        font-size: 1.05rem;
-    }
-
-    #root {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        align-items: center;
-    }
-    #root>* {
-        width: 100%;
-    }
-
-    a {
-        text-decoration: none;
-        color: #337ab7;
-        margin: 0;
-        padding: 0;
-
-        &:hover {
-            color: #23527c;
-            text-decoration: underline;
-        }
-    }
-
-    ul {
-        text-align: left;
-    }
-    ul > li {
-        margin: 16px 0;
-    }
-
-    b {
-        font-weight: 500;
-    }
-    
-    .redacted {
-        user-select: none;
-        position: relative;
-    }
-    .redacted::after {
-        background: #000;
-        border-radius: .1em;
-        box-shadow: 0 0 1px rgba(0, 0, 0, .35);
-        content: " ";
-        width: 100%;
-        height: 1.2em;
-        left: 0;
-        position: absolute;
-        transform: skewY(-5deg) rotate(5deg);
-    }
-`;
-
-const StyledParticles = styled(Particles)`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-`;
-
-const SiteWarning = styled.div`
-    position: fixed;
-    background-color: #ac1010;
-    box-shadow: 5px 0 5px #000;
-    top: 0;
-    z-index: 1000;
-    left: 0;
-    width: 100%;
-    padding: 10px 20px;
-    text-align: center;
-    transition: 300ms opacity ease;
-    cursor: default;
-
-    &:hover {
-        opacity: .5;
-    }
-`;
-
-
-const EventsWrap = styled.div`
-    position: fixed;
-    bottom: 64px;
-    right: 32px;
-    display: flex;
-    max-height: 80vh;
-    overflow-y: hidden;
-    z-index: 200;
-    width: auto !important;
-    flex-direction: column-reverse;
-`;
-const EventPopup = styled.div`
-    background-color: ${theme.bg_d1};
-    border: 1px solid ${theme.bg_l1};
-    display: inline-block;
-    width: 300px;
-    margin-top: 16px;
-`;
 
 
 export default class App extends Component {
@@ -168,7 +20,6 @@ export default class App extends Component {
         super(props);
 
         this.state = {
-            particles_js: false,
             console: false,
 
             currentPrompt: null,
@@ -236,8 +87,7 @@ export default class App extends Component {
     }
 
     render() {
-        if (this.state.console) return <VimMode>
-            <GlobalStyle />
+        if (this.state.console) return <div className={"vimDiv"}>
             {`[www-data@ractfhost1 shell]$ npm run build
 [www-data@ractfhost1 shell]$ python3.7 -m http.server --directory build 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
@@ -245,7 +95,7 @@ Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 Keyboard interrupt received, exiting.
 
 [www-data@ractfhost1 shell]$ `}
-        </VimMode>;
+        </div>;
 
         const removePopup = (n) => {
             let popups = [...this.state.popups];
@@ -254,10 +104,10 @@ Keyboard interrupt received, exiting.
         }
         let popups = this.state.popups.map((popup, n) => {
             let handler = plugins.popup[popup.type];
-            if (!handler) return <EventPopup onClick={()=>removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</EventPopup>;
-            return <EventPopup onClick={()=>removePopup(n)} key={n}>{React.createElement(
+            if (!handler) return <div className={"eventPopup"} onClick={()=>removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</div>;
+            return <div className={"eventPopup"} onClick={()=>removePopup(n)} key={n}>{React.createElement(
                 handler.component, {popup: popup, key:n}
-            )}</EventPopup>;
+            )}</div>;
         }).reverse();
 
         return (
@@ -265,20 +115,16 @@ Keyboard interrupt received, exiting.
                 <BrowserRouter>
                     <API><APIContext.Consumer>{api => <>
                         {/* TODO: Use api.ready */}
-                        {!api.ready && this.loaded ? <SiteWarning>
+                        {!api.ready && this.loaded ? <div className={"siteWarning"}>
                             Site operating in offline mode:
                             Failed to connect to the CTF servers!<br />
                             Functionality will be limited until service is restored.
-                        </SiteWarning> : null}
-                        {(api.user && api.user['2fa_status'] === "needs_verify") ? <SiteWarning>
+                        </div> : null}
+                        {(api.user && api.user['2fa_status'] === "needs_verify") ? <div className={"siteWarning"}>
                             A previous attempt to add 2-factor authentication to your account failed!<br />
                             Please visit settings to finish configuration!
-                        </SiteWarning> : null}
-
-                        {this.state.particles_js ? <StyledParticles params={particles_js_config} /> : null}
-                        <Normalize />
-                        <GlobalStyle />
-
+                        </div> : null}
+                        
                         <Header />
                         <Routes />
                         <Footer />
@@ -292,9 +138,9 @@ Keyboard interrupt received, exiting.
                     onHide={this.hideModal}
                 /> : null}
 
-                <EventsWrap>
+                <div className={"eventsWrap"}>
                     {popups}
-                </EventsWrap>
+                </div>
             </AppContext.Provider>
         );
     }

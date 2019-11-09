@@ -1,0 +1,70 @@
+@import "../../Colours.scss";
+
+
+.cardRow {
+    display: flex;
+    flex-direction: row;
+    &>* {
+        height: 100%;
+    }
+}
+.homeLead {
+    font-size: 3em;
+    margin-bottom: 24px;
+    font-family: $titleStack;
+}
+.cardTypeLink {
+    background-color: #292740;
+    position: relative;
+    display: block;
+    color: $fg;
+    padding: 16px;
+    flex-grow: 1;
+    margin: 16px;
+    text-align: left;
+    flex-basis: 0;
+    border-radius: 1px;
+
+    &>* {
+        margin-bottom: 8px;
+    }
+
+    &::before {
+        position: absolute;
+        left: 3px;
+        height: 100%;
+        top: 5px;
+        width: 100%;
+        content: "";
+        display: block;
+        background-color: $bg_d1;
+        z-index: -1;
+        border-radius: 1px;
+        transition: 100ms top ease-out, 100ms left ease-out;
+    }
+    &:hover {
+        text-decoration: none;
+        color: $fg;
+    }
+    cursor: pointer;
+
+    &:hover::before, &:focus::before {
+        left: 5px;
+        top: 8px;
+    }
+}
+.cardTitle {
+    font-size: 1.3em;
+    font-weight: 600;
+    font-family: $titleStack;
+}
+
+@media (max-width: 700px) {
+    .cardRow {
+        flex-direction: column;
+    }
+    .homeLead {
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+}

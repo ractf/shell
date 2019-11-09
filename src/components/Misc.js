@@ -1,76 +1,35 @@
-import styled from "styled-components";
+import React from "react";
 
-import theme from "theme";
+import "./Misc.scss";
 
 
-export const HR = styled.div`
-    width: 400px;
-    max-width: 80%;
-    margin: 1rem auto;
-    height: 1px;
-    background-color: #181624;
-`;
-
-export const SectionTitle = styled.div`
-    font-family: ${theme.title_stack};
-    font-size: 3rem;
-`;
-export const SectionTitle2 = styled.div`
-    font-family: ${theme.title_stack};
-    font-size: 2rem;
-`;
-
-export const SectionHeading = styled.div`
-    font-family: ${theme.title_stack};    
-    font-size: 2.3rem;
-    margin-bottom: .5em;
-`;
-
-export const SectionH2 = styled.div`
-    font-family: ${theme.title_stack};
-    font-size: 1.5rem;
-    margin-bottom: .5em;
-    margin-top: 1em;
-`;
-
-export const SectionSub = styled.div`
-    margin-bottom: 2rem;
-`;
-
-export const CTFContainer = styled.div`
-    max-width: 1000px;
-    width: 100%;
-    height: auto;
-`;
-
-export const TextBlock = styled.div`
-    margin: 1.5em .5em;
-    font-size: 1rem;
-    background-color: rgba(24,22,36,0.4);
-    padding: 1em 2em;
-    border-radius: 2px;
-    white-space: pre-wrap;
-    font-family: ${theme.mono_stack};
-
-    @media only screen and (max-width: 600px) {
-        margin: 1.5em 8px;
-    }
-`;
-
-export const SubtleText = styled.div`
-    opacity: .9;
-    font-size: .9em;
-    margin-top: 1em;
-`;
-
-export const SectionBlurb = styled.div`
-    margin: auto;    
-    margin-bottom: 24px;
-    width: 100%;
-    max-width: calc(100% - 72px);
-    line-height: 1.25;
-
-    &>br {
-        line-height: 1.8;
-    }
-`;
+export const HR = ({ children }) => (
+    <div className={"hr"}>{ children }</div>
+);
+export const SectionTitle = ({ children }) => (
+    <div className={"sectionTitle"}>{ children }</div>
+);
+export const SectionTitle2 = ({ children }) => (
+    <div className={"sectionTitle2"}>{ children }</div>
+);
+export const SectionHeading = ({ children }) => (
+    <div className={"sectionHeading"}>{ children }</div>
+);
+export const SectionH2 = ({ children }) => (
+    <div className={"sectionH2"}>{ children }</div>
+);
+export const SectionSub = ({ children }) => (
+    <div className={"sectionSub"}>{ children }</div>
+);
+export const CTFContainer = ({ children }) => (
+    <div className={"ctfContainer"}>{ children }</div>
+);
+export const TextBlock = ({ children, ...props }) => (
+    <div {...props} className={"textBlock " + props.className}>{ children }</div>
+);
+export const SubtleText = ({ children }) => (
+    <div className={"subtleText"}>{ children }</div>
+);
+export const SectionBlurb = ({ children }) => (
+    <div className={"sectionBlurb"}>{ children }</div>
+);
