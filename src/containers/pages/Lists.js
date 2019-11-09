@@ -14,7 +14,8 @@ export const TeamsList = () => {
         api.ensure("allTeams").catch(e => {
             setError("Something went wrong trying to get the user list\nPlease try reloading the page")
         });
-    }, [api]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return <Page
         title={"Teams"} vCentre={error || !api.allTeams}>
@@ -38,7 +39,8 @@ export const UsersList = () => {
         api.ensure("allUsers").catch(e => {
             setError("Something went wrong trying to get the user list\nPlease try reloading the page")
         });
-    }, [api]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return <Page
         title={"Users"} vCentre={error || !api.allUsers}>
