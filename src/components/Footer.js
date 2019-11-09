@@ -52,7 +52,7 @@ const FootLink = (props) => <p><Link to={props.to}>{props.children}</Link></p>;
 
 export default () => {
     return <Foot>
-        <FootCol title={"RACFT"}>
+        <FootCol title={"RACTF"}>
             <FootLink to={"/about"}>About</FootLink>
             <FootLink to={"/conduct"}>Code of Conduct</FootLink>
             <FootLink to={"/privacy"}>Privacy Policy</FootLink>
