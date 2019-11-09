@@ -13,7 +13,7 @@ const ButtonTheme = styled.button`
     display: block;
     cursor: pointer;
     color: ${theme.fg};
-    font-family: 'Roboto Mono',monospace;
+    font-family: ${theme.font_stack};
     font-size: 1.2rem;
     padding: 5px 10px;
     text-decoration: none;
