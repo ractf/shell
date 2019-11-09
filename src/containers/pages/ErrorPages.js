@@ -2,6 +2,18 @@ import React from "react";
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 
+import broken from "../../static/broken.png" 
+
+
+const ErrorImg = styled.img`
+    max-width: 80vw;
+    width: 500px;
+    margin: 32px auto 64px;
+`;
+
+export const BrokenShards = () => <ErrorImg src={broken} />
+
+
 const ErrorWrap = styled.div`
     flex-grow: 1;
     display: flex;
@@ -17,7 +29,7 @@ const ErrorWrap = styled.div`
         font-size: 1.5em;
         font-weight: 500;
     }
-    &>*:last-child {
+    &>*:nth-child(3) {
         margin-top: 16px;
         font-size: 1.2em;
         font-weight: 400;

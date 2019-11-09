@@ -1,5 +1,8 @@
 import styled from "styled-components";
 
+import theme from "theme";
+
+
 export const HR = styled.div`
     width: 400px;
     max-width: 80%;
@@ -9,18 +12,22 @@ export const HR = styled.div`
 `;
 
 export const SectionTitle = styled.div`
+    font-family: ${theme.title_stack};
     font-size: 3rem;
 `;
 export const SectionTitle2 = styled.div`
+    font-family: ${theme.title_stack};
     font-size: 2rem;
 `;
 
 export const SectionHeading = styled.div`
+    font-family: ${theme.title_stack};    
     font-size: 2.3rem;
     margin-bottom: .5em;
 `;
 
 export const SectionH2 = styled.div`
+    font-family: ${theme.title_stack};
     font-size: 1.5rem;
     margin-bottom: .5em;
     margin-top: 1em;
@@ -43,6 +50,7 @@ export const TextBlock = styled.div`
     padding: 1em 2em;
     border-radius: 2px;
     white-space: pre-wrap;
+    font-family: ${theme.mono_stack};
 
     @media only screen and (max-width: 600px) {
         margin: 1.5em 8px;

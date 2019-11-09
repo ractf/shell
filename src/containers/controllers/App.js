@@ -13,6 +13,7 @@ import { APIContext, AppContext } from "./Contexts";
 import Routes from "./Routes";
 import { API } from "./API";
 
+import { plugins } from "ractf";
 import theme from "theme";
 
 
@@ -50,7 +51,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     body, html {
-        font-family: 'Roboto Mono', monospace;
+        font-family: ${theme.font_stack};
         background-color: ${theme.bg};
         color: ${theme.fg};
         min-height: 100%;
@@ -58,6 +59,7 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         overflow-x: hidden;
+        font-size: 1.05rem;
     }
 
     #root {
@@ -141,6 +143,26 @@ const SiteWarning = styled.div`
 `;
 
 
+const EventsWrap = styled.div`
+    position: fixed;
+    bottom: 64px;
+    right: 32px;
+    display: flex;
+    max-height: 80vh;
+    overflow-y: hidden;
+    z-index: 200;
+    width: auto !important;
+    flex-direction: column-reverse;
+`;
+const EventPopup = styled.div`
+    background-color: ${theme.bg_d1};
+    border: 1px solid ${theme.bg_l1};
+    display: inline-block;
+    width: 300px;
+    margin-top: 16px;
+`;
+
+
 export default class App extends Component {
     constructor(props) {
         super(props);
@@ -151,6 +173,14 @@ export default class App extends Component {
 
             currentPrompt: null,
             promptConfirm: this.promptConfirm,
+
+            popups: [
+                {type: 0, title: 'Achievement get', body: 'You got a thing!'},
+                {type: 'medal', medal: 'winner'},
+                {type: 0, title: 'Challenge solved', body: 'solved a thing'},
+            ],
+
+            modals: 1
         }
 
         this.magic = [27, 16, 186, 81, 16, 49, 13]
@@ -158,20 +188,20 @@ export default class App extends Component {
 
         this.loaded = false;
         // 3s grace period to connect to the server
-        setTimeout(() => {this.loaded = true}, 3000);
+        setTimeout(() => { this.loaded = true }, 3000);
     }
 
     hideModal = () => {
-        this.setState({currentPrompt: null});
+        this.setState({ currentPrompt: null });
     }
 
-    promptConfirm = (body, inputs=0) => {
+    promptConfirm = (body, inputs = 0) => {
         if (inputs === 0) inputs = [];
 
         return new Promise((resolveOuter, rejectOuter) => {
             let innerPromise = new Promise((resolve, reject) => {
                 this.setState({
-                    currentPrompt: {body: body, promise: {resolve: resolve, reject: reject}, inputs: inputs}
+                    currentPrompt: { body: body, promise: { resolve: resolve, reject: reject }, inputs: inputs }
                 });
             });
 
@@ -192,13 +222,17 @@ export default class App extends Component {
         if (this.current.length > this.magic.length)
             this.current = this.current.slice(this.current.length - this.magic.length, this.current.length);
         if (JSON.stringify(this.current) === JSON.stringify(this.magic))
-            this.setState({console: true});
+            this.setState({ console: true });
     }
-    componentDidMount(){
+    componentDidMount() {
         document.addEventListener("keydown", this._handleKeyDown);
     }
     componentWillUnmount() {
         document.removeEventListener("keydown", this._handleKeyDown);
+    }
+
+    newModal = () => {
+        this.setState({ modals: this.state.modals + 1 })
     }
 
     render() {
@@ -212,6 +246,20 @@ Keyboard interrupt received, exiting.
 
 [www-data@ractfhost1 shell]$ `}
         </VimMode>;
+
+        const removePopup = (n) => {
+            let popups = [...this.state.popups];
+            popups.splice(n, 1);
+            this.setState({popups: popups});
+        }
+        let popups = this.state.popups.map((popup, n) => {
+            let handler = plugins.popup[popup.type];
+            if (!handler) return <EventPopup onClick={()=>removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</EventPopup>;
+            return <EventPopup onClick={()=>removePopup(n)} key={n}>{React.createElement(
+                handler.component, {popup: popup, key:n}
+            )}</EventPopup>;
+        }).reverse();
+
         return (
             <AppContext.Provider value={this.state}>
                 <BrowserRouter>
@@ -236,13 +284,17 @@ Keyboard interrupt received, exiting.
                         <Footer />
                     </>}</APIContext.Consumer></API>
                 </BrowserRouter>
-                
+
                 {this.state.currentPrompt ? <ModalPrompt
                     body={this.state.currentPrompt.body}
                     promise={this.state.currentPrompt.promise}
                     inputs={this.state.currentPrompt.inputs}
                     onHide={this.hideModal}
                 /> : null}
+
+                <EventsWrap>
+                    {popups}
+                </EventsWrap>
             </AppContext.Provider>
         );
     }

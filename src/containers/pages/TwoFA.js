@@ -88,6 +88,7 @@ export default () => {
                 <Button click={faPrompt}>I've got it</Button>
             </> : page === 3 ? <>
                 <SectionTitle2>Congratulations!</SectionTitle2>
+                <br/>
                 Two-factor authentication has been setup!
                 <Button to={"/"}>Yay!</Button>
             </> : <>

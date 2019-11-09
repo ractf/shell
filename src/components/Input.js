@@ -2,12 +2,18 @@ import React, { Component, createRef } from "react";
 import styled, { css } from "styled-components";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+import theme from "theme";
+
 
 const style = css`
     background: none;
     border: 0;
     width: 100%;
     color: inherit;
+
+    ${props => props.monospace && css`
+        font-family: ${theme.mono_stack};
+    `}
 
     &:focus {
         border: none;
@@ -101,6 +107,10 @@ const Placeholder = styled.div`
 
     user-select: none;
     pointer-events: none;
+
+    ${props => props.monospace && css`
+        font-family: ${theme.mono_stack};
+    `}
 `;
 
 
@@ -162,6 +172,7 @@ export default class Input extends Component {
                     value={this.state.val}
                     onChange={this.handleChange}
                     rows={this.props.rows}
+                    monospace={this.props.monospace}
                     disabled={this.props.disabled} />
                 : <StyledInput
                     onKeyDown={this.keyDown}
@@ -169,6 +180,7 @@ export default class Input extends Component {
                     value={this.state.val}
                     type={(this.props.password && !this.state.showPass) ? "password" : "text"}
                     onChange={this.handleChange}
+                    monospace={this.props.monospace}
                     disabled={this.props.disabled} />}
             {this.props.center || this.props.noCount ? null
                 : <LengthCounter>{this.state.val.length}{this.props.limit
@@ -178,7 +190,7 @@ export default class Input extends Component {
             {this.props.password ? <StyledEye onClick={this.togglePwd}>
                 {this.state.showPass ? <FaEyeSlash /> : <FaEye />}
             </StyledEye> : null}
-            {this.props.placeholder && this.state.val.length === 0 && <Placeholder>{this.props.placeholder}</Placeholder>}
+            {this.props.placeholder && this.state.val.length === 0 && <Placeholder monospace={this.props.monospace}>{this.props.placeholder}</Placeholder>}
         </InputWrap>
     }
 }

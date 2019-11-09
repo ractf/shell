@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Redirect } from "react-router-dom";
 
-import { apiContext, Page, FormError, SectionTitle2, Button, ButtonRow, Spinner } from "ractf";
+import { apiContext, Page, FormError, Spinner } from "ractf";
 import { Wrap } from "./Parts";
 
 
@@ -29,15 +30,7 @@ export const EmailVerif = ({ location }) => {
                 <br />
                 <FormError>{message}</FormError>
             </> : verif === 2 ? <>
-                <SectionTitle2>
-                    Welcome to RACTF!
-                </SectionTitle2>
-                <br />
-                <div>Where to now, chief?</div>
-                <ButtonRow>
-                    <Button to={"/team/new"}>Create a Team</Button>
-                    <Button to={"/team/join"}>Join a Team</Button>
-                </ButtonRow>
+                <Redirect to={"/noteam"}/>
             </> : null}
         </Wrap>
     </Page>;

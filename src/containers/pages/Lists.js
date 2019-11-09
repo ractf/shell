@@ -1,58 +1,54 @@
-import React from "react";
+import React, { useEffect, useContext, useState } from "react";
 
-import Table from "../../components/Table";
+import { BrokenShards } from "./ErrorPages";
 import Page from "./bases/Page";
 
+import { Table, Spinner, FormError, apiContext } from "ractf";
+
+
 export const TeamsList = () => {
-    const data = [
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-        ["PWN to 0xE4", "UK", "https://pwn0xe4.io/", ""],
-        ["Who knows", "Murica", "", "SANS"],
-    ]
+    const api = useContext(apiContext);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        api.ensure("allTeams").catch(e => {
+            setError("Something went wrong trying to get the user list\nPlease try reloading the page")
+        });
+    }, [api]);
 
     return <Page
-        title={"Teams"}>
-        <Table headings={["Team", "Country", "Website", "Affiliation"]} data={data} />
+        title={"Teams"} vCentre={error || !api.allTeams}>
+        {error ? <>
+            <FormError>{error}</FormError>
+            <BrokenShards />
+        </> :
+            api.allTeams ?
+                <Table headings={["Team"]} data={api.allTeams.map(x => [x.name])} />
+                : <Spinner />
+        }
     </Page>;
 }
 
+
 export const UsersList = () => {
-    const data = [
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-        ["Bottersnike", "https://bsnk.me", "PWN to 0xE4", ""],
-        ["Not Bottersnike", "", "Other team", "SANS"],
-    ]
+    const api = useContext(apiContext);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        api.ensure("allUsers").catch(e => {
+            setError("Something went wrong trying to get the user list\nPlease try reloading the page")
+        });
+    }, [api]);
 
     return <Page
-        title={"Users"}>
-        <Table headings={["User", "Website", "Team", "Affiliation"]} data={data} />
+        title={"Users"} vCentre={error || !api.allUsers}>
+        {error ? <>
+            <FormError>{error}</FormError>
+            <BrokenShards />
+        </> :
+            api.allUsers ?
+                <Table headings={["Team"]} data={api.allUsers.map(x => [x.name, x.team])} />
+                : <Spinner />
+        }
     </Page>;
 }

@@ -2,24 +2,41 @@ import React from "react";
 import styled from "styled-components";
 
 import { Spinner } from "ractf";
+import theme from "theme";
 
 
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
 
 const WrapDiv = styled.div`
-    border: 1px solid #373354;
-    background-color: #2c2a4455;
     max-width: 600px;
     width: 100%;
     margin: auto;
     padding: 56px 64px;
     padding-bottom: 48px;
-    border-radius: 2px;
     position: relative;
 
     @media only screen and (max-width: 600px) {
         padding: 56px 24px;
+    }
+
+    background-color: #292740;
+    position: relative;
+    color: ${theme.foregound};
+    border-radius: 1px;
+
+    &::before {
+        position: absolute;
+        left: 3px;
+        height: 100%;
+        top: 5px;
+        width: 100%;
+        content: "";
+        display: block;
+        background-color: ${theme.bg_d0};
+        z-index: -1;
+        border-radius: 1px;
+        transition: 100ms top ease-out, 100ms left ease-out;
     }
 `;
 

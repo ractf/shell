@@ -20,12 +20,18 @@ class APIClass extends Component {
         FLAG_TEST: "/challenges/<uuid>/attempt",
 
         USER_SELF: "/members/self",
+        USER_LIST: "/members/list",
         USER: "/members/id/",
 
         TEAM_CREATE: "/teams/create",
         TEAM_JOIN: "/teams/join",
         TEAM_SELF: "/teams/self",
+        TEAM_LIST: "/teams/list",
         TEAM: "/teams/",
+    };
+    ENSURABLE = {
+        allUsers: this.ENDPOINTS.USER_LIST,
+        allTeams: this.ENDPOINTS.TEAM_LIST,
     };
 
     constructor() {
@@ -57,6 +63,9 @@ class APIClass extends Component {
             challenges: challenges,
             team: teamData,
 
+            allUsers: null,
+            allTeams: null,
+
             login: this.login,
             logout: this.logout,
             verify: this.verify,
@@ -68,6 +77,7 @@ class APIClass extends Component {
             joinTeam: this.joinTeam,
             attemptFlag: this.attemptFlag,
 
+            ensure: this.ensure,
             getError: this.getError,
 
             _reloadCache: this._reloadCache,
@@ -85,6 +95,7 @@ class APIClass extends Component {
         }
     }
 
+    // Helpers
     getError = e => {
         if (e.response && e.response.data) {
             // We got a response from the server, but it wasn't happy with something
@@ -131,8 +142,6 @@ class APIClass extends Component {
         return headers;
     };
 
-    _getChallenges = () => this.get(this.ENDPOINTS.CHALLENGES);
-
     _reloadCache = async () => {
         let userData, teamData, challenges, ready = true;
         try {
@@ -178,11 +187,23 @@ class APIClass extends Component {
         this.setState(newState);
     };
 
+    // Endpoint Things
+    ensure = async type => {
+        return this.get(this.ENSURABLE[type]).then(data => {
+            this.setState({[type]: data.d})
+        });
+    }
+
+    _getChallenges = () => this.get(this.ENDPOINTS.CHALLENGES);
+
     _postLogin = async token => {
         localStorage.setItem("token", token);
         await this._reloadCache();
 
-        this.props.history.push("/home");
+        if (this.state.team)
+            this.props.history.push("/home");
+        else
+            this.props.history.push("/noteam");
     };
 
     modifyUser = ({ oPass = null, nPass = null }) => {
@@ -252,7 +273,9 @@ class APIClass extends Component {
 
     add_2fa = () => this.post(this.ENDPOINTS.ADD_2FA);
     verify_2fa = (otp) => this.post(this.ENDPOINTS.VERIFY_2FA, { otp: otp });
-    verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid });
+    verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid }).then(data => {
+        this._postLogin(data.d.token);
+    });
 
     register = (username, password, email) => {
         return new Promise((resolve, reject) => {
@@ -271,6 +294,7 @@ class APIClass extends Component {
         { flag: flag }
     );
 
+    // React
     render() {
         return <APIContext.Provider value={this.state}>{this.props.children}</APIContext.Provider>;
     }

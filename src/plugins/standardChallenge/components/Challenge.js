@@ -79,7 +79,7 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
             <Input rows={5} val={challenge.desc} name={"desc"} placeholder={"Description"}/>
 
             <Input placeholder="Flag format: ractf{...}"
-                format={partial} name={"flag"}
+                format={partial} name={"flag"} monospace
                 val={challenge.flag} />
             
             <Button submit>Save Challenge</Button>
@@ -96,7 +96,7 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
             {!challenge.solve && <Form handle={tryFlag(challenge)} locked={locked}>
                 <Input placeholder="Flag format: ractf{...}"
                        format={partial} name={"flag"}
-                       callback={changeFlag}
+                       callback={changeFlag} monospace
                        center width={"80%"} />
                 {message && <FormError>{message}</FormError>}
                 <Button disabled={!flagValid} submit>Attempt flag</Button>

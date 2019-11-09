@@ -9,6 +9,7 @@ import TwoFA from "../pages/TwoFA";
 
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
+import PostLogin from "../pages/auth/PostLogin";
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
 
@@ -94,6 +95,9 @@ export default withRouter(({ location }) => {
 
         <Route exact path={"/team"}>
             <Page title={"Team"} auth C={TeamPage} />
+        </Route>
+        <Route exact path={"/noteam"}>
+            <Page title={"Where now?"} auth C={PostLogin} />
         </Route>
 
         { Object.keys(plugins.page).map(url =>

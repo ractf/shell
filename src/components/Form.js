@@ -100,4 +100,6 @@ export const FormError = styled.div`
     color: #ac3232;
     font-weight: 500;
     font-size: 1.2em;
+    white-space: pre-wrap;
+    line-height: 1.5;
 `;
