@@ -23,10 +23,34 @@ Keyboard interrupt received, exiting.
 
 [www-data@ractfhost1 shell]$ `);
     const [lineBuffer, setLineBuffer] = useState("");
+    const [dir, setDir] = useState(["var", "www", "shell"]);
 
+    let d2;
     const onKeyPress = e => {
         if ((e.keyCode || e.which) === 13) {
-            setScrollback(scrollback + lineBuffer + "\n[www-data@ractfhost1 shell]$ ");
+            let resp;
+            let [cmd, args] = lineBuffer.split(/ +/, 2);
+            if (!cmd) resp = "";
+            else if (cmd === "ls") {
+                if (dir.length === 3) resp = ". .. index.html index.js index.css\n";
+                else if (dir.length === 2) resp = ". .. shell\n";
+                else if (dir.length === 1) resp = ". .. www\n";
+                else resp = ". .. var\n";
+            } else if (cmd === "cd") {
+                resp = "";
+                d2 = dir.slice(0, dir.length);
+                if (args === "var" && dir.length === 0) d2.push("var");
+                else if (args === "www" && dir.length === 1) d2.push("www");
+                else if (args === "shell" && dir.length === 2) d2.push("shell");
+                else if (args === ".." && dir.length !== 0) d2.pop();
+                else if (args === ".");
+                else resp = "ls: no such directory\n";
+                setDir(d2);
+            } else {
+                resp = `rash: ${cmd}: command not found\n`;
+            }
+
+            setScrollback(scrollback + lineBuffer + "\n" + resp + `[www-data@ractfhost1 ${(d2 || dir)[(d2 || dir).length - 1] || "/"}]$ `);
             setLineBuffer("");
         } else {
             setLineBuffer(lineBuffer + String.fromCharCode(e.which));
