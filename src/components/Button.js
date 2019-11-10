@@ -1,17 +1,21 @@
 import React, { forwardRef } from "react";
-import { Link } from "react-router-dom";
+import useReactRouter from "../useReactRouter";
 
 import "./Button.scss";
 
 
-export const ButtonRow = ({ children }) => <div className={"buttonRow"}>{ children }</div>;
+export const ButtonRow = ({ children }) => <div className={"buttonRow"}>{children}</div>;
 
 const Button = (props, ref) => {
-    const clickFunc = () => {
+    const { history } = useReactRouter();
+
+    const onClick = e => {
         if (props.click)
-            props.click();
+            props.click(e);
         if (props.form && props.form.callback)
             props.form.callback();
+        if (props.to)
+            history.push(props.to);
     }
     let className = props.className || "";
     if (props.main) className += " main";
@@ -20,15 +24,9 @@ const Button = (props, ref) => {
     if (props.warning) className += " warning";
     if (props.disabled) className += " disabled";
 
-    const button = <button className={className} disabled={props.disabled} ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={clickFunc}>
+    return <button className={className} disabled={props.disabled} ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={onClick}>
         {props.children}
     </button>;
-
-    if (props.to)
-        return <Link to={props.to} onMouseDown={(e => e.target.click())}>
-            {button}
-        </Link>;
-    return button;
 };
 
 

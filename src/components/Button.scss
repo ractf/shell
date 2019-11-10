@@ -12,7 +12,6 @@ button {
     text-decoration: none;
     transition: background-color 1s;
     margin: 1rem auto 0;
-    text-decoration: none;
 
     &.main {
         padding: .6rem 2rem;
@@ -30,11 +29,14 @@ button {
 
     &:not(.disabled):hover {
         background-color: $bg;
-        text-decoration: none;
     }
     &.disabled {
         color: #999;
         cursor: not-allowed;
+    }
+
+    &:hover {
+        text-decoration: none !important;
     }
 }
 

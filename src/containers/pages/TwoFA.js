@@ -65,7 +65,7 @@ export default () => {
                 </b>
 
                 <ButtonRow>
-                    <Button to={"/"} lesser>Nevermind</Button>
+                    <Button to={"/settings"} lesser>Nevermind</Button>
                     <Button click={startFlow}>Enable 2FA</Button>
                 </ButtonRow>
             </> : page === 1 ? <>
