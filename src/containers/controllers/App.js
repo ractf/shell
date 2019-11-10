@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
@@ -14,6 +14,37 @@ import { plugins } from "ractf";
 import "./App.scss";
 
 
+const VimDiv = () => {
+    const [scrollback, setScrollback] = useState(`[www-data@ractfhost1 shell]$ npm run build
+[www-data@ractfhost1 shell]$ python3.7 -m http.server --directory build 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+
+Keyboard interrupt received, exiting.
+
+[www-data@ractfhost1 shell]$ `);
+    const [lineBuffer, setLineBuffer] = useState("");
+
+    const onKeyPress = e => {
+        if ((e.keyCode || e.which) === 13) {
+            setScrollback(scrollback + lineBuffer + "\n[www-data@ractfhost1 shell]$ ");
+            setLineBuffer("");
+        } else {
+            setLineBuffer(lineBuffer + String.fromCharCode(e.which));
+        }
+    }
+
+    const onKeyDown = e => {
+        if ((e.keyCode || e.which) === 8) {
+            setLineBuffer(lineBuffer.substring(0, lineBuffer.length - 1))
+        }
+    }
+
+    return <div className={"vimDiv"} tabIndex={"0"} onKeyDown={onKeyDown} onKeyPress={onKeyPress}>
+        {scrollback}{lineBuffer}
+    </div>
+}
+
+
 
 export default class App extends Component {
     constructor(props) {
@@ -26,9 +57,9 @@ export default class App extends Component {
             promptConfirm: this.promptConfirm,
 
             popups: [
-                {type: 0, title: 'Achievement get', body: 'You got a thing!'},
-                {type: 'medal', medal: 'winner'},
-                {type: 0, title: 'Challenge solved', body: 'solved a thing'},
+                { type: 0, title: 'Achievement get', body: 'You got a thing!' },
+                { type: 'medal', medal: 'winner' },
+                { type: 0, title: 'Challenge solved', body: 'solved a thing' },
             ],
 
             modals: 1
@@ -87,26 +118,18 @@ export default class App extends Component {
     }
 
     render() {
-        if (this.state.console) return <div className={"vimDiv"}>
-            {`[www-data@ractfhost1 shell]$ npm run build
-[www-data@ractfhost1 shell]$ python3.7 -m http.server --directory build 80
-Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
-
-Keyboard interrupt received, exiting.
-
-[www-data@ractfhost1 shell]$ `}
-        </div>;
+        if (this.state.console) return <VimDiv />;
 
         const removePopup = (n) => {
             let popups = [...this.state.popups];
             popups.splice(n, 1);
-            this.setState({popups: popups});
+            this.setState({ popups: popups });
         }
         let popups = this.state.popups.map((popup, n) => {
             let handler = plugins.popup[popup.type];
-            if (!handler) return <div className={"eventPopup"} onClick={()=>removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</div>;
-            return <div className={"eventPopup"} onClick={()=>removePopup(n)} key={n}>{React.createElement(
-                handler.component, {popup: popup, key:n}
+            if (!handler) return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</div>;
+            return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>{React.createElement(
+                handler.component, { popup: popup, key: n }
             )}</div>;
         }).reverse();
 
@@ -124,7 +147,7 @@ Keyboard interrupt received, exiting.
                             A previous attempt to add 2-factor authentication to your account failed!<br />
                             Please visit settings to finish configuration!
                         </div> : null}
-                        
+
                         <Header />
                         <Routes />
                         <Footer />
