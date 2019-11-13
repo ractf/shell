@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin: 0 32px;
 
     &>:first-child {
         margin-right: 24px;
@@ -23,7 +24,42 @@
 .userMeta {
     line-height: 1.5;
     flex-shrink: 0;
-    text-align: center;
+    text-align: left;
+    min-width: 256px;
+
+    &>.userName {
+        font-size: 2em;
+        font-weight: 600;
+        font-family: $titleStack;
+    }
+    &>.userBio {
+        font-size: .8em;
+        margin-bottom: 1em;
+        &.noBio::before {
+                font-style: italic;
+                content: "No bio set";
+        }
+    }
+    &>.userSocial {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        color: $bg-l3;
+        transition: 150ms color ease;
+        cursor: pointer;
+
+        &>*:first-child {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+        &>*:last-child {
+            font-size: .9em;
+        }
+        &:hover {
+            color: $bg-l5;
+            text-decoration: none;
+        }
+    }
 }
 .userSolves {
     flex-grow: 1;

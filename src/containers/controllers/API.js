@@ -21,7 +21,7 @@ class APIClass extends Component {
 
         USER_SELF: "/members/self",
         USER_LIST: "/members/list",
-        USER: "/members/id/",
+        USER: "/members/",
 
         TEAM_CREATE: "/teams/create",
         TEAM_JOIN: "/teams/join",
@@ -65,6 +65,9 @@ class APIClass extends Component {
 
             allUsers: null,
             allTeams: null,
+
+            getTeam: this.getTeam,
+            getUser: this.getUser,
 
             login: this.login,
             logout: this.logout,
@@ -213,11 +216,11 @@ class APIClass extends Component {
     }
 
     getUser = (id) => {
-        return this.get(id === "self" ? this.ENDPOINTS.USER_SELF : this.ENDPOINTS.USER + id);
+        return this.get(id === "self" || id === "me" ? this.ENDPOINTS.USER_SELF : this.ENDPOINTS.USER + id);
     };
 
     getTeam = (id) => {
-        return this.get(id === "self" ? this.ENDPOINTS.TEAM_SELF : this.ENDPOINTS.TEAM + id);
+        return this.get(id === "self" || id === "me" ? this.ENDPOINTS.TEAM_SELF : this.ENDPOINTS.TEAM + id);
     };
 
     createTeam = (name, password) => {

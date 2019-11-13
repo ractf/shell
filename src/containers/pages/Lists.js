@@ -24,7 +24,7 @@ export const TeamsList = () => {
             <BrokenShards />
         </> :
             api.allTeams ?
-                <Table headings={["Team"]} data={api.allTeams.map(x => [x.name])} />
+                <Table headings={["Team"]} data={api.allTeams.map(x => [x.name, "/team/" + x.id])} />
                 : <Spinner />
         }
     </Page>;

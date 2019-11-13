@@ -34,8 +34,8 @@ export default props => {
         <div tabIndex={props.unlocked || props.done ? "0" : ""} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={(props.done || props.unlocked) ? props.click : null} className={nodeClass}>
             <div>{props.name}</div>
 
-            {props.right && <div class={lockClassR}>{props.lockDoneR ? <FaCheck /> : props.lockUnlockedR ? <FaLockOpen /> : <FaLock />}</div>}
-            {props.down && <div class={lockClassD}>{props.lockDoneD ? <FaCheck /> : props.lockUnlockedD ? <FaLockOpen /> : <FaLock />}</div>}
+            {props.right && <div className={lockClassR}>{props.lockDoneR ? <FaCheck /> : props.lockUnlockedR ? <FaLockOpen /> : <FaLock />}</div>}
+            {props.down && <div className={lockClassD}>{props.lockDoneD ? <FaCheck /> : props.lockUnlockedD ? <FaLockOpen /> : <FaLock />}</div>}
 
             <NodeLink onMouseDown={(e=>{e.preventDefault(); e.stopPropagation()})} onClick={toggle('left')} isEdit={props.isEdit} show={props.left} left done={props.done} unlocked={props.unlocked} />
             <NodeLink onMouseDown={(e=>{e.preventDefault(); e.stopPropagation()})} onClick={toggle('right')} isEdit={props.isEdit} show={props.right} right done={props.done} unlocked={props.unlocked} />

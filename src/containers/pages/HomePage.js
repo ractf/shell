@@ -62,7 +62,7 @@ export default () => {
                 </div>
             </Link>
         </div>
-        {api.user && api.user.isAdmin &&
+        {api.user && api.user.is_admin &&
             <div className={"cardRow"}>
                 <Link className={"cardTypeLink"} to={"/admin"}>
                     <div className={"cardTitle"}>Admin Panel</div>

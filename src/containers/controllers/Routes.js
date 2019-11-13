@@ -93,7 +93,8 @@ export default withRouter(({ location }) => {
             <Page title={"Leaderboard"} C={Leaderboard} />
         </Route>
 
-        <Route exact path={"/team"}>
+        <Redirect path={"/team"} to={"/team/me"} exact />
+        <Route exact path={"/team/:team"}>
             <Page title={"Team"} auth C={TeamPage} />
         </Route>
         <Route exact path={"/noteam"}>
