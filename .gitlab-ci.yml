@@ -4,7 +4,19 @@ cache:
   paths:
     - node_modules/
 
-build react:
+before_script:
+  - npm install --progress=false
+
+stages:
+  - Build
+  - Lint
+
+builder:
+  stage: Build
   script:
-    - npm install --progress=false
+    - CI=false npm run build
+
+linter:
+  stage: Lint
+  script:
     - npm run build
