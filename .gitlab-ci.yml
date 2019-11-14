@@ -17,6 +17,9 @@ builder:
   stage: Build
   script:
     - CI=false npm run build
+  artifacts:
+    paths:
+    - build
 
 deploy staging:
   stage: Deploy
@@ -24,7 +27,6 @@ deploy staging:
   only:
     - master
   script:
-    - CI=fasle npm run build
     - export SSHPASS=$USER_PASS
     - sshpass -e scp -o stricthostkeychecking=no -r build gitlab@git.bsnk.me:/srv/ractf
 
