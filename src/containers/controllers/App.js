@@ -98,6 +98,8 @@ const SiteLocked = ({ setLoaded }) => {
     const iRef = useRef();
     const shardData = useRef();
     const lastTime = useRef();
+    const scan = useRef();
+    if (!scan.current) scan.current = 0;
     if (!shardData.current) shardData.current = [];
 
     const pad = n => {
@@ -137,39 +139,94 @@ const SiteLocked = ({ setLoaded }) => {
         const ctx = canvas.getContext("2d");
 
         let shards = (canvas.width * canvas.height) / 25000;
+        let grd;
 
-        const drawShard = (x, y, scale, angle) => {
-            ctx.translate(x, y);
-            ctx.rotate(angle);
-            ctx.drawImage(image, -image.width * scale, -image.height * scale, image.width * scale, image.height * scale);
-            ctx.rotate(-angle);
-            ctx.translate(-x, -y);
-        };
+        const drawShards = () => {
+            const drawShard = (x, y, scale, angle) => {
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                ctx.drawImage(image, -image.width * scale, -image.height * scale, image.width * scale, image.height * scale);
+                ctx.rotate(-angle);
+                ctx.translate(-x, -y);
+            };
 
-        while (shardData.current.length < shards) {
-            shardData.current.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * 2 * -canvas.height,
-                scale: (Math.random() ** 4) / 2 + 0.5,
-                angle: 0,
-                rotate: (Math.random() - 0.5) / 4,
-            })
-        }
-
-        let shard;
-        for (let i = 0; i < shardData.current.length; i++) {
-            shard = shardData.current[i];
-            
-            ctx.globalAlpha = (shard.scale - 0.5);
-            drawShard(shard.x, shard.y, shard.scale, shard.angle);
-            
-            shard.y += shard.scale * 0.5 * dt;
-            shard.angle += shard.scale * shard.rotate * dt / 1000;
-            if (shard.y > canvas.height + image.height) {
-                shardData.current.splice(i, 1);
-                i--;
+            while (shardData.current.length < shards) {
+                shardData.current.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * 2 * -canvas.height,
+                    scale: (Math.random() ** 4) / 2 + 0.5,
+                    angle: 0,
+                    rotate: (Math.random() - 0.5) / 4,
+                })
             }
+
+            let shard;
+            for (let i = 0; i < shardData.current.length; i++) {
+                shard = shardData.current[i];
+                
+                ctx.globalAlpha = (shard.scale - 0.5);
+                drawShard(shard.x, shard.y, shard.scale, shard.angle);
+                
+                shard.y += shard.scale * 0.5 * dt;
+                shard.angle += shard.scale * shard.rotate * dt / 1000;
+                if (shard.y > canvas.height + image.height) {
+                    shardData.current.splice(i, 1);
+                    i--;
+                }
+            }
+
+            ctx.globalAlpha = 1;
         }
+
+        // Background
+        ctx.fillStyle = "#7f1a7aff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Sun
+        grd = ctx.createLinearGradient(0, canvas.height / 4, 0, canvas.height / 4 * 3);
+        grd.addColorStop(0, "#ff2f87ff");
+        grd.addColorStop(1, "#291888ff");
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 4, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Shards
+        drawShards();
+
+        // Shards fade
+        grd = ctx.createLinearGradient(0, canvas.height / 2 - 50, 0, canvas.height / 2);
+        grd.addColorStop(0, "#7f1a7a00");
+        grd.addColorStop(1, "#7f1a7aff");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Ground
+        ctx.fillStyle = "#291888ff";
+        ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, canvas.height);
+
+        ctx.strokeStyle = "#752fb6ff";
+        ctx.lineWidth = 2;
+        for (let i = 1; i < 11; i++) {
+            ctx.beginPath(); 
+            ctx.moveTo(0, canvas.height / 2 + (canvas.height / 20) * i + scan.current);
+            ctx.lineTo(canvas.width, canvas.height / 2 + (canvas.height / 20) * i + scan.current);
+            ctx.stroke();
+        }
+        scan.current = (scan.current - 1) % (canvas.height / 20);
+        for (let i = -400; i <= 400; i++) {
+            ctx.beginPath(); 
+            ctx.moveTo(canvas.width / 2 + i * canvas.width / 1000, canvas.height / 2);
+            ctx.lineTo(canvas.width / 2 + i * canvas.width / 5, canvas.height);
+            ctx.stroke();
+        }
+
+        /*var grd = ctx.createLinearGradient(0, canvas.height / 2 - 1, 0, canvas.height / 2 + 159);
+        grd.addColorStop(0, "#7f1a7aff");
+        grd.addColorStop(1, "#7f1a7a00");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, 160);*/
+        
     };
     useEffect(animate, []);
 
