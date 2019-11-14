@@ -66,43 +66,44 @@ export default () => {
         api.challenges = [];
 
     let tab = api.challenges[activeTab];
-    let handler = plugins.categoryType[tab.type];
-    let challengeTab;
-    if (!handler) {
-        challengeTab = <>
-            Category renderer for type "{tab.type}" missing!<br /><br />
-            Did you forget to install a plugin?
-        </>
-    } else {
-        challengeTab = <>
-            <SectionBlurb>{tab.desc}</SectionBlurb>
-            {React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit })}
-        </>
-    }
-
-    let chalEl;
-    if (challenge || isEditor) {
-        if (challenge.type)
-            handler = plugins.challengeType[challenge.type];
-        else
-            handler = plugins.challengeType["__default"];
-
-        if (!handler)
-            chalEl = <>
-                Challenge renderer for type "{challenge.type}" missing!<br /><br />
+    let chalEl, handler, challengeTab;
+    if (tab) {
+        handler = plugins.categoryType[tab.type];
+        if (!handler) {
+            challengeTab = <>
+                Category renderer for type "{tab.type}" missing!<br /><br />
                 Did you forget to install a plugin?
-            </>;
-        else {
-            chalEl = React.createElement(
-                handler.component, {
-                challenge: challenge, hideChal: hideChal,
-                isEditor: isEditor, saveEdit: saveEdit
-            })
+            </>
+        } else {
+            challengeTab = <>
+                <SectionBlurb>{tab.desc}</SectionBlurb>
+                {React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit })}
+            </>
         }
 
-        chalEl = <Modal onHide={hideChal}>
-            {chalEl}
-        </Modal>;
+        if (challenge || isEditor) {
+            if (challenge.type)
+                handler = plugins.challengeType[challenge.type];
+            else
+                handler = plugins.challengeType["__default"];
+
+            if (!handler)
+                chalEl = <>
+                    Challenge renderer for type "{challenge.type}" missing!<br /><br />
+                    Did you forget to install a plugin?
+                </>;
+            else {
+                chalEl = React.createElement(
+                    handler.component, {
+                    challenge: challenge, hideChal: hideChal,
+                    isEditor: isEditor, saveEdit: saveEdit
+                })
+            }
+
+            chalEl = <Modal onHide={hideChal}>
+                {chalEl}
+            </Modal>;
+        }
     }
 
     return <Page title={"Challenges"} selfContained>
@@ -120,7 +121,7 @@ export default () => {
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
             </div></div>
             <div className={"challengeBody"}><div>
-                { api.user.is_admin || 1 ? edit ? 
+                { api.user.is_admin ? edit ? 
                     <Button className={"campEditButton"} click={() => {setEdit(false)}} warning>Stop Editing</Button>
                     : <Button className={"campEditButton"} click={() => {setEdit(true)}} warning>Edit</Button> : null}
 

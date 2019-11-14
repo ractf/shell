@@ -5,7 +5,7 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { apiContext, Spinner, FormError, TextBlock } from "ractf";
+import { apiContext, Spinner, FormError } from "ractf";
 
 import admin from "../../static/img/admin.png";
 import donor from "../../static/img/donor_large.png";
@@ -48,9 +48,10 @@ export default () => {
         }).catch(e => {
             let error = api.getError(e)
             setUserData(api.user)
-            //setError(error)
+            setError(error)
         });
-    }, [api.getUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     if (error) return <Page title={"Users"} vCentre>
         <FormError>{error}</FormError>

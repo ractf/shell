@@ -30,7 +30,8 @@ export default () => {
         }).catch(e => {
             let error = api.getError(e)
             setError(error) });
-    }, [api.getTeam]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [team]);
 
     if (error) return <Page title={"Teans"} vCentre>
         <FormError>{error}</FormError>

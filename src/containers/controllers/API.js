@@ -10,6 +10,8 @@ class APIClass extends Component {
     API_BASE = process.env.REACT_APP_API_BASE;
     BASE_URL = this.DOMAIN + this.API_BASE;
     ENDPOINTS = {
+        COUNTDOWN: "/countdown/",
+
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
         ADD_2FA: "/auth/add_2fa",
@@ -37,7 +39,7 @@ class APIClass extends Component {
     constructor() {
         super();
         
-        let userData, challenges, teamData;
+        let userData, challenges, teamData, countdown, siteOpen;
         try {
             userData = JSON.parse(localStorage.getItem("userData"));
         } catch (e) {
@@ -56,6 +58,18 @@ class APIClass extends Component {
             teamData = {};
         }
 
+        try {
+            countdown = JSON.parse(localStorage.getItem("countdown"));
+
+            let ct = new Date(countdown.time);
+            let now = new Date();
+
+            siteOpen = (ct - now) - countdown.offset < 0;
+        } catch (e) {
+            countdown = {};
+            siteOpen = false;
+        }
+
         this.state = {
             ready: false,
             authenticated: !!userData,
@@ -65,6 +79,12 @@ class APIClass extends Component {
 
             allUsers: null,
             allTeams: null,
+
+            siteOpen: siteOpen,
+            countdown: countdown,
+            openSite: this.openSite,
+
+            getCountdown: this.getCountdown,
 
             getTeam: this.getTeam,
             getUser: this.getUser,
@@ -88,6 +108,11 @@ class APIClass extends Component {
     }
 
     async componentWillMount() {
+        this.setup();
+    }
+    async setup() {
+        if (!this.state.siteOpen) return;
+
         let token = localStorage.getItem('token');
         if (token) {
             this._reloadCache();
@@ -96,6 +121,11 @@ class APIClass extends Component {
                 ready: true,
             });
         }
+    }
+
+    openSite = () => {
+        this.setState({ ready: false, siteOpen: true });
+        this.setup();
     }
 
     // Helpers
@@ -197,6 +227,19 @@ class APIClass extends Component {
         });
     }
 
+    getCountdown = () => this.get(this.ENDPOINTS.COUNTDOWN).then(data => {
+        if (data.s) {
+            let ct = new Date(data.d.countdown_timestamp);
+            let st = new Date(data.d.server_timestamp);
+            let now = new Date();
+
+            let countdown = {time: data.d.countdown_timestamp, offset: st - now};
+            localStorage.setItem("countdown", JSON.stringify(countdown));
+
+            if (ct - st < 0) this.setState({countdown: countdown, siteOpen: true});
+            else this.setState({countdown: countdown, siteOpen: false, ready: true});
+        }
+    });
     _getChallenges = () => this.get(this.ENDPOINTS.CHALLENGES);
 
     _postLogin = async token => {
