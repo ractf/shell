@@ -5,16 +5,28 @@ cache:
     - node_modules/
 
 before_script:
+  - apt-get update -qq && apt-get install -y -qq sshpass
   - npm install --progress=false
 
 stages:
   - Build
+  - Deploy
   - Lint
 
 builder:
   stage: Build
   script:
     - CI=false npm run build
+
+deploy staging:
+  stage: Deploy
+  environment: Staging
+  only:
+    - master
+  script:
+    - CI=fasle npm run build
+    - export SSHPASS=$USER_PASS
+    - sshpass -e scp -o stricthostkeychecking=no -r build gitlab@git.bsnk.me:/srv/ractf
 
 linter:
   stage: Lint
