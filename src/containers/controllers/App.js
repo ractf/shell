@@ -9,9 +9,10 @@ import { AppContext } from "./Contexts";
 import Routes from "./Routes";
 import { API } from "./API";
 
-import { plugins, apiContext, Spinner, SectionTitle } from "ractf";
+import { plugins, apiContext, Spinner, SectionTitle, Button } from "ractf";
 
 import lockImg from "./spine.png";
+import bgm from "./synthwaveL60.ogg"
 import "./App.scss";
 
 
@@ -91,9 +92,12 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-const SiteLocked = ({ setLoaded }) => {
+const wave = {on: false, audio: null};
+
+const SiteLocked = ({ setLoaded, setHasCode }) => {
     const api = useContext(apiContext);
     const [countdownText, setCountdownText] = useState("");
+    const [swc, setWave] = useState(0);
     const cRef = useRef();
     const iRef = useRef();
     const shardData = useRef();
@@ -101,6 +105,24 @@ const SiteLocked = ({ setLoaded }) => {
     const scan = useRef();
     if (!scan.current) scan.current = 0;
     if (!shardData.current) shardData.current = [];
+    window._wave = wave;
+    if (wave.on && !wave.audio) {
+        wave.audio = (new AudioContext()).createBufferSource();
+
+        let request = new XMLHttpRequest();
+        request.open('GET', bgm, true); 
+        request.responseType = 'arraybuffer';
+        request.onload = function() {
+            wave.audio.context.decodeAudioData(request.response, function(response) {
+                wave.audio.buffer = response;
+                wave.audio.loop = true;
+                wave.audio.start(0);
+                if (wave.on) wave.audio.connect(wave.audio.context.destination);
+            }, function () { console.error('The request failed.'); } );
+        }
+        request.send();
+    };
+
 
     const pad = n => {
         if (n < 10) return "0" + n;
@@ -178,57 +200,65 @@ const SiteLocked = ({ setLoaded }) => {
             ctx.globalAlpha = 1;
         }
 
-        // Background
-        ctx.fillStyle = "#7f1a7aff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Sun
-        grd = ctx.createLinearGradient(0, canvas.height / 4, 0, canvas.height / 4 * 3);
-        grd.addColorStop(0, "#ff2f87ff");
-        grd.addColorStop(1, "#291888ff");
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 4, 0, Math.PI * 2);
-        ctx.fill();
+        if (wave.on) {
+            // Background
+            ctx.fillStyle = "#7f1a7aff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Sun
+            grd = ctx.createLinearGradient(0, canvas.height / 4, 0, canvas.height / 4 * 3);
+            grd.addColorStop(0, "#ff2f87ff");
+            grd.addColorStop(1, "#291888ff");
+            ctx.fillStyle = grd;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
         
         // Shards
         drawShards();
 
-        // Shards fade
-        grd = ctx.createLinearGradient(0, canvas.height / 2 - 50, 0, canvas.height / 2);
-        grd.addColorStop(0, "#7f1a7a00");
-        grd.addColorStop(1, "#7f1a7aff");
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Ground
-        ctx.fillStyle = "#291888ff";
-        ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, canvas.height);
+        if (wave.on) {
+            // Shards fade
+            grd = ctx.createLinearGradient(0, canvas.height / 2 - 50, 0, canvas.height / 2);
+            grd.addColorStop(0, "#7f1a7a00");
+            grd.addColorStop(1, "#7f1a7aff");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Ground
+            ctx.fillStyle = "#291888ff";
+            ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, canvas.height);
 
-        ctx.strokeStyle = "#752fb6ff";
-        ctx.lineWidth = 2;
-        for (let i = 1; i < 11; i++) {
-            ctx.beginPath(); 
-            ctx.moveTo(0, canvas.height / 2 + (canvas.height / 20) * i + scan.current);
-            ctx.lineTo(canvas.width, canvas.height / 2 + (canvas.height / 20) * i + scan.current);
-            ctx.stroke();
-        }
-        scan.current = (scan.current - 1) % (canvas.height / 20);
-        for (let i = -400; i <= 400; i++) {
-            ctx.beginPath(); 
-            ctx.moveTo(canvas.width / 2 + i * canvas.width / 1000, canvas.height / 2);
-            ctx.lineTo(canvas.width / 2 + i * canvas.width / 5, canvas.height);
-            ctx.stroke();
-        }
+            ctx.strokeStyle = "#752fb6ff";
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 11; i++) {
+                //let prog = (i / 20) + (scan.current / 500);
 
-        /*var grd = ctx.createLinearGradient(0, canvas.height / 2 - 1, 0, canvas.height / 2 + 159);
-        grd.addColorStop(0, "#7f1a7aff");
-        grd.addColorStop(1, "#7f1a7a00");
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, 160);*/
-        
+                let prog = (((i + (scan.current / 50)) / 10) ** 3);
+                
+                ctx.beginPath(); 
+                ctx.moveTo(0, canvas.height / 2 + (canvas.height / 2 * prog));
+                ctx.lineTo(canvas.width, canvas.height / 2 + (canvas.height / 2 * prog));
+                ctx.stroke();
+            }
+            scan.current = (scan.current + 0.1 * dt) % 50;
+            for (let i = -400; i <= 400; i++) {
+                ctx.beginPath(); 
+                ctx.moveTo(canvas.width / 2 + i * canvas.width / 1000, canvas.height / 2);
+                ctx.lineTo(canvas.width / 2 + i * canvas.width / 5, canvas.height);
+                ctx.stroke();
+            }
+        }
     };
     useEffect(animate, []);
+
+    const hasCode = () => {
+        let uname = prompt("c1");
+        let passwd = prompt("c2");
+        let otp = prompt("c3");
+        api.login(uname, passwd, otp);
+    }
 
     if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
     return <div className={"lockWrap"}>
@@ -236,12 +266,26 @@ const SiteLocked = ({ setLoaded }) => {
         <img alt={""} src={lockImg} style={{display: "none"}} ref={iRef} />
         <SectionTitle>Site Locked!</SectionTitle>
         <div className={"siteCountdown"}>Unlock in {countdownText}</div>
+
+        <div className={"slide" + (wave.on ? " on" : "")} onClick={() => {
+            wave.on = !wave.on
+            setWave(swc + 1);
+            if (wave.audio) {
+                wave.audio.loop = true;
+                if (wave.on) wave.audio.connect(wave.audio.context.destination);
+                else wave.audio.disconnect(wave.audio.context.destination);
+            }
+        }} />
+        {!wave.on &&
+        <Button lesser click={hasCode}>I have a code</Button>}
     </div>;
 }
 
 const App = () => {
     const api = useContext(apiContext);
     window.__api = api;
+
+    const [hasCode, setHasCode] = useState(false);
 
     const [console, setConsole] = useState(false);
     const [currentPrompt, setCurrentPrompt] = useState(null);
@@ -304,7 +348,7 @@ const App = () => {
         setTimeout(() => { setLoaded(true) }, LOADED_TIMEOUT);
     }, []);
 
-    if (!api.siteOpen) return <SiteLocked setLoaded={setLoaded} />;
+    if (!api.siteOpen && !hasCode) return <SiteLocked setHasCode={setHasCode} setLoaded={setLoaded} />;
 
     if (console) return <VimDiv />;
 

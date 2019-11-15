@@ -55,6 +55,45 @@ html {
 
         z-index: -1;
     }
+
+    &>.slide {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        width: 56px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: $bg_l1;
+        transition: 200ms all ease;
+        cursor: pointer;
+
+        &::before {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            top: 2px;
+            border-radius: 10px;
+            background-color: $bg_l2;
+
+            transition: 200ms all ease;
+        }
+        &.on {
+            &::before {
+                left: 34px;
+                background-color: #291888;
+            }
+            background-color: #ff2f87;
+        }
+    }
+
+    &>button {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+    }
 }
 
 a {

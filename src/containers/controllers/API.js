@@ -111,8 +111,6 @@ class APIClass extends Component {
         this.setup();
     }
     async setup() {
-        if (!this.state.siteOpen) return;
-
         let token = localStorage.getItem('token');
         if (token) {
             this._reloadCache();
@@ -121,6 +119,8 @@ class APIClass extends Component {
                 ready: true,
             });
         }
+
+        //if (!this.state.siteOpen) return;
     }
 
     openSite = () => {
@@ -216,6 +216,7 @@ class APIClass extends Component {
             newState.user = userData;
             newState.team = teamData;
             newState.challenges = challenges;
+            newState.siteOpen = true;
         }
         this.setState(newState);
     };
