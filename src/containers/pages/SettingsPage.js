@@ -85,7 +85,12 @@ export default () => {
     };
 
     const alterTeam = ({ name, desc, pass }) => {
-        setTeamError("Not implemented!");
+        api.modifyTeam(api.team.id, {name: name, description: desc, password: pass}).then(() => {
+            app.promptConfirm({message: "Team details updated succesfully.", noCancel: true, small: true});
+            setTeamError(null);
+        }).catch(e => {
+            setTeamError(api.getError(e));
+        });
     }
 
     const teamOwner = (api.team ? api.team.owner.id === api.user.id : null);

@@ -25,8 +25,9 @@ class APIClass extends Component {
         USER_SELF: "/members/self",
         USER_LIST: "/members/list",
         USER: "/members/",
-
+        
         TEAM_CREATE: "/teams/create",
+        TEAM_MODIFY: "/teams/mod/",
         TEAM_JOIN: "/teams/join",
         TEAM_SELF: "/teams/self",
         TEAM_LIST: "/teams/list",
@@ -98,6 +99,7 @@ class APIClass extends Component {
             verify_2fa: this.verify_2fa,
             modifyUser: this.modifyUser,
             createTeam: this.createTeam,
+            modifyTeam: this.modifyTeam,
             joinTeam: this.joinTeam,
             attemptFlag: this.attemptFlag,
 
@@ -274,6 +276,19 @@ class APIClass extends Component {
     getTeam = (id) => {
         return this.get(id === "self" || id === "me" ? this.ENDPOINTS.TEAM_SELF : this.ENDPOINTS.TEAM + id);
     };
+
+    modifyTeam = (teamId, data) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.TEAM_MODIFY + teamId,
+                method: "patch",
+                data: data,
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    }
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
