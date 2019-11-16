@@ -24,7 +24,7 @@ const makeOwner = (api, app, member) => {
 
 const TeamMember = ({ api, app, member, isOwner, isCaptain }) => {
     return <div className={"memberTheme"}>
-        <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")} onClick={1||isOwner ? makeOwner(api, app, member) : null}><GiCaptainHatProfile /></div>
+        <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")} onClick={isOwner ? makeOwner(api, app, member) : null}><GiCaptainHatProfile /></div>
         {/*(isOwner && !isCaptain) && <div className={"memberIcon clickable bad"} onClick={kickMember(api, app, member)}><GiThorHammer /></div>*/}
         <div>
             {member.name}
