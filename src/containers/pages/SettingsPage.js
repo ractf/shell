@@ -42,6 +42,7 @@ export default () => {
     const app = useContext(appContext);
 
     const [unError, setUnError] = useState("");
+    const [pfError, setPfError] = useState("");
     const [pwError, setPwError] = useState("");
     const [teamError, setTeamError] = useState("");
 
@@ -53,21 +54,33 @@ export default () => {
         if (new1 !== new2)
             return setPwError("Passwords must match");
 
-        api.modifyUser({oPass: old, nPass: new1}).then(() => {
+        api.modifyUser(api.user.id, {oPass: old, nPass: new1}).then(() => {
             setPwError(null);
         }).catch(e => {
-            setPwError(e.toString());
+            setPwError(api.getError(e));
         });
     };
 
     const changeUsername = ({ name }) => {
         if (!name)
             return setUnError("Username required");
+        if (name === api.user.username)
+            return setUnError("Username has not changed");
 
-        api.modifyUser({name: name}).then(() => {
-            setUnError(null);
+        api.modifyUser(api.user.id, {name: name}).then(() => {
+            app.promptConfirm({message: "Username changed. Please log back in.", noCancel: true, small: true});
+            api.logout();
         }).catch(e => {
-            setUnError(e.toString());
+            setUnError(api.getError(e));
+        });
+    };
+
+    const updateDetails = ({ discord, twitter, reddit, bio }) => {
+        api.modifyUser(api.user.id, {discord: discord, twitter: twitter, reddit: reddit, bio: bio}).then(() => {
+            app.promptConfirm({message: "Personal details updated succesfully.", noCancel: true, small: true});
+            setPfError(null);
+        }).catch(e => {
+            setPfError(api.getError(e));
         });
     };
 
@@ -89,7 +102,7 @@ export default () => {
                 }
 
                 <Form handle={changeUsername}>
-                    <div className={"optionTitle"}>Username</div>
+                    <label htmlFor={"name"} className={"optionTitle"}>Username</label>
                     <Input name={"name"} val={api.user.username} limit={36} placeholder={"Username"} />
 
                     {unError && <FormError>{unError}</FormError>}
@@ -103,6 +116,22 @@ export default () => {
 
                     {pwError && <FormError>{pwError}</FormError>}
                     <Button submit>Change Password</Button>
+                </Form>
+            </div>
+            <div label="Profile">
+                <Form handle={updateDetails}>
+                    <label htmlFor={"discord"} className={"optionTitle"}>Discord</label>
+                    <Input name={"discord"} val={api.user.social.discord} limit={36} placeholder={"Discord"} />
+                    <label htmlFor={"twitter"} className={"optionTitle"}>Twitter</label>
+                    <Input name={"twitter"} val={api.user.social.twitter} limit={36} placeholder={"Twitter"} />
+                    <label htmlFor={"reddit"} className={"optionTitle"}>Reddit</label>
+                    <Input name={"reddit"} val={api.user.social.reddit} limit={36} placeholder={"Reddit"} />
+
+                    <label htmlFor={"bio"} className={"optionTitle"}>Bio</label>
+                    <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={"Bio"} />
+
+                    {pfError && <FormError>{pfError}</FormError>}
+                    <Button submit>Save</Button>
                 </Form>
             </div>
             <div label="Team">

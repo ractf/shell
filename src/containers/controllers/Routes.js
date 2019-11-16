@@ -54,7 +54,7 @@ export default withRouter(({ location }) => {
             <Page title={"Register"} noAuth C={EmailMessage} />
         </Route>
         <Route exact path={"/verify"}>
-            <Page title={"Verify"} noAuth C={EmailVerif} />
+            <Page title={"Verify"} C={EmailVerif} />
         </Route>
 
         <Route exact path={"/team/join"}>

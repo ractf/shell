@@ -49,7 +49,7 @@ export const UsersList = () => {
             <BrokenShards />
         </> :
             api.allUsers ?
-                <Table headings={["Team"]} data={api.allUsers.map(x => [x.name, x.team])} />
+                <Table headings={["Name", "Team"]} data={api.allUsers.map(x => [x.name, x.team_name, "/profile/" + x.id])} />
                 : <Spinner />
         }
     </Page>;

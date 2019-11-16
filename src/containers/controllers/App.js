@@ -291,9 +291,9 @@ const App = () => {
     const [currentPrompt, setCurrentPrompt] = useState(null);
     const [loaded, setLoaded] = useState(false);
     const [popups, setPopups] = useState([
-        { type: 0, title: 'Achievement get', body: 'You got a thing!' },
+        /*{ type: 0, title: 'Achievement get', body: 'You got a thing!' },
         { type: 'medal', medal: 'winner' },
-        { type: 0, title: 'Challenge solved', body: 'solved a thing' },
+        { type: 0, title: 'Challenge solved', body: 'solved a thing' },*/
     ]);
     const typedText = useRef();
     if (!typedText.current) typedText.current = [];

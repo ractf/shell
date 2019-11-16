@@ -22,15 +22,11 @@ const UserSpecial = ({ children, col, ico }) => (
     </div>
 );
 
-const UserSolve = ({ challenge }) => {
-    // TODO: Properly API this.
-    const points = "69696 points";
-    const title = "Perculiar Post-it";
-
+const UserSolve = ({ name, points, time }) => {
     return (
         <div className={"userSolve"}>
-            <div>{title}</div>
-            <div>{points}</div>
+            <div>{name}</div>
+            <div>{points} point{points === 1 ? "" : "s"}</div>
         </div>
     )
 }
@@ -46,9 +42,8 @@ export default () => {
         api.getUser(user).then(data => {
             setUserData(data.d);
         }).catch(e => {
-            let error = api.getError(e)
-            setUserData(api.user)
-            setError(error)
+            setUserData(api.user);
+            setError(api.getError(e));
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
@@ -59,21 +54,23 @@ export default () => {
     </Page>;
     if (!userData) return <Page title={"Users"} vCentre><Spinner /></Page>;
 
-    console.log(userData);
-
     return <Page title={userData.username}>
         <div className={"profileSplit"}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
                 <div className={"userJoined"}>Joined Yesterday</div>
-                <div className={"userBio noBio"}></div>
+                <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
+                    {userData.bio}
+                </div>
 
-                {user.twitter &&
-                    <a className={"userSocial"} target={"_blank"} href={"https://twitter.com/" + user.twitter}><FaTwitter /><span>@{user.twitter}</span></a>}
-                {user.reddot &&
-                    <a className={"userSocial"} target={"_blank"} href={"https://reddit.com/u/" + user.reddit}><FaRedditAlien /><span>/u/{user.reddit}</span></a>}
-                {user.discord &&
-                    <span className={"userSocial"}><FaDiscord /><span>{user.discord}</span></span>}
+                {userData.social && <>
+                    {userData.social.twitter && userData.social.twitter.length !== 0 &&
+                        <a className={"userSocial"} target={"_blank"} href={"https://twitter.com/" + userData.social.twitter}><FaTwitter /><span>@{userData.social.twitter}</span></a>}
+                    {userData.social.reddit && userData.social.reddit.length !== 0 &&
+                        <a className={"userSocial"} target={"_blank"} href={"https://reddit.com/u/" + userData.social.reddit}><FaRedditAlien /><span>/u/{userData.social.reddit}</span></a>}
+                    {userData.social.discord && userData.social.discord.length !== 0 &&
+                        <span className={"userSocial"}><FaDiscord /><span>{userData.social.discord}</span></span>}
+                </>}
             </div>
             <div className={"userSolves"}>
                 {userData.is_beta &&
@@ -83,9 +80,8 @@ export default () => {
                 {userData.is_admin &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
-                <UserSolve />
-                <UserSolve />
-                <UserSolve />
+                {userData.solves && userData.solves.map(i => <UserSolve {...i} />)}
+                {(!userData.solves || userData.solves.length === 0) && <div className={"noSolves"}>{userData.username} hasn't solved any challenges yet</div>}
             </div>
         </div>
     </Page>;

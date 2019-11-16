@@ -21,6 +21,7 @@ class APIClass extends Component {
         CHALLENGES: "/challenges/",
         FLAG_TEST: "/challenges/<uuid>/attempt",
 
+        USER_MODIFY: "/members/mod/",
         USER_SELF: "/members/self",
         USER_LIST: "/members/list",
         USER: "/members/",
@@ -253,10 +254,17 @@ class APIClass extends Component {
             this.props.history.push("/noteam");
     };
 
-    modifyUser = ({ oPass = null, nPass = null }) => {
+    modifyUser = (userId, data) => {
         return new Promise((resolve, reject) => {
-            reject("Nope.");
-        })
+            axios({
+                url: this.BASE_URL + this.ENDPOINTS.USER_MODIFY + userId,
+                method: "patch",
+                data: data,
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
     }
 
     getUser = (id) => {
