@@ -78,6 +78,7 @@ class APIClass extends Component {
             user: userData,
             challenges: challenges,
             team: teamData,
+            setup: this.setup,
 
             allUsers: null,
             allTeams: null,

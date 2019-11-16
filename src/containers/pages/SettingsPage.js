@@ -1,25 +1,21 @@
 import React, { useContext, useState } from "react";
-import { GiCaptainHatProfile, GiThorHammer } from "react-icons/gi";
+import { GiCaptainHatProfile } from "react-icons/gi";
 
 import { Page, HR, ButtonRow, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
 
 import "./SettingsPage.scss";
 
 
-const kickMember = (api, app, member) => {
-    return () => {
-        app.promptConfirm({ message: "Are you sure you want to remove " + member.name + " from your team?", small: true }).then(() => {
-            // Kick 'em
-        }).catch(() => {
-        });
-    }
-};
-
-
 const makeOwner = (api, app, member) => {
     return () => {
         app.promptConfirm({ message: "Are you sure you want to make " + member.name + " the new team owner?\n\nYou will cease to own the team!", small: true }).then(() => {
             // Kick 'em
+            api.modifyTeam(api.team.id, {captain: member.id}).then(() => {
+                app.promptConfirm({message: "You are no longer the team captain!", noCancel: true, small: true});
+                api.setup();
+            }).catch(e => {
+                app.promptConfirm({message: "Error: " + api.getError(e), noCancel: true, small: true});
+            });
         }).catch(() => {
         });
     }
@@ -28,8 +24,8 @@ const makeOwner = (api, app, member) => {
 
 const TeamMember = ({ api, app, member, isOwner, isCaptain }) => {
     return <div className={"memberTheme"}>
-        <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")} onClick={isOwner ? makeOwner(api, app, member) : null}><GiCaptainHatProfile /></div>
-        {(isOwner && !isCaptain) && <div className={"memberIcon clickable bad"} onClick={kickMember(api, app, member)}><GiThorHammer /></div>}
+        <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")} onClick={1||isOwner ? makeOwner(api, app, member) : null}><GiCaptainHatProfile /></div>
+        {/*(isOwner && !isCaptain) && <div className={"memberIcon clickable bad"} onClick={kickMember(api, app, member)}><GiThorHammer /></div>*/}
         <div>
             {member.name}
         </div>
@@ -78,6 +74,7 @@ export default () => {
     const updateDetails = ({ discord, discordid, twitter, reddit, bio }) => {
         api.modifyUser(api.user.id, {discord: discord, discordid: discordid, twitter: twitter, reddit: reddit, bio: bio}).then(() => {
             app.promptConfirm({message: "Personal details updated succesfully.", noCancel: true, small: true});
+            api.setup();
             setPfError(null);
         }).catch(e => {
             setPfError(api.getError(e));
@@ -87,6 +84,7 @@ export default () => {
     const alterTeam = ({ name, desc, pass }) => {
         api.modifyTeam(api.team.id, {name: name, description: desc, password: pass}).then(() => {
             app.promptConfirm({message: "Team details updated succesfully.", noCancel: true, small: true});
+            api.setup();
             setTeamError(null);
         }).catch(e => {
             setTeamError(api.getError(e));
@@ -143,12 +141,7 @@ export default () => {
             <div label="Team">
                 {api.team ? <>
                     <Form handle={alterTeam} locked={!teamOwner}>
-                        {teamOwner ?
-                            <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
-                            : <div className={"row"}>
-                                <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
-                                <Button warning>Leave Team</Button>
-                            </div>}
+                        <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
                         <Input val={api.team.description} name={"desc"} rows={5} placeholder={"Team Description"} />
                         <Input val={api.team.password} name={"pass"} password placeholder={"Team Password"} />
 

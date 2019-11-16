@@ -39,7 +39,7 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
             <ButtonRow>
                 <Button submit>{ body.okay || "Okay" }</Button>
                 {!body.noCancel &&
-                    <Button onClick={promise.reject}>{ body.cancel || "Cancel" }</Button>}
+                    <Button click={() => {promise.reject(); onHide && onHide()}}>{ body.cancel || "Cancel" }</Button>}
             </ButtonRow>
         </Form>
     </Modal>;
