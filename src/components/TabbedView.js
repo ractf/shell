@@ -20,9 +20,11 @@ export default ({ center, children, callback, initial }) => {
                         className={i === active ? "active" : ""}>
                         {c.props.label}</Button>)}
             </div>
-            <div className={"tabWrap"}>
-                {children[active]}
-            </div>
+            {children.map((i, n) => 
+                <div style={{display: n === active ? "block" : "none"}} className={"tabWrap"}>
+                    {i}
+                </div>
+            )}
         </>
     )
 }

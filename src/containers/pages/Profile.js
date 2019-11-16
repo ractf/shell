@@ -65,11 +65,13 @@ export default () => {
 
                 {userData.social && <>
                     {userData.social.twitter && userData.social.twitter.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"} href={"https://twitter.com/" + userData.social.twitter}><FaTwitter /><span>@{userData.social.twitter}</span></a>}
+                        <a className={"userSocial"} target={"_blank"} href={"https://twitter.com/" + encodeURIComponent(userData.social.twitter)}><FaTwitter /><span>@{userData.social.twitter}</span></a>}
                     {userData.social.reddit && userData.social.reddit.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"} href={"https://reddit.com/u/" + userData.social.reddit}><FaRedditAlien /><span>/u/{userData.social.reddit}</span></a>}
+                        <a className={"userSocial"} target={"_blank"} href={"https://reddit.com/u/" + encodeURIComponent(userData.social.reddit)}><FaRedditAlien /><span>/u/{userData.social.reddit}</span></a>}
                     {userData.social.discord && userData.social.discord.length !== 0 &&
-                        <span className={"userSocial"}><FaDiscord /><span>{userData.social.discord}</span></span>}
+                        (userData.social.discordid && userData.social.discordid.length !== 0
+                            ? <a target={"_blank"} href={"https://discordapp.com/users/" + encodeURIComponent(userData.social.discordid)} className={"userSocial"}><FaDiscord /><span>{userData.social.discord}</span></a>
+                            : <span className={"userSocial"}><FaDiscord /><span>{userData.social.discord}</span></span>)}
                 </>}
             </div>
             <div className={"userSolves"}>

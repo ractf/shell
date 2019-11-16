@@ -75,8 +75,8 @@ export default () => {
         });
     };
 
-    const updateDetails = ({ discord, twitter, reddit, bio }) => {
-        api.modifyUser(api.user.id, {discord: discord, twitter: twitter, reddit: reddit, bio: bio}).then(() => {
+    const updateDetails = ({ discord, discordid, twitter, reddit, bio }) => {
+        api.modifyUser(api.user.id, {discord: discord, discordid: discordid, twitter: twitter, reddit: reddit, bio: bio}).then(() => {
             app.promptConfirm({message: "Personal details updated succesfully.", noCancel: true, small: true});
             setPfError(null);
         }).catch(e => {
@@ -122,6 +122,7 @@ export default () => {
                 <Form handle={updateDetails}>
                     <label htmlFor={"discord"} className={"optionTitle"}>Discord</label>
                     <Input name={"discord"} val={api.user.social.discord} limit={36} placeholder={"Discord"} />
+                    <Input name={"discordid"} val={api.user.social.discordid} format={/\d+/} limit={18} placeholder={"Discord User ID"} />
                     <label htmlFor={"twitter"} className={"optionTitle"}>Twitter</label>
                     <Input name={"twitter"} val={api.user.social.twitter} limit={36} placeholder={"Twitter"} />
                     <label htmlFor={"reddit"} className={"optionTitle"}>Reddit</label>
