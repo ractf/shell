@@ -17,6 +17,8 @@ class APIClass extends Component {
         ADD_2FA: "/auth/add_2fa",
         VERIFY_2FA: "/auth/verify_2fa",
         VERIFY: "/auth/verify",
+        REQUEST_RESET: "/auth/request_password_reset",
+        COMPLETE_RESET: "/auth/complete_password_reset",
 
         CHALLENGES: "/challenges/",
         FLAG_TEST: "/challenges/<uuid>/attempt",
@@ -103,6 +105,8 @@ class APIClass extends Component {
             modifyTeam: this.modifyTeam,
             joinTeam: this.joinTeam,
             attemptFlag: this.attemptFlag,
+            requestPasswordReset: this.requestPasswordReset,
+            completePasswordReset: this.completePasswordReset,
 
             ensure: this.ensure,
             getError: this.getError,
@@ -344,9 +348,22 @@ class APIClass extends Component {
 
     add_2fa = () => this.post(this.ENDPOINTS.ADD_2FA);
     verify_2fa = (otp) => this.post(this.ENDPOINTS.VERIFY_2FA, { otp: otp });
+    requestPasswordReset = (email) => this.post(this.ENDPOINTS.REQUEST_RESET, { username: email });
     verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid }).then(data => {
         this._postLogin(data.d.token);
     });
+
+    completePasswordReset = (id, secret, password) => {
+        return new Promise((resolve, reject) => {
+            this.post(this.ENDPOINTS.COMPLETE_RESET,
+                { uuid: id, secret: secret, new_password: password }
+            ).then(response => {
+                this.props.history.push("/login");
+                resolve();
+                return;
+            }).catch(reject)
+        });
+    };
 
     register = (username, password, email) => {
         return new Promise((resolve, reject) => {

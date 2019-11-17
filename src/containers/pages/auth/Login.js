@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import { Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, apiContext, appContext } from "ractf";
-import { Wrap } from "./Parts";
+import { Wrap, EMAIL_RE } from "./Parts";
 
 
 export default () => {
@@ -41,6 +41,18 @@ export default () => {
         );
     }
 
+    const openForget = () => {
+        app.promptConfirm({message: "Enter your email to reset your password", okay: "Send Link", small: true},
+            [{name: "email", placeholder: "Email", format: EMAIL_RE}]
+        ).then(({ email }) => {
+            api.requestPasswordReset(email).then(() => {
+                app.alert("Email sent, check your inbox");
+            }).catch(e => {
+                app.alert(api.getError(e));
+            })
+        });
+    }
+
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doLogin}>
@@ -48,6 +60,7 @@ export default () => {
     
                 <Input name={"username"} placeholder={"Username"} />
                 <Input name={"password"} placeholder={"Password"} password />
+                <div onClick={openForget} className={"fgtpsdpmt"}>I forgot my password</div>
 
                 {message && <FormError>{message}</FormError>}
 

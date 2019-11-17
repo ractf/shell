@@ -320,6 +320,10 @@ const App = () => {
         });
     };
 
+    const showAlert = (message) => (
+        promptConfirm({message: message, noCancel: true, small: true})
+    );
+
     // Countdown
     useEffect(() => {
         api.getCountdown();
@@ -366,7 +370,7 @@ const App = () => {
     }).reverse();
 
     return (
-        <AppContext.Provider value={{ promptConfirm: promptConfirm }}>
+        <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert }}>
             {/* TODO: Use api.ready */}
             {!api.ready && loaded ? <div className={"siteWarning"}>
                 Site operating in offline mode:

@@ -9,6 +9,7 @@
     "dotenv": "^8.2.0",
     "node-sass": "^4.13.0",
     "qrcode.react": "^0.9.3",
+    "query-string": "^6.9.0",
     "react": "^16.8.6",
     "react-app-rewire-hot-loader": "^2.0.1",
     "react-app-rewired": "^2.1.3",

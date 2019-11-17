@@ -33,7 +33,7 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [team]);
 
-    if (error) return <Page title={"Teans"} vCentre>
+    if (error) return <Page title={"Teams"} vCentre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;

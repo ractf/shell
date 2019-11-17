@@ -19,9 +19,9 @@ const Modal = ({ onHide, children, centre, small }) => {
 
     return <div className={"modalWrap"}>
         <div className={"darken"} onMouseDown={(e => e.target.click())} onClick={doHide(onHide)} />
-        <div className={"modalBox" + (centre ? " centre" : "") + (small ? " small" : "")}>
+        <div className={"modalBoxWrap"}><div className={"modalBox" + (centre ? " centre" : "") + (small ? " small" : "")}>
             {children}
-        </div>
+        </div></div>
     </div>;
 }
 

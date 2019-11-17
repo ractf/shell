@@ -48,3 +48,17 @@
     justify-content: center;
     align-items: center;
 }
+
+.fgtpsdpmt {
+    text-align: left;
+    font-size: .9em;
+    opacity: .5;
+    margin-top: -8px;
+    margin-left: 8px;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+        opacity: .8;
+    }
+}

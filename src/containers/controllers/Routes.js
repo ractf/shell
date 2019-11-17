@@ -9,6 +9,7 @@ import TwoFA from "../pages/TwoFA";
 
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
+import PasswordReset from "../pages/auth/PasswordReset";
 import PostLogin from "../pages/auth/PostLogin";
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
@@ -55,6 +56,10 @@ export default withRouter(({ location }) => {
         </Route>
         <Route exact path={"/verify"}>
             <Page title={"Verify"} C={EmailVerif} />
+        </Route>
+
+        <Route exact path={"/password_reset"}>
+            <Page title={"Reset Password"} C={PasswordReset} />
         </Route>
 
         <Route exact path={"/team/join"}>

@@ -51,7 +51,7 @@ export default () => {
             return setPwError("Passwords must match");
 
         api.modifyUser(api.user.id, {oPass: old, nPass: new1}).then(() => {
-            app.promptConfirm({message: "Password changed. Please log back in.", noCancel: true, small: true});
+            app.alert("Password changed. Please log back in.");
             api.logout();
         }).catch(e => {
             setPwError(api.getError(e));
@@ -65,7 +65,7 @@ export default () => {
             return setUnError("Username has not changed");
 
         api.modifyUser(api.user.id, {name: name}).then(() => {
-            app.promptConfirm({message: "Username changed. Please log back in.", noCancel: true, small: true});
+            app.alert("Username changed. Please log back in.");
             api.logout();
         }).catch(e => {
             setUnError(api.getError(e));
@@ -74,7 +74,7 @@ export default () => {
 
     const updateDetails = ({ discord, discordid, twitter, reddit, bio }) => {
         api.modifyUser(api.user.id, {discord: discord, discordid: discordid, twitter: twitter, reddit: reddit, bio: bio}).then(() => {
-            app.promptConfirm({message: "Personal details updated succesfully.", noCancel: true, small: true});
+            app.alert("Personal details updated succesfully.");
             api.setup();
             setPfError(null);
         }).catch(e => {
@@ -84,7 +84,7 @@ export default () => {
 
     const alterTeam = ({ name, desc, pass }) => {
         api.modifyTeam(api.team.id, {name: name, description: desc, password: pass}).then(() => {
-            app.promptConfirm({message: "Team details updated succesfully.", noCancel: true, small: true});
+            app.alert("Team details updated succesfully.");
             api.setup();
             setTeamError(null);
         }).catch(e => {

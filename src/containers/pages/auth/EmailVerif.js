@@ -9,6 +9,7 @@ export const EmailVerif = ({ location }) => {
     const [verif, setVerif] = useState(0);
     const [message, setMessage] = useState("");
     const api = useContext(apiContext);
+
     const uuid = window.location.search.substring(1, 37);
 
     useEffect(() => {
