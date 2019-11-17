@@ -1,9 +1,5 @@
 image: node:latest
 
-cache:
-  paths:
-    - node_modules/
-
 before_script:
   - npm install --progress=false
 
@@ -16,6 +12,9 @@ builder:
   stage: Build
   script:
     - CI=false npm run build
+  cache:
+    paths:
+      - node_modules/
   artifacts:
     paths:
     - build
@@ -24,9 +23,6 @@ deploy staging:
   stage: Deploy
   image: debian:latest
   environment: Staging
-  cache:
-    paths:
-      -
   only:
     - master
   before_script:
@@ -37,5 +33,8 @@ deploy staging:
 
 linter:
   stage: Lint
+  cache:
+    paths:
+      - node_modules/
   script:
     - npm run build
