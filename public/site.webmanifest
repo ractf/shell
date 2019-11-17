@@ -1,6 +1,7 @@
 {
     "name": "Really Awesome CTF",
     "short_name": "RACTF",
+    "start_url": "/",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
