@@ -26,11 +26,26 @@
     flex-shrink: 0;
     text-align: left;
     min-width: 256px;
+    max-width: 356px;
 
     &>.userName {
         font-size: 2em;
         font-weight: 600;
         font-family: $titleStack;
+        word-wrap: break-word;
+
+        &>svg {
+            margin-bottom: -0.125em;
+        }
+    }
+    &>.teamMemberico {
+        font-size: .9em;
+        color: $fg;
+
+        &>svg {
+            margin-bottom: -0.125em;
+            margin-right: .25em;
+        }
     }
     &>.userBio {
         font-size: .8em;
@@ -114,6 +129,9 @@
         &>:first-child {
             margin-bottom: 24px;
             margin-right: 0;
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
         }
 
         &>* {
