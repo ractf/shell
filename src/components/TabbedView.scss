@@ -1,41 +1,63 @@
+@import "../Colours.scss";
+
+
 .tabButtonRow {
     justify-content: flex-start;
-    &.centre {
+        &.centre {
         justify-content: center;
     }
     &>button {
         border-radius: 0;
         margin: 0;
         min-width: 100px;
-        opacity: .5;
         transition: none;
+
+        border-radius: 8px 8px 0px 0;
+        margin-right: 8px;
+
         font-size: 1.1em;
-    }
-    &>button:active {
-        outline: none;
-    }
+        background-color: $bg_d05;
+        color: #aaa;
+        border: none;
+    
+        &:hover, &:focus {
+            background-color: $bg_d0;
+            color: #ddd;
+            outline: none;
+        }
+        &:active {
+            outline: none;
+        }
 
-    &>button:first-child {
-        border-radius: 2px 0 0 0px;
-    }
-
-    &>button:last-child {
-        border-radius: 0 2px 0px 0;
-    }
-
-    &>button.active {
-        opacity: 1;
+        &.active {
+            background-color: $bg_l0;
+            border: none;
+            color: $fg;
+        }
     }
 }
 
 .tabWrap {
-    border: 1px solid #373354;
     padding: 32px;
     width: 100%;
 
-    background-color: #2c2a4455;
+    background-color: $bg_l0;
     padding: 1em 2em;
-    border-radius: 2px;
+    border-radius: 1px;
     margin-top: -1px;
     min-height: 300px;
+
+    position: relative;
+    &::before {
+        position: absolute;
+        left: 3px;
+        height: 100%;
+        top: 5px;
+        width: 100%;
+        content: "";
+        display: block;
+        background-color: $bg_d0;
+        z-index: -1;
+        border-radius: 1px;
+    } 
 }

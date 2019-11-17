@@ -51,7 +51,8 @@ export default () => {
             return setPwError("Passwords must match");
 
         api.modifyUser(api.user.id, {oPass: old, nPass: new1}).then(() => {
-            setPwError(null);
+            app.promptConfirm({message: "Password changed. Please log back in.", noCancel: true, small: true});
+            api.logout();
         }).catch(e => {
             setPwError(api.getError(e));
         });

@@ -1,4 +1,7 @@
-input, textarea {
+@import "../Colours.scss";
+
+input,
+textarea {
     background: none;
     border: 0;
     width: 100%;
@@ -14,6 +17,11 @@ textarea {
     resize: vertical;
 }
 
+.inputMetaWrap {
+    position: relative;
+    z-index: 1;
+}
+
 .inputWrapper {
     position: relative;
 
@@ -25,43 +33,62 @@ textarea {
     padding: 5px 10px;
     outline: none;
 
+    background-color: $bg;
+    transition: 100ms background-color ease;
+    &:focus-within {
+        transition: 100ms background-color ease;
+        background-color: $bg_d0;
+    }
+
+    &::before {
+        display: block;
+        position: absolute;
+        left: 2px;
+        top: 3px;
+        width: 100%;
+        height: 100%;
+        content: "";
+        background-color: $bg_l1;
+        z-index: -1;
+    }
+
     &.center {
         text-align: center;
     }
-    &.valid {
-        background-color: #18162455;
-        border: 1px solid #413d6399;
-        &:focus-within {
-            border: 1px solid #413d63;
-            background-color: #181624;
+    &.invalid {
+        background-color: #3f2637;
+        &::before {
+            background-color: #802d34;
         }
-    }
-    &:not(.valid) {
-        background-color: #ac323233;
-        border: 1px solid #ac323299;
+
         &:focus-within {
-            border: 1px solid #ac3232;
-            background-color: #ac323255;
+            background-color: #522836;
+            &::before {
+                background-color: #ac3232;
+            }
         }
     }
     &.password {
         padding-left: 38px;
     }
     &.disabled {
-        background-color: #18162411;
+        background-color: $bg_l1;
+        &::before {
+            background-color: $bg_l2;
+        }
     }
 
     &:focus-within > div:nth-of-type(1) {
-        opacity: .8;
+        opacity: 0.8;
     }
 
     & .lengthCounter {
         position: absolute;
         right: 8px;
         top: 4px;
-        font-size: .8em;
-        opacity: .4;
-    }    
+        font-size: 0.8em;
+        opacity: 0.4;
+    }
     & .styledEye {
         position: absolute;
         top: 50%;
@@ -74,10 +101,10 @@ textarea {
         align-items: center;
         cursor: pointer;
 
-        opacity: .4;
+        opacity: 0.4;
 
         &:hover {
-            opacity: .6;
+            opacity: 0.6;
         }
     }
 
@@ -91,8 +118,8 @@ textarea {
         text-align: left;
         font-size: 21px;
         color: #777;
-    
+
         user-select: none;
-        pointer-events: none;    
+        pointer-events: none;
     }
 }

@@ -57,11 +57,11 @@ export default class Input extends Component {
     render() {
         let wrapClass = "inputWrapper";
         if (this.props.center) wrapClass += " center";
-        if (this.state.val.length === 0 || this.state.valid) wrapClass += " valid";
+        if (!(this.state.val.length === 0 || this.state.valid)) wrapClass += " invalid";
         if (this.props.password) wrapClass += " password";
         if (this.props.disabled) wrapClass += " disabled";
 
-        return <div style={{minWidth: this.props.width || "100%"}} className={wrapClass}>
+        return <div className={"inputMetaWrap"}><div style={{minWidth: this.props.width || "100%"}} className={wrapClass}>
             {this.props.rows ?
                 <textarea
                     ref={this.inputRef}
@@ -89,6 +89,6 @@ export default class Input extends Component {
             {this.props.placeholder && this.state.val.length === 0 &&
                 <div className={"placeholder" + (this.props.monospace ? " monospaced" : "")}>
                     {this.props.placeholder}</div>}
-        </div>
+        </div></div>
     }
 }
