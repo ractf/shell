@@ -122,4 +122,39 @@ textarea {
         user-select: none;
         pointer-events: none;
     }
+
+    & .inputStrength {
+        position: absolute;
+        height: 2px;
+        background-color: #000;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        transition: width 200ms ease-out, color 200ms ease;
+
+        &[data-val="0"] {
+            width: 0%;
+            background-color: darkred;
+        }
+        &[data-val="1"] {
+            width: 20%;
+            background-color: darkred;
+        }
+        &[data-val="2"] {
+            width: 40%;
+            background-color: orangered;
+        }
+        &[data-val="3"] {
+            width: 60%;
+            background-color: orange;
+        }
+        &[data-val="4"] {
+            width: 80%;
+            background-color: yellowgreen;
+        }
+        &[data-val="5"] {
+            width: 100%;
+            background-color: green;
+        }
+    }
 }
