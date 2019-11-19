@@ -12,7 +12,7 @@ import { API } from "./API";
 import { plugins, apiContext, Spinner, SectionTitle, Button } from "ractf";
 
 import lockImg from "./spine.png";
-import bgm from "./synthwaveL60.ogg"
+import bgm from "./synthwave.mp3"
 import "./App.scss";
 
 
