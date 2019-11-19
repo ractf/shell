@@ -45,8 +45,13 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
     const tryFlag = challenge => {
         return ({ flag }) => {
             setLocked(true);
-            api.attemptFlag(flag, challenge).then(() => {
-                alert("yay");
+            api.attemptFlag(flag, challenge).then(resp => {
+                if (resp.d.correct) {
+                    alert("yay");
+                    doHide();
+                } else {
+                    alert("nuu");
+                }
                 setLocked(false);
             }).catch(e => {
                 setMessage(api.getError(e));

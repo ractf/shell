@@ -115,7 +115,7 @@ export default () => {
                     {api.challenges.map((tab, n) =>
                         <div key={n} className={activeTab === n ? "active" : ""}
                             onClick={() => { setActiveTab(n) }}
-                        >{tab.title}</div>
+                        >{tab.name}</div>
                     )}
                 </div>
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>

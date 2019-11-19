@@ -12,7 +12,7 @@ const JeopardyChallenges = ({ challenges }) => {
 
     challenges.cats.forEach((cat, n) => {
         let catChals = [];
-        cat.chal.forEach((chal, n) => {
+        cat.chals.forEach((chal, n) => {
             catChals.push(
                 <Challenge key={n} name={chal.name} done={chal.done} points={chal.points} />
             );
@@ -29,5 +29,5 @@ const JeopardyChallenges = ({ challenges }) => {
 
 
 export default () => {
-    registerPlugin("categoryType", 1, { component: JeopardyChallenges });
+    registerPlugin("categoryType", "jeopardy", { component: JeopardyChallenges });
 }

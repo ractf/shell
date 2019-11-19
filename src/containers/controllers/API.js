@@ -378,7 +378,7 @@ class APIClass extends Component {
     };
 
     attemptFlag = (flag, challenge) => this.post(
-        this.ENDPOINTS.FLAG_TEST.replace('<uuid>', challenge.uuid),
+        this.ENDPOINTS.FLAG_TEST.replace('<uuid>', challenge.id),
         { flag: flag }
     );
 

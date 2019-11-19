@@ -23,8 +23,10 @@ const getChal = (tab, x, y) => {
 const emptyChallenge = (x, y) => ({
     lock: false,
     solve: false,
-    x: x,
-    y: y
+    metadata: {
+        x: x,
+        y: y
+    }
 });
 
 
@@ -56,20 +58,20 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
 
     let rows = [];
     let max_x = 0;
-    challenges.chal.forEach((chal, n) => {
-        max_x = Math.max(chal.x, max_x);
-        while (rows.length <= chal.y)
+    challenges.chals.forEach((chal, n) => {
+        max_x = Math.max(chal.metadata.x, max_x);
+        while (rows.length <= chal.metadata.y)
             rows.push([]);
-        while (rows[chal.y].length <= chal.x)
-            if (isEdit) rows[chal.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.y].length, chal.y), challenges.chal)} key={rows[chal.y].length} />);
-            else rows[chal.y].push(<div className={"campaignSpacer"} key={rows[chal.y].length} />);
+        while (rows[chal.metadata.y].length <= chal.metadata.x)
+            if (isEdit) rows[chal.metadata.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal)} key={rows[chal.metadata.y].length} />);
+            else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
 
-        rows[chal.y][chal.x] = <Node key={chal.x} unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solve}
-            lockDoneR={isEdit ? false : chal.solve && !(chal.link & EAST && !getChal(challenges, chal.x + 1, chal.y).solve)}
-            lockDoneD={isEdit ? false : chal.solve && !(chal.link & SOUTH && !getChal(challenges, chal.x, chal.y + 1).solve)}
+        rows[chal.metadata.y][chal.metadata.x] = <Node key={chal.metadata.x} unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solve}
+            lockDoneR={isEdit ? false : chal.solve && !(chal.link & EAST && !getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solve)}
+            lockDoneD={isEdit ? false : chal.solve && !(chal.link & SOUTH && !getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solve)}
 
-            lockUnlockedR={isEdit ? true : chal.solve || (chal.link & EAST && getChal(challenges, chal.x + 1, chal.y).solve)}
-            lockUnlockedD={isEdit ? true : chal.solve || (chal.link & SOUTH && getChal(challenges, chal.x, chal.y + 1).solve)}
+            lockUnlockedR={isEdit ? true : chal.solve || (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solve)}
+            lockUnlockedD={isEdit ? true : chal.solve || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solve)}
 
             click={isEdit ? showEditor(chal) : showChallenge(chal)}
             isEdit={isEdit} toggleLink={toggleLink(chal)}
@@ -107,5 +109,5 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
 
 
 export default () => {
-    registerPlugin("categoryType", 0, { component: CampaignChallenges });
+    registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
 }
