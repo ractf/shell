@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile } from "react-icons/gi";
+import zxcvbn from "zxcvbn";
 
 import { Page, HR, ButtonRow, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
 
@@ -49,6 +50,10 @@ export default () => {
             return setPwError("New password required");
         if (new1 !== new2)
             return setPwError("Passwords must match");
+        
+        const strength = zxcvbn(new1);
+        if (strength.score < 3)
+            return setPwError((strength.feedback.warning || "Password too weak.") + "\n" + strength.feedback.suggestions);
 
         api.modifyUser(api.user.id, {oPass: old, nPass: new1}).then(() => {
             app.alert("Password changed. Please log back in.");
@@ -115,7 +120,7 @@ export default () => {
                 <HR />
                 <Form handle={changePassword}>
                     <Input password name={"old"} placeholder={"Current Password"} />
-                    <Input password name={"new1"} placeholder={"New Password"} />
+                    <Input zxcvbn password name={"new1"} placeholder={"New Password"} />
                     <Input password name={"new2"} placeholder={"New Password"} />
 
                     {pwError && <FormError>{pwError}</FormError>}
