@@ -75,7 +75,7 @@ export default ({ children, submit, button, handle, locked }) => {
         newArray.reverse();
         return [newArray, changed];
     }
-    let [components] = recursor(children);
+    let [components] = recursor(children instanceof Array ? children : [children]);
 
     return <div className={"formWrapper"}>
         {components}

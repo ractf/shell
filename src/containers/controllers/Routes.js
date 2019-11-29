@@ -14,6 +14,7 @@ import PostLogin from "../pages/auth/PostLogin";
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
 
+import AdminPage from "../pages/AdminPage";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
@@ -71,6 +72,9 @@ export default withRouter(({ location }) => {
 
         <Route exact path={"/home"}>
             <Page title={"Home"} C={HomePage} />
+        </Route>
+        <Route exact path={"/admin"}>
+            <Page title={"Admin"} C={AdminPage} />
         </Route>
         <Route exact path={"/settings"}>
             <Page title={"Settings"} auth C={SettingsPage} />

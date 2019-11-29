@@ -106,7 +106,7 @@ export default () => {
                 }
 
                 <Form handle={changeUsername}>
-                    <label htmlFor={"name"} className={"optionTitle"}>Username</label>
+                    <label htmlFor={"name"}>Username</label>
                     <Input name={"name"} val={api.user.username} limit={36} placeholder={"Username"} />
 
                     {unError && <FormError>{unError}</FormError>}
@@ -124,15 +124,15 @@ export default () => {
             </div>
             <div label="Profile">
                 <Form handle={updateDetails}>
-                    <label htmlFor={"discord"} className={"optionTitle"}>Discord</label>
+                    <label htmlFor={"discord"}>Discord</label>
                     <Input name={"discord"} val={api.user.social.discord} limit={36} placeholder={"Discord"} />
                     <Input name={"discordid"} val={api.user.social.discordid} format={/\d+/} limit={18} placeholder={"Discord User ID"} />
-                    <label htmlFor={"twitter"} className={"optionTitle"}>Twitter</label>
+                    <label htmlFor={"twitter"}>Twitter</label>
                     <Input name={"twitter"} val={api.user.social.twitter} limit={36} placeholder={"Twitter"} />
-                    <label htmlFor={"reddit"} className={"optionTitle"}>Reddit</label>
+                    <label htmlFor={"reddit"}>Reddit</label>
                     <Input name={"reddit"} val={api.user.social.reddit} limit={36} placeholder={"Reddit"} />
 
-                    <label htmlFor={"bio"} className={"optionTitle"}>Bio</label>
+                    <label htmlFor={"bio"}>Bio</label>
                     <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={"Bio"} />
 
                     {pfError && <FormError>{pfError}</FormError>}

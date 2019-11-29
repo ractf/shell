@@ -10,6 +10,19 @@
     &>div:nth-last-child(2) {
         margin-bottom: 8px;
     }
+
+    
+    & label {
+        font-size: .9em;
+        text-align: left;
+        margin: .3em 8px;
+        margin-bottom: .5em !important;
+        margin-top: 16px;
+        display: block;
+        &:first-child {
+            margin-top: 8px;
+        }
+    }
 }
 
 .formError {
