@@ -88,34 +88,28 @@ export default () => {
 
     const saveEdit = (original) => {
         return changes => {
-            if (isCreator)
-                api.createChallenge(
-                    api.challenges[activeTab].id, changes.name, changes.points, changes.desc,
-                    changes.flag_type, JSON.parse(changes.flag), original.metadata
-                ).then(async () => {
-                    for (let i in changes)
-                        original[i] = changes[i];    
-                    if (lState.saveTo)
-                        lState.saveTo.push(original);
+            let flag;
+            try {
+                flag = JSON.parse(changes.flag);
+            } catch (e) {
+                if (!changes.flag.length) flag = "";
+                else return app.alert("Invalid flag JSON")
+            }
 
-                    await api.setup();
-                    setIsEditor(false);
-                    setChallenge(null);
-                }).catch(e => app.alert(api.getError(e)));
-            else
-                api.editChallenge(
-                    original.id, changes.name, changes.points, changes.desc, changes.flag_type,
-                    JSON.parse(changes.flag), original.metadata
-                ).then(async () => {
-                    for (let i in changes)
-                        original[i] = changes[i];    
-                    if (lState.saveTo)
-                        lState.saveTo.push(original);
-                        
-                    await api.setup();
-                    setIsEditor(false);
-                    setChallenge(null);
-                }).catch(e => app.alert(api.getError(e)));
+            (isCreator ? api.createChallenge : api.editChallenge)(
+                (isCreator ? api.challenges[activeTab].id : original.id),
+                changes.name, changes.points, changes.desc, changes.flag_type, flag,
+                original.metadata
+            ).then(async () => {
+                for (let i in changes)
+                    original[i] = changes[i];
+                if (lState.saveTo)
+                    lState.saveTo.push(original);
+
+                await api.setup();
+                setIsEditor(false);
+                setChallenge(null);
+            }).catch(e => app.alert(api.getError(e)));
         }
     };
 
