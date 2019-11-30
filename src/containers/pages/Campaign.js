@@ -160,7 +160,7 @@ export default () => {
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
             </div></div>
             <div className={"challengeBody"}><div>
-                {1 || api.user.is_admin ? edit ?
+                {api.user.is_admin ? edit ?
                     <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
                     : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
 
