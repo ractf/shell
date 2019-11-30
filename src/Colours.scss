@@ -22,3 +22,25 @@ $bg_l5: desaturate(lighten($bg, 56%), 12%);
 $bg_d1: saturate(darken($bg, 8%), 4%);
 $bg_d05: saturate(darken($bg, 6%), 4%);
 $bg_d0: saturate(darken($bg, 4%), 4%);
+
+:export {
+    background: $background;
+    foreground: $foreground;
+    bg: $bg;
+    fg: $fg;
+    
+    green: $green;
+    bgreen: $bgreen;
+    red: $red;
+    
+    accent: $accent;
+
+    bg_l0: $bg_l0;
+    bg_l1: $bg_l1;
+    bg_l2: $bg_l2;
+    bg_l3: $bg_l3;
+    bg_l5: $bg_l5;
+    bg_d1: $bg_d1;
+    bg_d05: $bg_d05;
+    bg_d0: $bg_d0;
+}

@@ -1,79 +1,133 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import {
+    XYPlot, LineSeries, HorizontalGridLines, VerticalGridLines,
+    XAxis, YAxis, DiscreteColorLegend
+} from 'react-vis';
+import 'react-vis/dist/style.css';
 
 import TabbedView from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
-import theme from "theme";
-
 import "./Leaderboard.scss";
+import colours from "../../Colours.scss";
+import { apiContext, Spinner } from "ractf";
+
+
+const Graph = ({ data }) => {
+    let width;
+    if (window.innerWidth <= 450)
+        width = window.innerWidth - 100;
+    else if (window.innerWidth <= 600)
+        width = window.innerWidth - 150;
+    else
+        width = window.innerWidth - 200;
+    width = Math.min(900, width);
+        
+    return <XYPlot height={300} width={width} xType={"time"} className={"graphEl"}>
+        <HorizontalGridLines style={{ stroke: colours.bg_d1 }} />
+        <VerticalGridLines style={{ stroke: colours.bg_d1 }} />
+        <XAxis style={{ line: { stroke: colours.bg_l2 } }} />
+        <YAxis style={{ line: { stroke: colours.bg_l2 } }} />
+
+        {data.map(i =>
+            <LineSeries key={i.id} data={i.data} />
+        )}
+
+        <DiscreteColorLegend style={{
+            position: "absolute",
+            top: "10px",
+            left: "45px",
+        }} color={"#f0f"} items={data.map(i => i.name)} />
+    </XYPlot>;
+};
 
 
 export default () => {
-    const userData = [
-        ["1st","Nick","https://nicholasg.me","StantonSquad","Safeguarding", "10,000,000"],
-        ["1st","Nick","https://nicholasg.me","StantonSquad","Safeguarding", "10,000,000"],
-        ["1st","Nick","https://nicholasg.me","StantonSquad","Safeguarding", "10,000,000"],
-        ["1st","Nick","https://nicholasg.me","StantonSquad","Safeguarding", "10,000,000"],
-    ]
-
-    const teamData = [
-        ["1st","StantonSquad","UK","https://nicholasg.me","Safeguarding", "10,000,000"],
-        ["1st","StantonSquad","UK","https://nicholasg.me","Safeguarding", "10,000,000"],
-        ["1st","StantonSquad","UK","https://nicholasg.me","Safeguarding", "10,000,000"],
-        ["1st","StantonSquad","UK","https://nicholasg.me","Safeguarding", "10,000,000"],
-    ]
-
-    const userGraphData = [];
-    const teamGraphData = [];
-    const userGraphEl = React.createRef();
-    const teamGraphEl = React.createRef();
+    const api = useContext(apiContext);
+    const [userGraphData, setUserGraphData] = useState([]);
+    const [teamGraphData, setTeamGraphData] = useState([]);
+    const [rerender, setRerender] = useState(0);
 
     useEffect(() => {
+        api.ensure("leaderboard").then(data => {
+            let lbdata = data.d;
+            let userPlots = {};
+            let teamPlots = {};
+            let points = {};
+            let minTime = null;
 
-    });
+            lbdata.map(i => {
+                if (!minTime) minTime = new Date(i.time);
 
-    let initDone = [false, false];
-    const tabSwitch = i => {
-        if (initDone[i]) return;
-        if (!window.Plotly) return setTimeout(() => {tabSwitch(i)}, 500);
-        initDone[i] = true;
-
-        if (i === 0) {
-            window.Plotly.react(userGraphEl.current, userGraphData, {
-                plot_bgcolor: theme.bg,
-                paper_bgcolor: theme.bg,
-                font: {
-                    family: theme.font_stack,
-                    color: theme.fg
+                if (!userPlots.hasOwnProperty(i.user_id)) {
+                    userPlots[i.user_id] = { data: [{x: minTime, y: 0}], name: i.name, id: i.user_id };
+                    points[i.user_id] = 0;
                 }
-            }, {
-                responsive: true
-            });
-        } else {
-            window.Plotly.react(teamGraphEl.current, teamGraphData, {
-                plot_bgcolor: theme.bg,
-                paper_bgcolor: theme.bg,
-                font: {
-                    family: theme.font_stack,
-                    color: theme.fg
+                if (!teamPlots.hasOwnProperty(i.team_id)) {
+                    teamPlots[i.team_id] = { data: [{x: minTime, y: 0}], name: i.team_name, id: i.team_id };
+                    points[i.team_id] = 0;
                 }
-            }, {
-                responsive: true
+                points[i.user_id] += i.points;
+                points[i.team_id] += i.points;
+                userPlots[i.user_id].data.push({ x: new Date(i.time), y: points[i.user_id] });
+                teamPlots[i.team_id].data.push({ x: new Date(i.time), y: points[i.team_id] });
+
+                return 0;
             });
-        }
+
+            setUserGraphData(
+                Object.values(userPlots).sort((a, b) => points[a.id] > points[b.id])
+            );
+            setTeamGraphData(
+                Object.values(teamPlots).sort((a, b) => points[a.id] > points[b.id])
+            );
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const userData = (lbdata) => {
+        let users = {};
+
+        lbdata.map(i => {
+            if (!users.hasOwnProperty(i.user_id))
+                users[i.user_id] = { id: i.user_id, name: i.name, team: i.team_name, points: 0 };
+            users[i.user_id].points += i.points;
+            return 0;
+        });
+        return Object.values(users).sort((a, b) => a.points > b.points).map(
+            (i, n) => [n + 1, i.name, i.team, i.points, "/profile/" + i.id]
+        );
+    };
+
+    const teamData = (lbdata) => {
+        let users = {};
+
+        lbdata.map(i => {
+            if (!users.hasOwnProperty(i.team_id))
+                users[i.team_id] = { id: i.team_id, name: i.team_name, points: 0 };
+            users[i.team_id].points += i.points;
+            return 0;
+        });
+        return Object.values(users).sort((a, b) => a.points > b.points).map(
+            (i, n) => [n + 1, i.name, i.points, "/team/" + i.id]
+        );
     };
 
     return <Page title={"Leaderboard"}>
-        <TabbedView center callback={tabSwitch} initial={1}>
+        <TabbedView callback={() => { setRerender(rerender + 1) }} center initial={1}>
             <div label='Users'>
-                <div className={"graphEl"} ref={userGraphEl} />
-                <Table headings={["Ranking", "User", "Website", "Team", "Affiliation", "Points"]} data={userData} />
+                <Graph data={userGraphData} />
+                {api.leaderboard
+                    ? <Table headings={["Ranking", "User", "Team", "Points"]} data={userData(api.leaderboard)} />
+                    : <Spinner />}
             </div>
 
             <div label='Teams'>
-                <div className={"graphEl"} ref={teamGraphEl} />
-                <Table headings={["Ranking", "Team", "Country", "Website", "Affiliation", "Points"]} data={teamData} />
+                <Graph data={teamGraphData} />
+                {api.leaderboard
+                    ? <Table headings={["Ranking", "Team", "Points"]} data={teamData(api.leaderboard)} />
+                    : <Spinner />}
             </div>
         </TabbedView>
     </Page>;

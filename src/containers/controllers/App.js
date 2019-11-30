@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+//import Footer from "../../components/Footer";
 
 import { AppContext } from "./Contexts";
 import Routes from "./Routes";
@@ -385,7 +385,7 @@ const App = () => {
 
             <Header />
             <Routes />
-            <Footer />
+            {/*<Footer />*/}
 
             {currentPrompt ? <ModalPrompt
                 body={currentPrompt.body}

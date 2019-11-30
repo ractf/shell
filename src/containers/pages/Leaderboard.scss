@@ -12,13 +12,16 @@
     overflow: hidden;
     margin-bottom: 32px;
 
-    &::before{
-        content: "Loading chart...";
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.2em;
+    & text {
+        fill: $fg;
+    }
+
+    & .rv-discrete-color-legend-item__title {
+        color: $fg;
+        margin-left: 6px;
+    }
+    & .rv-discrete-color-legend-item.vertical {
+        padding: 4px 10px;
+        text-align: left;
     }
 }

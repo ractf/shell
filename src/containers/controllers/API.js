@@ -45,6 +45,8 @@ class APIClass extends Component {
         TEAM_SELF: "/teams/self",
         TEAM_LIST: "/teams/list",
         TEAM: "/teams/",
+
+        LEADERBOARD: "/leaderboard/",
     };
     ENSURABLE = {
         allUsers: this.ENDPOINTS.USER_LIST,
@@ -52,6 +54,7 @@ class APIClass extends Component {
         allTeams: this.ENDPOINTS.TEAM_LIST,
         allTeamsAdmin: this.ENDPOINTS.TEAM_LIST_ADMIN,
         adminConfig: this.ENDPOINTS.ADMIN_CONFIG,
+        leaderboard: this.ENDPOINTS.LEADERBOARD,
     };
 
     constructor() {
@@ -113,6 +116,7 @@ class APIClass extends Component {
             allUsersAdmin: null,
             allTeamsAdmin: null,
             adminConfig: null,
+            leaderboard: null,
 
             siteOpen: siteOpen,
             countdown: countdown,
@@ -287,7 +291,8 @@ class APIClass extends Component {
     // Endpoint Things
     ensure = async type => {
         return this.get(this.ENSURABLE[type]).then(data => {
-            this.setState({ [type]: data.d })
+            this.setState({ [type]: data.d });
+            return data;
         });
     }
 
