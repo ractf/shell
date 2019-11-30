@@ -1,13 +1,45 @@
 import React, { useState, useContext } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 
-import { SectionBlurb } from "../../components/Misc";
+import { SectionBlurb, SectionTitle2 } from "../../components/Misc";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button, apiContext } from "ractf";
+import { plugins, Button, apiContext, Input, Form, FormError } from "ractf";
 
 import "./Campaign.scss";
+
+
+const ANC = ({ hide }) => {
+    const api = useContext(apiContext);
+    const [locked, setLocked] = useState(false);
+    const [error, setError] = useState("");
+
+    const create = ({ cname, cdesc }) => {
+        if (!cname.length)
+            return setError("No name provided!");
+
+        setLocked(true);
+        api.createGroup(cname, cdesc).then(resp => {
+            hide();
+        }).catch(e => {
+            setError(api.getError(e));
+            setLocked(false);
+        });
+    }
+
+    return <Modal onHide={hide} title={"Hi"}>
+        <Form locked={locked} handle={create}>
+            <SectionTitle2>Add new category</SectionTitle2>
+            <label htmlFor={"cname"}>Catgeory name</label>
+            <Input name={"cname"} placeholder={"Catgeory name"} />
+            <label htmlFor={"cdesc"}>Catgeory brief</label>
+            <Input name={"cdesc"} rows={5} placeholder={"Category brief"} />
+            {error && <FormError>{error}</FormError>}
+            <Button submit>Add Category</Button>
+        </Form>
+    </Modal>;
+}
 
 
 export default () => {
@@ -15,6 +47,7 @@ export default () => {
     const [edit, setEdit] = useState(false);
     const [isEditor, setIsEditor] = useState(false);
     const [lState, setLState] = useState({});
+    const [anc, setAnc] = useState(false);
 
     const [activeTab, setActiveTab] = useState(0);
     const [sbHidden, setSbHidden] = useState(false);
@@ -108,6 +141,7 @@ export default () => {
 
     return <Page title={"Challenges"} selfContained>
         {chalEl}
+        {anc && <ANC hide={() => setAnc(false)} />}
         <div style={{ display: "flex", flexGrow: "1" }}>
             <div className={"sbWrapWrap"}><div className={"sbWrap"}>
                 <div className={"campSidebar" + (sbHidden ? " sbHidden" : "")}>
@@ -117,13 +151,15 @@ export default () => {
                             onClick={() => { setActiveTab(n) }}
                         >{tab.name}</div>
                     )}
+                    <div className={"sbSpace"} />
+                    <div onClick={e => setAnc(true)} style={{ textAlign: "center" }}>Add New Category</div>
                 </div>
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
             </div></div>
             <div className={"challengeBody"}><div>
-                { api.user.is_admin ? edit ? 
-                    <Button className={"campEditButton"} click={() => {setEdit(false)}} warning>Stop Editing</Button>
-                    : <Button className={"campEditButton"} click={() => {setEdit(true)}} warning>Edit</Button> : null}
+                {api.user.is_admin ? edit ?
+                    <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
+                    : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
 
                 {challengeTab}
             </div></div>

@@ -23,6 +23,8 @@ class APIClass extends Component {
         CHALLENGES: "/challenges/",
         FLAG_TEST: "/challenges/<uuid>/attempt",
 
+        GROUP_CREATE: "/group/new",
+
         USER_MODIFY: "/members/mod/",
         USER_SELF: "/members/self",
         USER_LIST: "/members/list",
@@ -94,19 +96,24 @@ class APIClass extends Component {
             getTeam: this.getTeam,
             getUser: this.getUser,
 
+            createGroup: this.createGroup,
+
             login: this.login,
             logout: this.logout,
             verify: this.verify,
             add_2fa: this.add_2fa,
             register: this.register,
             verify_2fa: this.verify_2fa,
-            modifyUser: this.modifyUser,
-            createTeam: this.createTeam,
-            modifyTeam: this.modifyTeam,
-            joinTeam: this.joinTeam,
-            attemptFlag: this.attemptFlag,
             requestPasswordReset: this.requestPasswordReset,
             completePasswordReset: this.completePasswordReset,
+
+            modifyUser: this.modifyUser,
+            createTeam: this.createTeam,
+
+            modifyTeam: this.modifyTeam,
+            joinTeam: this.joinTeam,
+
+            attemptFlag: this.attemptFlag,
 
             ensure: this.ensure,
             getError: this.getError,
@@ -352,6 +359,7 @@ class APIClass extends Component {
     verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid }).then(data => {
         this._postLogin(data.d.token);
     });
+    createGroup = (name, desc) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc });
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {
