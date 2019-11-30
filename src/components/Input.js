@@ -61,6 +61,7 @@ export default class Input extends Component {
         if (!(this.state.val.length === 0 || this.state.valid)) wrapClass += " invalid";
         if (this.props.password) wrapClass += " password";
         if (this.props.disabled) wrapClass += " disabled";
+        if (this.props.hidden) wrapClass += " hidden";
 
         return <div className={"inputMetaWrap"}><div style={{minWidth: this.props.width || "100%"}} className={wrapClass}>
             {this.props.rows ?

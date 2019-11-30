@@ -22,9 +22,12 @@ class APIClass extends Component {
 
         CHALLENGES: "/challenges/",
         FLAG_TEST: "/challenges/<uuid>/attempt",
+        CHALLENGE_CREATE: "/challenges/new",
+        CHALLENGE_EDIT: "/challenges/edit",
 
         GROUP_CREATE: "/group/new",
         GROUP_EDIT: "/group/edit",
+
 
         USER_MODIFY: "/members/mod/",
         USER_SELF: "/members/self",
@@ -97,6 +100,7 @@ class APIClass extends Component {
             getTeam: this.getTeam,
             getUser: this.getUser,
 
+            editChallenge: this.editChallenge,
             createGroup: this.createGroup,
             editGroup: this.editGroup,
 
@@ -361,8 +365,10 @@ class APIClass extends Component {
     verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid }).then(data => {
         this._postLogin(data.d.token);
     });
-    createGroup = (name, desc) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc });
-    editGroup = (id, name, desc) => this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc });
+    createGroup = (name, desc, type) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc, type: type });
+    editGroup = (id, name, desc, type) => this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc, type: type });
+    editChallenge = (id, name, points, desc, flag, meta) =>
+        this.post(this.ENDPOINTS.CHALLENGE_EDIT, { id: id, name: name, points: points, desc: desc, flag: flag, meta: meta });
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {

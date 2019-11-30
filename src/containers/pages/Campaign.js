@@ -5,7 +5,7 @@ import { SectionBlurb, SectionTitle2 } from "../../components/Misc";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button, apiContext, Input, Form, FormError } from "ractf";
+import { plugins, Button, apiContext, Input, Form, FormError, appContext } from "ractf";
 
 import "./Campaign.scss";
 
@@ -15,13 +15,15 @@ const ANC = ({ hide, anc }) => {
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
 
-    const create = ({ cname, cdesc }) => {
+    const create = ({ cname, cdesc, ctype }) => {
         if (!cname.length)
             return setError("No name provided!");
+        if (!ctype.length || !plugins.categoryType[ctype])
+            return setError("Invalid category type!\nValid types: " + Object.keys(plugins.categoryType).join(", "));
 
         setLocked(true);
-        
-        (anc ? api.editGroup(anc.id, cname, cdesc) : api.createGroup(cname, cdesc)).then(async resp => {
+
+        (anc.id ? api.editGroup(anc.id, cname, cdesc, ctype) : api.createGroup(cname, cdesc, ctype)).then(async resp => {
             await api.setup();
             hide();
         }).catch(e => {
@@ -32,13 +34,15 @@ const ANC = ({ hide, anc }) => {
 
     return <Modal onHide={hide} title={"Hi"}>
         <Form locked={locked} handle={create}>
-            <SectionTitle2>{anc ? "Edit" : "Add new"} category</SectionTitle2>
+            <SectionTitle2>{anc.id ? "Edit" : "Add new"} category</SectionTitle2>
             <label htmlFor={"cname"}>Catgeory name</label>
-            <Input val={anc && anc.name} name={"cname"} placeholder={"Catgeory name"} />
+            <Input val={anc.name} name={"cname"} placeholder={"Catgeory name"} />
             <label htmlFor={"cdesc"}>Catgeory brief</label>
-            <Input val={anc && anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
+            <Input val={anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
+            <label htmlFor={"ctype"}>Catgeory type</label>
+            <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }} placeholder={"Category type"} />
             {error && <FormError>{error}</FormError>}
-            <Button submit>{anc ? "Edit" : "Add"} Category</Button>
+            <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
         </Form>
     </Modal>;
 }
@@ -53,12 +57,11 @@ export default () => {
 
     const [activeTab, setActiveTab] = useState(0);
     const [sbHidden, setSbHidden] = useState(false);
-    //const app = useContext(appContext);
+    const app = useContext(appContext);
     const api = useContext(apiContext);
 
     const showChallenge = (challenge) => {
         return () => {
-            //app.setModalOpen(true);
             setChallenge(challenge);
             setIsEditor(false);
         }
@@ -83,17 +86,18 @@ export default () => {
 
     const saveEdit = (original) => {
         return changes => {
-            console.log(changes);
-            for (let i in changes) {
-                original[i] = changes[i];
-            }
-
-            if (lState.saveTo) {
-                lState.saveTo.push(original);
-            }
-
-            setIsEditor(false);
-            setChallenge(null);
+            api.editChallenge(
+                original.id, changes.name, changes.points, changes.desc, changes.flag, original.metadata
+            ).then(async () => {
+                for (let i in changes)
+                    original[i] = changes[i];    
+                if (lState.saveTo)
+                    lState.saveTo.push(original);
+                    
+                await api.setup();
+                setIsEditor(false);
+                setChallenge(null);
+            }).catch(e => app.alert(api.getError(e)));
         }
     };
 
@@ -111,7 +115,7 @@ export default () => {
             </>
         } else {
             challengeTab = <>
-                {edit && <Button click={()=>setAnc(tab)}>Edit Details</Button>}
+                {edit && <Button click={() => setAnc(tab)}>Edit Details</Button>}
                 <SectionBlurb>{tab.desc}</SectionBlurb>
                 {React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit })}
             </>
@@ -155,7 +159,9 @@ export default () => {
                         >{tab.name}</div>
                     )}
                     <div className={"sbSpace"} />
-                    <div onClick={e => setAnc(true)} style={{ textAlign: "center" }}>Add New Category</div>
+                    {api.user.is_admin &&
+                        <div onClick={e => setAnc(true)} style={{ textAlign: "center" }}>Add New Category</div>
+                    }
                 </div>
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
             </div></div>

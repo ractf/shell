@@ -10,11 +10,13 @@ import Challenge from "./components/Challenge";
 const JeopardyChallenges = ({ challenges }) => {
     let sections = [];
 
-    challenges.cats.forEach((cat, n) => {
+    //challenges.cats.forEach((cat, n) => {
+    let cat = challenges, n=1;
+
         let catChals = [];
         cat.chals.forEach((chal, n) => {
             catChals.push(
-                <Challenge key={n} name={chal.name} done={chal.done} points={chal.points} />
+                <Challenge key={n} name={chal.name} done={chal.done} points={chal.base_score} />
             );
         });
         sections.push(
@@ -22,7 +24,7 @@ const JeopardyChallenges = ({ challenges }) => {
                 {catChals}
             </Section>
         );
-    });
+    //});
 
     return sections;
 }

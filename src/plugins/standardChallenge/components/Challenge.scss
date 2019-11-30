@@ -5,6 +5,10 @@
     font-family: "Special Elite", "Robot Mono", monospace;
     text-align: left;
     line-height: 1.5;
+
+    > img {
+        max-width: 100%;
+    }
 }
 
 .challengeTitle {

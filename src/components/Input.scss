@@ -77,6 +77,9 @@ textarea {
             background-color: $bg_l2;
         }
     }
+    &.hidden {
+        display: none;
+    }
 
     &:focus-within > div:nth-of-type(1) {
         opacity: 0.8;

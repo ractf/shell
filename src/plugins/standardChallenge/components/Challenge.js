@@ -65,27 +65,29 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
         {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
 
         { isEditor ? <div style={{width: "100%"}}><Form handle={saveEdit(challenge)}>
-            <Input val={challenge.uuid} name={"uuid"} hidden />
-            <Input val={challenge.name} name={"name"} placeholder={"Challenge Name"} />
-            <div className={"challengeWorth"}><Input val={challenge.points} name={"points"} placeholder={"Challenge Points"} format={/\d+/} /> Points</div>
+            <label htmlFor={"name"}>Challenge name</label>
+            <Input val={challenge.name} name={"name"} placeholder={"Challenge came"} />
+            <label htmlFor={"points"}>Challenge points</label>
+            <Input val={challenge.base_score} name={"points"} placeholder={"Challenge points"} format={/\d+/} />
 
-            <br/>
-            <Input rows={5} val={challenge.desc} name={"desc"} placeholder={"Description"}/>
+            <label htmlFor={"desc"}>Challenge brief</label>
+            <Input rows={5} val={challenge.description} name={"desc"} placeholder={"Challenge brief"}/>
 
-            <Input placeholder="Flag format: ractf{...}"
+            <label htmlFor={"flag"}>Challenge flag</label>
+            <Input placeholder="Challenge flag"
                 format={partial} name={"flag"} monospace
                 val={challenge.flag} />
             
             <Button submit>Save Challenge</Button>
         </Form></div> : <>
             <div className={"challengeTitle"}>{challenge.name}</div>
-            <div className={"challengeWorth"}>{challenge.points} Points</div>
+            <div className={"challengeWorth"}>{challenge.base_score} Points</div>
 
             <div className={"challengeMeta"}>
                 {challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet"}
             </div>
 
-            <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.desc }} />
+            <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.description }} />
 
             {!challenge.solve && <Form handle={tryFlag(challenge)} locked={locked}>
                 <Input placeholder="Flag format: ractf{...}"
