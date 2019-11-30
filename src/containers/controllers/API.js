@@ -13,6 +13,10 @@ class APIClass extends Component {
         COUNTDOWN: "/countdown/",
         CONFIG: "/admin/config",
         ADMIN_CONFIG: "/admin/admin_config",
+        USER_LIST_ADMIN: "/admin/members",
+        TEAM_LIST_ADMIN: "/admin/teams",
+        USER_MODIFY_ADMIN: "/admin/edit_member",
+        TEAM_MODIFY_ADMIN: "/admin/edit_team",
 
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
@@ -44,7 +48,9 @@ class APIClass extends Component {
     };
     ENSURABLE = {
         allUsers: this.ENDPOINTS.USER_LIST,
+        allUsersAdmin: this.ENDPOINTS.USER_LIST_ADMIN,
         allTeams: this.ENDPOINTS.TEAM_LIST,
+        allTeamsAdmin: this.ENDPOINTS.TEAM_LIST_ADMIN,
         adminConfig: this.ENDPOINTS.ADMIN_CONFIG,
     };
 
@@ -95,14 +101,18 @@ class APIClass extends Component {
             challenges: challenges,
             team: teamData,
             config: config,
-            adminConfig: null,
             setup: this.setup,
-
+            
             configGet: this.configGet,
             setConfigValue: this.setConfigValue,
-
+            modifyUserAdmin: this.modifyUserAdmin,
+            modifyTeamAdmin: this.modifyTeamAdmin,
+            
             allUsers: null,
             allTeams: null,
+            allUsersAdmin: null,
+            allTeamsAdmin: null,
+            adminConfig: null,
 
             siteOpen: siteOpen,
             countdown: countdown,
@@ -321,6 +331,8 @@ class APIClass extends Component {
             }).catch(reject);
         });
     }
+    modifyUserAdmin = (id, data) => this.post(this.ENDPOINTS.USER_MODIFY_ADMIN, { id: id, ...data });
+    modifyTeamAdmin = (id, data) => this.post(this.ENDPOINTS.TEAM_MODIFY_ADMIN, { id: id, ...data });
 
     getUser = (id) => {
         return this.get(id === "self" || id === "me" ? this.ENDPOINTS.USER_SELF : this.ENDPOINTS.USER + id);
