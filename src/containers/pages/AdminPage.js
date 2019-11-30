@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 
-import { Page, Form, Input, Button, Radio, Spinner, apiContext } from "ractf";
+import { Page, Form, Input, Button, Radio, Spinner, apiContext, appContext } from "ractf";
 
 import logo from "../../static/wordmark.png";
 
@@ -18,7 +18,7 @@ const Section = ({ title, children }) => <>
 
 
 const AdminTabs = ({ children }) => {
-    const [active, setActive] = useState(3);
+    const [active, setActive] = useState(0);
 
     return <div className={"adminWrap"}>
         <div className={"adminSidebar"}>
@@ -69,44 +69,61 @@ const MemberCard = ({ name }) => {
 
 export default () => {
     const api = useContext(apiContext);
+    const app = useContext(appContext);
 
     useEffect(() => {
         api.ensure("allUsers");
         api.ensure("allTeams");
+        api.ensure("adminConfig");
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const configSet = (key, value) => {
+        api.setConfigValue(key, value).then(() => {
+            api.config[key] = value;
+            api.adminConfig[key] = value;
+        }).catch(e => {
+            app.alert(api.getError(e));
+        });
+    }
 
     return <Page selfContained>
         <AdminTabs>
             <AdminSection title={"Configuration"}>
-                <Section title={"Login"}>
-                    <Form>
-                        <div className={"absfg"}>
-                            Enable or disable site login
-                            <Radio value={"on"} name="lgnEnable" options={[["Enabled", "on"], ["Disabled", "off"]]} />
-                        </div>
-                    </Form>
-                </Section>
-                <Section title={"Registration"}>
-                    <Form>
-                        <div className={"absfg"}>
-                            Enable or disable site registration
-                            <Radio name="regEnable" options={[["Enabled", "on"], ["Disabled", "off"]]} />
-                        </div>
-                    </Form>
-                </Section>
-                <Section title={"Main Game"}>
-                    <Form>
-                        <div className={"absfg"}>
-                            Scoring
-                            <Radio name="scrEnable" options={[["Enabled", "on"], ["Disabled", "off"]]} />
-                        </div>
-                        <div className={"absfg"}>
-                            Flag Submission
-                            <Radio name="socEnable" options={[["Enabled", "on"], ["Disabled", "off"]]} />
-                        </div>
-                    </Form>
-                </Section>
+                {api.adminConfig ? <>
+                    <Section title={"Login"}>
+                        <Form>
+                            <div className={"absfg"}>
+                                Enable or disable site login
+                                <Radio onChange={v => configSet("login", v)} value={api.adminConfig.login}
+                                    options={[["Enabled", true], ["Disabled", false]]} />
+                            </div>
+                        </Form>
+                    </Section>
+                    <Section title={"Registration"}>
+                        <Form>
+                            <div className={"absfg"}>
+                                Enable or disable site registration
+                                <Radio onChange={v => configSet("registration", v)} value={api.adminConfig.registration}
+                                    options={[["Enabled", true], ["Disabled", false]]} />
+                            </div>
+                        </Form>
+                    </Section>
+                    <Section title={"Main Game"}>
+                        <Form>
+                            <div className={"absfg"}>
+                                Scoring
+                                <Radio onChange={v => configSet("scoring", v)} value={api.adminConfig.scoring}
+                                    options={[["Enabled", true], ["Disabled", false]]} />
+                            </div>
+                            <div className={"absfg"}>
+                                Flag Submission
+                                <Radio onChange={v => configSet("flags_on", v)} value={api.adminConfig.flags_on}
+                                    options={[["Enabled", true], ["Disabled", false]]} />
+                            </div>
+                        </Form>
+                    </Section>
+                </> : <Spinner />}
             </AdminSection>
             <AdminSection title={"Service Status"}>
                 <Section title={"Code Ingest"}>
@@ -141,24 +158,24 @@ export default () => {
             <AdminSection title={"Members"}>
                 {api.allUsers ? <>
                     <Section title={"Admins"}>
-                        {api.allUsers.filter(i => i.is_admin).map(i => 
+                        {api.allUsers.filter(i => i.is_admin).map(i =>
                             <MemberCard key={i.id} name={i.name} />
                         )}
                     </Section>
                     <Section title={"Standard Users"}>
-                        {api.allUsers.filter(i => !i.is_admin).map(i => 
+                        {api.allUsers.filter(i => !i.is_admin).map(i =>
                             <MemberCard key={i.id} name={i.name} />
                         )}
-                </Section>
+                    </Section>
                 </> : <Spinner />}
             </AdminSection>
             <AdminSection title={"Teams"}>
                 {api.allTeams ? <>
                     <Section title={"All Teams"}>
-                        {api.allTeams.map(i => 
+                        {api.allTeams.map(i =>
                             <MemberCard key={i.id} name={i.name} />
                         )}
-                </Section>
+                    </Section>
                 </> : <Spinner />}
             </AdminSection>
         </AdminTabs>

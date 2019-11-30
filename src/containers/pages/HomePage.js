@@ -28,18 +28,20 @@ export default () => {
                     </div>
                 </Link>
             </> : <>
-                <Link className={"cardTypeLink"} to={"/login"}>
-                    <div className={"cardTitle"}>Login</div>
-                    <div>
-                        Been here before? Login to get the most out of the site!
+                    {api.configGet("login", true) &&
+                        <Link className={"cardTypeLink"} to={"/login"}>
+                            <div className={"cardTitle"}>Login</div>
+                            <div>
+                                Been here before? Login to get the most out of the site!
                     </div>
-                </Link>
-                <Link className={"cardTypeLink"} to={"/register"}>
-                    <div className={"cardTitle"}>Register</div>
-                    <div>
-                        If you want to solve challenges you're going to need to get yourself an account
+                        </Link>}
+                    {api.configGet("registration", true) &&
+                        <Link className={"cardTypeLink"} to={"/register"}>
+                            <div className={"cardTitle"}>Register</div>
+                            <div>
+                                If you want to solve challenges you're going to need to get yourself an account
                     </div>
-                    </Link>
+                        </Link>}
                 </>}
         </div>
         <div className={"cardRow"}>

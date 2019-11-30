@@ -11,6 +11,8 @@ class APIClass extends Component {
     BASE_URL = this.DOMAIN + this.API_BASE;
     ENDPOINTS = {
         COUNTDOWN: "/countdown/",
+        CONFIG: "/admin/config",
+        ADMIN_CONFIG: "/admin/admin_config",
 
         REGISTER: "/auth/register",
         LOGIN: "/auth/login",
@@ -28,12 +30,11 @@ class APIClass extends Component {
         GROUP_CREATE: "/group/new",
         GROUP_EDIT: "/group/edit",
 
-
         USER_MODIFY: "/members/mod/",
         USER_SELF: "/members/self",
         USER_LIST: "/members/list",
         USER: "/members/",
-        
+
         TEAM_CREATE: "/teams/create",
         TEAM_MODIFY: "/teams/mod/",
         TEAM_JOIN: "/teams/join",
@@ -44,12 +45,13 @@ class APIClass extends Component {
     ENSURABLE = {
         allUsers: this.ENDPOINTS.USER_LIST,
         allTeams: this.ENDPOINTS.TEAM_LIST,
+        adminConfig: this.ENDPOINTS.ADMIN_CONFIG,
     };
 
     constructor() {
         super();
-        
-        let userData, challenges, teamData, countdown, siteOpen;
+
+        let userData, challenges, teamData, countdown, siteOpen, config;
         try {
             userData = JSON.parse(localStorage.getItem("userData"));
         } catch (e) {
@@ -66,6 +68,12 @@ class APIClass extends Component {
             teamData = JSON.parse(localStorage.getItem("teamData"));
         } catch (e) {
             teamData = {};
+        }
+
+        try {
+            config = JSON.parse(localStorage.getItem("config"));
+        } catch (e) {
+            config = {};
         }
 
         try {
@@ -86,7 +94,12 @@ class APIClass extends Component {
             user: userData,
             challenges: challenges,
             team: teamData,
+            config: config,
+            adminConfig: null,
             setup: this.setup,
+
+            configGet: this.configGet,
+            setConfigValue: this.setConfigValue,
 
             allUsers: null,
             allTeams: null,
@@ -131,6 +144,18 @@ class APIClass extends Component {
 
     async componentWillMount() {
         this.setup();
+        this._setupConfig();
+    }
+    async _setupConfig() {
+        let config;
+        try {
+            config = (await this._getConfig()).d;
+        } catch (e) {
+            return
+        }
+
+        localStorage.setItem("config", JSON.stringify(config));
+        this.setState({ config: config });
     }
     async setup() {
         let token = localStorage.getItem('token');
@@ -143,6 +168,12 @@ class APIClass extends Component {
         }
 
         //if (!this.state.siteOpen) return;
+    }
+
+    configGet = (key, fallback) => {
+        if (this.state.config && this.state.config.hasOwnProperty(key))
+            return this.state.config[key];
+        return fallback;
     }
 
     openSite = () => {
@@ -246,7 +277,7 @@ class APIClass extends Component {
     // Endpoint Things
     ensure = async type => {
         return this.get(this.ENSURABLE[type]).then(data => {
-            this.setState({[type]: data.d})
+            this.setState({ [type]: data.d })
         });
     }
 
@@ -256,14 +287,17 @@ class APIClass extends Component {
             let st = new Date(data.d.server_timestamp);
             let now = new Date();
 
-            let countdown = {time: data.d.countdown_timestamp, offset: st - now};
+            let countdown = { time: data.d.countdown_timestamp, offset: st - now };
             localStorage.setItem("countdown", JSON.stringify(countdown));
 
-            if (ct - st < 0) this.setState({countdown: countdown, siteOpen: true});
-            else this.setState({countdown: countdown, siteOpen: false, ready: true});
+            if (ct - st < 0) this.setState({ countdown: countdown, siteOpen: true });
+            else this.setState({ countdown: countdown, siteOpen: false, ready: true });
         }
     });
+    _getConfig = () => this.get(this.ENDPOINTS.CONFIG);
+    _getAdminConfig = () => this.get(this.ENDPOINTS.ADMIN_CONFIG);
     _getChallenges = () => this.get(this.ENDPOINTS.CHALLENGES);
+    setConfigValue = (key, value) => this.post(this.ENDPOINTS.ADMIN_CONFIG, { key: key, value: value });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);

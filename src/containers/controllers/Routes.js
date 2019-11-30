@@ -30,19 +30,20 @@ const Logout = () => {
 }
 
 
-const Page = ({title, auth, noAuth, C}) => {
+const Page = ({ title, auth, noAuth, C }) => {
     const api = useContext(APIContext);
     if (title !== null)
         document.title = title || "RACTF";
 
     if (auth && !api.authenticated) return <Redirect to={"/login"} />;
     if (noAuth && api.authenticated) return <Redirect to={"/home"} />;
-    
+
     return <C />;
 };
 
 
 export default withRouter(({ location }) => {
+    const api = useContext(APIContext);
     return <Switch location={location}>
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />
@@ -73,9 +74,10 @@ export default withRouter(({ location }) => {
         <Route exact path={"/home"}>
             <Page title={"Home"} C={HomePage} />
         </Route>
-        <Route exact path={"/admin"}>
-            <Page title={"Admin"} C={AdminPage} />
-        </Route>
+        {api.user && api.user.is_admin &&
+            <Route exact path={"/admin"}>
+                <Page title={"Admin"} C={AdminPage} />
+            </Route>}
         <Route exact path={"/settings"}>
             <Page title={"Settings"} auth C={SettingsPage} />
         </Route>
@@ -110,9 +112,9 @@ export default withRouter(({ location }) => {
             <Page title={"Where now?"} auth C={PostLogin} />
         </Route>
 
-        { Object.keys(plugins.page).map(url =>
+        {Object.keys(plugins.page).map(url =>
             <Route exact path={url} key={url} component={plugins.page[url]} />
-        ) }
+        )}
 
         <Route>
             <Page title={"Error"} C={NotFound} />

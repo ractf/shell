@@ -9,7 +9,7 @@ export default () => {
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
-
+    
     const doLogin = ({ username, password, pin=null }) => {
         if (!username)
             return setMessage("No username provided");

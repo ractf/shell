@@ -49,7 +49,7 @@ export default ({ title, url, children, vCentre, selfContained }) => {
                             </LinkDropdown>
                             <Link className={"headLink"} to={"/logout"}>Logout</Link>
                         </>
-                        : <Link className={"headLink"} to={"/login"}>Login</Link>}
+                        : api.configGet("login", true) && <Link className={"headLink"} to={"/login"}>Login</Link>}
                 </div>
             </div>
             {selfContained ? children :

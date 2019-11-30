@@ -10,7 +10,7 @@ export default class Radio extends Component {
         super(props);
 
         this.state = {
-            val: this.props.value || "",
+            val: this.props.value !== undefined ? this.props.value : "",
         }
         this.ids = this.props.options.map(() => Math.random().toString().substring(2, 9999));
     }
@@ -21,15 +21,18 @@ export default class Radio extends Component {
         }
     }
 
-    change = e => {
-        this.setState({ val: e.target.value });
-        if (this.props.onChange) this.props.onChange(e.target.value);
+    change = value => {
+        if (value !== this.state.val) {
+            this.setState({ val: value });
+            if (this.props.onChange)
+                this.props.onChange(value);
+        }
     }
 
     render() {
         return <div className={"radioWrap"}>
             {this.props.options.map((i, n) => <div key={n}>
-                <div onClick={e => this.setState({ val: i[1] })} onMouseDown={e=>e.target.click()}
+                <div onClick={e => this.change(i[1])} onMouseDown={e=>e.target.click()}
                     onKeyDown={this.okd} tabIndex="0" className={"radioLabel" + (i[1] === this.state.val ? " checked" : "")}
                     htmlFor={this.ids[n]}>
                     <div className={"radioButton"} />

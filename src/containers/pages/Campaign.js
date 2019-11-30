@@ -70,8 +70,6 @@ export default () => {
 
     const showEditor = (challenge, saveTo, isNew) => {
         return () => {
-            console.log('!!', saveTo);
-
             setChallenge(challenge || {});
             setLState({
                 saveTo: saveTo
