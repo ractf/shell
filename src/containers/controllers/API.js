@@ -24,6 +24,7 @@ class APIClass extends Component {
         FLAG_TEST: "/challenges/<uuid>/attempt",
 
         GROUP_CREATE: "/group/new",
+        GROUP_EDIT: "/group/edit",
 
         USER_MODIFY: "/members/mod/",
         USER_SELF: "/members/self",
@@ -97,6 +98,7 @@ class APIClass extends Component {
             getUser: this.getUser,
 
             createGroup: this.createGroup,
+            editGroup: this.editGroup,
 
             login: this.login,
             logout: this.logout,
@@ -360,6 +362,7 @@ class APIClass extends Component {
         this._postLogin(data.d.token);
     });
     createGroup = (name, desc) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc });
+    editGroup = (id, name, desc) => this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc });
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {

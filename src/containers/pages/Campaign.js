@@ -10,7 +10,7 @@ import { plugins, Button, apiContext, Input, Form, FormError } from "ractf";
 import "./Campaign.scss";
 
 
-const ANC = ({ hide }) => {
+const ANC = ({ hide, anc }) => {
     const api = useContext(apiContext);
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
@@ -20,7 +20,9 @@ const ANC = ({ hide }) => {
             return setError("No name provided!");
 
         setLocked(true);
-        api.createGroup(cname, cdesc).then(resp => {
+        
+        (anc ? api.editGroup(anc.id, cname, cdesc) : api.createGroup(cname, cdesc)).then(async resp => {
+            await api.setup();
             hide();
         }).catch(e => {
             setError(api.getError(e));
@@ -30,13 +32,13 @@ const ANC = ({ hide }) => {
 
     return <Modal onHide={hide} title={"Hi"}>
         <Form locked={locked} handle={create}>
-            <SectionTitle2>Add new category</SectionTitle2>
+            <SectionTitle2>{anc ? "Edit" : "Add new"} category</SectionTitle2>
             <label htmlFor={"cname"}>Catgeory name</label>
-            <Input name={"cname"} placeholder={"Catgeory name"} />
+            <Input val={anc && anc.name} name={"cname"} placeholder={"Catgeory name"} />
             <label htmlFor={"cdesc"}>Catgeory brief</label>
-            <Input name={"cdesc"} rows={5} placeholder={"Category brief"} />
+            <Input val={anc && anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
             {error && <FormError>{error}</FormError>}
-            <Button submit>Add Category</Button>
+            <Button submit>{anc ? "Edit" : "Add"} Category</Button>
         </Form>
     </Modal>;
 }
@@ -109,6 +111,7 @@ export default () => {
             </>
         } else {
             challengeTab = <>
+                {edit && <Button click={()=>setAnc(tab)}>Edit Details</Button>}
                 <SectionBlurb>{tab.desc}</SectionBlurb>
                 {React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit })}
             </>
@@ -141,7 +144,7 @@ export default () => {
 
     return <Page title={"Challenges"} selfContained>
         {chalEl}
-        {anc && <ANC hide={() => setAnc(false)} />}
+        {anc && <ANC anc={anc} hide={() => setAnc(false)} />}
         <div style={{ display: "flex", flexGrow: "1" }}>
             <div className={"sbWrapWrap"}><div className={"sbWrap"}>
                 <div className={"campSidebar" + (sbHidden ? " sbHidden" : "")}>
@@ -157,7 +160,7 @@ export default () => {
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
             </div></div>
             <div className={"challengeBody"}><div>
-                {api.user.is_admin ? edit ?
+                {1 || api.user.is_admin ? edit ?
                     <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
                     : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
 
