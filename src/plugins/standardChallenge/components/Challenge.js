@@ -11,7 +11,7 @@ import "./Challenge.scss";
 const HintModal = () => <h1>hi</h1>
 
 
-export default ({ challenge, doHide, isEditor, saveEdit }) => {
+export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
     const [flagValid, setFlagValid] = useState(false);
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
@@ -33,12 +33,12 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
     const promptHint = (hint) => {
         return () => {
             let msg = <>
-                Are you sure you want to use a hint?<br/><br/>
+                Are you sure you want to use a hint?<br /><br />
                 This hint will deduct {hint.cost} points from this challenge.
             </>;
-            app.promptConfirm({message: msg, small: true}).then(() => {
+            app.promptConfirm({ message: msg, small: true }).then(() => {
                 alert("Hint!!!!");
-            }).catch(() => {});
+            }).catch(() => { });
         };
     }
 
@@ -64,50 +64,53 @@ export default ({ challenge, doHide, isEditor, saveEdit }) => {
     return <>
         {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
 
-        { isEditor ? <div style={{width: "100%"}}><Form handle={saveEdit(challenge)}>
+        {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
             <label htmlFor={"name"}>Challenge name</label>
-            <Input val={challenge.name} name={"name"} placeholder={"Challenge came"} />
+            <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
             <label htmlFor={"points"}>Challenge points</label>
             <Input val={challenge.base_score} name={"points"} placeholder={"Challenge points"} format={/\d+/} />
 
             <label htmlFor={"desc"}>Challenge brief</label>
-            <Input rows={5} val={challenge.description} name={"desc"} placeholder={"Challenge brief"}/>
+            <Input rows={5} val={challenge.description} name={"desc"} placeholder={"Challenge brief"} />
 
+            <label htmlFor={"flag"}>Challenge flag type</label>
+            <Input placeholder="Challenge flag type" name={"flag_type"} monospace
+                val={challenge.flag} />
             <label htmlFor={"flag"}>Challenge flag</label>
             <Input placeholder="Challenge flag"
-                format={partial} name={"flag"} monospace
+                name={"flag"} monospace format={{ test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } } }}
                 val={challenge.flag} />
-            
-            <Button submit>Save Challenge</Button>
+
+            <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
         </Form></div> : <>
-            <div className={"challengeTitle"}>{challenge.name}</div>
-            <div className={"challengeWorth"}>{challenge.base_score} Points</div>
+                <div className={"challengeTitle"}>{challenge.name}</div>
+                <div className={"challengeWorth"}>{challenge.base_score} Points</div>
 
-            <div className={"challengeMeta"}>
-                {challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet"}
-            </div>
+                <div className={"challengeMeta"}>
+                    {challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet"}
+                </div>
 
-            <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.description }} />
+                <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.description }} />
 
-            {!challenge.solve && <Form handle={tryFlag(challenge)} locked={locked}>
-                <Input placeholder="Flag format: ractf{...}"
-                       format={partial} name={"flag"}
-                       callback={changeFlag} monospace
-                       center width={"80%"} />
-                {message && <FormError>{message}</FormError>}
-                <Button disabled={!flagValid} submit>Attempt flag</Button>
-            </Form>}
+                {!challenge.solve && <Form handle={tryFlag(challenge)} locked={locked}>
+                    <Input placeholder="Flag format: ractf{...}"
+                        format={partial} name={"flag"}
+                        callback={changeFlag} monospace
+                        center width={"80%"} />
+                    {message && <FormError>{message}</FormError>}
+                    <Button disabled={!flagValid} submit>Attempt flag</Button>
+                </Form>}
 
-            {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
-                {challenge.files.map(file => {
-                    return <File name={file.name} url={file.url} size={file.size} />;
-                })}
-            </div>}
-            {challenge.hint && !!challenge.hint.length && <div className={"challengeLinkGroup"}>
-                {challenge.hint && !challenge.solve && challenge.hint.map((hint, n) => {
-                    return <Hint name={"Hint " + (n + 1)} onClick={promptHint(hint)} points={hint.cost} />;
-                })}
-            </div>}
-        </>}
+                {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
+                    {challenge.files.map(file => {
+                        return <File name={file.name} url={file.url} size={file.size} />;
+                    })}
+                </div>}
+                {challenge.hint && !!challenge.hint.length && <div className={"challengeLinkGroup"}>
+                    {challenge.hint && !challenge.solve && challenge.hint.map((hint, n) => {
+                        return <Hint name={"Hint " + (n + 1)} onClick={promptHint(hint)} points={hint.cost} />;
+                    })}
+                </div>}
+            </>}
     </>;
 };

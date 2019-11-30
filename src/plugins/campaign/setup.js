@@ -63,7 +63,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
         while (rows.length <= chal.metadata.y)
             rows.push([]);
         while (rows[chal.metadata.y].length <= chal.metadata.x)
-            if (isEdit) rows[chal.metadata.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal)} key={rows[chal.metadata.y].length} />);
+            if (isEdit) rows[chal.metadata.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal, true)} key={rows[chal.metadata.y].length} />);
             else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
 
         rows[chal.metadata.y][chal.metadata.x] = <Node key={chal.metadata.x} unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solve}
@@ -85,7 +85,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
     rows.forEach((row, n) => {
         while (row.length <= max_x)
             if (isEdit)
-                row.push(<AddNode click={showEditor(emptyChallenge(row.length, n), challenges.chal)} key={row.length} />);
+                row.push(<AddNode click={showEditor(emptyChallenge(row.length, n), challenges.chal, true)} key={row.length} />);
             else row.push(<div className={"campaignSpacer"} key={row.length} />);
 
         rows[n] = <Row key={n}>
@@ -96,7 +96,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
         let row = [];
         while (row.length <= max_x)
             if (isEdit)
-                row.push(<AddNode click={showEditor(emptyChallenge(row.length, rows.length), challenges.chal)} key={row.length} />);
+                row.push(<AddNode click={showEditor(emptyChallenge(row.length, rows.length), challenges.chal, true)} key={row.length} />);
             else row.push(<div className={"campaignSpacer"} key={row.length} />);
 
         rows[rows.length] = <Row key={rows.length + 1}>

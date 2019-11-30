@@ -52,6 +52,7 @@ export default () => {
     const [challenge, setChallenge] = useState(null);
     const [edit, setEdit] = useState(false);
     const [isEditor, setIsEditor] = useState(false);
+    const [isCreator, setIsCreator] = useState(false);
     const [lState, setLState] = useState({});
     const [anc, setAnc] = useState(false);
 
@@ -67,7 +68,7 @@ export default () => {
         }
     };
 
-    const showEditor = (challenge, saveTo) => {
+    const showEditor = (challenge, saveTo, isNew) => {
         return () => {
             console.log('!!', saveTo);
 
@@ -76,6 +77,7 @@ export default () => {
                 saveTo: saveTo
             })
             setIsEditor(true);
+            setIsCreator(!!isNew);
         }
     };
 
@@ -86,18 +88,34 @@ export default () => {
 
     const saveEdit = (original) => {
         return changes => {
-            api.editChallenge(
-                original.id, changes.name, changes.points, changes.desc, changes.flag, original.metadata
-            ).then(async () => {
-                for (let i in changes)
-                    original[i] = changes[i];    
-                if (lState.saveTo)
-                    lState.saveTo.push(original);
-                    
-                await api.setup();
-                setIsEditor(false);
-                setChallenge(null);
-            }).catch(e => app.alert(api.getError(e)));
+            if (isCreator)
+                api.createChallenge(
+                    api.challenges[activeTab].id, changes.name, changes.points, changes.desc,
+                    changes.flag_type, JSON.parse(changes.flag), original.metadata
+                ).then(async () => {
+                    for (let i in changes)
+                        original[i] = changes[i];    
+                    if (lState.saveTo)
+                        lState.saveTo.push(original);
+
+                    await api.setup();
+                    setIsEditor(false);
+                    setChallenge(null);
+                }).catch(e => app.alert(api.getError(e)));
+            else
+                api.editChallenge(
+                    original.id, changes.name, changes.points, changes.desc, changes.flag_type,
+                    JSON.parse(changes.flag), original.metadata
+                ).then(async () => {
+                    for (let i in changes)
+                        original[i] = changes[i];    
+                    if (lState.saveTo)
+                        lState.saveTo.push(original);
+                        
+                    await api.setup();
+                    setIsEditor(false);
+                    setChallenge(null);
+                }).catch(e => app.alert(api.getError(e)));
         }
     };
 
@@ -136,7 +154,8 @@ export default () => {
                 chalEl = React.createElement(
                     handler.component, {
                     challenge: challenge, hideChal: hideChal,
-                    isEditor: isEditor, saveEdit: saveEdit
+                    isEditor: isEditor, saveEdit: saveEdit,
+                    isCreator: isCreator,
                 })
             }
 

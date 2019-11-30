@@ -100,6 +100,7 @@ class APIClass extends Component {
             getTeam: this.getTeam,
             getUser: this.getUser,
 
+            createChallenge: this.createChallenge,
             editChallenge: this.editChallenge,
             createGroup: this.createGroup,
             editGroup: this.editGroup,
@@ -367,8 +368,10 @@ class APIClass extends Component {
     });
     createGroup = (name, desc, type) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc, type: type });
     editGroup = (id, name, desc, type) => this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc, type: type });
-    editChallenge = (id, name, points, desc, flag, meta) =>
-        this.post(this.ENDPOINTS.CHALLENGE_EDIT, { id: id, name: name, points: points, desc: desc, flag: flag, meta: meta });
+    editChallenge = (id, name, points, desc, flag_type, flag, meta) =>
+        this.post(this.ENDPOINTS.CHALLENGE_EDIT, { id: id, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, meta: meta });
+    createChallenge = (group, name, points, desc, flag_type, flag, meta) =>
+        this.post(this.ENDPOINTS.CHALLENGE_CREATE, { group: group, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, meta: meta });
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {
