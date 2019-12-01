@@ -92,7 +92,7 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-const wave = {on: false, audio: null};
+const wave = { on: false, audio: null };
 
 const SiteLocked = ({ setLoaded, setHasCode }) => {
     const api = useContext(apiContext);
@@ -110,15 +110,15 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
         wave.audio = (new AudioContext()).createBufferSource();
 
         let request = new XMLHttpRequest();
-        request.open('GET', bgm, true); 
+        request.open('GET', bgm, true);
         request.responseType = 'arraybuffer';
-        request.onload = function() {
-            wave.audio.context.decodeAudioData(request.response, function(response) {
+        request.onload = function () {
+            wave.audio.context.decodeAudioData(request.response, function (response) {
                 wave.audio.buffer = response;
                 wave.audio.loop = true;
                 wave.audio.start(0);
                 if (wave.on) wave.audio.connect(wave.audio.context.destination);
-            }, function () { console.error('The request failed.'); } );
+            }, function () { console.error('The request failed.'); });
         }
         request.send();
     };
@@ -135,16 +135,16 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
         const hours = Math.floor((delta % 86400) / 3600);
         const minutes = Math.floor((delta % 3600) / 60);
         const seconds = Math.floor((delta % 60));
-        
+
         setCountdownText(("" + days) + " day" + (days === 1 ? "" : "s") + ", "
-                        + pad(hours) + " hour" + (hours === 1 ? "" : "s") + ", "
-                        + pad(minutes) + " minute" + (minutes === 1 ? "" : "s") + ", "
-                        + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
+            + pad(hours) + " hour" + (hours === 1 ? "" : "s") + ", "
+            + pad(minutes) + " minute" + (minutes === 1 ? "" : "s") + ", "
+            + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
 
         if (delta < 0) {
             setLoaded(false);
             api.openSite();
-            setTimeout(() => {setLoaded(true)}, LOADED_TIMEOUT);
+            setTimeout(() => { setLoaded(true) }, LOADED_TIMEOUT);
         }
     }, 100);
 
@@ -185,10 +185,10 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             let shard;
             for (let i = 0; i < shardData.current.length; i++) {
                 shard = shardData.current[i];
-                
+
                 ctx.globalAlpha = (shard.scale - 0.5);
                 drawShard(shard.x, shard.y, shard.scale, shard.angle);
-                
+
                 shard.y += shard.scale * 0.5 * dt;
                 shard.angle += shard.scale * shard.rotate * dt / 1000;
                 if (shard.y > canvas.height + image.height) {
@@ -204,7 +204,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             // Background
             ctx.fillStyle = "#7f1a7aff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             // Sun
             grd = ctx.createLinearGradient(0, canvas.height / 4, 0, canvas.height / 4 * 3);
             grd.addColorStop(0, "#ff2f87ff");
@@ -214,7 +214,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 4, 0, Math.PI * 2);
             ctx.fill();
         }
-        
+
         // Shards
         drawShards();
 
@@ -225,7 +225,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             grd.addColorStop(1, "#7f1a7aff");
             ctx.fillStyle = grd;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             // Ground
             ctx.fillStyle = "#291888ff";
             ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, canvas.height);
@@ -236,15 +236,15 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
                 //let prog = (i / 20) + (scan.current / 500);
 
                 let prog = (((i + (scan.current / 50)) / 10) ** 3);
-                
-                ctx.beginPath(); 
+
+                ctx.beginPath();
                 ctx.moveTo(0, canvas.height / 2 + (canvas.height / 2 * prog));
                 ctx.lineTo(canvas.width, canvas.height / 2 + (canvas.height / 2 * prog));
                 ctx.stroke();
             }
             scan.current = (scan.current + 0.1 * dt) % 50;
             for (let i = -400; i <= 400; i++) {
-                ctx.beginPath(); 
+                ctx.beginPath();
                 ctx.moveTo(canvas.width / 2 + i * canvas.width / 1000, canvas.height / 2);
                 ctx.lineTo(canvas.width / 2 + i * canvas.width / 5, canvas.height);
                 ctx.stroke();
@@ -263,7 +263,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
     if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
     return <div className={"lockWrap"}>
         <canvas ref={cRef} />
-        <img alt={""} src={lockImg} style={{display: "none"}} ref={iRef} />
+        <img alt={""} src={lockImg} style={{ display: "none" }} ref={iRef} />
         <SectionTitle>Site Locked!</SectionTitle>
         <div className={"siteCountdown"}>Unlock in {countdownText}</div>
 
@@ -277,9 +277,19 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             }
         }} />
         {!wave.on &&
-        <Button lesser click={hasCode}>I have a code</Button>}
+            <Button lesser click={hasCode}>I have a code</Button>}
     </div>;
 }
+
+
+const PopupMessage = ({ data }) => {
+    const api = useContext(apiContext);
+    
+    return <div onClick={() => api.hidePopup(data.id)}>
+        <div>{data.title}</div>
+        <div>{data.body}</div>
+    </div>
+};
 
 const App = () => {
     const api = useContext(apiContext);
@@ -321,13 +331,13 @@ const App = () => {
     };
 
     const showAlert = (message) => (
-        promptConfirm({message: message, noCancel: true, small: true})
+        promptConfirm({ message: message, noCancel: true, small: true })
     );
 
     // Countdown
     useEffect(() => {
         api.getCountdown();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Vim-mode
@@ -337,7 +347,7 @@ const App = () => {
         const _handleKeyDown = event => {
             if (event.keyCode === 16 && typedText.current[typedText.current.length - 1] === 16)
                 return
-                typedText.current.push(event.keyCode);
+            typedText.current.push(event.keyCode);
             if (typedText.current.length > MAGIC.length)
                 typedText.current = typedText.current.slice(typedText.current.length - MAGIC.length, typedText.current.length);
             if (JSON.stringify(typedText.current) === JSON.stringify(MAGIC))
@@ -393,6 +403,10 @@ const App = () => {
                 inputs={currentPrompt.inputs}
                 onHide={hideModal}
             /> : null}
+
+            <div className={"popupMessages"}>
+                {api.popups.map(i => <PopupMessage data={i} key={i.id} />)}
+            </div>
 
             <div className={"eventsWrap"}>
                 {popupsEl}

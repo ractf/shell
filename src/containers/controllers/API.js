@@ -2,6 +2,8 @@ import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
 import axios from "axios";
 
+import WS from "./WS";
+
 import { APIContext } from "./Contexts";
 
 
@@ -98,6 +100,9 @@ class APIClass extends Component {
         }
 
         this.state = {
+            popups: [],
+            hidePopup: this.hidePopup,
+
             ready: false,
             authenticated: !!userData,
             user: userData,
@@ -105,12 +110,12 @@ class APIClass extends Component {
             team: teamData,
             config: config,
             setup: this.setup,
-            
+
             configGet: this.configGet,
             setConfigValue: this.setConfigValue,
             modifyUserAdmin: this.modifyUserAdmin,
             modifyTeamAdmin: this.modifyTeamAdmin,
-            
+
             allUsers: null,
             allTeams: null,
             allUsersAdmin: null,
@@ -154,6 +159,8 @@ class APIClass extends Component {
 
             _reloadCache: this._reloadCache,
         };
+
+        this.ws = new WS(this);
     }
 
     async componentWillMount() {
@@ -182,17 +189,6 @@ class APIClass extends Component {
         }
 
         //if (!this.state.siteOpen) return;
-    }
-
-    configGet = (key, fallback) => {
-        if (this.state.config && this.state.config.hasOwnProperty(key))
-            return this.state.config[key];
-        return fallback;
-    }
-
-    openSite = () => {
-        this.setState({ ready: false, siteOpen: true });
-        this.setup();
     }
 
     // Helpers
@@ -288,12 +284,48 @@ class APIClass extends Component {
         this.setState(newState);
     };
 
+    // Misc
+    getUUID = () => {
+        if (window.crypto)
+            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+                (c ^ (window.crypto.getRandomValues(new Uint8Array(1))[0] & ((15 >> c) / 4))).toString(16)
+            );
+        else
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                let r = Math.random() * 16 | 0;
+                return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16);
+            });
+    }
+
+    addPopup = (title, body) => {
+        let id = this.getUUID();
+        this.setState({ popups: [...this.state.popups, { title: title, body: body, id: id }] })
+        setTimeout(() => {
+            this.hidePopup(id);
+        }, 10000);
+    }
+
+    hidePopup = (id) => {
+        this.setState({ popups: this.state.popups.filter(i => i.id !== id) })
+    }
+
     // Endpoint Things
     ensure = async type => {
         return this.get(this.ENSURABLE[type]).then(data => {
             this.setState({ [type]: data.d });
             return data;
         });
+    }
+
+    configGet = (key, fallback) => {
+        if (this.state.config && this.state.config.hasOwnProperty(key))
+            return this.state.config[key];
+        return fallback;
+    }
+
+    openSite = () => {
+        this.setState({ ready: false, siteOpen: true });
+        this.setup();
     }
 
     getCountdown = () => this.get(this.ENDPOINTS.COUNTDOWN).then(data => {

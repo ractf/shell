@@ -203,3 +203,39 @@ b {
     width: 300px;
     margin-top: 16px;
 }
+
+.popupMessages {
+    position: fixed;
+    right: 16px;
+    bottom: 48px;
+    display: flex;
+    overflow-y: hidden;
+    width: auto !important;
+    flex-direction: column;
+
+    &>div {
+        background-color: $bg_d1;
+        display: inline-block;
+        width: 300px;
+        margin-top: 16px;
+        padding: 16px 24px;
+        border-radius: 2px;
+        cursor: pointer;
+        margin-top: 1rem;
+        word-wrap: break-word;
+
+        &>div:first-child {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        &>div:last-child {
+            font-size: .9rem;
+        }
+
+        & b {
+            font-weight: 700;
+            color: $bgreen;
+        }
+    }
+}
