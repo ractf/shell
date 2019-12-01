@@ -145,7 +145,7 @@ export default () => {
             else {
                 chalEl = React.createElement(
                     handler.component, {
-                    challenge: challenge, hideChal: hideChal,
+                    challenge: challenge, doHide: hideChal,
                     isEditor: isEditor, saveEdit: saveEdit,
                     isCreator: isCreator,
                 })

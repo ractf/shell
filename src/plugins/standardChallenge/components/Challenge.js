@@ -20,6 +20,7 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
     const regex = /^ractf{.+}$/;
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
     const api = useContext(apiContext);
+    const app = useContext(appContext);
 
     const changeFlag = (flag) => {
         setFlagValid(regex.test(flag));
@@ -29,7 +30,6 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
         setHint(null);
     }
 
-    const app = useContext(appContext);
     const promptHint = (hint) => {
         return () => {
             let msg = <>
@@ -47,15 +47,15 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
             setLocked(true);
             api.attemptFlag(flag, challenge).then(resp => {
                 if (resp.d.correct) {
-                    alert("yay");
+                    app.alert("Flag correct!");
                     doHide();
                 } else {
-                    alert("nuu");
+                    app.alert("Incorrect flag");
                 }
                 setLocked(false);
             }).catch(e => {
                 setMessage(api.getError(e));
-                console.log(api.getError(e));
+                console.log(e);
                 setLocked(false);
             });
         }

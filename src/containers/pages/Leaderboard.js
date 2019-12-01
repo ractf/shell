@@ -57,7 +57,7 @@ export default () => {
             let points = {};
             let minTime = null;
 
-            lbdata.map(i => {
+            lbdata.sort((a, b) => (new Date(a.time)) - (new Date(b.time))).map(i => {
                 if (!minTime) minTime = new Date(i.time);
 
                 if (!userPlots.hasOwnProperty(i.user_id)) {
@@ -77,10 +77,10 @@ export default () => {
             });
 
             setUserGraphData(
-                Object.values(userPlots).sort((a, b) => points[a.id] > points[b.id])
+                Object.values(userPlots).sort((a, b) => points[b.id] - points[a.id])
             );
             setTeamGraphData(
-                Object.values(teamPlots).sort((a, b) => points[a.id] > points[b.id])
+                Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
             );
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +95,7 @@ export default () => {
             users[i.user_id].points += i.points;
             return 0;
         });
-        return Object.values(users).sort((a, b) => a.points > b.points).map(
+        return Object.values(users).sort((a, b) => b.points - a.points).map(
             (i, n) => [n + 1, i.name, i.team, i.points, "/profile/" + i.id]
         );
     };
@@ -109,7 +109,7 @@ export default () => {
             users[i.team_id].points += i.points;
             return 0;
         });
-        return Object.values(users).sort((a, b) => a.points > b.points).map(
+        return Object.values(users).sort((a, b) => b.points - a.points).map(
             (i, n) => [n + 1, i.name, i.points, "/team/" + i.id]
         );
     };
