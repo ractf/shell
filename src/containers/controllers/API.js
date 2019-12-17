@@ -32,6 +32,7 @@ class APIClass extends Component {
         FLAG_TEST: "/challenges/<uuid>/attempt",
         CHALLENGE_CREATE: "/challenges/new",
         CHALLENGE_EDIT: "/challenges/edit",
+        CHALLENGE_LINK: "/challenges/link",
 
         GROUP_CREATE: "/group/new",
         GROUP_EDIT: "/group/edit",
@@ -133,6 +134,7 @@ class APIClass extends Component {
             getUser: this.getUser,
 
             createChallenge: this.createChallenge,
+            linkChallenges: this.linkChallenges,
             editChallenge: this.editChallenge,
             createGroup: this.createGroup,
             editGroup: this.editGroup,
@@ -264,6 +266,7 @@ class APIClass extends Component {
 
         try {
             challenges = (await this._getChallenges()).d;
+            this._createChallengeLinks(challenges);
         } catch (e) {
             if (e.response && e.response.data)
                 return this.logout();
@@ -285,6 +288,47 @@ class APIClass extends Component {
     };
 
     // Misc
+    _createChallengeLinks = (challenges) => {
+        const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
+
+        challenges.forEach(group => {
+            if (group.type === "campaign") {
+                let challenges = {};
+                group.chals.forEach(
+                    i => {
+                        challenges[i.id] = i;
+                        i.link = 0;
+                    }
+                );
+                group.chals.forEach(
+                    i => {
+                        i.deps.forEach(dep => {
+                            if (challenges[dep]) {
+                                let depChallenge = challenges[dep];
+                                if (depChallenge.metadata.x === i.metadata.x + 1 && depChallenge.metadata.y === i.metadata.y) {
+                                    i.link |= EAST;
+                                    depChallenge.link |= WEST;
+                                }
+                                if (depChallenge.metadata.x === i.metadata.x - 1 && depChallenge.metadata.y === i.metadata.y) {
+                                    i.link |= WEST;
+                                    depChallenge.link |= EAST;
+                                }
+                                if (depChallenge.metadata.x === i.metadata.x && depChallenge.metadata.y === i.metadata.y - 1) {
+                                    i.link |= NORTH;
+                                    depChallenge.link |= SOUTH;
+                                }
+                                if (depChallenge.metadata.x === i.metadata.x && depChallenge.metadata.y === i.metadata.y + 1) {
+                                    i.link |= SOUTH;
+                                    depChallenge.link |= NORTH;
+                                }
+                            }
+                        });
+                    }
+                )
+            }
+        })
+    };
+
     getUUID = () => {
         if (window.crypto)
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -295,7 +339,7 @@ class APIClass extends Component {
                 let r = Math.random() * 16 | 0;
                 return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16);
             });
-    }
+    };
 
     addPopup = (title, body) => {
         let id = this.getUUID();
@@ -303,11 +347,11 @@ class APIClass extends Component {
         setTimeout(() => {
             this.hidePopup(id);
         }, 10000);
-    }
+    };
 
     hidePopup = (id) => {
         this.setState({ popups: this.state.popups.filter(i => i.id !== id) })
-    }
+    };
 
     // Endpoint Things
     ensure = async type => {
@@ -315,18 +359,18 @@ class APIClass extends Component {
             this.setState({ [type]: data.d });
             return data;
         });
-    }
+    };
 
     configGet = (key, fallback) => {
         if (this.state.config && this.state.config.hasOwnProperty(key))
             return this.state.config[key];
         return fallback;
-    }
+    };
 
     openSite = () => {
         this.setState({ ready: false, siteOpen: true });
         this.setup();
-    }
+    };
 
     getCountdown = () => this.get(this.ENDPOINTS.COUNTDOWN).then(data => {
         if (data.s) {
@@ -367,7 +411,7 @@ class APIClass extends Component {
                 resolve(response.data);
             }).catch(reject);
         });
-    }
+    };
     modifyUserAdmin = (id, data) => this.post(this.ENDPOINTS.USER_MODIFY_ADMIN, { id: id, ...data });
     modifyTeamAdmin = (id, data) => this.post(this.ENDPOINTS.TEAM_MODIFY_ADMIN, { id: id, ...data });
 
@@ -390,7 +434,7 @@ class APIClass extends Component {
                 resolve(response.data);
             }).catch(reject);
         });
-    }
+    };
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
@@ -451,10 +495,12 @@ class APIClass extends Component {
     });
     createGroup = (name, desc, type) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc, type: type });
     editGroup = (id, name, desc, type) => this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc, type: type });
-    editChallenge = (id, name, points, desc, flag_type, flag, meta) =>
-        this.post(this.ENDPOINTS.CHALLENGE_EDIT, { id: id, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, meta: meta });
-    createChallenge = (group, name, points, desc, flag_type, flag, meta) =>
-        this.post(this.ENDPOINTS.CHALLENGE_CREATE, { group: group, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, meta: meta });
+    editChallenge = (id, name, points, desc, flag_type, flag, autoUnlock, meta) =>
+        this.post(this.ENDPOINTS.CHALLENGE_EDIT, { id: id, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, auto_unlock: autoUnlock, meta: meta });
+    createChallenge = (group, name, points, desc, flag_type, flag, autoUnlock, meta) =>
+        this.post(this.ENDPOINTS.CHALLENGE_CREATE, { group: group, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, auto_unlock: autoUnlock, meta: meta });
+    linkChallenges = (chal1, chal2, linkState) =>
+        this.post(this.ENDPOINTS.CHALLENGE_LINK, {cfrom: chal1.id, cto: chal2.id, state: linkState});
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {
@@ -463,7 +509,6 @@ class APIClass extends Component {
             ).then(response => {
                 this.props.history.push("/login");
                 resolve();
-                return;
             }).catch(reject)
         });
     };
@@ -475,7 +520,6 @@ class APIClass extends Component {
             ).then(response => {
                 this.props.history.push("/register/email");
                 resolve();
-                return;
             }).catch(reject)
         });
     };

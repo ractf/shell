@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
-import { registerPlugin } from "ractf";
+import {apiContext, registerPlugin} from "ractf";
 
 import AddNode from "./components/AddNode";
 import Node from "./components/Node";
@@ -12,9 +12,9 @@ const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
 
 
 const getChal = (tab, x, y) => {
-    for (let i = 0; i < tab.chal.length; i++) {
-        if (tab.chal[i].x === x && tab.chal[i].y === y)
-            return tab.chal[i];
+    for (let i = 0; i < tab.chals.length; i++) {
+        if (tab.chals[i].metadata.x === x && tab.chals[i].metadata.y === y)
+            return tab.chals[i];
     }
     return {};
 };
@@ -23,6 +23,7 @@ const getChal = (tab, x, y) => {
 const emptyChallenge = (x, y) => ({
     lock: false,
     solve: false,
+    deps: [],
     metadata: {
         x: x,
         y: y
@@ -32,21 +33,47 @@ const emptyChallenge = (x, y) => ({
 
 const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) => {
     const [reRender, setReRender] = useState(0);
+    const api = useContext(apiContext);
+
+    let chalmap = {};
+    challenges.chals.forEach((chal) => {
+        chalmap[[chal.metadata.x, chal.metadata.y]] = chal;
+    });
 
     const toggleLink = chal => {
         return side => {
             switch (side) {
                 case "up":
-                    chal.link ^= NORTH;
+                    if (chalmap[[chal.metadata.x, chal.metadata.y - 1]]) {
+                        chal.link ^= NORTH;
+                        chalmap[[chal.metadata.x, chal.metadata.y - 1]].link ^= SOUTH;
+                        api.linkChallenges(chal, chalmap[[chal.metadata.x, chal.metadata.y - 1]], !!(chal.link & NORTH));
+                        api.linkChallenges(chalmap[[chal.metadata.x, chal.metadata.y - 1]], chal, !!(chal.link & NORTH));
+                    }
                     break;
                 case "down":
-                    chal.link ^= SOUTH;
+                    if (chalmap[[chal.metadata.x, chal.metadata.y + 1]]) {
+                        chal.link ^= SOUTH;
+                        chalmap[[chal.metadata.x, chal.metadata.y + 1]].link ^= NORTH;
+                        api.linkChallenges(chal, chalmap[[chal.metadata.x, chal.metadata.y + 1]], !!(chal.link & SOUTH));
+                        api.linkChallenges(chalmap[[chal.metadata.x, chal.metadata.y + 1]], chal, !!(chal.link & SOUTH));
+                    }
                     break;
                 case "left":
-                    chal.link ^= WEST;
+                    if (chalmap[[chal.metadata.x - 1, chal.metadata.y]]) {
+                        chal.link ^= WEST;
+                        chalmap[[chal.metadata.x - 1, chal.metadata.y]].link ^= EAST;
+                        api.linkChallenges(chal, chalmap[[chal.metadata.x - 1, chal.metadata.y]], !!(chal.link & WEST));
+                        api.linkChallenges(chalmap[[chal.metadata.x - 1, chal.metadata.y]], chal, !!(chal.link & WEST));
+                    }
                     break;
                 case "right":
-                    chal.link ^= EAST;
+                    if (chalmap[[chal.metadata.x + 1, chal.metadata.y]]) {
+                        chal.link ^= EAST;
+                        chalmap[[chal.metadata.x + 1, chal.metadata.y]].link ^= WEST;
+                        api.linkChallenges(chal, chalmap[[chal.metadata.x + 1, chal.metadata.y]], !!(chal.link & EAST));
+                        api.linkChallenges(chalmap[[chal.metadata.x + 1, chal.metadata.y]], chal, !!(chal.link & EAST));
+                    }
                     break;
                 default:
                     break;
@@ -66,19 +93,25 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
             if (isEdit) rows[chal.metadata.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal, true)} key={rows[chal.metadata.y].length} />);
             else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
 
-        rows[chal.metadata.y][chal.metadata.x] = <Node key={chal.metadata.x} unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solve}
-            lockDoneR={isEdit ? false : chal.solve && !(chal.link & EAST && !getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solve)}
-            lockDoneD={isEdit ? false : chal.solve && !(chal.link & SOUTH && !getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solve)}
+        rows[chal.metadata.y][chal.metadata.x] = <Node
+            x={chal.metadata.x} y={chal.metadata.y} key={chal.metadata.x}
+            unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solved}
 
-            lockUnlockedR={isEdit ? true : chal.solve || (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solve)}
-            lockUnlockedD={isEdit ? true : chal.solve || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solve)}
+            chalmap={chalmap}
+            
+            lockDoneR={isEdit ? false : chal.solved && !(chal.link & EAST && !getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
+            lockDoneD={isEdit ? false : chal.solved && !(chal.link & SOUTH && !getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
+
+            lockUnlockedR={isEdit ? true : chal.solved || (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
+            lockUnlockedD={isEdit ? true : chal.solved || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
 
             click={isEdit ? showEditor(chal) : showChallenge(chal)}
             isEdit={isEdit} toggleLink={toggleLink(chal)}
 
             up={!!(chal.link & NORTH)} down={!!(chal.link & SOUTH)}
             right={!!(chal.link & EAST)} left={!!(chal.link & WEST)}
-            name={chal.lock ? "???" : chal.name} />;
+            name={chal.lock ? "???" : chal.name}
+        />;
     });
     if (isEdit && max_x < 2) max_x++;
 

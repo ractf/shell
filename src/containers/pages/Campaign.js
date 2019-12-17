@@ -30,7 +30,7 @@ const ANC = ({ hide, anc }) => {
             setError(api.getError(e));
             setLocked(false);
         });
-    }
+    };
 
     return <Modal onHide={hide} title={"Hi"}>
         <Form locked={locked} handle={create}>
@@ -45,7 +45,7 @@ const ANC = ({ hide, anc }) => {
             <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
         </Form>
     </Modal>;
-}
+};
 
 
 export default () => {
@@ -73,7 +73,7 @@ export default () => {
             setChallenge(challenge || {});
             setLState({
                 saveTo: saveTo
-            })
+            });
             setIsEditor(true);
             setIsCreator(!!isNew);
         }
@@ -97,7 +97,7 @@ export default () => {
             (isCreator ? api.createChallenge : api.editChallenge)(
                 (isCreator ? api.challenges[activeTab].id : original.id),
                 changes.name, changes.points, changes.desc, changes.flag_type, flag,
-                original.metadata
+                changes.autoUnlock, original.metadata
             ).then(async () => {
                 for (let i in changes)
                     original[i] = changes[i];

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { apiContext, appContext, Button, Input, TextBlock, Form, FormError } from "ractf";
+import { apiContext, appContext, Button, Input, TextBlock, Form, FormError, Radio } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
@@ -24,11 +24,11 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
 
     const changeFlag = (flag) => {
         setFlagValid(regex.test(flag));
-    }
+    };
 
     const useHint = () => {
         setHint(null);
-    }
+    };
 
     const promptHint = (hint) => {
         return () => {
@@ -40,7 +40,7 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
                 alert("Hint!!!!");
             }).catch(() => { });
         };
-    }
+    };
 
     const tryFlag = challenge => {
         return ({ flag }) => {
@@ -48,7 +48,18 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
             api.attemptFlag(flag, challenge).then(resp => {
                 if (resp.d.correct) {
                     app.alert("Flag correct!");
-                    doHide();
+                    challenge.solved = true;
+
+                    // NOTE: This is potentially very slow. If there are performance issues in production, this is
+                    // where to look first!
+                    api._reloadCache().then(() => doHide());
+                    /*  // This is the start of what would be the code to rebuild the local cache
+                    api.challenges.forEach(group => group.chals.forEach(chal => {
+                        if (chal.deps.indexOf(challenge.id) !== -1) {
+                            chal.lock = false;
+                        }
+                    }));
+                    */
                 } else {
                     app.alert("Incorrect flag");
                 }
@@ -75,11 +86,17 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
 
             <label htmlFor={"flag"}>Challenge flag type</label>
             <Input placeholder="Challenge flag type" name={"flag_type"} monospace
-                val={challenge.flag} />
+                val={challenge.flag_type} />
             <label htmlFor={"flag"}>Challenge flag</label>
             <Input placeholder="Challenge flag"
                 name={"flag"} monospace format={{ test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } } }}
                 val={challenge.flag} />
+
+            <div>
+                Always Unlocked
+                <Radio name={"autoUnlock"} value={challenge.auto_unlock}
+                       options={[["Enabled", true], ["Disabled", false]]} />
+            </div>
 
             <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
         </Form></div> : <>
@@ -92,7 +109,9 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
 
                 <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.description }} />
 
-                {!challenge.solve && <Form handle={tryFlag(challenge)} locked={locked}>
+                {challenge.solved ? <>
+                    You have already solved this challenge!
+                </> : <Form handle={tryFlag(challenge)} locked={locked}>
                     <Input placeholder="Flag format: ractf{...}"
                         format={partial} name={"flag"}
                         callback={changeFlag} monospace
