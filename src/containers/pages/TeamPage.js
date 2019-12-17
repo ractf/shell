@@ -41,8 +41,10 @@ export default () => {
     </Page>;
     if (!teamData) return <Page title={"Teams"} vCentre><Spinner /></Page>;
 
-    // TODO: This properly later
-    const UserSolve = () => null;
+    const UserSolve = ({ user_name, name, score }) => <div className={"userSolve"}>
+        <div>{name}</div>
+        <div>{score} point{score === 1 ? "" : "s"} - Scored by {user_name}</div>
+    </div>;
 
     return <Page title={teamData.name}>
         <div className={"profileSplit"}>
@@ -68,13 +70,6 @@ export default () => {
                 </Link>)}
             </div>
             <div className={"userSolves"}>
-                {/*{teamData.is_beta &&
-                    <UserSpecial col={"#66bb66"} ico={beta}>Beta Tester</UserSpecial>}
-                {teamData.is_donor &&
-                    <UserSpecial col={"#bbbb33"} ico={donor}>Donor</UserSpecial>}
-                {teamData.is_admin &&
-                <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}*/}
-
                 {teamData.solves && teamData.solves.map(i => <UserSolve {...i} />)}
                 {(!teamData.solves || teamData.solves.length === 0) && <div className={"noSolves"}>{teamData.name} haven't solved any challenges yet</div>}
             </div>

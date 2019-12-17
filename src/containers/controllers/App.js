@@ -382,7 +382,6 @@ const App = () => {
 
     return (
         <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert }}>
-            {/* TODO: Use api.ready */}
             {!api.ready && loaded ? <div className={"siteWarning"}>
                 Site operating in offline mode:
                     Failed to connect to the CTF servers!<br />
