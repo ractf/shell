@@ -43,7 +43,7 @@ export default ({ name, url, size, id, isEdit }) => {
             <FaFile />
             <div>
                 <div>{name}</div>
-                <a href={""}>{url}</a>
+                <div className={"linkStyle"} href={""}>{url}</div>
                 <div className={"challengeLinkMeta"}>{formatBytes(size)}</div>
             </div>
         </div>;
