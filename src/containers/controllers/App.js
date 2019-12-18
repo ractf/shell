@@ -61,18 +61,18 @@ Keyboard interrupt received, exiting.
         } else {
             setLineBuffer(lineBuffer + String.fromCharCode(e.which));
         }
-    }
+    };
 
     const onKeyDown = e => {
         if ((e.keyCode || e.which) === 8) {
             setLineBuffer(lineBuffer.substring(0, lineBuffer.length - 1))
         }
-    }
+    };
 
     return <div className={"vimDiv"} tabIndex={"0"} onKeyDown={onKeyDown} onKeyPress={onKeyPress}>
         {scrollback}{lineBuffer}
     </div>
-}
+};
 
 function useInterval(callback, delay) {
     const savedCallback = useRef();
@@ -119,15 +119,14 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
                 wave.audio.start(0);
                 if (wave.on) wave.audio.connect(wave.audio.context.destination);
             }, function () { console.error('The request failed.'); });
-        }
+        };
         request.send();
-    };
-
+    }
 
     const pad = n => {
         if (n < 10) return "0" + n;
         return "" + n;
-    }
+    };
 
     useInterval(() => {
         const delta = ((new Date(api.countdown.time)) - (new Date()) - api.countdown.offset) / 1000;
@@ -198,7 +197,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             }
 
             ctx.globalAlpha = 1;
-        }
+        };
 
         if (wave.on) {
             // Background
@@ -258,7 +257,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
         let passwd = prompt("c2");
         let otp = prompt("c3");
         api.login(uname, passwd, otp);
-    }
+    };
 
     if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
     return <div className={"lockWrap"}>
@@ -279,7 +278,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
         {!wave.on &&
             <Button lesser click={hasCode}>I have a code</Button>}
     </div>;
-}
+};
 
 
 const PopupMessage = ({ data }) => {
@@ -346,13 +345,13 @@ const App = () => {
 
         const _handleKeyDown = event => {
             if (event.keyCode === 16 && typedText.current[typedText.current.length - 1] === 16)
-                return
+                return;
             typedText.current.push(event.keyCode);
             if (typedText.current.length > MAGIC.length)
                 typedText.current = typedText.current.slice(typedText.current.length - MAGIC.length, typedText.current.length);
             if (JSON.stringify(typedText.current) === JSON.stringify(MAGIC))
                 setConsole(true);
-        }
+        };
 
         document.addEventListener("keydown", _handleKeyDown);
     }, []);
@@ -371,7 +370,7 @@ const App = () => {
         let popups_ = [...popups];
         popups_.splice(n, 1);
         setPopups(popups_);
-    }
+    };
     let popupsEl = popups.map((popup, n) => {
         let handler = plugins.popup[popup.type];
         if (!handler) return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</div>;
@@ -412,6 +411,6 @@ const App = () => {
             </div>
         </AppContext.Provider>
     );
-}
+};
 
 export default () => <BrowserRouter><API><App /></API></BrowserRouter>;

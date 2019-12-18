@@ -34,7 +34,10 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
         </p>
 
         <Form handle={promise.resolve}>
-            {inputs.map((i, n) => <Input key={n} width={'auto'} {...i} />)}
+            {inputs.map((i, n) => i.label ? <>
+                <label htmlFor={i.name}>{i.label}</label>
+                <Input key={n} width={'auto'} {...i} />
+            </> : <Input key={n} width={'auto'} {...i} />)}
 
             <ButtonRow>
                 <Button submit>{ body.okay || "Okay" }</Button>

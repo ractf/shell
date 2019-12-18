@@ -13,6 +13,8 @@
 
 .challengeTitle {
     font-size: 3rem;
+    word-wrap: break-word;
+    max-width: 100%;
 }
 
 .challengeWorth {
@@ -38,6 +40,7 @@
     align-items: center;
     max-width: 300px;
     margin-right: 16px;
+    position: relative;
 
     &:hover {
         color: $fg;
@@ -56,6 +59,15 @@
 
     &.clickable {
         cursor: pointer;
+    }
+
+    &.hintUsed::after {
+        content: "UNLOCKED";
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        font-size: .8em;
+        opacity: .5;
     }
 }
 .challengeLinkMeta {

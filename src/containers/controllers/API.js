@@ -34,6 +34,12 @@ class APIClass extends Component {
         CHALLENGE_EDIT: "/challenges/edit",
         CHALLENGE_LINK: "/challenges/link",
 
+        EDIT_FILE: "/files/edit",
+        NEW_FILE: "/files/new",
+        EDIT_HINT: "/hints/edit",
+        NEW_HINT: "/hints/new",
+        USE_HINT: "/hints/use",
+
         GROUP_CREATE: "/group/new",
         GROUP_EDIT: "/group/edit",
 
@@ -60,8 +66,8 @@ class APIClass extends Component {
         leaderboard: this.ENDPOINTS.LEADERBOARD,
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         let userData, challenges, teamData, countdown, siteOpen, config;
         try {
@@ -155,6 +161,12 @@ class APIClass extends Component {
             joinTeam: this.joinTeam,
 
             attemptFlag: this.attemptFlag,
+
+            editFile: this.editFile,
+            newFile: this.newFile,
+            editHint: this.editHint,
+            newHint: this.newHint,
+            useHint: this.useHint,
 
             ensure: this.ensure,
             getError: this.getError,
@@ -528,6 +540,75 @@ class APIClass extends Component {
         this.ENDPOINTS.FLAG_TEST.replace('<uuid>', challenge.id),
         { flag: flag }
     );
+
+    editFile = (id, name, url, size) =>
+        this.post(this.ENDPOINTS.EDIT_FILE, {id: id, name: name, url: url, size: size}).then(() => {
+            this.state.challenges.forEach(group =>
+                group.chals.forEach(chal =>
+                    chal.files.forEach(file => {
+                        if (file.id === id) {
+                            file.name = name;
+                            file.url = url;
+                            file.size = size;
+                        }
+                    })
+                )
+            );
+            this.setState({challenges: this.state.challenges});
+        });
+    newFile = (chalId, name, url, size) =>
+        this.post(this.ENDPOINTS.NEW_FILE, {chal_id: chalId, name: name, url: url, size: size}).then((resp) => {
+            this.state.challenges.forEach(group =>
+                group.chals.forEach(chal => {
+                    if (chal.id === chalId) {
+                        chal.files.push(resp.d);
+                    }
+                })
+            );
+            this.setState({challenges: this.state.challenges});
+        });
+
+    editHint = (id, name, cost, body) =>
+        this.post(this.ENDPOINTS.EDIT_HINT, {id: id, name: name, cost: cost, body: body}).then(() => {
+            this.state.challenges.forEach(group =>
+                group.chals.forEach(chal =>
+                    chal.hints.forEach(hint => {
+                        if (hint.id === id) {
+                            hint.name = name;
+                            hint.cost = cost;
+                            hint.body = body;
+                        }
+                    })
+                )
+            );
+            this.setState({challenges: this.state.challenges});
+        });
+    newHint = (chalId, name, cost, body) =>
+        this.post(this.ENDPOINTS.NEW_HINT, {chal_id: chalId, name: name, cost: cost, body: body}).then((resp) => {
+            this.state.challenges.forEach(group =>
+                group.chals.forEach(chal => {
+                    if (chal.id === chalId) {
+                        chal.hints.push(resp.d);
+                    }
+                })
+            );
+            this.setState({challenges: this.state.challenges});
+        });
+    useHint = (id) =>
+        this.post(this.ENDPOINTS.USE_HINT, {id: id}).then(resp => resp.d).then(body => {
+            this.state.challenges.forEach(group =>
+                group.chals.forEach(chal =>
+                    chal.hints.forEach(hint => {
+                        if (hint.id === id) {
+                            hint.body = body;
+                            hint.hint_used = true;
+                        }
+                    })
+                )
+            );
+            this.setState({challenges: this.state.challenges});
+            return body
+        });
 
     // React
     render() {

@@ -50,6 +50,7 @@
     width: auto;
     &:not(.small) {
         width: 930px;
+        max-width: 100vw;
     }
     &.centre {
         text-align: center;
