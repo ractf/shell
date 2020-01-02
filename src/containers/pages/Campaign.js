@@ -1,16 +1,15 @@
 import React, { useState, useContext } from "react";
-import { MdKeyboardArrowLeft } from "react-icons/md";
 
-import { SectionBlurb, SectionTitle2 } from "../../components/Misc";
+import { SectionTitle2 } from "../../components/Misc";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button, apiContext, Input, Form, FormError, appContext } from "ractf";
+import { plugins, Button, apiContext, Input, Form, FormError, SidebarTabs, SBTSection, Section, appContext } from "ractf";
 
 import "./Campaign.scss";
 
 
-const ANC = ({ hide, anc }) => {
+const ANC = ({ hide, anc, modal }) => {
     const api = useContext(apiContext);
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
@@ -32,19 +31,23 @@ const ANC = ({ hide, anc }) => {
         });
     };
 
-    return <Modal onHide={hide} title={"Hi"}>
-        <Form locked={locked} handle={create}>
-            <SectionTitle2>{anc.id ? "Edit" : "Add new"} category</SectionTitle2>
-            <label htmlFor={"cname"}>Catgeory name</label>
-            <Input val={anc.name} name={"cname"} placeholder={"Catgeory name"} />
-            <label htmlFor={"cdesc"}>Catgeory brief</label>
-            <Input val={anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
-            <label htmlFor={"ctype"}>Catgeory type</label>
-            <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }} placeholder={"Category type"} />
-            {error && <FormError>{error}</FormError>}
-            <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
-        </Form>
-    </Modal>;
+    let body = <Form locked={locked} handle={create}>
+        {modal && <SectionTitle2>{anc.id ? "Edit" : "Add new"} category</SectionTitle2>}
+        <label htmlFor={"cname"}>Catgeory name</label>
+        <Input val={anc.name} name={"cname"} placeholder={"Catgeory name"} />
+        <label htmlFor={"cdesc"}>Catgeory brief</label>
+        <Input val={anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
+        <label htmlFor={"ctype"}>Catgeory type</label>
+        <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }} placeholder={"Category type"} />
+        {error && <FormError>{error}</FormError>}
+        <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
+    </Form>;
+    
+    if (modal)
+        return <Modal onHide={hide} title={"Add new challenge"}>
+            {body}
+        </Modal>;
+    return body;
 };
 
 
@@ -57,7 +60,6 @@ export default () => {
     const [anc, setAnc] = useState(false);
 
     const [activeTab, setActiveTab] = useState(0);
-    const [sbHidden, setSbHidden] = useState(false);
     const app = useContext(appContext);
     const api = useContext(apiContext);
 
@@ -124,11 +126,7 @@ export default () => {
                 Did you forget to install a plugin?
             </>
         } else {
-            challengeTab = <>
-                {edit && <Button click={() => setAnc(tab)}>Edit Details</Button>}
-                <SectionBlurb>{tab.desc}</SectionBlurb>
-                {React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit })}
-            </>
+            challengeTab = React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit });
         }
 
         if (challenge || isEditor) {
@@ -157,9 +155,33 @@ export default () => {
         }
     }
 
+    let foot;
+    if (api.user.is_admin) {
+        foot = <SBTSection key={"anc"} title={"Add new category"} noHead>
+            <Section light title={"Add new category"}>
+                <ANC anc={true} />
+            </Section>
+        </SBTSection>;
+    }
+
     return <Page title={"Challenges"} selfContained>
         {chalEl}
-        {anc && <ANC anc={anc} hide={() => setAnc(false)} />}
+        {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
+
+        <SidebarTabs noHead onChangeTab={setActiveTab} feet={[foot]}>
+            {api.challenges.map((tab, n) =>
+                <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
+                    {api.user.is_admin ? edit ?
+                        <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
+                        : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
+                    {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
+
+                    {n === activeTab && <div className={"campInner"}>{challengeTab}</div>}
+                </SBTSection>
+            )}
+        </SidebarTabs>
+
+{/*
         <div style={{ display: "flex", flexGrow: "1" }}>
             <div className={"sbWrapWrap"}><div className={"sbWrap"}>
                 <div className={"campSidebar" + (sbHidden ? " sbHidden" : "")}>
@@ -175,7 +197,7 @@ export default () => {
                     }
                 </div>
                 <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
-            </div></div>
+                </div></div>
             <div className={"challengeBody"}><div>
                 {api.user.is_admin ? edit ?
                     <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
@@ -183,6 +205,6 @@ export default () => {
 
                 {challengeTab}
             </div></div>
-        </div>
+        </div>*/}
     </Page>;
 };

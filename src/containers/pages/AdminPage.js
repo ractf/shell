@@ -1,52 +1,8 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
-import { Page, Form, Input, Button, Radio, Spinner, apiContext, appContext } from "ractf";
-
-import logo from "../../static/wordmark.png";
+import { Page, Form, Input, Button, Radio, Spinner, SidebarTabs, SBTSection, Section, apiContext, appContext } from "ractf";
 
 import "./AdminPage.scss";
-
-
-const Section = ({ title, children }) => <>
-    <div className={"abSection"}>
-        <div className={"absTitle"}>{title}</div>
-        <div className={"absBody"}>
-            {children}
-        </div>
-    </div>
-</>;
-
-
-const AdminTabs = ({ children }) => {
-    const [active, setActive] = useState(0);
-
-    return <div className={"adminWrap"}>
-        <div className={"adminSidebar"}>
-            <img className={"asbBrand"} alt={""} src={logo} />
-            {children.map((i, n) =>
-                <div key={i.props.title} className={"asbItem" + (n === active ? " asbActive" : "")}
-                    onClick={() => setActive(n)}>
-                    {i.props.title}
-                </div>
-            )}
-            <div style={{ flexGrow: 1 }} />
-            <div className={"asbItem"} style={{ textAlign: "center" }}>Back Home</div>
-        </div>
-        <div className={"adminBody"}>
-            {children.map((i, n) => <div key={i.props.title} style={{ display: n === active ? "block" : "none" }}>
-                {i}
-            </div>)}
-        </div>
-    </div>
-};
-
-
-const AdminSection = ({ title, children }) => {
-    return <>
-        <div className={"abTitle"}>{title}</div>
-        {children}
-    </>
-};
 
 
 const MemberCard = ({ data }) => {
@@ -127,8 +83,8 @@ export default () => {
     };
 
     return <Page selfContained>
-        <AdminTabs>
-            <AdminSection title={"Configuration"}>
+        <SidebarTabs>
+            <SBTSection title={"Configuration"}>
                 {api.adminConfig ? <>
                     <Section title={"Login"}>
                         <Form>
@@ -163,8 +119,8 @@ export default () => {
                         </Form>
                     </Section>
                 </> : <Spinner />}
-            </AdminSection>
-            <AdminSection title={"Service Status"}>
+            </SBTSection>
+            <SBTSection title={"Service Status"}>
                 <Section title={"Code Ingest"}>
                     <div className={"absIndicator unknown"} />
                 </Section>
@@ -177,8 +133,8 @@ export default () => {
                 <Section title={"Staging"}>
                     <div className={"absIndicator partial"} />
                 </Section>
-            </AdminSection>
-            <AdminSection title={"Announcements"}>
+            </SBTSection>
+            <SBTSection title={"Announcements"}>
                 <Section title={"Active Announcements"}>
                     <Form>
                         <label>No announcements active</label>
@@ -193,8 +149,8 @@ export default () => {
                         <Button>Add</Button>
                     </Form>
                 </Section>
-            </AdminSection>
-            <AdminSection title={"Members"}>
+            </SBTSection>
+            <SBTSection title={"Members"}>
                 {api.allUsersAdmin ? <>
                     <Section title={"Admins"}>
                         {api.allUsersAdmin.filter(i => i.is_admin).map(i =>
@@ -207,8 +163,8 @@ export default () => {
                         )}
                     </Section>
                 </> : <Spinner />}
-            </AdminSection>
-            <AdminSection title={"Teams"}>
+            </SBTSection>
+            <SBTSection title={"Teams"}>
                 {api.allTeamsAdmin ? <>
                     <Section title={"All Teams"}>
                         {api.allTeamsAdmin.map(i =>
@@ -216,7 +172,7 @@ export default () => {
                         )}
                     </Section>
                 </> : <Spinner />}
-            </AdminSection>
-        </AdminTabs>
+            </SBTSection>
+        </SidebarTabs>
     </Page>
 }

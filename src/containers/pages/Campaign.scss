@@ -7,6 +7,12 @@
     right: 32px;
 }
 
+.campUnderEditButton {
+    position: absolute;
+    top: 8px;
+    right: 180px;
+}
+
 .sbWrapWrap {
     position: relative;
 }
@@ -127,6 +133,11 @@
     width: 100%;
     position: relative;
     padding: 24px 64px;
+}
+ 
+.campInner {
+    text-align: center;
+    padding-top: 24px;
 }
 
 @media (max-width: 600px) {

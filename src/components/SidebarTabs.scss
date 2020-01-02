@@ -1,0 +1,254 @@
+@import "../Colours.scss";
+
+
+.sbtWrap {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    
+    &>.sbtSidebar {
+        flex-shrink: 0;
+        width: 300px;
+        background-color: $bg_d0;
+        padding: 32px 0;
+        display: flex;
+        flex-direction: column;
+
+        &>.sbtBrand {
+            width: 200px;
+            display: block;
+            margin: 0 auto 32px;
+        }
+        &>.sbtItem {
+            padding: 12px 20px;
+            position: relative;
+            cursor: pointer;
+            margin-top: 1px;
+
+            &:hover, &.sbtActive {
+                background-color: $bg_d1;
+            }
+            &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                top: -1px;
+                left: 16px;
+                width: calc(100% - 32px);
+                height: 1px;
+                background-color: $bg_l1;
+            }
+            &::after {
+                content: "";
+                display: block;
+                position: absolute;
+                bottom: -1px;
+                left: 16px;
+                width: calc(100% - 32px);
+                height: 1px;
+                background-color: $bg_l1;
+            }
+        }
+    }
+}
+
+.sbtBody {
+    flex-grow: 1;
+    padding: 32px 64px;
+    position: relative;
+    margin-right: 0;
+    transition: margin-right 200ms ease;
+}
+
+
+.abTitle {
+    padding: 16px;
+    font-size: 1.5em;
+    font-weight: 700;
+    font-family: $titleStack;
+    border-bottom: 2px solid $bg_l1;
+
+    &>div {
+        font-size: .6em;
+        margin-top: .3em;
+        font-weight: initial;
+    }
+}
+
+.abSection {
+    margin-top: 16px;
+    background-color: $bg_d0;
+    border-radius: 4px;
+
+    &.absLight {
+        background-color: $bg_l0;
+    }
+
+    &>.absTitle {
+        border-bottom: 1px solid $bg_l1;
+        font-size: 1em;
+        font-weight: 700;
+        font-family: $titleStack;
+    }
+    &>.absTitle, &>.absBody {
+        padding: 16px;
+    }
+    &>.absBody {
+        padding: 24px;
+    }
+    & .absfg {
+        display: inline-block;
+        margin-right: 96px;
+    }
+
+    & .absIndicator {
+        &::before {
+            content: "";
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #0006;
+        }
+        display: flex;
+        align-items: center;
+        
+        &::after {
+            display: block;
+            margin-left: 8px;
+            font-size: .9em;
+        }
+
+        &.online {
+            &::before {
+                background-color: $bgreen;
+            }
+            &::after {
+                content: "Online";
+            }
+        }
+        &.offline {
+            &::before {
+                background-color: $red;
+            }
+            &::after {
+                content: "Offline";
+            }
+        }
+        &.partial {
+            &::before {
+                background-color: orange;
+            }
+            &::after {
+                content: "Partial Outage";
+            }
+        }
+        &.unknown {
+            &::before {
+                background-color: #777;
+            }
+            &::after {
+                content: "Unknown";
+            }
+        }
+    }
+
+    & label {
+        &:first-child {
+            margin-top: 0;
+        }
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+    }
+
+    & .absMember {
+        background-color: $bg_d1;
+        border-radius: 4px;
+        position: relative;
+        margin-bottom: 8px;
+
+        &>.absmName {
+            border-bottom: 1px solid $bg_l1;
+            font-size: 1em;
+            font-weight: 700;
+            font-family: $titleStack;
+        }
+        &>.absmName, &>.absmBody {
+            padding: 16px;
+        }
+        & .absmVml {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            font-size: .8em;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.sbtHandle {
+    display: none;
+}
+
+@media (max-width: 1200px) {
+    .sbtBody {
+        padding: 16px 32px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .sbtWrap > .sbtSidebar {
+        width: 250px;
+    }
+}
+
+@media (max-width: 800px) {
+    .sbtBody {
+        padding-left: 62px;
+    }
+    .sbtWrap > .sbtSidebar {
+        margin-left: -250px;
+        transition: margin-left 200ms ease;
+        position: relative;
+
+        &>.sbtHandle {
+            display: block;
+            background-color: $bg_d1;
+            border-right: 1px solid $bg_l0;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            width: 30px;
+            height: 100%;
+            z-index: 1;
+            cursor: pointer;
+            opacity: .73;
+
+            &>* {
+                position: absolute;
+                left: calc(50% - 1px);
+                top: 50%;
+                transform: translate(-50%, -50%) rotateY(180deg);
+                width: 40px;
+                height: 40px;
+            }
+
+        }
+    }
+    .sbtOpen {
+        &>.sbtSidebar {
+            margin-left: 0;
+
+            &>.sbtHandle>* {
+                transform: translate(-50%, -50%) rotateY(0deg);
+            }
+        }
+        &>.sbtBody {
+            margin-right: -250px;
+        }
+    }
+}
