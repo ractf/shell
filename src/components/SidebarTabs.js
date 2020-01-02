@@ -16,14 +16,14 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
             {!noHead && <img className={"sbtBrand"} alt={""} src={logo} />}
             {children.map((i, n) =>
                 <div key={i.props.title} className={"sbtItem" + (n === active ? " sbtActive" : "")}
-                    onClick={() => {setActive(n); onChangeTab && onChangeTab(n)}}>
+                    onClick={() => {setActive(n); setSbOpen(false); onChangeTab && onChangeTab(n)}}>
                     {i.props.title}
                 </div>
             )}
             <div style={{ flexGrow: 1 }} />
             {feet && feet.map((i, n) =>
                 <div key={i.props.title} style={{ textAlign: "center" }} className={"sbtItem" + (children.length + n === active ? " sbtActive" : "")}
-                    onClick={() => {setActive(children.length + n); onChangeTab && onChangeTab(children.length + n)}}>
+                    onClick={() => {setActive(children.length + n); setSbOpen(false); onChangeTab && onChangeTab(children.length + n)}}>
                     {i.props.title}
                 </div>
             )}
