@@ -168,7 +168,7 @@ export default () => {
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
-        <SidebarTabs noHead onChangeTab={setActiveTab} feet={[foot]}>
+        <SidebarTabs noHead onChangeTab={setActiveTab} feet={foot ? [foot] : []}>
             {api.challenges.map((tab, n) =>
                 <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
                     {api.user.is_admin ? edit ?
