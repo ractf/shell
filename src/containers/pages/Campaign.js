@@ -24,7 +24,8 @@ const ANC = ({ hide, anc, modal }) => {
 
         (anc.id ? api.editGroup(anc.id, cname, cdesc, ctype) : api.createGroup(cname, cdesc, ctype)).then(async resp => {
             await api.setup();
-            hide();
+            if (hide)
+                hide();
         }).catch(e => {
             setError(api.getError(e));
             setLocked(false);

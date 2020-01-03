@@ -24,7 +24,7 @@ export default () => {
         
         const strength = zxcvbn(passwd1);
         if (strength.score < 3) {
-            return setMessage((strength.feedback.warning || "Password too weak.") + "\n" + strength.feedback.suggestions)
+            return setMessage((strength.feedback.warning || "Password too weak."))
         }
 
         setLocked(true);

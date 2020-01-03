@@ -53,7 +53,7 @@ export default () => {
         
         const strength = zxcvbn(new1);
         if (strength.score < 3)
-            return setPwError((strength.feedback.warning || "Password too weak.") + "\n" + strength.feedback.suggestions);
+            return setPwError((strength.feedback.warning || "Password too weak."));
 
         api.modifyUser(api.user.id, {oPass: old, nPass: new1}).then(() => {
             app.alert("Password changed. Please log back in.");
