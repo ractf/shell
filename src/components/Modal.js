@@ -18,10 +18,10 @@ const Modal = ({ onHide, children, centre, small }) => {
     };
 
     return <div className={"modalWrap"}>
-        <style>{"@media (max-width: 930px) {body{overflow: hidden; height: 100vh;}}"}</style>
+        {!small && <style>{"@media (max-width: 930px) {body{overflow: hidden; height: 100vh;}}"}</style>}
         <div className={"darken"} onMouseDown={(e => e.target.click())} onClick={doHide(onHide)} />
         <div className={"modalBoxWrap"}>
-            <div className={"modalX"} onClick={doHide(onHide)}>&times;</div>
+            {!small && <div className={"modalX"} onClick={doHide(onHide)}>&times;</div>}
             <div className={"modalBox" + (centre ? " centre" : "") + (small ? " small" : "")}>
                 {children}
             </div>

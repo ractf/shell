@@ -27,7 +27,6 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
                     {i.props.title}
                 </div>
             )}
-            <div className={"sbtItem"} style={{ textAlign: "center" }}>Back Home</div>
         </div>
         <div className={"sbtBody"}>
             {children.map((i, n) => <div key={i.props.title} style={{ display: n === active ? "block" : "none" }}>
