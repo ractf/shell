@@ -106,6 +106,7 @@ class APIClass extends Component {
             siteOpen = false;
         }
 
+        this.ws = new WS(this);
         this.state = {
             popups: [],
             hidePopup: this.hidePopup,
@@ -172,9 +173,13 @@ class APIClass extends Component {
             getError: this.getError,
 
             _reloadCache: this._reloadCache,
-        };
 
-        this.ws = new WS(this);
+            ws: this.ws,
+        };
+    }
+
+    refresh() {
+        this.setState(this.state);
     }
 
     async componentWillMount() {
@@ -285,7 +290,7 @@ class APIClass extends Component {
             ready = false;
         }
 
-        let newState = { ready: ready, authenticated: true };
+        let newState = { ready: ready, authenticated: ready };
         if (ready) {
             localStorage.setItem("userData", JSON.stringify(userData));
             localStorage.setItem("teamData", JSON.stringify(teamData));
@@ -314,7 +319,7 @@ class APIClass extends Component {
                 );
                 group.chals.forEach(
                     i => {
-                        i.deps.forEach(dep => {
+                        i.deps && i.deps.forEach(dep => {
                             if (challenges[dep]) {
                                 let depChallenge = challenges[dep];
                                 if (depChallenge.metadata.x === i.metadata.x + 1 && depChallenge.metadata.y === i.metadata.y) {

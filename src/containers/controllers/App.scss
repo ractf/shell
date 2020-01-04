@@ -239,3 +239,26 @@ b {
         }
     }
 }
+
+.spinningSpine {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    opacity: .7;
+    display: flex;
+
+    &>img {
+        height: 32px;
+        animation: spineSpin 1s infinite ease;
+    }
+    &>span {
+        margin-top: 9px;
+        margin-left: 12px;
+    }
+}
+@keyframes spineSpin {
+	0%{transform: scaleX(1)}
+	50% {transform: scaleX(-1)}
+	100% {transform: scaleX(1)}
+}
+

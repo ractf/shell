@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
+import { SiteNav } from "../../components/SidebarTabs";
 import Header from "../../components/Header";
 //import Footer from "../../components/Footer";
 
@@ -18,6 +19,12 @@ import "./App.scss";
 
 // 3s grace period to connect to the server
 const LOADED_TIMEOUT = 3000;
+
+
+const SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
+    <img alt={""} src={lockImg} />
+    <span>{ text }</span>
+</div>;
 
 
 const VimDiv = () => {
@@ -392,7 +399,9 @@ const App = () => {
                 </div> : null}
 
             <Header />
-            <Routes />
+            <SiteNav>
+                <Routes />
+            </SiteNav>
             {/*<Footer />*/}
 
             {currentPrompt ? <ModalPrompt
@@ -409,6 +418,10 @@ const App = () => {
             <div className={"eventsWrap"}>
                 {popupsEl}
             </div>
+
+            {!api.ws.connected &&
+                <SpinningSpine text={"Lost connection. Reconnecting" + (api.ws.timer > 0 ? " in " + api.ws.timer + "s..." : "...")} />
+            }
         </AppContext.Provider>
     );
 };

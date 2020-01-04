@@ -88,6 +88,9 @@ export default withRouter(({ location }) => {
         <Route exact path={"/campaign"}>
             <Page title={"Challenges"} auth C={Campaign} />
         </Route>
+        <Route exact path={"/campaign/:tabId"}>
+            <Page title={"Challenges"} auth C={Campaign} />
+        </Route>
 
         <Redirect path={"/profile"} to={"/profile/me"} exact />
         <Route exact path={"/profile/:user"}>

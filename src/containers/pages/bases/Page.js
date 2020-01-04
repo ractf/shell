@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 
-import { FaLink } from "react-icons/fa";
-import { apiContext } from "ractf";
+//import { FaLink } from "react-icons/fa";
+//import { apiContext } from "ractf";
 
 import "./Page.scss";
 
 
+/*
 const LinkIcon = ({ url }) => {
     if (!url) return null;
     return <a href={url}>
@@ -22,41 +22,42 @@ const LinkDropdown = ({ name, children }) => {
         </ul>
     </div>
 };
+*/
 
 
 export default ({ title, url, children, vCentre, selfContained }) => {
-    const api = useContext(apiContext);
+    //const api = useContext(apiContext);
 
-    return (
-        <>
-            <div className={"pageHead" + ((!title || title.length === 0) ? " minimal" : "")}>
-                {title ? <div className={"headTitle"}>
-                    {title}
-                    {url ? <LinkIcon url={url} /> : null}
-                </div> : null}
-                <div className={"headLinks"}>
-                    <Link className={"headLink"} to={"/users"}>Users</Link>
-                    <Link className={"headLink"} to={"/teams"}>Teams</Link>
-                    <Link className={"headLink"} to={"/leaderboard"}>Leaderboard</Link>
+    return (<>
+    {/*
+        <div className={"pageHead" + ((!title || title.length === 0) ? " minimal" : "")}>
+            {title ? <div className={"headTitle"}>
+                {title}
+                {url ? <LinkIcon url={url} /> : null}
+            </div> : null}
+            <div className={"headLinks"}>
+                <Link className={"headLink"} to={"/users"}>Users</Link>
+                <Link className={"headLink"} to={"/teams"}>Teams</Link>
+                <Link className={"headLink"} to={"/leaderboard"}>Leaderboard</Link>
 
-                    {api.authenticated
-                        ? <>
-                            <Link className={"headLink"} to={"/campaign"}>Challenges</Link>
-                            <Link className={"headLink"} to={api.team ? "/team" : "/team/join"}>My Team</Link>
-                            <LinkDropdown name={api.user.username}>
-                                <Link className={"headLink"} to={"/profile"}>Profile</Link>
-                                <Link className={"headLink"} to={"/settings"}>Settings</Link>
-                            </LinkDropdown>
-                            <Link className={"headLink"} to={"/logout"}>Logout</Link>
-                        </>
-                        : api.configGet("login", true) && <Link className={"headLink"} to={"/login"}>Login</Link>}
-                </div>
+                {api.authenticated
+                    ? <>
+                        <Link className={"headLink"} to={"/campaign"}>Challenges</Link>
+                        <Link className={"headLink"} to={api.team ? "/team" : "/team/join"}>My Team</Link>
+                        <LinkDropdown name={api.user.username}>
+                            <Link className={"headLink"} to={"/profile"}>Profile</Link>
+                            <Link className={"headLink"} to={"/settings"}>Settings</Link>
+                        </LinkDropdown>
+                        <Link className={"headLink"} to={"/logout"}>Logout</Link>
+                    </>
+                    : api.configGet("login", true) && <Link className={"headLink"} to={"/login"}>Login</Link>}
             </div>
-            {selfContained ? children :
-                <div className={"pageContent" + (vCentre ? " vCentre" : "")}>
-                    {children}
-                </div>
-            }
-        </>
-    );
+        </div>
+        */}
+        {selfContained ? children :
+            <div className={"pageContent" + (vCentre ? " vCentre" : "")}>
+                {children}
+            </div>
+        }
+    </>);
 };

@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
+import { Redirect } from "react-router-dom";
 
 import { SectionTitle2 } from "../../components/Misc";
+import useReactRouter from "../../useReactRouter";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button, apiContext, Input, Form, FormError, SidebarTabs, SBTSection, Section, appContext } from "ractf";
+import { plugins, Button, apiContext, Input, Form, FormError, SBTSection, appContext } from "ractf";
 
 import "./Campaign.scss";
 
@@ -43,7 +45,7 @@ const ANC = ({ hide, anc, modal }) => {
         {error && <FormError>{error}</FormError>}
         <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
     </Form>;
-    
+
     if (modal)
         return <Modal onHide={hide} title={"Add new challenge"}>
             {body}
@@ -60,7 +62,9 @@ export default () => {
     const [lState, setLState] = useState({});
     const [anc, setAnc] = useState(false);
 
-    const [activeTab, setActiveTab] = useState(0);
+    const { match } = useReactRouter();
+    const tabId = match.params.tabId;
+
     const app = useContext(appContext);
     const api = useContext(apiContext);
 
@@ -98,7 +102,7 @@ export default () => {
             }
 
             (isCreator ? api.createChallenge : api.editChallenge)(
-                (isCreator ? api.challenges[activeTab].id : original.id),
+                (isCreator ? tabId : original.id),
                 changes.name, changes.points, changes.desc, changes.flag_type, flag,
                 changes.autoUnlock, original.metadata
             ).then(async () => {
@@ -117,7 +121,10 @@ export default () => {
     if (!api.challenges)
         api.challenges = [];
 
-    let tab = api.challenges[activeTab];
+    let tab = (() => {
+        for (let i = 0; i < api.challenges.length; i++)
+            if (api.challenges[i].id === tabId) return api.challenges[i];
+    })();
     let chalEl, handler, challengeTab;
     if (tab) {
         handler = plugins.categoryType[tab.type];
@@ -154,8 +161,13 @@ export default () => {
                 {chalEl}
             </Modal>;
         }
+    } else {
+        if (!api.challenges || !api.challenges.length) return <></>;
+        return <Redirect to={"/campaign/" + api.challenges[0].id} />
     }
 
+    // TODO: This
+    /*
     let foot;
     if (api.user.is_admin) {
         foot = <SBTSection key={"anc"} title={"Add new category"} noHead>
@@ -163,49 +175,19 @@ export default () => {
                 <ANC anc={true} />
             </Section>
         </SBTSection>;
-    }
+    }*/
 
     return <Page title={"Challenges"} selfContained>
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
-        <SidebarTabs noHead onChangeTab={setActiveTab} feet={foot ? [foot] : []}>
-            {api.challenges.map((tab, n) =>
-                <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
-                    {api.user.is_admin ? edit ?
-                        <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
-                        : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
-                    {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
+        <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
+            {api.user.is_admin ? edit ?
+                <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
+                : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
+            {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
 
-                    {n === activeTab && <div className={"campInner"}>{challengeTab}</div>}
-                </SBTSection>
-            )}
-        </SidebarTabs>
-
-{/*
-        <div style={{ display: "flex", flexGrow: "1" }}>
-            <div className={"sbWrapWrap"}><div className={"sbWrap"}>
-                <div className={"campSidebar" + (sbHidden ? " sbHidden" : "")}>
-                    <div className={"head"}>Categories</div>
-                    {api.challenges.map((tab, n) =>
-                        <div key={n} className={activeTab === n ? "active" : ""}
-                            onClick={() => { setActiveTab(n) }}
-                        >{tab.name}</div>
-                    )}
-                    <div className={"sbSpace"} />
-                    {api.user.is_admin &&
-                        <div onClick={e => setAnc(true)} style={{ textAlign: "center" }}>Add New Category</div>
-                    }
-                </div>
-                <div className={"sbBurger" + (sbHidden ? " sbHidden" : "")} onClick={() => setSbHidden(!sbHidden)}><MdKeyboardArrowLeft /></div>
-                </div></div>
-            <div className={"challengeBody"}><div>
-                {api.user.is_admin ? edit ?
-                    <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
-                    : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
-
-                {challengeTab}
-            </div></div>
-        </div>*/}
+            <div className={"campInner"}>{challengeTab}</div>
+        </SBTSection>
     </Page>;
 };

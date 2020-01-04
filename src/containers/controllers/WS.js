@@ -9,7 +9,15 @@ export default class WS {
 
     constructor(api) {
         this.api = api;
+        this.connected = false;
         this.cooldown = 1000;
+        this.timer = this.cooldown / 1000;
+
+        setInterval((() => {
+            this.timer -= 1;
+            if (!this.connected)
+                api.refresh();
+        }), 1000);
 
         this._setupWS();
     }
@@ -25,6 +33,9 @@ export default class WS {
 
     onopen = () => {
         this.cooldown = 1000;
+        this.timer = this.cooldown / 1000;
+        this.connected = true;
+        this.api.refresh();
     };
 
     onmessage = message => {
@@ -56,7 +67,10 @@ export default class WS {
     };
 
     onclose = () => {
+        this.connected = false;
         setTimeout(this._setupWS, this.cooldown);
         this.cooldown = Math.min(16000, this.cooldown * 2);
+        this.timer = this.cooldown / 1000;
+        this.api.refresh();
     };
 }
