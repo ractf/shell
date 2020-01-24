@@ -20,7 +20,6 @@
     margin: auto;
     flex-grow: 1;
     width: 100%;
-    text-align: center;
     &.vCentre {
         display: flex;
         flex-direction: column;
@@ -86,21 +85,23 @@
 
     background-color: rgba($bg_d1, .73);
 }
+@media (max-width: 1200px) {
+    .pageContent {
+        padding: 16px 32px;
+    }
+}
+
+@media (max-width: 800px) {
+    .pageContent {
+        padding: 4px;
+    }
+}
 
 @media (max-width: 600px) {
     .pageHead {
         padding: 4px
     }
-    .pageContent {
-        padding: 16px 32px;
-    }
     .headTitle {
         margin-bottom: 24px
-    }
-}
-
-@media only screen and (max-width: 450px) {
-    .pageContent {
-        padding: 16px 4px;
     }
 }

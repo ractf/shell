@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { transparentize } from "polished";
 import { BrokenShards } from "./ErrorPages";
@@ -12,7 +13,7 @@ import donor from "../../static/img/donor_large.png";
 import beta from "../../static/img/beta.png";
 
 import "./Profile.scss";
-import { FaTwitter, FaDiscord, FaRedditAlien } from "react-icons/fa";
+import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
 
 
 const UserSpecial = ({ children, col, ico }) => (
@@ -58,7 +59,7 @@ export default () => {
         <div className={"profileSplit"}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
-                <div className={"userJoined"}>Joined Yesterday</div>
+                {/*<div className={"userJoined"}>Joined Yesterday</div>*/}
                 <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
                     {userData.bio}
                 </div>
@@ -73,6 +74,10 @@ export default () => {
                             ? <a target={"_blank"} href={"https://discordapp.com/users/" + encodeURIComponent(userData.social.discordid)} className={"userSocial"}><FaDiscord /><span>{userData.social.discord}</span></a>
                             : <span className={"userSocial"}><FaDiscord /><span>{userData.social.discord}</span></span>)}
                 </>}
+
+                {userData.team && <Link to={"/team/" + userData.team.id} className={"teamMemberico"}>
+                    <FaUsers /> { userData.team.name }
+                </Link>}
             </div>
             <div className={"userSolves"}>
                 {userData.is_beta &&

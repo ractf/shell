@@ -17,3 +17,6 @@ export const APIContext = React.createContext({
     challenges: [],
     categories: [],
 });
+
+
+export const WSContext = React.createContext({});

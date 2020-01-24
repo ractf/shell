@@ -1,24 +1,29 @@
-import React from "react";
+import React, { Component } from "react";
+
+import { WSContext } from "./Contexts";
 
 
-export default class WS {
+export default class WS extends Component {
     WSS_URL = process.env.REACT_APP_WSS_URL;
 
     CONNECTION = 0;
     CHALLENGE_SCORE = 1;
 
-    constructor(api) {
-        this.api = api;
-        this.connected = false;
-        this.cooldown = 1000;
-        this.timer = this.cooldown / 1000;
+    constructor(props) {
+        super(props);
+        this.api = this.props.api;
 
         setInterval((() => {
-            this.timer -= 1;
-            if (!this.connected)
-                api.refresh();
+            this.setState({
+                timer: this.state.timer - 1
+            })
         }), 1000);
 
+        this.state = {
+            connected: false,
+            cooldown: 1000,
+            timer: 1,
+        }
         this._setupWS();
     }
 
@@ -32,10 +37,11 @@ export default class WS {
     }
 
     onopen = () => {
-        this.cooldown = 1000;
-        this.timer = this.cooldown / 1000;
-        this.connected = true;
-        this.api.refresh();
+        this.setState({
+            cooldown: 1000,
+            timer: 1,
+            connected: true
+        });
     };
 
     onmessage = message => {
@@ -67,10 +73,16 @@ export default class WS {
     };
 
     onclose = () => {
-        this.connected = false;
-        setTimeout(this._setupWS, this.cooldown);
-        this.cooldown = Math.min(16000, this.cooldown * 2);
-        this.timer = this.cooldown / 1000;
-        this.api.refresh();
+        let cooldown = Math.min(16000, this.cooldown * 2);
+        setTimeout(this._setupWS, cooldown);
+        this.setState({
+            connected: false,
+            cooldown: cooldown,
+            timer: cooldown / 1000
+        })
     };
+
+    render() {
+        return <WSContext.Provider value={this.state}>{this.props.children}</WSContext.Provider>;
+    }
 }

@@ -149,7 +149,10 @@ export default () => {
                     <Form handle={alterTeam} locked={!teamOwner}>
                         <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
                         <Input val={api.team.description} name={"desc"} rows={5} placeholder={"Team Description"} />
-                        <Input val={api.team.password} name={"pass"} password placeholder={"Team Password"} />
+                        <Input val={api.team.password} name={"pass"} password placeholder={"Team Secret"} />
+                        <div style={{opacity: .5}}>
+                            In order to display the secret for you above, we store it un-hashed. Don't put sensitive things like your bank details here.
+                        </div>
 
                         {teamError && <FormError>{teamError}</FormError>}
                         {teamOwner && <Button submit>Modify Team</Button>}

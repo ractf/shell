@@ -65,12 +65,12 @@ export default () => {
                             : <span className={"userSocial"}><FaDiscord /><span>{teamData.social.discord}</span></span>)}
                 </>}
 
-                {teamData.members.map((i, n) => <Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
+                {teamData.members.map((i, n) => <><Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
                     <FaUser /> { i.name }
-                </Link>)}
+                </Link><br/></>)}
             </div>
             <div className={"userSolves"}>
-                {teamData.solves && teamData.solves.map(i => <UserSolve {...i} />)}
+                {teamData.solves && teamData.solves.map(i => <UserSolve key={i.solve_timestamp} {...i} />)}
                 {(!teamData.solves || teamData.solves.length === 0) && <div className={"noSolves"}>{teamData.name} haven't solved any challenges yet</div>}
             </div>
         </div>

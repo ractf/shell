@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import {apiContext, registerPlugin} from "ractf";
+import { apiContext, registerPlugin } from "ractf";
 
 import AddNode from "./components/AddNode";
 import Node from "./components/Node";
@@ -31,7 +31,7 @@ const emptyChallenge = (x, y) => ({
 });
 
 
-const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) => {
+const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     const [reRender, setReRender] = useState(0);
     const api = useContext(apiContext);
 
@@ -94,7 +94,7 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
             else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
 
         rows[chal.metadata.y][chal.metadata.x] = <Node
-            x={chal.metadata.x} y={chal.metadata.y} key={chal.metadata.x}
+            x={chal.metadata.x} y={chal.metadata.y} key={chal.id}
             unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solved}
 
             chalmap={chalmap}
@@ -105,8 +105,10 @@ const CampaignChallenges = ({ challenges, showChallenge, showEditor, isEdit }) =
             lockUnlockedR={isEdit ? true : chal.solved || (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
             lockUnlockedD={isEdit ? true : chal.solved || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
 
-            click={isEdit ? showEditor(chal) : showChallenge(chal)}
+            click={isEdit ? showEditor(chal) : ""}
             isEdit={isEdit} toggleLink={toggleLink(chal)}
+
+            url={"/campaign/" + challenges.id + "/challenge/" + chal.id}
 
             up={!!(chal.link & NORTH)} down={!!(chal.link & SOUTH)}
             right={!!(chal.link & EAST)} left={!!(chal.link & WEST)}

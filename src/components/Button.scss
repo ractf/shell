@@ -1,26 +1,30 @@
 @import "../Colours.scss";
 
 button {
-    background-color: #2c2a44;
-    border-radius: 2px;
-    border: 1px solid #373354;
+    background-color: $bg_l1;
+    border-radius: 0;
+    border: 1px solid $bg_l2;
     display: block;
     cursor: pointer;
     color: $fg;
     font-size: 1.2rem;
-    padding: 5px 10px;
+    padding: 6px 12px;
     text-decoration: none;
     transition: background-color 1s;
     margin: 1rem auto 0;
+    min-width: 100px;
 
     &.main {
         padding: .6rem 2rem;
     }
     &.medium {
-        padding: 8px 15px;
+        padding: 8px 18px;
+        min-width: 120px;
     }
     &.lesser {
         background: none;
+        color: darken($fg, 20%);
+        border-color: $bg_l1;
     }
     &.warning {
         background: rgba($red, .3);

@@ -49,8 +49,8 @@ export default () => {
                 {message && <FormError>{message}</FormError>}
 
                 <ButtonRow>
-                    <Button medium submit>Register</Button>
                     <Button medium lesser to={"/login"}>Login</Button>
+                    <Button medium submit>Register</Button>
                 </ButtonRow>
             </Form>
         </Wrap>

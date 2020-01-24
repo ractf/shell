@@ -48,7 +48,7 @@ export const JoinTeam = () => {
 
                 <Form locked={locked} handle={doJoinTeam}>
                     <Input name={"name"} placeholder={"Team Name"} />
-                    <Input name={"password"} placeholder={"Team Password"} password />
+                    <Input name={"password"} placeholder={"Team Secret"} password />
 
                     {message && <FormError>{message}</FormError>}
 
@@ -108,7 +108,10 @@ export const CreateTeam = () => {
                     <Input name={"name"} placeholder={"Team Name"} />
                     {/*<Input name={"affil"} placeholder={"Affiliation"} />
                     <Input name={"web"} placeholder={"Website"} />*/}
-                    <Input name={"password"} placeholder={"Team Password"} password />
+                    <Input name={"password"} placeholder={"Team Secret"} password />
+                    <div style={{opacity: .5}}>
+                        You'll be able to view this secret again later, so we can't store it hashed. Don't put sensitive things like your bank details here.
+                    </div>
 
                     {message && <FormError>{message}</FormError>}
 

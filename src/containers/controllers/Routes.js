@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import { TeamsList, UsersList } from "../pages/Lists";
 import SettingsPage from "../pages/SettingsPage";
@@ -14,6 +14,7 @@ import PostLogin from "../pages/auth/PostLogin";
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
 
+import ChallengePage from "../pages/ChallengePage";
 import AdminPage from "../pages/AdminPage";
 import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
@@ -30,21 +31,21 @@ const Logout = () => {
 }
 
 
-const Page = ({ title, auth, noAuth, C }) => {
+const Page = ({ title, auth, admin, noAuth, C }) => {
     const api = useContext(APIContext);
     if (title !== null)
         document.title = title || "RACTF";
 
     if (auth && !api.authenticated) return <Redirect to={"/login"} />;
     if (noAuth && api.authenticated) return <Redirect to={"/home"} />;
+    if (admin && (!api.user || !api.user.is_admin)) return <Redirect to={"/home"} />;
 
     return <C />;
 };
 
 
-export default withRouter(({ location }) => {
-    const api = useContext(APIContext);
-    return <Switch location={location}>
+export default () => {
+    return <Switch>
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />
         <Route exact path={"/login"}>
@@ -74,10 +75,12 @@ export default withRouter(({ location }) => {
         <Route exact path={"/home"}>
             <Page title={"Home"} C={HomePage} />
         </Route>
-        {api.user && api.user.is_admin &&
-            <Route exact path={"/admin"}>
-                <Page title={"Admin"} C={AdminPage} />
-            </Route>}
+
+        <Redirect from={"/admin"} to={"/admin/config"} exact />
+        <Route exact path={"/admin/:page"}>
+            <Page title={"Admin"} auth admin C={AdminPage} />
+        </Route>
+
         <Route exact path={"/settings"}>
             <Page title={"Settings"} auth C={SettingsPage} />
         </Route>
@@ -85,6 +88,9 @@ export default withRouter(({ location }) => {
             <Page title={"Settings"} auth C={TwoFA} />
         </Route>
 
+        <Route exact path={"/campaign/:tabId/challenge/:chalId"}>
+            <Page title={"Challenges"} auth C={ChallengePage} />
+        </Route>
         <Route exact path={"/campaign"}>
             <Page title={"Challenges"} auth C={Campaign} />
         </Route>
@@ -123,4 +129,4 @@ export default withRouter(({ location }) => {
             <Page title={"Error"} C={NotFound} />
         </Route>
     </Switch>;
-});
+};

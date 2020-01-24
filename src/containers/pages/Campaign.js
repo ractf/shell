@@ -6,7 +6,7 @@ import useReactRouter from "../../useReactRouter";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button, apiContext, Input, Form, FormError, SBTSection, appContext } from "ractf";
+import { plugins, Button, ButtonRow, apiContext, Input, Form, FormError, SBTSection, Section, appContext } from "ractf";
 
 import "./Campaign.scss";
 
@@ -43,7 +43,12 @@ const ANC = ({ hide, anc, modal }) => {
         <label htmlFor={"ctype"}>Catgeory type</label>
         <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }} placeholder={"Category type"} />
         {error && <FormError>{error}</FormError>}
-        <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
+        <ButtonRow>
+            {anc.id &&
+                <Button warning disabled>Remove Category</Button>
+            }
+            <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
+        </ButtonRow>
     </Form>;
 
     if (modal)
@@ -68,12 +73,14 @@ export default () => {
     const app = useContext(appContext);
     const api = useContext(apiContext);
 
-    const showChallenge = (challenge) => {
-        return () => {
-            setChallenge(challenge);
-            setIsEditor(false);
-        }
-    };
+    if (tabId === "new" && api.user.is_admin)
+        return <SBTSection key={"anc"} title={"Add new category"} noHead>
+            <Section light title={"Add new category"}>
+                <ANC anc={true} />
+            </Section>
+        </SBTSection>;
+    else if (!tabId)
+        return <Redirect to={"/campaign/" + api.challenges[0].id} />
 
     const showEditor = (challenge, saveTo, isNew) => {
         return () => {
@@ -122,62 +129,51 @@ export default () => {
         api.challenges = [];
 
     let tab = (() => {
-        for (let i = 0; i < api.challenges.length; i++)
+        for (let i in api.challenges)
             if (api.challenges[i].id === tabId) return api.challenges[i];
     })();
     let chalEl, handler, challengeTab;
-    if (tab) {
-        handler = plugins.categoryType[tab.type];
-        if (!handler) {
-            challengeTab = <>
-                Category renderer for type "{tab.type}" missing!<br /><br />
-                Did you forget to install a plugin?
-            </>
-        } else {
-            challengeTab = React.createElement(handler.component, { challenges: tab, showChallenge: showChallenge, showEditor: showEditor, isEdit: edit });
-        }
 
-        if (challenge || isEditor) {
-            if (challenge.type)
-                handler = plugins.challengeType[challenge.type];
-            else
-                handler = plugins.challengeType["__default"];
-
-            if (!handler)
-                chalEl = <>
-                    Challenge renderer for type "{challenge.type}" missing!<br /><br />
-                    Did you forget to install a plugin?
-                </>;
-            else {
-                chalEl = React.createElement(
-                    handler.component, {
-                    challenge: challenge, doHide: hideChal,
-                    isEditor: isEditor, saveEdit: saveEdit,
-                    isCreator: isCreator,
-                })
-            }
-
-            chalEl = <Modal onHide={hideChal}>
-                {chalEl}
-            </Modal>;
-        }
-    } else {
+    if (!tab) {
         if (!api.challenges || !api.challenges.length) return <></>;
-        return <Redirect to={"/campaign/" + api.challenges[0].id} />
+        return <Redirect to={"/404"} />
+    }
+    handler = plugins.categoryType[tab.type];
+    if (!handler) {
+        challengeTab = <>
+            Category renderer for type "{tab.type}" missing!<br /><br />
+            Did you forget to install a plugin?
+        </>
+    } else {
+        challengeTab = React.createElement(handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit });
     }
 
-    // TODO: This
-    /*
-    let foot;
-    if (api.user.is_admin) {
-        foot = <SBTSection key={"anc"} title={"Add new category"} noHead>
-            <Section light title={"Add new category"}>
-                <ANC anc={true} />
-            </Section>
-        </SBTSection>;
-    }*/
+    if (challenge || isEditor) {
+        if (challenge.type)
+            handler = plugins.challengeType[challenge.type];
+        else
+            handler = plugins.challengeType["__default"];
 
-    return <Page title={"Challenges"} selfContained>
+        if (!handler)
+            chalEl = <>
+                Challenge renderer for type "{challenge.type}" missing!<br /><br />
+                Did you forget to install a plugin?
+            </>;
+        else {
+            chalEl = React.createElement(
+                handler.component, {
+                challenge: challenge, doHide: hideChal,
+                isEditor: isEditor, saveEdit: saveEdit,
+                isCreator: isCreator,
+            });
+        }
+
+        chalEl = <Modal onHide={hideChal}>
+            {chalEl}
+        </Modal>;
+    }
+
+    return <Page title={"Challenges"}>
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 

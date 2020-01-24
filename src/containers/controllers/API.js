@@ -55,6 +55,7 @@ class APIClass extends Component {
         TEAM_LIST: "/teams/list",
         TEAM: "/teams/",
 
+        STATS: "/stats/",
         LEADERBOARD: "/leaderboard/",
     };
     ENSURABLE = {
@@ -62,6 +63,7 @@ class APIClass extends Component {
         allUsersAdmin: this.ENDPOINTS.USER_LIST_ADMIN,
         allTeams: this.ENDPOINTS.TEAM_LIST,
         allTeamsAdmin: this.ENDPOINTS.TEAM_LIST_ADMIN,
+        stats: this.ENDPOINTS.STATS,
         adminConfig: this.ENDPOINTS.ADMIN_CONFIG,
         leaderboard: this.ENDPOINTS.LEADERBOARD,
     };
@@ -106,7 +108,6 @@ class APIClass extends Component {
             siteOpen = false;
         }
 
-        this.ws = new WS(this);
         this.state = {
             popups: [],
             hidePopup: this.hidePopup,
@@ -130,6 +131,7 @@ class APIClass extends Component {
             allTeamsAdmin: null,
             adminConfig: null,
             leaderboard: null,
+            stats: null,
 
             siteOpen: siteOpen,
             countdown: countdown,
@@ -173,13 +175,7 @@ class APIClass extends Component {
             getError: this.getError,
 
             _reloadCache: this._reloadCache,
-
-            ws: this.ws,
         };
-    }
-
-    refresh() {
-        this.setState(this.state);
     }
 
     async componentWillMount() {
@@ -617,7 +613,10 @@ class APIClass extends Component {
 
     // React
     render() {
-        return <APIContext.Provider value={this.state}>{this.props.children}</APIContext.Provider>;
+        return <APIContext.Provider value={this.state}>
+            <WS api={this} />
+            {this.props.children}
+        </APIContext.Provider>;
     }
 }
 

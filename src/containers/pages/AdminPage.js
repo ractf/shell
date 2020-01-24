@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
+import useReactRouter from "../../useReactRouter";
 
-import { Page, Form, Input, Button, Radio, Spinner, SidebarTabs, SBTSection, Section, apiContext, appContext } from "ractf";
+import { Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext, appContext } from "ractf";
 
 import "./AdminPage.scss";
 
@@ -73,6 +74,10 @@ export default () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const { match } = useReactRouter();
+    if (!match) return "uuuh.. admin?";
+    const page = match.params.page;
+
     const configSet = (key, value) => {
         api.setConfigValue(key, value).then(() => {
             api.config[key] = value;
@@ -82,9 +87,10 @@ export default () => {
         });
     };
 
-    return <Page selfContained>
-        <SidebarTabs>
-            <SBTSection title={"Configuration"}>
+    let content;
+    switch (page) {
+        case "config":
+            content = <SBTSection title={"Configuration"}>
                 {api.adminConfig ? <>
                     <Section title={"Login"}>
                         <Form>
@@ -119,8 +125,10 @@ export default () => {
                         </Form>
                     </Section>
                 </> : <Spinner />}
-            </SBTSection>
-            <SBTSection title={"Service Status"}>
+            </SBTSection>;
+            break;
+        case "service":
+            content = <SBTSection title={"Service Status"}>
                 <Section title={"Code Ingest"}>
                     <div className={"absIndicator unknown"} />
                 </Section>
@@ -133,8 +141,10 @@ export default () => {
                 <Section title={"Staging"}>
                     <div className={"absIndicator partial"} />
                 </Section>
-            </SBTSection>
-            <SBTSection title={"Announcements"}>
+            </SBTSection>;
+            break;
+        case "announcements":
+            content = <SBTSection title={"Announcements"}>
                 <Section title={"Active Announcements"}>
                     <Form>
                         <label>No announcements active</label>
@@ -149,8 +159,10 @@ export default () => {
                         <Button>Add</Button>
                     </Form>
                 </Section>
-            </SBTSection>
-            <SBTSection title={"Members"}>
+            </SBTSection>;
+            break
+        case "members":
+            content = <SBTSection title={"Members"}>
                 {api.allUsersAdmin ? <>
                     <Section title={"Admins"}>
                         {api.allUsersAdmin.filter(i => i.is_admin).map(i =>
@@ -163,8 +175,10 @@ export default () => {
                         )}
                     </Section>
                 </> : <Spinner />}
-            </SBTSection>
-            <SBTSection title={"Teams"}>
+            </SBTSection>;
+            break;
+        case "teams":
+            content = <SBTSection title={"Teams"}>
                 {api.allTeamsAdmin ? <>
                     <Section title={"All Teams"}>
                         {api.allTeamsAdmin.map(i =>
@@ -172,7 +186,14 @@ export default () => {
                         )}
                     </Section>
                 </> : <Spinner />}
-            </SBTSection>
-        </SidebarTabs>
+            </SBTSection>;
+            break
+        default:
+            content = <Spinner />;
+            break;
+    }
+
+    return <Page selfContained>
+        {content}
     </Page>
 }

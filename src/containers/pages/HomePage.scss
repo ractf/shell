@@ -4,15 +4,16 @@
 .cardRow {
     display: flex;
     flex-direction: row;
-    &>* {
-        height: 100%;
-    }
 }
+
 .homeLead {
-    font-size: 3em;
+    font-size: 2em;
     margin-bottom: 24px;
+    margin-top: 12px;
     font-family: $titleStack;
+    text-align: center;
 }
+
 .cardTypeLink {
     background-color: #292740;
     position: relative;
@@ -24,6 +25,10 @@
     text-align: left;
     flex-basis: 0;
     border-radius: 1px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
     &>* {
         margin-bottom: 8px;
@@ -46,17 +51,36 @@
         text-decoration: none;
         color: $fg;
     }
-    cursor: pointer;
 
     &:hover::before, &:focus::before {
         left: 5px;
         top: 8px;
     }
+
+    &>div:not(.cardTitle) {
+        font-size: .9em;
+        color: darken($fg, 15%);
+    }
+
+    & .loadingSpinner {
+        font-size: .5em !important;
+        margin-bottom: 5em !important;
+    }
 }
+
 .cardTitle {
-    font-size: 1.3em;
+    font-size: 1.1em;
     font-weight: 600;
     font-family: $titleStack;
+}
+
+.cloudsOverlay {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: -2;
+    opacity: .5;
 }
 
 @media (max-width: 700px) {

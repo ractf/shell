@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { apiContext, appContext, Button, Input, TextBlock, Form, FormError, Radio } from "ractf";
+import { apiContext, appContext, Button, CodeInput, Input, TextBlock, Form, FormError, Radio } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
@@ -15,6 +15,7 @@ const HintModal = () => <h1>hi</h1>
 export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
     const [isEditFiles, setEditFiles] = useState(false);
     const [isEditHints, setEditHints] = useState(false);
+    const [isEditRaw, setEditRaw] = useState(false);
     const [flagValid, setFlagValid] = useState(false);
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
@@ -149,6 +150,16 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
         </>;
     }
 
+    if (isEditRaw) {
+        return <div style={{ width: "100%" }}><Form handle={() => {}}>
+            <CodeInput lang={"javascript"} val={JSON.stringify(challenge, null, 4)} />
+            <ButtonRow>
+                <Button click={() => setEditRaw(false)}>Cancel</Button>
+                <Button submit>Save Edit</Button>
+            </ButtonRow>
+        </Form></div>;
+    }
+
     return <>
         {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
 
@@ -172,6 +183,7 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
             <ButtonRow>
                 <Button click={() => setEditFiles(true)}>Edit Files</Button>
                 <Button click={() => setEditHints(true)}>Edit Hints</Button>
+                <Button click={() => setEditRaw(true)}>Edit Raw</Button>
             </ButtonRow>
 
             <div>
@@ -180,15 +192,11 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
                        options={[["Enabled", true], ["Disabled", false]]} />
             </div>
 
-            <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
+            <ButtonRow>
+                {!isCreator && <Button warning disabled>Remove Challenge</Button>}
+                <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
+            </ButtonRow>
         </Form></div> : <>
-                <div className={"challengeTitle"}>{challenge.name}</div>
-                <div className={"challengeWorth"}>{challenge.base_score} Points</div>
-
-                <div className={"challengeMeta"}>
-                    {challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet"}
-                </div>
-
                 <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.description }} />
 
                 {challenge.solved ? <>

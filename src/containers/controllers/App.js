@@ -10,7 +10,7 @@ import { AppContext } from "./Contexts";
 import Routes from "./Routes";
 import { API } from "./API";
 
-import { plugins, apiContext, Spinner, SectionTitle, Button } from "ractf";
+import { plugins, apiContext, wsContext, Spinner, SectionTitle, Button } from "ractf";
 
 import lockImg from "./spine.png";
 import bgm from "./synthwave.mp3"
@@ -299,7 +299,9 @@ const PopupMessage = ({ data }) => {
 
 const App = () => {
     const api = useContext(apiContext);
+    const ws = useContext(wsContext);
     window.__api = api;
+    window.__ws = ws;
 
     const [hasCode, setHasCode] = useState(false);
 
@@ -419,8 +421,8 @@ const App = () => {
                 {popupsEl}
             </div>
 
-            {!api.ws.connected &&
-                <SpinningSpine text={"Lost connection. Reconnecting" + (api.ws.timer > 0 ? " in " + api.ws.timer + "s..." : "...")} />
+            {!ws.connected &&
+                <SpinningSpine text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />
             }
         </AppContext.Provider>
     );

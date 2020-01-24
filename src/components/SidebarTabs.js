@@ -16,7 +16,6 @@ export const SBMenu = ({ name, children, initial }) => {
     const toggle = () => {
         if (height !== 0) setHeight(0);
         else {
-            console.log(childs);
             setHeight(
                 Array.prototype.reduce.call(childs.current.childNodes, function (p, c) { return p + (c.offsetHeight || 0); }, 0)
             )
@@ -35,34 +34,6 @@ export const SBMenu = ({ name, children, initial }) => {
 export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
     const [active, setActive] = useState(0);
     const [sbOpen, setSbOpen] = useState(false);
-
-    /*
-    return <div className={"sbtWrap" + (sbOpen ? " sbtOpen" : "")}>
-        <div className={"sbtSidebar"}>
-            <hr />
-            <SBMenu name={"Home"} />
-            <hr />
-            <SBMenu name={"Users"} />
-            <hr />
-            <SBMenu name={"Teams"} />
-            <hr />
-            <SBMenu name={"Challenges"}>
-                <Link to={"/"} className={"sbtSubitem"}>hi</Link>
-                <Link to={"/"} className={"sbtSubitem"}>help</Link>
-                <Link to={"/"} className={"sbtSubitem"}>me</Link>
-                <Link to={"/"} className={"sbtSubitem"}>pls</Link>
-            </SBMenu>
-            <hr />
-        </div>
-        <div className={"sbtBody"}>
-            {children.map((i, n) => <div key={i.props.title} style={{ display: n === active ? "block" : "none" }}>
-                {i}
-            </div>)}
-            {feet && feet.map((i, n) => <div key={i.props.title} style={{ display: children.length + n === active ? "block" : "none" }}>
-                {i}
-            </div>)}
-        </div>
-    </div>;*/
 
     return <div className={"sbtWrap" + (sbOpen ? " sbtOpen" : "")}>
         <div className={"sbtSidebar"}>
@@ -93,6 +64,7 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
     </div>
 };
 
+
 export const SiteNav = withRouter(({ children, history }) => {
     const api = useContext(apiContext);
 
@@ -109,31 +81,46 @@ export const SiteNav = withRouter(({ children, history }) => {
         <div onMouseDown={() => setSbOpen(!sbOpen)} className={"sbtBurger"}><MdMenu /></div>
         <div className={"sbtSidebar"}>
             <hr />
-            <SBMenu name={"RACTF"} initial>
+            <SBMenu key={"ractf"} name={"RACTF"} initial>
                 <Link to={"/home"} className={"sbtSubitem"}>Home</Link>
                 <Link to={"/users"} className={"sbtSubitem"}>Users</Link>
                 <Link to={"/teams"} className={"sbtSubitem"}>Teams</Link>
                 <Link to={"/leaderboard"} className={"sbtSubitem"}>Leaderboard</Link>
             </SBMenu>
             <hr />
-            {api.authenticated && api.user ? <>
-                <SBMenu name={"Challenges"} initial>
+            {api.user ? <>
+                <SBMenu key={"challenges"} name={"Challenges"} initial>
                     {api.challenges.map(i =>
                         <Link to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>{i.name}</Link>
                     )}
+                    {api.user.is_admin &&
+                        <Link to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ Add new category</Link>
+                    }
                 </SBMenu>
                 <hr />
-                <SBMenu name={api.user.username}>
+                <SBMenu key={"user"} name={api.user.username}>
                     <Link to={"/profile/me"} className={"sbtSubitem"}>Profile</Link>
                     <Link to={"/team/me"} className={"sbtSubitem"}>Team</Link>
                     <Link to={"/settings"} className={"sbtSubitem"}>Settings</Link>
                     <Link to={"/logout"} className={"sbtSubitem"}>Logout</Link>
                 </SBMenu>
                 <hr />
-            </> : <>
-                <SBMenu name={"Login"} initial>
-                    <Link to={"/login"} className={"sbtSubitem"}>Login</Link>
-                    <Link to={"/register"} className={"sbtSubitem"}>Register</Link>
+            </> : (!api.config || api.config.login || api.config.registration) ? <>
+                <SBMenu key={"login"} name={"Login"} initial>
+                    {api.config.login &&
+                        <Link key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
+                    {api.config.registration &&
+                    <Link key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
+                </SBMenu>
+                <hr />
+            </> : null}
+            {api.user && api.user.is_admin && <>
+                <SBMenu key={"admin"} name={"Admin"}>
+                    <Link to={"/admin/config"} className={"sbtSubitem"}>Configuration</Link>
+                    <Link to={"/admin/service"} className={"sbtSubitem"}>Service Status</Link>
+                    <Link to={"/admin/announcements"} className={"sbtSubitem"}>Announcements</Link>
+                    <Link to={"/admin/members"} className={"sbtSubitem"}>Members</Link>
+                    <Link to={"/admin/teams"} className={"sbtSubitem"}>Teams</Link>
                 </SBMenu>
                 <hr />
             </>}
@@ -154,6 +141,7 @@ export const SBTSection = ({ title, children, subTitle, noHead }) => {
         {children}
     </>
 };
+
 
 export const Section = ({ title, children, light }) => <>
     <div className={"abSection" + (light ? " absLight" : "")}>
