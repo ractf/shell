@@ -20,6 +20,7 @@ import TeamPage from "../pages/TeamPage";
 import HomePage from "../pages/HomePage";
 import Campaign from "../pages/Campaign";
 import Profile from "../pages/Profile";
+import Debug from "../pages/Debug";
 import { APIContext } from "./Contexts";
 
 import { plugins } from "ractf";
@@ -46,6 +47,8 @@ const Page = ({ title, auth, admin, noAuth, C }) => {
 
 export default () => {
     return <Switch>
+        <Route exact path={"/debug"} component={Debug} />
+
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />
         <Route exact path={"/login"}>

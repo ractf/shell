@@ -74,3 +74,13 @@
         line-height: 1.8;
     }
 }
+
+.inlineCode {
+    background-color: $bg-l1;
+    color: darken($fg, 10%);
+    font-family: $monoStack;
+    padding: 3px 7px;
+    margin: 0 4px;
+    font-size: .85em;
+    border-radius: 8px;
+}

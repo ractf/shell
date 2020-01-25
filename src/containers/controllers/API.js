@@ -57,6 +57,7 @@ class APIClass extends Component {
 
         STATS: "/stats/",
         LEADERBOARD: "/leaderboard/",
+        DEBUG_VERSION: "/debug/version",
     };
     ENSURABLE = {
         allUsers: this.ENDPOINTS.USER_LIST,
@@ -66,6 +67,7 @@ class APIClass extends Component {
         stats: this.ENDPOINTS.STATS,
         adminConfig: this.ENDPOINTS.ADMIN_CONFIG,
         leaderboard: this.ENDPOINTS.LEADERBOARD,
+        backendVersion: this.ENDPOINTS.DEBUG_VERSION,
     };
 
     constructor(props) {
@@ -132,6 +134,7 @@ class APIClass extends Component {
             adminConfig: null,
             leaderboard: null,
             stats: null,
+            backendVersion: null,
 
             siteOpen: siteOpen,
             countdown: countdown,

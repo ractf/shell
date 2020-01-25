@@ -38,6 +38,10 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
+const commitHash = require('child_process')
+  .execSync('git rev-parse --short HEAD')
+  .toString();
+
 module.exports = function(webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
@@ -315,6 +319,9 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
+      new webpack.DefinePlugin({
+        __COMMIT_HASH__: JSON.stringify(commitHash),
+      }),
       new HtmlWebpackPlugin(
         Object.assign(
           {},
