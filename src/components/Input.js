@@ -70,6 +70,7 @@ export default class Input extends Component {
                     value={this.state.val}
                     onChange={this.handleChange}
                     rows={this.props.rows}
+                    autofill={this.props.autofill}
                     className={this.props.monospace ? "monospaced" : ""}
                     disabled={this.props.disabled} />
                 : <input
@@ -78,6 +79,7 @@ export default class Input extends Component {
                     value={this.state.val}
                     type={(this.props.password && !this.state.showPass) ? "password" : "text"}
                     onChange={this.handleChange}
+                    autofill={this.props.autofill}
                     className={this.props.monospace ? "monospaced" : ""}
                     disabled={this.props.disabled} />}
             {this.props.center || this.props.noCount ? null

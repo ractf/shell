@@ -178,7 +178,7 @@ class APIClass extends Component {
         };
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
         this.setup();
         this._setupConfig();
     }
@@ -614,8 +614,9 @@ class APIClass extends Component {
     // React
     render() {
         return <APIContext.Provider value={this.state}>
-            <WS api={this} />
-            {this.props.children}
+            <WS api={this}>
+                {this.props.children}
+            </WS>
         </APIContext.Provider>;
     }
 }

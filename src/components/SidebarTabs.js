@@ -3,8 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdMenu } from "react-icons/md";
 
 import { apiContext } from "ractf";
-
-import logo from "../static/wordmark.png";
+import Wordmark from "./Wordmark";
 
 import "./SidebarTabs.scss";
 
@@ -38,7 +37,7 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
     return <div className={"sbtWrap" + (sbOpen ? " sbtOpen" : "")}>
         <div className={"sbtSidebar"}>
             <div onClick={() => setSbOpen(!sbOpen)} className={"sbtHandle"}><MdKeyboardArrowLeft /></div>
-            {!noHead && <img className={"sbtBrand"} alt={""} src={logo} />}
+            {!noHead && <Wordmark className={"sbtBrand"} />}
             {children.map((i, n) =>
                 <div key={i.props.title} className={"sbtItem" + (n === active ? " sbtActive" : "")}
                     onClick={() => { setActive(n); setSbOpen(false); onChangeTab && onChangeTab(n) }}>
@@ -105,11 +104,11 @@ export const SiteNav = withRouter(({ children, history }) => {
                     <Link to={"/logout"} className={"sbtSubitem"}>Logout</Link>
                 </SBMenu>
                 <hr />
-            </> : (!api.config || api.config.login || api.config.registration) ? <>
+            </> : (api.configGet("login", true) || api.configGet("registration", true)) ? <>
                 <SBMenu key={"login"} name={"Login"} initial>
-                    {api.config.login &&
+                    {api.configGet("login", true) &&
                         <Link key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
-                    {api.config.registration &&
+                    {api.configGet("registration", true) &&
                     <Link key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
                 </SBMenu>
                 <hr />

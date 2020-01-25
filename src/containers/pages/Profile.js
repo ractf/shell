@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Moment from 'react-moment';
 
 import { transparentize } from "polished";
 import { BrokenShards } from "./ErrorPages";
@@ -59,7 +60,7 @@ export default () => {
         <div className={"profileSplit"}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
-                {/*<div className={"userJoined"}>Joined Yesterday</div>*/}
+                <div className={"userJoined"}>Joined <Moment fromNow>{userData.joined}</Moment></div>
                 <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
                     {userData.bio}
                 </div>
@@ -87,7 +88,7 @@ export default () => {
                 {userData.is_admin &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
-                {userData.solves && userData.solves.map(i => <UserSolve {...i} />)}
+                {userData.solves && userData.solves.map((n, i) => <UserSolve key={n} {...i} />)}
                 {(!userData.solves || userData.solves.length === 0) && <div className={"noSolves"}>{userData.username} hasn't solved any challenges yet</div>}
             </div>
         </div>

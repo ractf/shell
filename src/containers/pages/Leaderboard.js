@@ -47,7 +47,6 @@ export default () => {
     const api = useContext(apiContext);
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
-    const [rerender, setRerender] = useState(0);
 
     useEffect(() => {
         api.ensure("leaderboard").then(data => {
@@ -115,7 +114,7 @@ export default () => {
     };
 
     return <Page title={"Leaderboard"}>
-        <TabbedView callback={() => { setRerender(rerender + 1) }} center initial={1}>
+        <TabbedView center initial={1}>
             <div label='Users'>
                 <Graph data={userGraphData} />
                 {api.leaderboard

@@ -43,7 +43,7 @@ export const EmailMessage = () => {
         <Wrap>
             Thank you for registering!
             <br /><br />
-            Please check your indox for a verification link.
+            Please check your inbox for a verification link.
             <br /><br />
             Make sure to check your spam folder if you can't find it!
         </Wrap>

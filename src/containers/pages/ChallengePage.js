@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Redirect, Link } from "react-router-dom";
 
 import useReactRouter from "../../useReactRouter";
@@ -8,12 +8,6 @@ import { plugins, apiContext, SBTSection } from "ractf";
 
 
 export default () => {
-    const [edit, setEdit] = useState(false);
-    const [isEditor, setIsEditor] = useState(false);
-    const [isCreator, setIsCreator] = useState(false);
-    const [lState, setLState] = useState({});
-    const [anc, setAnc] = useState(false);
-
     const { match } = useReactRouter();
     const tabId = match.params.tabId;
     const chalId = match.params.chalId;
@@ -32,15 +26,13 @@ export default () => {
     })();
     let chalEl, handler;
 
-    const saveEdit = () => {};
-
     if (!tab) {
         if (!api.challenges || !api.challenges.length) return <></>;
         return <Redirect to={"/404"} />
     }
 
     handler = plugins.categoryType[tab.type];
-    if (challenge || isEditor) {
+    if (challenge) {
         if (challenge.type)
             handler = plugins.challengeType[challenge.type];
         else
@@ -55,8 +47,6 @@ export default () => {
             chalEl = React.createElement(
                 handler.component, {
                 challenge: challenge,
-                isEditor: isEditor, saveEdit: saveEdit,
-                isCreator: isCreator,
             });
         }
     }
