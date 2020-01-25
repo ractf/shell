@@ -88,7 +88,7 @@ export default () => {
                 {userData.is_admin &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
-                {userData.solves && userData.solves.map((n, i) => <UserSolve key={n} {...i} />)}
+                {userData.solves && userData.solves.map((i, n) => <UserSolve key={n} {...i} />)}
                 {(!userData.solves || userData.solves.length === 0) && <div className={"noSolves"}>{userData.username} hasn't solved any challenges yet</div>}
             </div>
         </div>
