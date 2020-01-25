@@ -383,6 +383,7 @@ module.exports = function(webpackEnv) {
       isEnvProduction &&
         new WorkboxWebpackPlugin.GenerateSW({
           clientsClaim: true,
+          skipWaiting: true,
           exclude: [/\.map$/, /asset-manifest\.json$/],
           importWorkboxFrom: 'cdn',
           navigateFallback: publicUrl + '/index.html',
@@ -390,6 +391,13 @@ module.exports = function(webpackEnv) {
             new RegExp('^/api'),  // Exclude the API
             new RegExp('/[^/]+\\.[^/]+$'),  // Exclude anything with dots in it
           ],
+          runtimeCaching: [{
+            urlPattern: new RegExp('^/api'),
+            handler: 'NetworkOnly',
+          }, {
+            urlPattern: /\.html$/,
+            handler: 'StaleWhileRevalidate',
+          }]
         }),
       useTypeScript &&
         new ForkTsCheckerWebpackPlugin({
