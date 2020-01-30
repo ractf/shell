@@ -141,13 +141,29 @@ const NavBar = ({ newFile, showAbout }) => (
     </TopBar>
 );
 
-const Editor = ({ names, splitSide, contents, setContents, setNames }) => {
+const File = ({ readOnly, mode, content, setContent }) => {
+    const [liveContent, setLiveContent] = useState(content);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setContent(liveContent);
+        }, 250);
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [liveContent, setContent]);
+
+    return (
+        <CodeInput readOnly={readOnly} mode={mode}
+                   height={"calc(100vh - 132px)"} val={liveContent}
+                   onChange={val => setLiveContent(val)} />
+    );
+}
+
+const Editor = ({ names, splitSide, contents, changeFile, setNames }) => {
     let tabs = [[], []];
 
     names.forEach((_, n) => {
-        let setContent = (value) => {
-            setContents(contents.map((i, m) => m === n ? value : i));
-        }
         let setName = (value) => {
             setNames(names.map((i, m) => m === n ? value : i));
         }
@@ -155,7 +171,7 @@ const Editor = ({ names, splitSide, contents, setContents, setNames }) => {
         let mode = getInfoFromName(names[n])[1];
 
         tabs[splitSide[n]].push(<div key={n} label={<FileLabel saveNameChange={setName} name={names[n]} />}>
-            <CodeInput readOnly={splitSide[n] === 1} mode={mode} height={"calc(100vh - 132px)"} val={contents[n]} onChange={setContent} />
+            <File readOnly={splitSide[n] === 1} mode={mode} content={contents[n]} setContent={val => changeFile(n, val)} />
         </div>);
     });
 
@@ -188,9 +204,31 @@ const Window = () => {
 
     const app = useContext(appContext);
     
-    const [names, setNames] = useState(["BRIEFING.md", "example.py", "Console"]);
-    const [contents, setContents] = useState(["", "", output]);
-    const [splitSide, setSplitSide] = useState([0, 0, 1]);
+    const [names, setNames] = useState(["Console"]);
+    const [contents, setContents] = useState([""]);
+    const [splitSide, setSplitSide] = useState([1]);
+
+    useEffect(() => {
+        let data = localStorage.getItem("editorFiles");
+        try {
+            data = JSON.parse(data);
+        } catch (e) {
+            data = null;
+        }
+        if (data) {
+            setNames(data["names"]);
+            setContents(data["content"]);
+            setSplitSide(data["split"]);
+        }
+    }, []);
+
+    const changeFile = (index, content) => {
+        setContents(contents.map((i, m) => m === index ? content : i));
+
+        localStorage.setItem("editorFiles", JSON.stringify({
+            names: names, content: contents, split: splitSide
+        }));
+    };
 
     const newFile = useCallback(() => {
         setSplitSide(splitSide.concat(0));
@@ -209,7 +247,7 @@ more information and source code.`);
     return <div className="ideMain">
         <NavBar newFile={newFile} showAbout={showAbout} />
         <Editor names={names} contents={contents} splitSide={splitSide}
-                setNames={setNames} setContents={setContents} />
+                setNames={setNames} changeFile={changeFile} />
     </div>;
 }
 
