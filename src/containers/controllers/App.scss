@@ -19,6 +19,24 @@ html {
     font-size: 1.05rem;
 }
 
+code {
+    background-color: $bg-l1;
+    color: darken($fg, 10%);
+    font-family: $monoStack;
+    padding: .2em .4em;
+    margin: 0 2px;
+    font-size: 85%;
+    border-radius: 8px;
+}
+pre > code {
+    display: block;
+    padding: 16px;
+    margin: 0 -8px;
+    border-radius: 3px;
+    line-height: 1.45;
+    overflow: auto;
+}
+
 #root {
     min-height: 100vh;
     display: flex;
@@ -98,12 +116,12 @@ html {
 
 a, .linkStyle {
     text-decoration: none;
-    color: #337ab7;
+    color: $link-color;
     margin: 0;
     padding: 0;
 
     &:hover {
-        color: #23527c;
+        color: $link-hover;
         text-decoration: underline;
     }
 }
@@ -122,15 +140,19 @@ b {
 .redacted {
     user-select: none;
     position: relative;
+    padding: 0 8px;
+    margin: 0 4px;
+    vertical-align: middle;
 }
 .redacted::after {
-    background: #000;
+    background: $bg-l1;
     border-radius: 0.1em;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
     content: " ";
     width: 100%;
     height: 1.2em;
     left: 0;
+    bottom: 0;
     position: absolute;
     transform: skewY(-5deg) rotate(5deg);
 }

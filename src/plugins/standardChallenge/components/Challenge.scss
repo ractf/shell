@@ -2,13 +2,16 @@
 
 
 .challengeBrief {
-    font-family: "Special Elite", "Robot Mono", monospace;
+    font-family: $fontStack;
     text-align: left;
     line-height: 1.5;
+    margin-top: 8px;
 
     > img {
         max-width: 100%;
     }
+
+    padding: .2em 2em;
 }
 
 .challengeTitle {

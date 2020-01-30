@@ -48,8 +48,11 @@ export default props => {
             { inner }
         </div>;
 
+    if (!props.url)
+        return <div tabIndex={props.unlocked || props.done ? "0" : ""} className={nodeClass}>
+            { inner }
+        </div>;
     return <Link tabIndex={props.unlocked || props.done ? "0" : ""} to={props.url} className={nodeClass}>
         { inner }
-    </Link>;
-        
+    </Link>;        
 };

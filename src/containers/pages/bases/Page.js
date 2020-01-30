@@ -25,35 +25,8 @@ const LinkDropdown = ({ name, children }) => {
 */
 
 
-export default ({ title, url, children, vCentre, selfContained }) => {
-    //const api = useContext(apiContext);
-
+export default ({ children, vCentre, selfContained }) => {
     return (<>
-    {/*
-        <div className={"pageHead" + ((!title || title.length === 0) ? " minimal" : "")}>
-            {title ? <div className={"headTitle"}>
-                {title}
-                {url ? <LinkIcon url={url} /> : null}
-            </div> : null}
-            <div className={"headLinks"}>
-                <Link className={"headLink"} to={"/users"}>Users</Link>
-                <Link className={"headLink"} to={"/teams"}>Teams</Link>
-                <Link className={"headLink"} to={"/leaderboard"}>Leaderboard</Link>
-
-                {api.authenticated
-                    ? <>
-                        <Link className={"headLink"} to={"/campaign"}>Challenges</Link>
-                        <Link className={"headLink"} to={api.team ? "/team" : "/team/join"}>My Team</Link>
-                        <LinkDropdown name={api.user.username}>
-                            <Link className={"headLink"} to={"/profile"}>Profile</Link>
-                            <Link className={"headLink"} to={"/settings"}>Settings</Link>
-                        </LinkDropdown>
-                        <Link className={"headLink"} to={"/logout"}>Logout</Link>
-                    </>
-                    : api.configGet("login", true) && <Link className={"headLink"} to={"/login"}>Login</Link>}
-            </div>
-        </div>
-        */}
         {selfContained ? children :
             <div className={"pageContent" + (vCentre ? " vCentre" : "")}>
                 {children}

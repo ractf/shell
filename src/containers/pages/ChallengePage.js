@@ -26,7 +26,7 @@ export default () => {
     })();
     let chalEl, handler;
 
-    if (!tab) {
+    if (!tab || !challenge) {
         if (!api.challenges || !api.challenges.length) return <></>;
         return <Redirect to={"/404"} />
     }
@@ -55,7 +55,7 @@ export default () => {
 
     return <Page title={challenge ? challenge.name : "Challenges"}>
         <SBTSection key={tab.id} subTitle={challenge.base_score + " points - " + solveMsg} title={challenge.name}>
-            <Link to={".."}>&lt; Back to challenges</Link>
+            <Link className={"backToChals"} to={".."}>Back to challenges</Link>
             {chalEl}
         </SBTSection>
     </Page>;

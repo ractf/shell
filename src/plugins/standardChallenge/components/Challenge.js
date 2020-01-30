@@ -1,18 +1,20 @@
 import React, { useState, useContext } from "react";
+import ReactMarkdown from "react-markdown";
 
 import { apiContext, appContext, Button, CodeInput, Input, TextBlock, Form, FormError, Radio } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
+import IDE from "./IDE";
 
 import "./Challenge.scss";
-import {ButtonRow} from "../../../components/Button";
+import { ButtonRow } from "../../../components/Button";
 
 
 const HintModal = () => <h1>hi</h1>
 
 
-export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
+export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     const [isEditFiles, setEditFiles] = useState(false);
     const [isEditHints, setEditHints] = useState(false);
     const [isEditRaw, setEditRaw] = useState(false);
@@ -62,7 +64,7 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
 
                     // NOTE: This is potentially very slow. If there are performance issues in production, this is
                     // where to look first!
-                    api._reloadCache().then(() => doHide());
+                    api._reloadCache();
                     /*  // This is the start of what would be the code to rebuild the local cache
                     api.challenges.forEach(group => group.chals.forEach(chal => {
                         if (chal.deps.indexOf(challenge.id) !== -1) {
@@ -197,18 +199,28 @@ export default ({ challenge, doHide, isEditor, isCreator, saveEdit }) => {
                 <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
             </ButtonRow>
         </Form></div> : <>
-                <TextBlock className={"challengeBrief"} dangerouslySetInnerHTML={{ __html: challenge.description }} />
+                <TextBlock className={"challengeBrief"}>
+                    <ReactMarkdown
+                        source={challenge.description}
+                        renderers={{
+                            link: ({ href, children }) => <a rel="noopener noreferrer" target="_blank" href={href}>{children}</a>,
+                            delete: ({ children }) => <span className="redacted">{children}</span>
+                        }}
+                    />
+                </TextBlock>
 
-                {challenge.solved ? <>
+                <IDE challenge={challenge} />
+
+                {/*challenge.solved ? <>
                     You have already solved this challenge!
                 </> : <Form handle={tryFlag(challenge)} locked={locked}>
                     <Input placeholder="Flag format: ractf{...}"
                         format={partial} name={"flag"}
-                        callback={changeFlag} monospace
+                        callback={changeFlag} light monospace
                         center width={"80%"} />
                     {message && <FormError>{message}</FormError>}
                     <Button disabled={!flagValid} submit>Attempt flag</Button>
-                </Form>}
+                </Form>*/}
 
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                     {challenge.files.map(file => {

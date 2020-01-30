@@ -19,7 +19,41 @@ header {
         flex-basis: 0;
         flex-grow: 1;
     }
-    &>img {
-        height: 35px;
+    & svg {
+        height: 38px;
+    }
+    &>button {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        height: 32px;
+        border-radius: 16px;
+        font-size: .8em;
+        margin: 0;
+        padding: 0;
+    }
+}
+#headerPad {
+    display: none;
+    height: 60px;
+}
+
+@media (max-width: 800px) {
+    header {
+        position: fixed;
+        left: 0;
+        top: 0;
+    }
+
+    #headerPad {
+        display: block;
+    }
+}
+
+@media (max-width: 500px) {
+    header svg {
+        height: 32px;
+        float: left;
+        margin-left: 32px;
     }
 }

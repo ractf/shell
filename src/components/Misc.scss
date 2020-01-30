@@ -50,6 +50,11 @@
     white-space: pre-wrap;
     font-family: $monoStack;
 
+    & img {
+        max-width: 100%;
+        padding: 1em;
+    }
+
     @media only screen and (max-width: 600px) {
         & {
             margin: 1.5em 8px;
@@ -73,14 +78,4 @@
     &>br {
         line-height: 1.8;
     }
-}
-
-.inlineCode {
-    background-color: $bg-l1;
-    color: darken($fg, 10%);
-    font-family: $monoStack;
-    padding: 3px 7px;
-    margin: 0 4px;
-    font-size: .85em;
-    border-radius: 8px;
 }

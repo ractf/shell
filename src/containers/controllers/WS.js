@@ -14,9 +14,10 @@ export default class WS extends Component {
         this.api = this.props.api;
 
         setInterval((() => {
-            this.setState({
-                timer: this.state.timer - 1
-            })
+            if (!this.state.connected)
+                this.setState({
+                    timer: this.state.timer - 1
+                })
         }), 1000);
 
         this.state = {

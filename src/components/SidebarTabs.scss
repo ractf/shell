@@ -68,6 +68,7 @@
 
 .sbtBody {
     flex-grow: 1;
+    width: 0;
     padding: 32px 64px;
     position: relative;
     margin-right: 0;
@@ -81,6 +82,7 @@
     font-weight: 700;
     font-family: $titleStack;
     border-bottom: 2px solid $bg_l1;
+    word-wrap: break-word;
 
     &>div {
         font-size: .6em;
@@ -259,7 +261,7 @@
     }
     .sbtBurger {
         display: block;
-        position: absolute;
+        position: fixed;
         left: 0px;
         top: 0px;
         font-size: 32px;

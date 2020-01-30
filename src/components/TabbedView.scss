@@ -6,19 +6,20 @@
         &.centre {
         justify-content: center;
     }
-    &>button {
+    & > button {
         border-radius: 0;
         margin: 0;
         min-width: 100px;
         transition: none;
+        position: relative;
 
-        border-radius: 8px 8px 0px 0;
         margin-right: 8px;
 
         font-size: 1.1em;
         background-color: $bg_d05;
         color: #aaa;
         border: none;
+        min-height: 42px;
     
         &:hover, &:focus {
             background-color: $bg_d0;
@@ -28,12 +29,26 @@
         &:active {
             outline: none;
         }
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 100%;
+            top: 5px;
+            height: calc(100%);
+            width: 3px;
+            background-color: $bg_d0;
+        }
 
         &.active {
             background-color: $bg_l0;
             border: none;
             color: $fg;
         }
+    }
+
+    & > .tabSpacer {
+        flex-grow: 1;
     }
 }
 

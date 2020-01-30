@@ -93,9 +93,20 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
             if (isEdit) rows[chal.metadata.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal, true)} key={rows[chal.metadata.y].length} />);
             else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
 
+        let unlocked = isEdit || !chal.lock;
+        // Admins are a special edge-case for unlocked challenges
+        if (!isEdit && unlocked && api.user.is_admin && !chal.solved) {
+            if (!((chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)
+                 || (chal.link & WEST && getChal(challenges, chal.metadata.x - 1, chal.metadata.y).solved)
+                 || (chal.link & NORTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)
+                 || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y - 1).solved))) {
+                unlocked = false;
+            }
+        }
+
         rows[chal.metadata.y][chal.metadata.x] = <Node
             x={chal.metadata.x} y={chal.metadata.y} key={chal.id}
-            unlocked={isEdit || !chal.lock} done={isEdit ? false : chal.solved}
+            unlocked={unlocked} done={isEdit ? false : chal.solved}
 
             chalmap={chalmap}
             
@@ -108,11 +119,11 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
             click={isEdit ? showEditor(chal) : ""}
             isEdit={isEdit} toggleLink={toggleLink(chal)}
 
-            url={"/campaign/" + challenges.id + "/challenge/" + chal.id}
+            url={unlocked ? "/campaign/" + challenges.id + "/challenge/" + chal.id : null}
 
             up={!!(chal.link & NORTH)} down={!!(chal.link & SOUTH)}
             right={!!(chal.link & EAST)} left={!!(chal.link & WEST)}
-            name={chal.lock ? "???" : chal.name}
+            name={!unlocked ? "???" : chal.name}
         />;
     });
     if (isEdit && max_x < 2) max_x++;

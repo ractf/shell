@@ -27,6 +27,7 @@
     text-align: left;
     min-width: 256px;
     max-width: 356px;
+    margin-bottom: 8px;
 
     &>.userName {
         font-size: 2em;
@@ -87,12 +88,14 @@
     }
 }
 .userSpecial {
-    padding: 12px 16px;
+    padding: 0 16px;
+    height: 42px;
     border-radius: 21px;
     margin-bottom: 8px;
     width: 100%;
     text-align: left;
     display: flex;
+    align-items: center;
 
     &>div:first-child {
         width: 42px;

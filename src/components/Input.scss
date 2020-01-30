@@ -39,6 +39,13 @@ textarea {
         transition: 100ms background-color ease;
         background-color: $bg_d0;
     }
+    &.light:not(:focus-within) {
+        background-color: $bg_l1;
+        color: #eee;
+        &::before {
+            background-color: $bg-l2;
+        }
+    }
 
     &::before {
         display: block;

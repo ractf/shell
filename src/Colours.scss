@@ -18,10 +18,14 @@ $bg_l0: saturate(lighten($bg, 3%), 1%);
 $bg_l1: desaturate(lighten($bg, 7%), 5%);
 $bg_l2: desaturate(lighten($bg, 14%), 9%);
 $bg_l3: desaturate(lighten($bg, 28%), 11%);
+$bg_l4: desaturate(lighten($bg, 42%), 11%);
 $bg_l5: desaturate(lighten($bg, 56%), 12%);
 $bg_d1: saturate(darken($bg, 8%), 4%);
 $bg_d05: saturate(darken($bg, 6%), 4%);
 $bg_d0: saturate(darken($bg, 4%), 4%);
+
+$link_color: $bg_l4;
+$link_hover: $bg_l3;
 
 :export {
     background: $background;

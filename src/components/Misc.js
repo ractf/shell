@@ -33,6 +33,3 @@ export const SubtleText = ({ children }) => (
 export const SectionBlurb = ({ children }) => (
     <div className={"sectionBlurb"}>{ children }</div>
 );
-export const Code = ({ children }) => (
-    <span className={"inlineCode"}>{ children }</span>
-)

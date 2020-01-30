@@ -85,6 +85,15 @@
 
     background-color: rgba($bg_d1, .73);
 }
+.backToChals {
+    &::before {
+        content: "< ";
+    }
+    margin-top: 8px;
+    margin-left: 4px;
+    display: block;
+}
+
 @media (max-width: 1200px) {
     .pageContent {
         padding: 16px 32px;
