@@ -1,29 +1,44 @@
-import React, { useState } from "react";
-import AceEditor from "react-ace";
+import React from "react";
+import MonacoEditor from 'react-monaco-editor';
 
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-terminal";
-import "ace-builds/src-noconflict/ext-language_tools";
+import colours from "../Colours.scss";
 
-import ace from "ace-builds/src-noconflict/ace";
 
-ace.config.set("basePath", "/");
-ace.config.setModuleUrl('ace/mode/javascript_worker', "/ace/worker-javascript.min.js");
+export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
+    const value = val;
+    const setValue = () => {};
 
-export default ({ val, height, lang, readOnly, onChange, ...rest }) => {
-    const [value, setValue] = useState(val);
+    const editorWillMount = ({ editor }) => {
+        editor.defineTheme("ractf", {
+            base: "vs-dark",
+            inherit: true,
+            rules: [{ background: colours.bg }],
+            colors: {
+                'editor.foreground': colours.fg,
+                'editor.background': colours.bg,
+                'editorCursor.foreground': colours.fg,
+                'editor.lineHighlightBackground': colours.bg_d0,
+                'editorLineNumber.foreground': colours.bg_l5,
+                'editor.selectionBackground': colours.bg_l1,
+                'editor.inactiveSelectionBackground': colours.bg_l2
+            }
+          });
+    };
 
-    return <AceEditor
-        mode={lang}
-        theme="terminal"
-        style={{width: "100%", height: height || "500px"}}
-        onChange={onChange || (val => setValue(val))}
-        readOnly={readOnly}
-        showGutter wrapEnabled
-        enableBasicAutocompletion
-        enableLiveAutocompletion
-        value={onChange ? val : value}
-        {...rest}
-    />
+    const options = {
+        readOnly: readOnly,
+        automaticLayout: true,
+    };
+    return (
+        <MonacoEditor
+            width={width || "100%"}
+            height={height || "100%"}
+            language={lang}
+            theme="ractf"
+            value={value}
+            options={options}
+            editorWillMount={editorWillMount}
+            onChange={onChange || (val => setValue(val))}
+        />
+    );
 };

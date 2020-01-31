@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useContext, cloneElement, useRef } from "react";
 import PanelGroup from "react-panelgroup";
-import { FaFileAlt, FaPython, FaMarkdown, FaTerminal } from "react-icons/fa";
+import { FaFileAlt, FaPython, FaMarkdown, FaTerminal, FaAlignLeft } from "react-icons/fa";
 
-import { CodeInput, TabbedView, appContext } from "ractf";
+import { CodeInput, TabbedView, Tab, appContext } from "ractf";
 
 import "./IDE.scss";
 
-const getInfoFromName = (name, readOnly) => {
+const getInfoFromName = (name) => {
     let ext = name.split(".");
     ext = ext[ext.length - 1];
 
@@ -20,13 +20,6 @@ const getInfoFromName = (name, readOnly) => {
             icon = <FaMarkdown />;
             mode = "markdown";
             break;
-        case "console":
-            if (readOnly) {    
-                icon = <FaTerminal />;
-                mode = "";
-                break;
-            }
-            // falls through
         default:
             icon = <FaFileAlt />;
             mode = "";
@@ -79,7 +72,7 @@ const Spacer = () => (
     <div className="ideMenuSpacer" />
 );
 
-const FileLabel = ({ name, readOnly, saveNameChange }) => {
+const FileLabel = ({ name, saveNameChange }) => {
     const [edName, setEdName] = useState(null);
     const ref = useRef();
 
@@ -98,7 +91,7 @@ const FileLabel = ({ name, readOnly, saveNameChange }) => {
         };
     }, [edName, saveNameChange]);
 
-    let icon = getInfoFromName(edName || name, readOnly)[0];
+    let icon = getInfoFromName(edName || name)[0];
 
     const okd = (e) => {
         if (e.keyCode === 13) {
@@ -141,27 +134,27 @@ const NavBar = ({ newFile, showAbout }) => (
     </TopBar>
 );
 
-const File = ({ readOnly, mode, content, setContent }) => {
+const File = ({ mode, content, setContent }) => {
     const [liveContent, setLiveContent] = useState(content);
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            setContent(liveContent);
-        }, 250);
+            if (liveContent !== content)
+                setContent(liveContent);
+        }, 1000);
         return () => {
             clearTimeout(handler);
         };
-    }, [liveContent, setContent]);
+    }, [liveContent, content, setContent]);
 
     return (
-        <CodeInput readOnly={readOnly} mode={mode}
-                   height={"calc(100vh - 132px)"} val={liveContent}
+        <CodeInput mode={mode} val={liveContent} height={"calc(100vh - 132px)"}
                    onChange={val => setLiveContent(val)} />
     );
 }
 
-const Editor = ({ names, splitSide, contents, changeFile, setNames }) => {
-    let tabs = [[], []];
+const Editor = ({ names, contents, changeFile, setNames, output, brief }) => {
+    let tabs = [];
 
     names.forEach((_, n) => {
         let setName = (value) => {
@@ -170,25 +163,34 @@ const Editor = ({ names, splitSide, contents, changeFile, setNames }) => {
 
         let mode = getInfoFromName(names[n])[1];
 
-        tabs[splitSide[n]].push(<div key={n} label={<FileLabel saveNameChange={setName} name={names[n]} />}>
-            <File readOnly={splitSide[n] === 1} mode={mode} content={contents[n]} setContent={val => changeFile(n, val)} />
-        </div>);
+        tabs.push(<Tab key={n} label={<FileLabel saveNameChange={setName} name={names[n]} />}>
+            <File mode={mode} content={contents[n]} setContent={val => changeFile(n, val)} />
+        </Tab>);
     });
 
     return (
         <PanelGroup>
             <div>
-                <TabbedView children={tabs[0]} />
+                <TabbedView children={tabs} />
             </div>
             <div>
-                <TabbedView children={tabs[1]} />
+                <TabbedView>
+                    <Tab label={<><FaAlignLeft /> Briefing</>}>
+                        <div className={"ideBrief"}>
+                            {brief}
+                        </div>
+                    </Tab>
+                    <Tab label={<><FaTerminal /> Console</>}>
+                        <CodeInput readOnly height={"calc(100vh - 132px)"} val={output} />
+                    </Tab>
+                </TabbedView>
             </div>
         </PanelGroup>
     );
 }
 
-const Window = () => {
-    const output = `Compiled with warnings.
+const Window = ({ brief }) => {
+    const output_ = `Compiled with warnings.
 
     ./src/plugins/standardChallenge/components/Challenge.js
         Line 4:77:   'FormError' is defined but never used            no-unused-vars
@@ -206,7 +208,7 @@ const Window = () => {
     
     const [names, setNames] = useState(["Console"]);
     const [contents, setContents] = useState([""]);
-    const [splitSide, setSplitSide] = useState([1]);
+    const [output, setOutput] = useState(output_);
 
     useEffect(() => {
         let data = localStorage.getItem("editorFiles");
@@ -218,7 +220,6 @@ const Window = () => {
         if (data) {
             setNames(data["names"]);
             setContents(data["content"]);
-            setSplitSide(data["split"]);
         }
     }, []);
 
@@ -226,15 +227,14 @@ const Window = () => {
         setContents(contents.map((i, m) => m === index ? content : i));
 
         localStorage.setItem("editorFiles", JSON.stringify({
-            names: names, content: contents, split: splitSide
+            names: names, content: contents
         }));
     };
 
     const newFile = useCallback(() => {
-        setSplitSide(splitSide.concat(0));
         setContents(contents.concat(""));
         setNames(names.concat("untitled.txt"));
-    }, [splitSide, contents, names]);
+    }, [contents, names]);
 
     const showAbout = () => {
         app.alert(`RACTF Web Editor
@@ -246,11 +246,12 @@ more information and source code.`);
 
     return <div className="ideMain">
         <NavBar newFile={newFile} showAbout={showAbout} />
-        <Editor names={names} contents={contents} splitSide={splitSide}
-                setNames={setNames} changeFile={changeFile} />
+        <Editor names={names} contents={contents}
+                setNames={setNames} changeFile={changeFile}
+                output={output} brief={brief} />
     </div>;
 }
 
-export default ({ challenge }) => {
-    return <Window />
+export default ({ challenge, children }) => {
+    return <Window brief={children} />
 }

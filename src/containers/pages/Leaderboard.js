@@ -5,7 +5,7 @@ import {
 } from 'react-vis';
 import 'react-vis/dist/style.css';
 
-import TabbedView from "../../components/TabbedView";
+import TabbedView, { Tab } from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
@@ -115,19 +115,19 @@ export default () => {
 
     return <Page title={"Leaderboard"}>
         <TabbedView center initial={1}>
-            <div label='Users'>
+            <Tab label='Users'>
                 <Graph data={userGraphData} />
                 {api.leaderboard
                     ? <Table headings={["Ranking", "User", "Team", "Points"]} data={userData(api.leaderboard)} />
                     : <Spinner />}
-            </div>
+            </Tab>
 
-            <div label='Teams'>
+            <Tab label='Teams'>
                 <Graph data={teamGraphData} />
                 {api.leaderboard
                     ? <Table headings={["Ranking", "Team", "Points"]} data={teamData(api.leaderboard)} />
                     : <Spinner />}
-            </div>
+            </Tab>
         </TabbedView>
     </Page>;
 

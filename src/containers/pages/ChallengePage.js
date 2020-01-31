@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { plugins, apiContext, SBTSection } from "ractf";
+import { plugins, apiContext } from "ractf";
 
 
 export default () => {
@@ -51,12 +51,7 @@ export default () => {
         }
     }
 
-    let solveMsg = challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet";
-
     return <Page title={challenge ? challenge.name : "Challenges"}>
-        <SBTSection key={tab.id} subTitle={challenge.base_score + " points - " + solveMsg} title={challenge.name}>
-            <Link className={"backToChals"} to={".."}>Back to challenges</Link>
-            {chalEl}
-        </SBTSection>
+        {chalEl}
     </Page>;
 }

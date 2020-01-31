@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import zxcvbn from "zxcvbn";
 
-import { Page, HR, ButtonRow, TabbedView, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
+import { Page, HR, ButtonRow, TabbedView, Tab, Button, Form, FormError, Input, apiContext, appContext } from "ractf";
 
 import "./SettingsPage.scss";
 
@@ -101,7 +101,7 @@ export default () => {
 
     return <Page title={"Settings for " + api.user.username}>
         <TabbedView>
-            <div label="User">
+            <Tab label="User">
                 {
                     api.user['2fa_status'] !== "on" && <>
                         <FormError>Your account has 2 factor authentication <b>DISABLED</b></FormError>
@@ -126,8 +126,8 @@ export default () => {
                     {pwError && <FormError>{pwError}</FormError>}
                     <Button submit>Change Password</Button>
                 </Form>
-            </div>
-            <div label="Profile">
+            </Tab>
+            <Tab label="Profile">
                 <Form handle={updateDetails}>
                     <label htmlFor={"discord"}>Discord</label>
                     <Input name={"discord"} val={api.user.social.discord} limit={36} placeholder={"Discord"} />
@@ -143,8 +143,8 @@ export default () => {
                     {pfError && <FormError>{pfError}</FormError>}
                     <Button submit>Save</Button>
                 </Form>
-            </div>
-            <div label="Team">
+            </Tab>
+            <Tab label="Team">
                 {api.team ? <>
                     <Form handle={alterTeam} locked={!teamOwner}>
                         <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
@@ -157,7 +157,7 @@ export default () => {
                         {teamError && <FormError>{teamError}</FormError>}
                         {teamOwner && <Button submit>Modify Team</Button>}
                     </Form>
-                </> : <div label="Team">
+                </> : <div>
                     You are not in a team!
                     <br /><br />
                     To be able to participate, you must join or create a team (even if you never invite anyone).
@@ -167,12 +167,12 @@ export default () => {
                         <Button to={"/team/new"}>Create a Team</Button>
                     </ButtonRow>
                 </div>}
-            </div>
+            </Tab>
             {api.team &&
-                <div label="Team Members">
+                <Tab label="Team Members">
                     <br />
                     {api.team.members.map((i, n) => <TeamMember key={n} api={api} app={app} isCaptain={i.id === api.team.owner.id} isOwner={teamOwner} member={i} />)}
-                </div>
+                </Tab>
             }
         </TabbedView>
     </Page>;

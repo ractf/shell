@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-import { apiContext, appContext, Button, CodeInput, Input, TextBlock, Form, FormError, Radio } from "ractf";
+import { apiContext, appContext, Button, CodeInput, Input, TextBlock, Form, FormError, Radio, SBTSection } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
@@ -162,7 +163,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
         </Form></div>;
     }
 
-    return <>
+    let chalContent = <>
         {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
 
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
@@ -209,9 +210,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                     />
                 </TextBlock>
 
-                <IDE challenge={challenge} />
-
-                {/*challenge.solved ? <>
+                {challenge.solved ? <>
                     You have already solved this challenge!
                 </> : <Form handle={tryFlag(challenge)} locked={locked}>
                     <Input placeholder="Flag format: ractf{...}"
@@ -220,7 +219,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                         center width={"80%"} />
                     {message && <FormError>{message}</FormError>}
                     <Button disabled={!flagValid} submit>Attempt flag</Button>
-                </Form>*/}
+                </Form>}
 
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                     {challenge.files.map(file => {
@@ -235,4 +234,18 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 </div>}
             </>}
     </>;
+
+    let solveMsg = challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet";
+
+    chalContent = <SBTSection subTitle={challenge.base_score + " points - " + solveMsg} title={challenge.name}>
+        <Link className={"backToChals"} to={".."}>Back to challenges</Link>
+        {chalContent}
+    </SBTSection>
+
+    if (1 || challenge.flag_type === "code")
+        return <IDE challenge={challenge}>
+            {chalContent}
+        </IDE>;
+    return chalContent;
+
 };

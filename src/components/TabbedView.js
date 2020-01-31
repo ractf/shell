@@ -5,6 +5,8 @@ import Button from "./Button";
 import "./TabbedView.scss";
 
 
+export const Tab = ({ label, children }) => children;
+
 export default ({ center, children, callback, initial }) => {
     const [active, setActive] = useState(initial || 0);
 
