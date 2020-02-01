@@ -122,6 +122,8 @@ class APIClass extends Component {
             config: config,
             setup: this.setup,
 
+            codeRunState: { running: false },
+
             configGet: this.configGet,
             setConfigValue: this.setConfigValue,
             modifyUserAdmin: this.modifyUserAdmin,
@@ -176,6 +178,9 @@ class APIClass extends Component {
 
             ensure: this.ensure,
             getError: this.getError,
+
+            runCode: this.runCode,
+            abortRunCode: this.abortRunCode,
 
             _reloadCache: this._reloadCache,
         };
@@ -613,6 +618,28 @@ class APIClass extends Component {
             this.setState({challenges: this.state.challenges});
             return body
         });
+    
+
+    runCode = (runType, fileName, fileContent) => {
+        if (this.state.codeRunState.running) return;
+
+        this.post(this.ENDPOINTS.RUN_CODE + "/" + runType, {exec: btoa(fileContent)}).then(resp => {
+            //
+        }).catch(e => {
+            this.setState({ codeRunState: {
+                running: false,
+                error: this.getError(e),
+            } });
+        });
+        this.setState({ codeRunState: {
+            name: fileName,
+            running: true,
+            start: new Date(),
+        } });
+    };
+    abortRunCode = () => {
+        this.setState({ codeRunState: { running: false } });
+    };
 
     // React
     render() {

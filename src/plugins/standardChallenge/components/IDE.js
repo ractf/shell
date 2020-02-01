@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useContext, cloneElement, useRef } from "react";
 import PanelGroup from "react-panelgroup";
 import { FaFileAlt, FaPython, FaMarkdown, FaTerminal, FaAlignLeft } from "react-icons/fa";
+import { MdPlayArrow, MdStop } from "react-icons/md";
 
-import { CodeInput, TabbedView, Tab, appContext } from "ractf";
+import { CodeInput, TabbedView, Tab, appContext, apiContext } from "ractf";
 
 import "./IDE.scss";
+import Moment from "react-moment";
 
 const getInfoFromName = (name) => {
     let ext = name.split(".");
@@ -26,7 +28,7 @@ const getInfoFromName = (name) => {
             break;
     }
     return [icon, mode];
-}
+};
 
 const TopBar = ({ children }) => {
     const [open, setOpen] = useState(null);
@@ -53,7 +55,7 @@ const TopBar = ({ children }) => {
             })
         ))}
     </div>;
-}
+};
 
 const Menu = ({ title, children, doOpen, open }) => (
     <div className="ideMenu" onClick={doOpen}>
@@ -114,8 +116,7 @@ const FileLabel = ({ name, saveNameChange }) => {
     }
 
     return <>{icon} {nameEl}</>;
-
-}
+};
 
 const NavBar = ({ newFile, showAbout }) => (
     <TopBar>
@@ -134,6 +135,23 @@ const NavBar = ({ newFile, showAbout }) => (
     </TopBar>
 );
 
+const ToolBar = ({ runState, run, stop }) => {
+    return <div className={"ideToolbar"}>
+        <div className={"ideTButton itbRun" + (runState.running ? " disabled" : "")}
+             onClick={runState.running ? (() => 1) : run}
+        ><MdPlayArrow /> <span>Run code</span></div>
+        <div className={"ideTButton itbStop" + (!runState.running ? " disabled" : "")}
+             onClick={runState.running ? stop : (() => 1)}
+        ><MdStop /> <span>Stop code</span></div>
+
+        <div className={"ideTLabel"}>{
+            runState.running ? <>Running {runState.name}. Elapsed: <Moment interval={1000} durationFromNow>{ runState.start}</Moment></>
+            : runState.error ? "Error running code: " + runState.error
+                             : "Not running"
+        }</div>
+    </div>;
+};
+
 const File = ({ mode, content, setContent }) => {
     const [liveContent, setLiveContent] = useState(content);
 
@@ -147,13 +165,13 @@ const File = ({ mode, content, setContent }) => {
         };
     }, [liveContent, content, setContent]);
 
-    return (
-        <CodeInput mode={mode} val={liveContent} height={"calc(100vh - 132px)"}
+    return <>
+        <CodeInput mode={mode} val={liveContent} height={"calc(100vh - 165px)"}
                    onChange={val => setLiveContent(val)} />
-    );
-}
+    </>;
+};
 
-const Editor = ({ names, contents, changeFile, setNames, output, brief }) => {
+const Editor = ({ names, contents, changeFile, setNames, output, brief, tab, setTab }) => {
     let tabs = [];
 
     names.forEach((_, n) => {
@@ -171,7 +189,7 @@ const Editor = ({ names, contents, changeFile, setNames, output, brief }) => {
     return (
         <PanelGroup>
             <div>
-                <TabbedView children={tabs} />
+                <TabbedView initial={tab} callback={setTab} children={tabs} />
             </div>
             <div>
                 <TabbedView>
@@ -187,7 +205,7 @@ const Editor = ({ names, contents, changeFile, setNames, output, brief }) => {
             </div>
         </PanelGroup>
     );
-}
+};
 
 const Window = ({ brief }) => {
     const output_ = `Compiled with warnings.
@@ -209,6 +227,9 @@ const Window = ({ brief }) => {
     const [names, setNames] = useState(["Console"]);
     const [contents, setContents] = useState([""]);
     const [output, setOutput] = useState(output_);
+    const [tab, setTab] = useState(0);
+
+    const api = useContext(apiContext);
 
     useEffect(() => {
         let data = localStorage.getItem("editorFiles");
@@ -244,14 +265,23 @@ See https://gitlab.com/ractf/shell for
 more information and source code.`);
     }
 
+    const run = () => {
+        api.runCode("python", names[tab], contents[tab]);
+    }
+    const stop = () => {
+        api.abortRunCode();
+    }
+
     return <div className="ideMain">
         <NavBar newFile={newFile} showAbout={showAbout} />
+        <ToolBar runState={api.codeRunState} run={run} stop={stop} />
         <Editor names={names} contents={contents}
                 setNames={setNames} changeFile={changeFile}
+                tab={tab} setTab={i => setTab(i)}
                 output={output} brief={brief} />
     </div>;
-}
+};
 
 export default ({ challenge, children }) => {
     return <Window brief={children} />
-}
+};

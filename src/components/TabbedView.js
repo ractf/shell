@@ -10,16 +10,12 @@ export const Tab = ({ label, children }) => children;
 export default ({ center, children, callback, initial }) => {
     const [active, setActive] = useState(initial || 0);
 
-    useEffect(() => {
-        if (callback) callback(active);
-    });
-
     return (
         <>
             <div className={"buttonRow tabButtonRow" + (center ? " centre" : "")}>
                 {children.map((c, i) =>
                     c && c.props.label ?
-                        <Button key={i} click={(() => { active !== i && setActive(i) })} medium
+                        <Button key={i} click={(() => {if (active !== i) {setActive(i); callback && callback(i)}})} medium
                         className={i === active ? "active" : ""}>
                         {c.props.label}</Button>
                     : c)}
