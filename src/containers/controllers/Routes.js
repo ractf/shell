@@ -1,29 +1,33 @@
 import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import asyncComponent from "./AsyncComponent";
 
 import { TeamsList, UsersList } from "../pages/Lists";
-import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
-import Leaderboard from "../pages/Leaderboard";
 import TwoFA from "../pages/TwoFA";
 
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
-import PasswordReset from "../pages/auth/PasswordReset";
-import PostLogin from "../pages/auth/PostLogin";
-import SignUp from "../pages/auth/SignUp";
-import Login from "../pages/auth/Login";
 
-import ChallengePage from "../pages/ChallengePage";
-import AdminPage from "../pages/AdminPage";
-import TeamPage from "../pages/TeamPage";
-import HomePage from "../pages/HomePage";
-import Campaign from "../pages/Campaign";
-import Profile from "../pages/Profile";
-import Debug from "../pages/Debug";
 import { APIContext } from "./Contexts";
 
 import { plugins } from "ractf";
+
+const SettingsPage = asyncComponent(() => import("../pages/SettingsPage"));
+const Leaderboard = asyncComponent(() => import("../pages/Leaderboard"));
+
+const PasswordReset = asyncComponent(() => import("../pages/auth/PasswordReset"));
+const PostLogin = asyncComponent(() => import("../pages/auth/PostLogin"));
+const SignUp = asyncComponent(() => import("../pages/auth/SignUp"));
+const Login = asyncComponent(() => import("../pages/auth/Login"));
+
+const ChallengePage = asyncComponent(() => import("../pages/ChallengePage"));
+const AdminPage = asyncComponent(() => import("../pages/AdminPage"));
+const TeamPage = asyncComponent(() => import("../pages/TeamPage"));
+const HomePage = asyncComponent(() => import("../pages/HomePage"));
+const Campaign = asyncComponent(() => import("../pages/Campaign"));
+const Profile = asyncComponent(() => import("../pages/Profile"));
+const Debug = asyncComponent(() => import("../pages/Debug"));
 
 
 const Logout = () => {

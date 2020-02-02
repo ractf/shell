@@ -1,9 +1,9 @@
-import { registerPlugin } from "ractf";
-
-import Challenge from "./components/Challenge";
+import { registerPlugin, asyncComponent } from "ractf";
 
 
 export default () => {
-    registerPlugin("challengeType", "__default", { component: Challenge });
-    registerPlugin("challengeType", "code", { component: Challenge });
+    const chal = asyncComponent(() => import("./components/Challenge"));
+
+    registerPlugin("challengeType", "__default", { component: chal });
+    registerPlugin("challengeType", "code", { component: chal });
 }

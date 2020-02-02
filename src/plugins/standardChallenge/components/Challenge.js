@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-import { apiContext, appContext, Button, CodeInput, Input, TextBlock, Form, FormError, Radio, SBTSection } from "ractf";
+import { apiContext, appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
@@ -10,7 +10,7 @@ import IDE from "./IDE";
 
 import "./Challenge.scss";
 import { ButtonRow } from "../../../components/Button";
-
+import CodeInput from "./CodeInput";
 
 const HintModal = () => <h1>hi</h1>
 

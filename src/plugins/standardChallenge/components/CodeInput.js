@@ -1,7 +1,7 @@
 import React from "react";
 import MonacoEditor from 'react-monaco-editor';
 
-import colours from "../Colours.scss";
+import colours from "../../../Colours.scss";
 
 
 export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {

@@ -1,6 +1,5 @@
 import React, { Component, createRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import zxcvbn from "zxcvbn";
 
 import "./Input.scss";
 
@@ -92,7 +91,7 @@ export default class Input extends Component {
                 {this.state.showPass ? <FaEyeSlash /> : <FaEye />}
             </div> : null}
             {this.props.zxcvbn &&
-                <div className={"inputStrength"} data-val={this.state.val.length ? zxcvbn(this.state.val).score + 1 : 0} />}
+                <div className={"inputStrength"} data-val={this.state.val.length ? this.props.zxcvbn(this.state.val).score + 1 : 0} />}
             {this.props.placeholder && this.state.val.length === 0 &&
                 <div className={"placeholder" + (this.props.monospace ? " monospaced" : "")}>
                     {this.props.placeholder}</div>}

@@ -120,7 +120,7 @@ export default () => {
                 <HR />
                 <Form handle={changePassword}>
                     <Input password name={"old"} placeholder={"Current Password"} />
-                    <Input zxcvbn password name={"new1"} placeholder={"New Password"} />
+                    <Input zxcvbn={zxcvbn} password name={"new1"} placeholder={"New Password"} />
                     <Input password name={"new2"} placeholder={"New Password"} />
 
                     {pwError && <FormError>{pwError}</FormError>}

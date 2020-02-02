@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as Sentry from '@sentry/browser';
+//import * as Sentry from '@sentry/browser';
 import AppWrap from './containers/controllers/App';
 import * as serviceWorker from './serviceWorker';
 import setupPlugins from "./plugins";
 import { AppContainer } from 'react-hot-loader';
 
-Sentry.init({dsn: "https://b51135cca11047fe979c7b44cc35a404@sentry.io/1815863"});
+//Sentry.init({dsn: "https://b51135cca11047fe979c7b44cc35a404@sentry.io/1815863"});
 setupPlugins();
 
 const render = () => {

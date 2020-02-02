@@ -43,7 +43,7 @@ export default () => {
     
                 <Input name={"username"} placeholder={"Username"} />
                 <Input format={EMAIL_RE} name={"email"} placeholder={"Email"} />
-                <Input zxcvbn name={"passwd1"} placeholder={"Password"} password />
+                <Input zxcvbn={zxcvbn} name={"passwd1"} placeholder={"Password"} password />
                 <Input name={"passwd2"} placeholder={"Repeat Password"} password />
 
                 {message && <FormError>{message}</FormError>}

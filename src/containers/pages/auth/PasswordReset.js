@@ -46,7 +46,7 @@ export default () => {
             <Form locked={locked} handle={doReset}>
                 <SectionTitle2>Reset Password</SectionTitle2>
     
-                <Input zxcvbn name={"passwd1"} placeholder={"New Password"} password />
+                <Input zxcvbn={zxcvbn} name={"passwd1"} placeholder={"New Password"} password />
                 <Input name={"passwd2"} placeholder={"Repeat Password"} password />
 
                 {message && <FormError>{message}</FormError>}

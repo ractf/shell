@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback, useContext, cloneElement, useRef } from "react";
 import PanelGroup from "react-panelgroup";
+import Moment from "react-moment";
 import { FaFileAlt, FaPython, FaMarkdown, FaTerminal, FaAlignLeft } from "react-icons/fa";
 import { MdPlayArrow, MdStop } from "react-icons/md";
 
-import { CodeInput, TabbedView, Tab, appContext, apiContext } from "ractf";
+import { TabbedView, Tab, appContext, apiContext } from "ractf";
+import CodeInput from "./CodeInput";
 
 import "./IDE.scss";
-import Moment from "react-moment";
 
 const getInfoFromName = (name) => {
     let ext = name.split(".");
