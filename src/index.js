@@ -18,7 +18,7 @@ const render = () => {
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
-Loadable.preloadAll();
+Loadable.preloadReady();
 
 render();
 
