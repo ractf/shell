@@ -154,21 +154,9 @@ const ToolBar = ({ runState, run, stop }) => {
 };
 
 const File = ({ mode, content, setContent }) => {
-    const [liveContent, setLiveContent] = useState(content);
-
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            if (liveContent !== content)
-                setContent(liveContent);
-        }, 1000);
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [liveContent, content, setContent]);
-
     return <>
-        <CodeInput mode={mode} val={liveContent} height={"calc(100vh - 165px)"}
-                   onChange={val => setLiveContent(val)} />
+        <CodeInput mode={mode} val={content} height={"calc(100vh - 165px)"}
+                   onChange={val => setContent(val)} />
     </>;
 };
 

@@ -6,7 +6,8 @@ import { apiContext, appContext, Button, Input, TextBlock, Form, FormError, Radi
 
 import File from "./File";
 import Hint from "./Hint";
-import IDE from "./IDE";
+//import IDE from "./IDE";
+import { default as IDE } from "./IDEGood";
 
 import "./Challenge.scss";
 import { ButtonRow } from "../../../components/Button";
