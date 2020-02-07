@@ -21,6 +21,7 @@ const Console = () => {
 
 export default ({ challenge, children }) => {
     const [console, setConsole] = useState(false);
+    const [brief, setBrief] = useState(true);
     const api = useContext(apiContext);
     const [content, setContent] = useState('');
 
@@ -33,7 +34,9 @@ export default ({ challenge, children }) => {
     };
 
     return <div className={"ide-split"}>
-        <div className={"ide-brief"}><div>{children}</div></div>
+        {brief &&
+            <div className={"ide-brief"}><div>{children}</div></div>
+        }
         <div className={"ide-editor"}>
             <div className={"editor-top"}>
                 <CodeInput val={content} onChange={setContent} />
@@ -43,6 +46,9 @@ export default ({ challenge, children }) => {
                     <div className={"etb-button"} onClick={stop}>Stop</div>
                     : <div className={"etb-button run"} onClick={run}>Run</div>
                 }
+                <div className={"etb-button"} onClick={() => setBrief(!brief)}>
+                    {brief ? "Hide" : "Show"} Briefing
+                </div>
                 <div style={{ flexGrow: 1 }} />
                 <div className={"etb-button"} onClick={() => setConsole(!console)}>
                     {console ? "Hide" : "Show"} Output

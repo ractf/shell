@@ -5,6 +5,7 @@ import AppWrap from './containers/controllers/App';
 import * as serviceWorker from './serviceWorker';
 import setupPlugins from "./plugins";
 import { AppContainer } from 'react-hot-loader';
+import Loadable from "react-loadable";
 
 //Sentry.init({dsn: "https://b51135cca11047fe979c7b44cc35a404@sentry.io/1815863"});
 setupPlugins();
@@ -17,6 +18,7 @@ const render = () => {
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
+Loadable.preloadAll();
 
 render();
 

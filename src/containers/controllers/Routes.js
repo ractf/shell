@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import asyncComponent from "./AsyncComponent";
+import Loadable from "react-loadable";
 
 import { TeamsList, UsersList } from "../pages/Lists";
 import { NotFound } from "../pages/ErrorPages";
@@ -13,21 +13,29 @@ import { APIContext } from "./Contexts";
 
 import { plugins } from "ractf";
 
-const SettingsPage = asyncComponent(() => import("../pages/SettingsPage"));
-const Leaderboard = asyncComponent(() => import("../pages/Leaderboard"));
+const Loading = () => "Loading";
+const asyncRoute = (loader) => (
+    Loadable({
+        loader: loader,
+        loading: Loading,
+    })
+);
 
-const PasswordReset = asyncComponent(() => import("../pages/auth/PasswordReset"));
-const PostLogin = asyncComponent(() => import("../pages/auth/PostLogin"));
-const SignUp = asyncComponent(() => import("../pages/auth/SignUp"));
-const Login = asyncComponent(() => import("../pages/auth/Login"));
+const SettingsPage = asyncRoute(() => import("../pages/SettingsPage"));
+const Leaderboard = asyncRoute(() => import("../pages/Leaderboard"));
 
-const ChallengePage = asyncComponent(() => import("../pages/ChallengePage"));
-const AdminPage = asyncComponent(() => import("../pages/AdminPage"));
-const TeamPage = asyncComponent(() => import("../pages/TeamPage"));
-const HomePage = asyncComponent(() => import("../pages/HomePage"));
-const Campaign = asyncComponent(() => import("../pages/Campaign"));
-const Profile = asyncComponent(() => import("../pages/Profile"));
-const Debug = asyncComponent(() => import("../pages/Debug"));
+const PasswordReset = asyncRoute(() => import("../pages/auth/PasswordReset"));
+const PostLogin = asyncRoute(() => import("../pages/auth/PostLogin"));
+const SignUp = asyncRoute(() => import("../pages/auth/SignUp"));
+const Login = asyncRoute(() => import("../pages/auth/Login"));
+
+const ChallengePage = asyncRoute(() => import("../pages/ChallengePage"));
+const AdminPage = asyncRoute(() => import("../pages/AdminPage"));
+const TeamPage = asyncRoute(() => import("../pages/TeamPage"));
+const HomePage = asyncRoute(() => import("../pages/HomePage"));
+const Campaign = asyncRoute(() => import("../pages/Campaign"));
+const Profile = asyncRoute(() => import("../pages/Profile"));
+const Debug = asyncRoute(() => import("../pages/Debug"));
 
 
 const Logout = () => {
