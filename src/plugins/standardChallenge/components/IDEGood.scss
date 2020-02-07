@@ -31,6 +31,15 @@
             width: 100%;
         }
 
+        &.ie-row {
+            flex-direction: row;
+
+            & > * {
+                height: 100%;
+                width: 50%;
+            }
+        }
+
         .ide-console {
             font-family: $monoStack;
             background-color: #111;
@@ -44,6 +53,9 @@
         .editor-top {
             background-color: $bg-l1;
             overflow-y: auto;
+            & > div:first-child {
+                height: calc(100% - 32px);
+            }
         }
 
         .editor-toolbar {

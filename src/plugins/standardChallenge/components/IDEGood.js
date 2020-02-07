@@ -37,23 +37,23 @@ export default ({ challenge, children }) => {
         {brief &&
             <div className={"ide-brief"}><div>{children}</div></div>
         }
-        <div className={"ide-editor"}>
+        <div className={"ide-editor" + (brief ? "" : " ie-row")}>
             <div className={"editor-top"}>
                 <CodeInput val={content} onChange={setContent} />
-            </div>
-            <div className={"editor-toolbar"}>
-                {api.codeRunState.running ?
-                    <div className={"etb-button"} onClick={stop}>Stop</div>
-                    : <div className={"etb-button run"} onClick={run}>Run</div>
-                }
-                <div className={"etb-button"} onClick={() => setBrief(!brief)}>
-                    {brief ? "Hide" : "Show"} Briefing
+                <div className={"editor-toolbar"}>
+                    {api.codeRunState.running ?
+                        <div className={"etb-button"} onClick={stop}>Stop</div>
+                        : <div className={"etb-button run"} onClick={run}>Run</div>
+                    }
+                    <div className={"etb-button"} onClick={() => setBrief(!brief)}>
+                        {brief ? "Hide" : "Show"} Briefing
+                    </div>
+                    <div style={{ flexGrow: 1 }} />
+                    <div className={"etb-button"} onClick={() => setConsole(!console)}>
+                        {console ? "Hide" : "Show"} Output
+                    </div>
+                    <div className={"etb-button warn"}>Reset</div>
                 </div>
-                <div style={{ flexGrow: 1 }} />
-                <div className={"etb-button"} onClick={() => setConsole(!console)}>
-                    {console ? "Hide" : "Show"} Output
-                </div>
-                <div className={"etb-button warn"}>Reset</div>
             </div>
             {console && <Console />}
         </div>
