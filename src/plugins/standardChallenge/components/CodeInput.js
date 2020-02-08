@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import MonacoEditor from 'react-monaco-editor';
 
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -14,45 +13,10 @@ import "./Theme.scss";
 export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
     const [value, setValue] = useState(val || '');
 
-    /*
-    const editorWillMount = ({ editor }) => {
-        editor.defineTheme("ractf", {
-            base: "vs-dark",
-            inherit: true,
-            rules: [{ background: colours.bg }],
-            colors: {
-                'editor.foreground': colours.fg,
-                'editor.background': colours.bg,
-                'editorCursor.foreground': colours.fg,
-                'editor.lineHighlightBackground': colours.bg_d0,
-                'editorLineNumber.foreground': colours.bg_l5,
-                'editor.selectionBackground': colours.bg_l1,
-                'editor.inactiveSelectionBackground': colours.bg_l2
-            }
-          });
-    };
-
-    const options = {
-        readOnly: readOnly,
-        automaticLayout: true,
-    };
-    return (
-        <MonacoEditor
-            width={width || "100%"}
-            height={height || "100%"}
-            language={lang}
-            theme="ractf"
-            value={value}
-            options={options}
-            editorWillMount={editorWillMount}
-            onChange={onChange || (val => setValue(val))}
-        />
-    );
-    */
     return <div className={"ractf-code"}><Editor
         value={value}
         className={"ractf-code-editor"}
-        onValueChange={v => {setValue(v); if (onChange) onChange(v)}}
+        onValueChange={v => {setValue(v); if (onChange) onChange(v);}}
         highlight={code =>
             highlight(code, languages.js)
               .split('\n')

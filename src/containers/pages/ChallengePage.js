@@ -28,7 +28,7 @@ export default () => {
 
     if (!tab || !challenge) {
         if (!api.challenges || !api.challenges.length) return <></>;
-        return <Redirect to={"/404"} />
+        return <Redirect to={"/404"} />;
     }
 
     handler = plugins.categoryType[tab.type];
@@ -54,4 +54,4 @@ export default () => {
     return <Page title={challenge ? challenge.name : "Challenges"}>
         {chalEl}
     </Page>;
-}
+};

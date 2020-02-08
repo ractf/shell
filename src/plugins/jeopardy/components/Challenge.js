@@ -1,5 +1,5 @@
 import React from "react";
-import "./Challenge.scss"
+import "./Challenge.scss";
 
 
 export default ({ name, done, click, points }) => {
@@ -9,4 +9,4 @@ export default ({ name, done, click, points }) => {
     return <div className={cn} onMouseDown={(e => (e.target.click && e.target.click()))} onClick={done ? click : null}>
         <span>{name}</span>
     </div>;
-}
+};

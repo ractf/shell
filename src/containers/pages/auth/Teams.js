@@ -1,11 +1,15 @@
 import React, { useState, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 
-import { apiContext, Form, FormError, Page, SectionTitle2, HR, Input, Button, ButtonRow, SubtleText } from "ractf";
+import {
+    apiContext, apiEndpoints, Form, FormError, Page, SectionTitle2, HR, Input,
+    Button, ButtonRow, SubtleText
+} from "ractf";
 import { Wrap } from "./Parts";
 
 
 export const JoinTeam = () => {
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
 
     const [message, setMessage] = useState("");
@@ -20,13 +24,13 @@ export const JoinTeam = () => {
             return setMessage("Team name missing");
 
         setLocked(true);
-        api.joinTeam(name, password).then(resp => {
+        endpoints.joinTeam(name, password).then(resp => {
             setSuccess(true);
         }).catch(e => {
-            setMessage(api.getError(e));
+            setMessage(endpoints.getError(e));
             setLocked(false);
-        })
-    }
+        });
+    };
 
     return <Page vCentre>
         <Wrap>{success ?
@@ -58,10 +62,11 @@ export const JoinTeam = () => {
 
         </Wrap>
     </Page>;
-}
+};
 
 
 export const CreateTeam = () => {
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
 
     const [message, setMessage] = useState("");
@@ -78,13 +83,13 @@ export const CreateTeam = () => {
             return setMessage("Password too short");
 
         setLocked(true);
-        api.createTeam(name, password).then(resp => {
+        endpoints.createTeam(name, password).then(resp => {
             setSuccess(true);
         }).catch(e => {
-            setMessage(api.getError(e));
+            setMessage(endpoints.getError(e));
             setLocked(false);
-        })
-    }
+        });
+    };
 
     return <Page vCentre>
         <Wrap>{success ?
@@ -110,7 +115,8 @@ export const CreateTeam = () => {
                     <Input name={"web"} placeholder={"Website"} />*/}
                     <Input autofill={"off"} name={"password"} placeholder={"Team Secret"} password />
                     <div style={{opacity: .5}}>
-                        You'll be able to view this secret again later, so we can't store it hashed. Don't put sensitive things like your bank details here.
+                        You'll be able to view this secret again later, so we can't store it hashed.
+                        Don't put sensitive things like your bank details here.
                     </div>
 
                     {message && <FormError>{message}</FormError>}
@@ -120,4 +126,4 @@ export const CreateTeam = () => {
             </>}
         </Wrap>
     </Page>;
-}
+};

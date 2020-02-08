@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import zxcvbn from "zxcvbn";
 
-import { Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, apiContext } from "ractf";
+import {
+    Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, apiEndpoints
+} from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
 
 export default () => {
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
 
@@ -24,17 +26,17 @@ export default () => {
         
         const strength = zxcvbn(passwd1);
         if (strength.score < 3) {
-            return setMessage((strength.feedback.warning || "Password too weak."))
+            return setMessage((strength.feedback.warning || "Password too weak."));
         }
 
         setLocked(true);
-        api.register(username, passwd1, email).catch(
+        endpoints.register(username, passwd1, email).catch(
             message => {
-                setMessage(api.getError(message))
+                setMessage(endpoints.getError(message));
                 setLocked(false);
             }
         );
-    }
+    };
 
     return <Page vCentre>
         <Wrap>

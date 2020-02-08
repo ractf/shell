@@ -10,7 +10,7 @@ export default class SwitchButton extends Component {
 
         this.state = {
             active: this.props.default || 0
-        }
+        };
     }
 
     makeActive(n) {
@@ -18,7 +18,7 @@ export default class SwitchButton extends Component {
             this.setState({ active: n });
 
             if (this.props.onChange) {
-                this.props.onChange(this.props.options[n][1])
+                this.props.onChange(this.props.options[n][1]);
             }
         };
     }

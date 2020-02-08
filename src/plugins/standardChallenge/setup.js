@@ -11,4 +11,4 @@ export default () => {
 
     registerPlugin("challengeType", "__default", { component: chal });
     registerPlugin("challengeType", "code", { component: chal });
-}
+};

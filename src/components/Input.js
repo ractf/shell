@@ -14,7 +14,7 @@ export default class Input extends Component {
             val: props.val || "",
             valid: true,
             showPass: false,
-        }
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.inputRef = createRef();
@@ -63,38 +63,41 @@ export default class Input extends Component {
         if (this.props.hidden) wrapClass += " hidden";
         if (this.props.light) wrapClass += " light";
 
-        return <div className={"inputMetaWrap"}><div style={{minWidth: this.props.width || "100%"}} className={wrapClass}>
-            {this.props.rows ?
-                <textarea
-                    ref={this.inputRef}
-                    value={this.state.val}
-                    onChange={this.handleChange}
-                    rows={this.props.rows}
-                    autofill={this.props.autofill}
-                    className={this.props.monospace ? "monospaced" : ""}
-                    disabled={this.props.disabled} />
-                : <input
-                    onKeyDown={this.keyDown}
-                    ref={this.inputRef}
-                    value={this.state.val}
-                    type={(this.props.password && !this.state.showPass) ? "password" : "text"}
-                    onChange={this.handleChange}
-                    autofill={this.props.autofill}
-                    className={this.props.monospace ? "monospaced" : ""}
-                    disabled={this.props.disabled} />}
-            {this.props.center || this.props.noCount ? null
-                : <div className={"lengthCounter"}>{this.state.val.length}{this.props.limit
-                    ? "/" + this.props.limit
-                    : ""
-                }</div>}
-            {this.props.password ? <div className={"styledEye"} onClick={this.togglePwd}>
-                {this.state.showPass ? <FaEyeSlash /> : <FaEye />}
-            </div> : null}
-            {this.props.zxcvbn &&
-                <div className={"inputStrength"} data-val={this.state.val.length ? this.props.zxcvbn(this.state.val).score + 1 : 0} />}
-            {this.props.placeholder && this.state.val.length === 0 &&
-                <div className={"placeholder" + (this.props.monospace ? " monospaced" : "")}>
-                    {this.props.placeholder}</div>}
-        </div></div>
+        return <div className={"inputMetaWrap"}>
+            <div style={{ minWidth: this.props.width || "100%" }} className={wrapClass}>
+                {this.props.rows ?
+                    <textarea
+                        ref={this.inputRef}
+                        value={this.state.val}
+                        onChange={this.handleChange}
+                        rows={this.props.rows}
+                        autofill={this.props.autofill}
+                        className={this.props.monospace ? "monospaced" : ""}
+                        disabled={this.props.disabled} />
+                    : <input
+                        onKeyDown={this.keyDown}
+                        ref={this.inputRef}
+                        value={this.state.val}
+                        type={(this.props.password && !this.state.showPass) ? "password" : "text"}
+                        onChange={this.handleChange}
+                        autofill={this.props.autofill}
+                        className={this.props.monospace ? "monospaced" : ""}
+                        disabled={this.props.disabled} />}
+                {this.props.center || this.props.noCount ? null
+                    : <div className={"lengthCounter"}>{this.state.val.length}{this.props.limit
+                        ? "/" + this.props.limit
+                        : ""
+                    }</div>}
+                {this.props.password ? <div className={"styledEye"} onClick={this.togglePwd}>
+                    {this.state.showPass ? <FaEyeSlash /> : <FaEye />}
+                </div> : null}
+                {this.props.zxcvbn &&
+                    <div className={"inputStrength"}
+                         data-val={this.state.val.length ? this.props.zxcvbn(this.state.val).score + 1 : 0} />}
+                {this.props.placeholder && this.state.val.length === 0 &&
+                    <div className={"placeholder" + (this.props.monospace ? " monospaced" : "")}>
+                        {this.props.placeholder}</div>}
+            </div>
+        </div>;
     }
 }

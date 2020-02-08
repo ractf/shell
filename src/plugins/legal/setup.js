@@ -9,4 +9,4 @@ export default () => {
     registerPlugin("page", "/about", AboutPage);
     registerPlugin("page", "/conduct", ConductPage);
     registerPlugin("page", "/privacy", PrivacyPage);
-}
+};

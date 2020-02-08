@@ -2,18 +2,20 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-import { apiContext, appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection } from "ractf";
+import {
+    appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
+    apiEndpoints
+} from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
-//import IDE from "./IDE";
-import { default as IDE } from "./IDEGood";
+import IDE from "./IDEGood";
 
 import "./Challenge.scss";
 import { ButtonRow } from "../../../components/Button";
 import CodeInput from "./CodeInput";
 
-const HintModal = () => <h1>hi</h1>
+const HintModal = () => <h1>hi</h1>;
 
 
 export default ({ challenge, isEditor, isCreator, saveEdit }) => {
@@ -24,10 +26,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
     const [hint, setHint] = useState(null);
+    const [mdRaw, setMdRaw] = useState(JSON.stringify(challenge.metadata, null, 4));
 
     const regex = /^ractf{.+}$/;
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
 
     const changeFlag = (flag) => {
@@ -47,10 +50,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 This hint will deduct {hint.cost} points from this challenge.
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
-                api.useHint(hint.id).then(body =>
+                endpoints.useHint(hint.id).then(body =>
                     app.alert(hint.name + ":\n" + body)
                 ).catch(e =>
-                    app.alert("Error using hint:\n" + api.getError(e))
+                    app.alert("Error using hint:\n" + endpoints.getError(e))
                 );
             }).catch(() => { });
         };
@@ -59,14 +62,14 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     const tryFlag = challenge => {
         return ({ flag }) => {
             setLocked(true);
-            api.attemptFlag(flag, challenge).then(resp => {
+            endpoints.attemptFlag(flag, challenge).then(resp => {
                 if (resp.d.correct) {
                     app.alert("Flag correct!");
                     challenge.solved = true;
 
                     // NOTE: This is potentially very slow. If there are performance issues in production, this is
                     // where to look first!
-                    api._reloadCache();
+                    endpoints._reloadCache();
                     /*  // This is the start of what would be the code to rebuild the local cache
                     api.challenges.forEach(group => group.chals.forEach(chal => {
                         if (chal.deps.indexOf(challenge.id) !== -1) {
@@ -79,43 +82,42 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 }
                 setLocked(false);
             }).catch(e => {
-                setMessage(api.getError(e));
-                console.log(e);
+                setMessage(endpoints.getError(e));
                 setLocked(false);
             });
-        }
+        };
     };
 
     const addFile = () => {
-        app.promptConfirm({message: "New file",},
-            [{name: 'name', placeholder: 'File name', label: "Name"},
-             {name: 'url', placeholder: 'File URL', label: "URL"},
-             {name: 'size', placeholder: 'File size', label: "Size (bytes)", format: /\d+/}]
+        app.promptConfirm({ message: "New file", },
+            [{ name: 'name', placeholder: 'File name', label: "Name" },
+            { name: 'url', placeholder: 'File URL', label: "URL" },
+            { name: 'size', placeholder: 'File size', label: "Size (bytes)", format: /\d+/ }]
         ).then(({ name, url, size }) => {
 
             if (!size.match(/\d+/)) return app.alert("Invalid file size!");
 
-            api.newFile(challenge.id, name, url, size).then(() =>
+            endpoints.newFile(challenge.id, name, url, size).then(() =>
                 app.alert("New file added!")
             ).catch(e =>
-                app.alert("Error creating new file:\n" + api.getError(e))
+                app.alert("Error creating new file:\n" + endpoints.getError(e))
             );
         });
     };
 
     const addHint = () => {
-        app.promptConfirm({message: "New hint"},
-            [{name: 'name', placeholder: 'Hint name', label: "Name"},
-             {name: 'cost', placeholder: 'Hint cost', label: "Cost", format: /\d+/},
-             {name: 'body', placeholder: 'Hint text', label: "Message", rows: 5}]
+        app.promptConfirm({ message: "New hint" },
+            [{ name: 'name', placeholder: 'Hint name', label: "Name" },
+            { name: 'cost', placeholder: 'Hint cost', label: "Cost", format: /\d+/ },
+            { name: 'body', placeholder: 'Hint text', label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
 
             if (!cost.match(/\d+/)) return app.alert("Invalid file size!");
 
-            api.newHint(challenge.id, name, cost, body).then(() =>
+            endpoints.newHint(challenge.id, name, cost, body).then(() =>
                 app.alert("New hint added!")
             ).catch(e =>
-                app.alert("Error creating new hint:\n" + api.getError(e))
+                app.alert("Error creating new hint:\n" + endpoints.getError(e))
             );
         });
     };
@@ -155,11 +157,23 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     }
 
     if (isEditRaw) {
-        return <div style={{ width: "100%" }}><Form handle={() => {}}>
-            <CodeInput lang={"javascript"} val={JSON.stringify(challenge, null, 4)} />
+        const saveEditRaw = () => {
+            let metadata;
+            try {
+                metadata = JSON.parse(mdRaw);
+            } catch (e) {
+                app.alert(<>Failed to save metadata:<br /><br /><pre><code>{e.toString()}</code></pre></>);
+                return;
+            }
+            challenge.metadata = metadata;
+            setEditRaw(false);
+        };
+
+        return <div style={{ width: "100%" }}><Form handle={() => { }}>
+            <CodeInput lang={"javascript"} val={mdRaw} onChange={setMdRaw} />
             <ButtonRow>
                 <Button click={() => setEditRaw(false)}>Cancel</Button>
-                <Button submit>Save Edit</Button>
+                <Button click={() => saveEditRaw()}>Save Edit</Button>
             </ButtonRow>
         </Form></div>;
     }
@@ -181,19 +195,21 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 val={challenge.flag_type} />
             <label htmlFor={"flag"}>Challenge flag</label>
             <Input placeholder="Challenge flag"
-                name={"flag"} monospace format={{ test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } } }}
+                name={"flag"} monospace format={{
+                    test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
+                }}
                 val={challenge.flag} />
 
             <ButtonRow>
                 <Button click={() => setEditFiles(true)}>Edit Files</Button>
                 <Button click={() => setEditHints(true)}>Edit Hints</Button>
-                <Button click={() => setEditRaw(true)}>Edit Raw</Button>
+                <Button click={() => setEditRaw(true)}>Edit Metadata</Button>
             </ButtonRow>
 
             <div>
                 Always Unlocked
                 <Radio name={"autoUnlock"} value={challenge.auto_unlock}
-                       options={[["Enabled", true], ["Disabled", false]]} />
+                    options={[["Enabled", true], ["Disabled", false]]} />
             </div>
 
             <ButtonRow>
@@ -205,7 +221,9 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                     <ReactMarkdown
                         source={challenge.description}
                         renderers={{
-                            link: ({ href, children }) => <a rel="noopener noreferrer" target="_blank" href={href}>{children}</a>,
+                            link: ({ href, children }) => (
+                                <a rel="noopener noreferrer" target="_blank" href={href}>{children}</a>
+                            ),
                             delete: ({ children }) => <span className="redacted">{children}</span>
                         }}
                     />
@@ -214,13 +232,13 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 {challenge.solved ? <>
                     You have already solved this challenge!
                 </> : <Form handle={tryFlag(challenge)} locked={locked}>
-                    <Input placeholder="Flag format: ractf{...}"
-                        format={partial} name={"flag"}
-                        callback={changeFlag} light monospace
-                        center width={"80%"} />
-                    {message && <FormError>{message}</FormError>}
-                    <Button disabled={!flagValid} submit>Attempt flag</Button>
-                </Form>}
+                        <Input placeholder="Flag format: ractf{...}"
+                            format={partial} name={"flag"}
+                            callback={changeFlag} light monospace
+                            center width={"80%"} />
+                        {message && <FormError>{message}</FormError>}
+                        <Button disabled={!flagValid} submit>Attempt flag</Button>
+                    </Form>}
 
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                     {challenge.files.map(file => {
@@ -230,23 +248,24 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 {challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
                     {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
                         return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.hint_used}
-                                     points={hint.cost} id={hint.id} key={hint.id} />;
+                            points={hint.cost} id={hint.id} key={hint.id} />;
                     })}
                 </div>}
             </>}
     </>;
 
-    let solveMsg = challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet";
+    if (!isEditor) {
+        let solveMsg = challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet";
 
-    chalContent = <SBTSection subTitle={challenge.base_score + " points - " + solveMsg} title={challenge.name}>
-        <Link className={"backToChals"} to={".."}>Back to challenges</Link>
-        {chalContent}
-    </SBTSection>
-
-    if (1 || challenge.flag_type === "code")
-        return <IDE challenge={challenge}>
+        chalContent = <SBTSection subTitle={challenge.base_score + " points - " + solveMsg} title={challenge.name}>
+            <Link className={"backToChals"} to={".."}>Back to challenges</Link>
             {chalContent}
-        </IDE>;
-    return chalContent;
+        </SBTSection>;
 
+        if (challenge.flag_type === "code")
+            chalContent = <IDE challenge={challenge}>
+                {chalContent}
+            </IDE>;
+    }
+    return chalContent;
 };

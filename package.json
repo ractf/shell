@@ -38,8 +38,6 @@
     "jest-resolve": "24.7.1",
     "jest-watch-typeahead": "0.3.0",
     "mini-css-extract-plugin": "0.5.0",
-    "monaco-editor": "^0.19.3",
-    "monaco-editor-webpack-plugin": "^1.8.2",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
@@ -62,7 +60,6 @@
     "react-loadable": "^5.5.0",
     "react-markdown": "^4.3.1",
     "react-moment": "^0.9.7",
-    "react-monaco-editor": "^0.33.0",
     "react-panelgroup": "^1.0.10",
     "react-router-dom": "^5.1.2",
     "react-simple-code-editor": "^0.11.0",
@@ -91,6 +88,17 @@
     "extends": "react-app",
     "globals": {
       "__COMMIT_HASH__": "readonly"
+    },
+    "rules": {
+      "max-len": [
+        "warn",
+        120,
+        4
+      ],
+      "semi": [
+        "warn",
+        "always"
+      ]
     }
   },
   "browserslist": {

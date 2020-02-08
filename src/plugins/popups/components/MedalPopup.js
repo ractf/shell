@@ -7,7 +7,7 @@ import "./Style.scss";
 
 export default ({ popup }) => {
     const medal = plugins.medal[popup.medal];
-    if (!medal) return <div className={"medalWrap"}>Unknown medal type '{popup.medal}'</div>
+    if (!medal) return <div className={"medalWrap"}>Unknown medal type '{popup.medal}'</div>;
 
     return <div className={"medalOuterWrap"}>
         <div className={"medalWrap"}>
@@ -15,5 +15,5 @@ export default ({ popup }) => {
             <div>{ medal.description }</div>
         </div>
         <div className={"medalIcon"}>{ medal.icon }</div>
-    </div>
+    </div>;
 };

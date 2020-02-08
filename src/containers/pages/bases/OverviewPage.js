@@ -3,7 +3,7 @@ import React from "react";
 import { SectionH2, SectionHeading, TextBlock } from "../../../components/Misc";
 import ListPage from "./ListPage";
 
-import Page from "./Page"
+import Page from "./Page";
 
 
 export default (props) =>

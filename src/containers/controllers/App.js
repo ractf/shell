@@ -10,10 +10,10 @@ import { AppContext } from "./Contexts";
 import Routes from "./Routes";
 import { API } from "./API";
 
-import { plugins, apiContext, wsContext, Spinner, SectionTitle, Button } from "ractf";
+import { plugins, apiContext, apiEndpoints, wsContext, Spinner, SectionTitle, Button } from "ractf";
 
 import lockImg from "./spine.png";
-import bgm from "./synthwave.mp3"
+import bgm from "./synthwave.mp3";
 import "./App.scss";
 
 
@@ -23,7 +23,7 @@ const LOADED_TIMEOUT = 3000;
 
 const SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
     <img alt={""} src={lockImg} />
-    <span>{ text }</span>
+    <span>{text}</span>
 </div>;
 
 
@@ -63,7 +63,8 @@ Keyboard interrupt received, exiting.
                 resp = `rash: ${cmd}: command not found\n`;
             }
 
-            setScrollback(scrollback + lineBuffer + "\n" + resp + `[www-data@ractfhost1 ${(d2 || dir)[(d2 || dir).length - 1] || "/"}]$ `);
+            setScrollback(scrollback + lineBuffer + "\n" + resp +
+                `[www-data@ractfhost1 ${(d2 || dir)[(d2 || dir).length - 1] || "/"}]$ `);
             setLineBuffer("");
         } else {
             setLineBuffer(lineBuffer + String.fromCharCode(e.which));
@@ -72,13 +73,13 @@ Keyboard interrupt received, exiting.
 
     const onKeyDown = e => {
         if ((e.keyCode || e.which) === 8) {
-            setLineBuffer(lineBuffer.substring(0, lineBuffer.length - 1))
+            setLineBuffer(lineBuffer.substring(0, lineBuffer.length - 1));
         }
     };
 
     return <div className={"vimDiv"} tabIndex={"0"} onKeyDown={onKeyDown} onKeyPress={onKeyPress}>
         {scrollback}{lineBuffer}
-    </div>
+    </div>;
 };
 
 function useInterval(callback, delay) {
@@ -102,6 +103,7 @@ function useInterval(callback, delay) {
 const wave = { on: false, audio: null };
 
 const SiteLocked = ({ setLoaded, setHasCode }) => {
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const [countdownText, setCountdownText] = useState("");
     const [swc, setWave] = useState(0);
@@ -149,8 +151,8 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
 
         if (delta < 0) {
             setLoaded(false);
-            api.openSite();
-            setTimeout(() => { setLoaded(true) }, LOADED_TIMEOUT);
+            endpoints.openSite();
+            setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
         }
     }, 100);
 
@@ -173,7 +175,8 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
             const drawShard = (x, y, scale, angle) => {
                 ctx.translate(x, y);
                 ctx.rotate(angle);
-                ctx.drawImage(image, -image.width * scale, -image.height * scale, image.width * scale, image.height * scale);
+                ctx.drawImage(image, -image.width * scale, -image.height * scale,
+                    image.width * scale, image.height * scale);
                 ctx.rotate(-angle);
                 ctx.translate(-x, -y);
             };
@@ -185,7 +188,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
                     scale: (Math.random() ** 4) / 2 + 0.5,
                     angle: 0,
                     rotate: (Math.random() - 0.5) / 4,
-                })
+                });
             }
 
             let shard;
@@ -263,7 +266,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
         let uname = prompt("c1");
         let passwd = prompt("c2");
         let otp = prompt("c3");
-        api.login(uname, passwd, otp);
+        endpoints.login(uname, passwd, otp);
     };
 
     if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
@@ -274,7 +277,7 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
         <div className={"siteCountdown"}>Unlock in {countdownText}</div>
 
         <div className={"slide" + (wave.on ? " on" : "")} onClick={() => {
-            wave.on = !wave.on
+            wave.on = !wave.on;
             setWave(swc + 1);
             if (wave.audio) {
                 wave.audio.loop = true;
@@ -289,15 +292,16 @@ const SiteLocked = ({ setLoaded, setHasCode }) => {
 
 
 const PopupMessage = ({ data }) => {
-    const api = useContext(apiContext);
-    
-    return <div onClick={() => api.hidePopup(data.id)}>
+    const endpoints = useContext(apiEndpoints);
+
+    return <div onClick={() => endpoints.hidePopup(data.id)}>
         <div>{data.title}</div>
         <div>{data.body}</div>
-    </div>
+    </div>;
 };
 
 const App = () => {
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const ws = useContext(wsContext);
     window.__api = api;
@@ -344,9 +348,8 @@ const App = () => {
 
     // Countdown
     useEffect(() => {
-        api.getCountdown();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        endpoints.getCountdown();
+    }, [endpoints]);
 
     // Vim-mode
     useEffect(() => {
@@ -357,7 +360,8 @@ const App = () => {
                 return;
             typedText.current.push(event.keyCode);
             if (typedText.current.length > MAGIC.length)
-                typedText.current = typedText.current.slice(typedText.current.length - MAGIC.length, typedText.current.length);
+                typedText.current = typedText.current.slice(typedText.current.length - MAGIC.length,
+                    typedText.current.length);
             if (JSON.stringify(typedText.current) === JSON.stringify(MAGIC))
                 setConsole(true);
         };
@@ -367,7 +371,7 @@ const App = () => {
 
     // Warning banner
     useEffect(() => {
-        setTimeout(() => { setLoaded(true) }, LOADED_TIMEOUT);
+        setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
     }, []);
 
     if (!process.env.REACT_APP_NO_SITE_LOCK)
@@ -382,7 +386,9 @@ const App = () => {
     };
     let popupsEl = popups.map((popup, n) => {
         let handler = plugins.popup[popup.type];
-        if (!handler) return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>Plugin handler missing for '{popup.type}'!</div>;
+        if (!handler) return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>
+            Plugin handler missing for '{popup.type}'!
+        </div>;
         return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>{React.createElement(
             handler.component, { popup: popup, key: n }
         )}</div>;
@@ -422,7 +428,8 @@ const App = () => {
             </div>
 
             {!ws.connected &&
-                <SpinningSpine text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />
+                <SpinningSpine
+                    text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />
             }
         </AppContext.Provider>
     );

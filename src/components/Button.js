@@ -16,7 +16,7 @@ const Button = (props, ref) => {
             props.form.callback();
         if (props.to)
             history.push(props.to);
-    }
+    };
     let className = props.className || "";
     if (props.main) className += " main";
     if (props.medium) className += " medium";
@@ -24,7 +24,8 @@ const Button = (props, ref) => {
     if (props.warning) className += " warning";
     if (props.disabled) className += " disabled";
 
-    return <button className={className} disabled={props.disabled} ref={ref} onMouseDown={props.to && (e => e.target.click())} onClick={onClick}>
+    return <button className={className} disabled={props.disabled} ref={ref}
+                   onMouseDown={props.to && (e => e.target.click())} onClick={onClick}>
         {props.children}
     </button>;
 };

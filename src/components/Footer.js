@@ -30,5 +30,5 @@ export default () => {
             <p>&copy; 2019 RACTF Team</p>
             <p>Built by RACTF, for RACTF</p>
         </FootCol>
-    </footer>
+    </footer>;
 };

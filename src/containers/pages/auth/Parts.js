@@ -12,5 +12,5 @@ export const Wrap = ({ locked = false, children }) => {
     return <div className={"authWrap"}>
         {children}
         {locked && <div className={"authDarken"}><Spinner /></div>}
-    </div>
-}
+    </div>;
+};

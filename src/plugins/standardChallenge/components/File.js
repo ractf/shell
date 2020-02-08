@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { FaFile } from "react-icons/fa";
 
-import { apiContext, appContext } from "ractf";
+import { appContext, apiEndpoints } from "ractf";
 
 import "./Challenge.scss";
 
 
 export default ({ name, url, size, id, isEdit }) => {
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
-    const api = useContext(apiContext);
 
     const formatBytes = bytes => {
         if (bytes === 0) return '0 Bytes';
@@ -30,10 +30,10 @@ export default ({ name, url, size, id, isEdit }) => {
 
             if (!size.toString().match(/\d+/)) return app.alert("Invalid file size!");
 
-            api.editFile(id, name, url, size).then(() =>
+            endpoints.editFile(id, name, url, size).then(() =>
                 app.alert("File edited!")
             ).catch(e =>
-                app.alert("Error editing file:\n" + api.getError(e))
+                app.alert("Error editing file:\n" + endpoints.getError(e))
             );
         });
     };
@@ -56,4 +56,4 @@ export default ({ name, url, size, id, isEdit }) => {
             <div className={"challengeLinkMeta"}>{formatBytes(size)}</div>
         </div>
     </div>;
-}
+};

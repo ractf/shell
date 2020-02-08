@@ -4,7 +4,7 @@ import axios from "axios";
 
 import WS from "./WS";
 
-import { APIContext } from "./Contexts";
+import { APIContext, APIEndpoints } from "./Contexts";
 
 
 class APIClass extends Component {
@@ -56,22 +56,15 @@ class APIClass extends Component {
         TEAM: "/teams/",
 
         STATS: "/stats/",
-        LEADERBOARD: "/leaderboard/",
-        DEBUG_VERSION: "/debug/version",
-    };
-    ENSURABLE = {
-        allUsers: this.ENDPOINTS.USER_LIST,
-        allUsersAdmin: this.ENDPOINTS.USER_LIST_ADMIN,
-        allTeams: this.ENDPOINTS.TEAM_LIST,
-        allTeamsAdmin: this.ENDPOINTS.TEAM_LIST_ADMIN,
-        stats: this.ENDPOINTS.STATS,
-        adminConfig: this.ENDPOINTS.ADMIN_CONFIG,
-        leaderboard: this.ENDPOINTS.LEADERBOARD,
-        backendVersion: this.ENDPOINTS.DEBUG_VERSION,
     };
 
     constructor(props) {
         super(props);
+
+        this._cache = {};
+        try {
+            this._cache = JSON.parse(localStorage.getItem("apiCache")) || {};
+        } catch (e) { };
 
         let userData, challenges, teamData, countdown, siteOpen, config;
         try {
@@ -110,42 +103,16 @@ class APIClass extends Component {
             siteOpen = false;
         }
 
-        this.state = {
-            popups: [],
+        this.endpoints = {
             hidePopup: this.hidePopup,
-
-            ready: false,
-            authenticated: !!userData,
-            user: userData,
-            challenges: challenges,
-            team: teamData,
-            config: config,
-            setup: this.setup,
-
-            codeRunState: { running: false },
 
             configGet: this.configGet,
             setConfigValue: this.setConfigValue,
             modifyUserAdmin: this.modifyUserAdmin,
             modifyTeamAdmin: this.modifyTeamAdmin,
-
-            allUsers: null,
-            allTeams: null,
-            allUsersAdmin: null,
-            allTeamsAdmin: null,
-            adminConfig: null,
-            leaderboard: null,
-            stats: null,
-            backendVersion: null,
-
-            siteOpen: siteOpen,
-            countdown: countdown,
             openSite: this.openSite,
 
             getCountdown: this.getCountdown,
-
-            getTeam: this.getTeam,
-            getUser: this.getUser,
 
             createChallenge: this.createChallenge,
             linkChallenges: this.linkChallenges,
@@ -176,13 +143,31 @@ class APIClass extends Component {
             newHint: this.newHint,
             useHint: this.useHint,
 
-            ensure: this.ensure,
             getError: this.getError,
 
             runCode: this.runCode,
             abortRunCode: this.abortRunCode,
 
             _reloadCache: this._reloadCache,
+            getCache: this.getCache,
+            cachedGet: this.cachedGet,
+        };
+        this.state = {
+            popups: [],
+
+            ready: false,
+            authenticated: !!userData,
+            user: userData,
+            challenges: challenges,
+            team: teamData,
+            config: config,
+            setup: this.setup,
+
+            codeRunState: { running: false },
+
+            siteOpen: siteOpen,
+            countdown: countdown,
+
         };
     }
 
@@ -195,7 +180,7 @@ class APIClass extends Component {
         try {
             config = (await this._getConfig()).d;
         } catch (e) {
-            return
+            return;
         }
 
         localStorage.setItem("config", JSON.stringify(config));
@@ -215,6 +200,18 @@ class APIClass extends Component {
     }
 
     // Helpers
+    getCache = route => {
+        return this._cache[route];
+    };
+
+    cachedGet = route => {
+        return this.get(route).then(data => data.d).then(data => {
+            this._cache[route] = data;
+            localStorage.setItem("apiCache", JSON.stringify(this._cache));
+            return data;
+        });
+    };
+
     getError = e => {
         if (e.response && e.response.data) {
             // We got a response from the server, but it wasn't happy with something
@@ -264,7 +261,7 @@ class APIClass extends Component {
     _reloadCache = async () => {
         let userData, teamData, challenges, ready = true;
         try {
-            userData = (await this.getUser("self")).d;
+            userData = await this.cachedGet("/members/self");
         } catch (e) {
             if (e.response && e.response.data)
                 return this.logout();
@@ -273,7 +270,7 @@ class APIClass extends Component {
         }
 
         try {
-            teamData = (await this.getTeam("self")).d;
+            teamData = await this.cachedGet("/teams/self");
         } catch (e) {
             if (e.request && e.request.status === 404) {
                 teamData = null;
@@ -321,33 +318,35 @@ class APIClass extends Component {
                         i.link = 0;
                     }
                 );
-                group.chals.forEach(
-                    i => {
-                        i.deps && i.deps.forEach(dep => {
-                            if (challenges[dep]) {
-                                let depChallenge = challenges[dep];
-                                if (depChallenge.metadata.x === i.metadata.x + 1 && depChallenge.metadata.y === i.metadata.y) {
-                                    i.link |= EAST;
-                                    depChallenge.link |= WEST;
-                                }
-                                if (depChallenge.metadata.x === i.metadata.x - 1 && depChallenge.metadata.y === i.metadata.y) {
-                                    i.link |= WEST;
-                                    depChallenge.link |= EAST;
-                                }
-                                if (depChallenge.metadata.x === i.metadata.x && depChallenge.metadata.y === i.metadata.y - 1) {
-                                    i.link |= NORTH;
-                                    depChallenge.link |= SOUTH;
-                                }
-                                if (depChallenge.metadata.x === i.metadata.x && depChallenge.metadata.y === i.metadata.y + 1) {
-                                    i.link |= SOUTH;
-                                    depChallenge.link |= NORTH;
-                                }
+                group.chals.forEach(i => {
+                    i.deps && i.deps.forEach(dep => {
+                        if (challenges[dep]) {
+                            let depChallenge = challenges[dep];
+                            if (depChallenge.metadata.x === i.metadata.x + 1 &&
+                                depChallenge.metadata.y === i.metadata.y) {
+                                i.link |= EAST;
+                                depChallenge.link |= WEST;
                             }
-                        });
-                    }
-                )
+                            if (depChallenge.metadata.x === i.metadata.x - 1 &&
+                                depChallenge.metadata.y === i.metadata.y) {
+                                i.link |= WEST;
+                                depChallenge.link |= EAST;
+                            }
+                            if (depChallenge.metadata.x === i.metadata.x &&
+                                depChallenge.metadata.y === i.metadata.y - 1) {
+                                i.link |= NORTH;
+                                depChallenge.link |= SOUTH;
+                            }
+                            if (depChallenge.metadata.x === i.metadata.x &&
+                                depChallenge.metadata.y === i.metadata.y + 1) {
+                                i.link |= SOUTH;
+                                depChallenge.link |= NORTH;
+                            }
+                        }
+                    });
+                });
             }
-        })
+        });
     };
 
     getUUID = () => {
@@ -364,24 +363,17 @@ class APIClass extends Component {
 
     addPopup = (title, body) => {
         let id = this.getUUID();
-        this.setState({ popups: [...this.state.popups, { title: title, body: body, id: id }] })
+        this.setState({ popups: [...this.state.popups, { title: title, body: body, id: id }] });
         setTimeout(() => {
             this.hidePopup(id);
         }, 10000);
     };
 
     hidePopup = (id) => {
-        this.setState({ popups: this.state.popups.filter(i => i.id !== id) })
+        this.setState({ popups: this.state.popups.filter(i => i.id !== id) });
     };
 
     // Endpoint Things
-    ensure = async type => {
-        return this.get(this.ENSURABLE[type]).then(data => {
-            this.setState({ [type]: data.d });
-            return data;
-        });
-    };
-
     configGet = (key, fallback) => {
         if (this.state.config && this.state.config.hasOwnProperty(key))
             return this.state.config[key];
@@ -436,14 +428,6 @@ class APIClass extends Component {
     modifyUserAdmin = (id, data) => this.post(this.ENDPOINTS.USER_MODIFY_ADMIN, { id: id, ...data });
     modifyTeamAdmin = (id, data) => this.post(this.ENDPOINTS.TEAM_MODIFY_ADMIN, { id: id, ...data });
 
-    getUser = (id) => {
-        return this.get(id === "self" || id === "me" ? this.ENDPOINTS.USER_SELF : this.ENDPOINTS.USER + id);
-    };
-
-    getTeam = (id) => {
-        return this.get(id === "self" || id === "me" ? this.ENDPOINTS.TEAM_SELF : this.ENDPOINTS.TEAM + id);
-    };
-
     modifyTeam = (teamId, data) => {
         return new Promise((resolve, reject) => {
             axios({
@@ -461,7 +445,7 @@ class APIClass extends Component {
         return new Promise((resolve, reject) => {
             this.post(this.ENDPOINTS.TEAM_CREATE, { name: name, password: password }
             ).then(async data => {
-                let team = (await this.getTeam("self")).d
+                let team = await this.cachedGet("/teams/self");
                 this.setState({ team: team });
                 localStorage.setItem("teamData", team);
 
@@ -474,7 +458,7 @@ class APIClass extends Component {
         return new Promise((resolve, reject) => {
             this.post(this.ENDPOINTS.TEAM_JOIN, { name: name, password: password }
             ).then(async data => {
-                let team = (await this.getTeam("self")).d
+                let team = await this.cachedGet("/teams/self");
                 this.setState({ team: team });
                 localStorage.setItem("teamData", team);
 
@@ -492,11 +476,11 @@ class APIClass extends Component {
             user: null,
             ready: true,
             challenges: [],
-        })
+        });
     };
 
     login = (username, password, otp = null) => {
-        let payload = { username: username, password: password }
+        let payload = { username: username, password: password };
         if (otp) payload.otp = otp;
 
         return new Promise((resolve, reject) => {
@@ -514,14 +498,26 @@ class APIClass extends Component {
     verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid }).then(data => {
         this._postLogin(data.d.token);
     });
-    createGroup = (name, desc, type) => this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc, type: type });
-    editGroup = (id, name, desc, type) => this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc, type: type });
-    editChallenge = (id, name, points, desc, flag_type, flag, autoUnlock, meta) =>
-        this.post(this.ENDPOINTS.CHALLENGE_EDIT, { id: id, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, auto_unlock: autoUnlock, meta: meta });
-    createChallenge = (group, name, points, desc, flag_type, flag, autoUnlock, meta) =>
-        this.post(this.ENDPOINTS.CHALLENGE_CREATE, { group: group, name: name, points: points, desc: desc, flag_type: flag_type, flag: flag, auto_unlock: autoUnlock, meta: meta });
+    createGroup = (name, desc, type) => (
+        this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc, type: type })
+    );
+    editGroup = (id, name, desc, type) => (
+        this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc, type: type })
+    );
+    editChallenge = (id, name, points, desc, flag_type, flag, autoUnlock, meta) => (
+        this.post(this.ENDPOINTS.CHALLENGE_EDIT, {
+            id: id, name: name, points: points, desc: desc, flag_type: flag_type,
+            flag: flag, auto_unlock: autoUnlock, meta: meta
+        })
+    );
+    createChallenge = (group, name, points, desc, flag_type, flag, autoUnlock, meta) => (
+        this.post(this.ENDPOINTS.CHALLENGE_CREATE, {
+            group: group, name: name, points: points, desc: desc, flag_type: flag_type,
+            flag: flag, auto_unlock: autoUnlock, meta: meta
+        })
+    );
     linkChallenges = (chal1, chal2, linkState) =>
-        this.post(this.ENDPOINTS.CHALLENGE_LINK, {cfrom: chal1.id, cto: chal2.id, state: linkState});
+        this.post(this.ENDPOINTS.CHALLENGE_LINK, { cfrom: chal1.id, cto: chal2.id, state: linkState });
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {
@@ -530,7 +526,7 @@ class APIClass extends Component {
             ).then(response => {
                 this.props.history.push("/login");
                 resolve();
-            }).catch(reject)
+            }).catch(reject);
         });
     };
 
@@ -541,7 +537,7 @@ class APIClass extends Component {
             ).then(response => {
                 this.props.history.push("/register/email");
                 resolve();
-            }).catch(reject)
+            }).catch(reject);
         });
     };
 
@@ -551,7 +547,7 @@ class APIClass extends Component {
     );
 
     editFile = (id, name, url, size) =>
-        this.post(this.ENDPOINTS.EDIT_FILE, {id: id, name: name, url: url, size: size}).then(() => {
+        this.post(this.ENDPOINTS.EDIT_FILE, { id: id, name: name, url: url, size: size }).then(() => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal =>
                     chal.files.forEach(file => {
@@ -563,10 +559,10 @@ class APIClass extends Component {
                     })
                 )
             );
-            this.setState({challenges: this.state.challenges});
+            this.setState({ challenges: this.state.challenges });
         });
     newFile = (chalId, name, url, size) =>
-        this.post(this.ENDPOINTS.NEW_FILE, {chal_id: chalId, name: name, url: url, size: size}).then((resp) => {
+        this.post(this.ENDPOINTS.NEW_FILE, { chal_id: chalId, name: name, url: url, size: size }).then((resp) => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal => {
                     if (chal.id === chalId) {
@@ -574,11 +570,11 @@ class APIClass extends Component {
                     }
                 })
             );
-            this.setState({challenges: this.state.challenges});
+            this.setState({ challenges: this.state.challenges });
         });
 
     editHint = (id, name, cost, body) =>
-        this.post(this.ENDPOINTS.EDIT_HINT, {id: id, name: name, cost: cost, body: body}).then(() => {
+        this.post(this.ENDPOINTS.EDIT_HINT, { id: id, name: name, cost: cost, body: body }).then(() => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal =>
                     chal.hints.forEach(hint => {
@@ -590,10 +586,10 @@ class APIClass extends Component {
                     })
                 )
             );
-            this.setState({challenges: this.state.challenges});
+            this.setState({ challenges: this.state.challenges });
         });
     newHint = (chalId, name, cost, body) =>
-        this.post(this.ENDPOINTS.NEW_HINT, {chal_id: chalId, name: name, cost: cost, body: body}).then((resp) => {
+        this.post(this.ENDPOINTS.NEW_HINT, { chal_id: chalId, name: name, cost: cost, body: body }).then((resp) => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal => {
                     if (chal.id === chalId) {
@@ -601,10 +597,10 @@ class APIClass extends Component {
                     }
                 })
             );
-            this.setState({challenges: this.state.challenges});
+            this.setState({ challenges: this.state.challenges });
         });
     useHint = (id) =>
-        this.post(this.ENDPOINTS.USE_HINT, {id: id}).then(resp => resp.d).then(body => {
+        this.post(this.ENDPOINTS.USE_HINT, { id: id }).then(resp => resp.d).then(body => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal =>
                     chal.hints.forEach(hint => {
@@ -615,27 +611,31 @@ class APIClass extends Component {
                     })
                 )
             );
-            this.setState({challenges: this.state.challenges});
-            return body
+            this.setState({ challenges: this.state.challenges });
+            return body;
         });
-    
+
 
     runCode = (runType, fileName, fileContent) => {
         if (this.state.codeRunState.running) return;
 
-        this.post(this.ENDPOINTS.RUN_CODE + "/" + runType, {exec: btoa(fileContent)}).then(resp => {
+        this.post(this.ENDPOINTS.RUN_CODE + "/" + runType, { exec: btoa(fileContent) }).then(resp => {
             //
         }).catch(e => {
-            this.setState({ codeRunState: {
-                running: false,
-                error: this.getError(e),
-            } });
+            this.setState({
+                codeRunState: {
+                    running: false,
+                    error: this.getError(e),
+                }
+            });
         });
-        this.setState({ codeRunState: {
-            name: fileName,
-            running: true,
-            start: new Date(),
-        } });
+        this.setState({
+            codeRunState: {
+                name: fileName,
+                running: true,
+                start: new Date(),
+            }
+        });
     };
     abortRunCode = () => {
         this.setState({ codeRunState: { running: false } });
@@ -644,11 +644,13 @@ class APIClass extends Component {
     // React
     render() {
         return <APIContext.Provider value={this.state}>
-            <WS api={this}>
-                {this.props.children}
-            </WS>
+            <APIEndpoints.Provider value={this.endpoints}>
+                <WS api={this}>
+                    {this.props.children}
+                </WS>
+            </APIEndpoints.Provider>
         </APIContext.Provider>;
-    }
+    };
 }
 
 export const API = withRouter(APIClass);

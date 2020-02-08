@@ -17,14 +17,14 @@ export default class WS extends Component {
             if (!this.state.connected)
                 this.setState({
                     timer: this.state.timer - 1
-                })
+                });
         }), 1000);
 
         this.state = {
             connected: false,
             cooldown: 1000,
             timer: 1,
-        }
+        };
         this._setupWS();
     }
 
@@ -50,7 +50,7 @@ export default class WS extends Component {
 
         switch (data.event_code) {
             case this.CONNECTION:
-                console.log(data.message)
+                console.log(data.message);
                 break;
             case this.CHALLENGE_SCORE:
                 console.log(data);
@@ -62,7 +62,7 @@ export default class WS extends Component {
                             {data.data.team_name}</b> scoring <b>
                             {data.data.challenge_score}</b> points
                     </>
-                )
+                );
                 break;
             default:
                 break;
@@ -80,7 +80,7 @@ export default class WS extends Component {
             connected: false,
             cooldown: cooldown,
             timer: cooldown / 1000
-        })
+        });
     };
 
     render() {

@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdMenu } from "react-icons/md";
 
-import { apiContext } from "ractf";
+import { apiContext, apiEndpoints } from "ractf";
 import Wordmark from "./Wordmark";
 
 import "./SidebarTabs.scss";
@@ -16,18 +16,20 @@ export const SBMenu = ({ name, children, initial }) => {
         if (height !== 0) setHeight(0);
         else {
             setHeight(
-                Array.prototype.reduce.call(childs.current.childNodes, function (p, c) { return p + (c.offsetHeight || 0); }, 0)
-            )
+                Array.prototype.reduce.call(childs.current.childNodes, (p, c) => (p + (c.offsetHeight || 0)), 0)
+            );
         }
     };
 
     return <>
-        <div onClick={toggle} className={"sbtItem" + (height === 0 ? "" : " sbtActive")}>{children && children.length && <MdKeyboardArrowRight />}{name}</div>
+        <div onClick={toggle} className={"sbtItem" + (height === 0 ? "" : " sbtActive")}>
+            {children && children.length && <MdKeyboardArrowRight />}{name}
+        </div>
         <div className={"sbtChildren"} style={{ height: height }} ref={childs}>
             {children}
         </div>
-    </>
-}
+    </>;
+};
 
 
 export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
@@ -40,14 +42,19 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
             {!noHead && <Wordmark className={"sbtBrand"} />}
             {children.map((i, n) =>
                 <div key={i.props.title} className={"sbtItem" + (n === active ? " sbtActive" : "")}
-                    onClick={() => { setActive(n); setSbOpen(false); onChangeTab && onChangeTab(n) }}>
+                    onClick={() => { setActive(n); setSbOpen(false); onChangeTab && onChangeTab(n); }}>
                     {i.props.title}
                 </div>
             )}
             <div style={{ flexGrow: 1 }} />
             {feet && feet.map((i, n) =>
-                <div key={i.props.title} style={{ textAlign: "center" }} className={"sbtItem" + (children.length + n === active ? " sbtActive" : "")}
-                    onClick={() => { setActive(children.length + n); setSbOpen(false); onChangeTab && onChangeTab(children.length + n) }}>
+                <div key={i.props.title} style={{ textAlign: "center" }}
+                className={"sbtItem" + (children.length + n === active ? " sbtActive" : "")}
+                    onClick={() => {
+                        setActive(children.length + n);
+                        setSbOpen(false);
+                        if (onChangeTab) onChangeTab(children.length + n);
+                    }}>
                     {i.props.title}
                 </div>
             )}
@@ -56,15 +63,18 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
             {children.map((i, n) => <div key={i.props.title} style={{ display: n === active ? "block" : "none" }}>
                 {i}
             </div>)}
-            {feet && feet.map((i, n) => <div key={i.props.title} style={{ display: children.length + n === active ? "block" : "none" }}>
-                {i}
-            </div>)}
+            {feet && feet.map((i, n) => (
+                <div key={i.props.title} style={{ display: children.length + n === active ? "block" : "none" }}>
+                    {i}
+                </div>
+            ))}
         </div>
-    </div>
+    </div>;
 };
 
 
 export const SiteNav = withRouter(({ children, history }) => {
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
 
     const [sbOpen, setSbOpen] = useState(false);
@@ -104,11 +114,11 @@ export const SiteNav = withRouter(({ children, history }) => {
                     <Link to={"/logout"} className={"sbtSubitem"}>Logout</Link>
                 </SBMenu>
                 <hr />
-            </> : (api.configGet("login", true) || api.configGet("registration", true)) ? <>
+            </> : (endpoints.configGet("login", true) || endpoints.configGet("registration", true)) ? <>
                 <SBMenu key={"login"} name={"Login"} initial>
-                    {api.configGet("login", true) &&
+                    {endpoints.configGet("login", true) &&
                         <Link key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
-                    {api.configGet("registration", true) &&
+                    {endpoints.configGet("registration", true) &&
                     <Link key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
                 </SBMenu>
                 <hr />
@@ -138,7 +148,7 @@ export const SBTSection = ({ title, children, subTitle, noHead }) => {
             {subTitle}
         </div>}</div>}
         {children}
-    </>
+    </>;
 };
 
 

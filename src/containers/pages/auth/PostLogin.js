@@ -22,4 +22,4 @@ export default () => {
             </ButtonRow>
         </Wrap>
     </Page>;
-}
+};

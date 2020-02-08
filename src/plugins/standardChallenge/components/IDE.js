@@ -4,7 +4,7 @@ import Moment from "react-moment";
 import { FaFileAlt, FaPython, FaMarkdown, FaTerminal, FaAlignLeft } from "react-icons/fa";
 import { MdPlayArrow, MdStop } from "react-icons/md";
 
-import { TabbedView, Tab, appContext, apiContext } from "ractf";
+import { TabbedView, Tab, appContext, apiContext, apiEndpoints } from "ractf";
 import CodeInput from "./CodeInput";
 
 import "./IDE.scss";
@@ -52,7 +52,7 @@ const TopBar = ({ children }) => {
         {children.map((i, n) => (
             cloneElement(i, {
                 key: n, open: n === open,
-                doOpen: () => {setOpen(n)}
+                doOpen: () => {setOpen(n);}
             })
         ))}
     </div>;
@@ -107,13 +107,13 @@ const FileLabel = ({ name, saveNameChange }) => {
             e.preventDefault();
             e.stopPropagation();
         }
-    }
+    };
 
     let nameEl;
     if (edName !== null) {
         nameEl = <input autoFocus ref={ref} className={"tabNameEdit"} value={edName} onKeyDown={okd} onChange={({ target }) => setEdName(target.value)} />;
     } else {
-        nameEl = <div onDoubleClick={(e) => { setEdName(name); e.target.focus() }}>{name}</div>
+        nameEl = <div onDoubleClick={(e) => { setEdName(name); e.target.focus(); }}>{name}</div>;
     }
 
     return <>{icon} {nameEl}</>;
@@ -166,7 +166,7 @@ const Editor = ({ names, contents, changeFile, setNames, output, brief, tab, set
     names.forEach((_, n) => {
         let setName = (value) => {
             setNames(names.map((i, m) => m === n ? value : i));
-        }
+        };
 
         let mode = getInfoFromName(names[n])[1];
 
@@ -218,6 +218,7 @@ const Window = ({ brief }) => {
     const [output, setOutput] = useState(output_);
     const [tab, setTab] = useState(0);
 
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
 
     useEffect(() => {
@@ -252,14 +253,14 @@ const Window = ({ brief }) => {
 Version 0.1a
 See https://gitlab.com/ractf/shell for
 more information and source code.`);
-    }
+    };
 
     const run = () => {
-        api.runCode("python", names[tab], contents[tab]);
-    }
+        endpoints.runCode("python", names[tab], contents[tab]);
+    };
     const stop = () => {
-        api.abortRunCode();
-    }
+        endpoints.abortRunCode();
+    };
 
     return <div className="ideMain">
         <NavBar newFile={newFile} showAbout={showAbout} />
@@ -272,5 +273,5 @@ more information and source code.`);
 };
 
 export default ({ challenge, children }) => {
-    return <Window brief={children} />
+    return <Window brief={children} />;
 };

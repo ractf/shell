@@ -27,9 +27,9 @@ const JeopardyChallenges = ({ challenges }) => {
     //});
 
     return sections;
-}
+};
 
 
 export default () => {
     registerPlugin("categoryType", "jeopardy", { component: JeopardyChallenges });
-}
+};

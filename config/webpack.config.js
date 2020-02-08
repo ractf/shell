@@ -25,7 +25,6 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -348,9 +347,6 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
-      new MonacoWebpackPlugin({
-        languages: ['json', 'python', 'cpp']
-      }),
       isEnvProduction &&
         shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),

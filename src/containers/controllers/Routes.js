@@ -9,7 +9,7 @@ import TwoFA from "../pages/TwoFA";
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
 
-import { APIContext } from "./Contexts";
+import { APIContext, APIEndpoints } from "./Contexts";
 
 import { plugins } from "ractf";
 
@@ -39,9 +39,9 @@ const Debug = asyncRoute(() => import("../pages/Debug"));
 
 
 const Logout = () => {
-    useContext(APIContext).logout();
-    return <Redirect to={"/home"} />
-}
+    useContext(APIEndpoints).logout();
+    return <Redirect to={"/home"} />;
+};
 
 
 const Page = ({ title, auth, admin, noAuth, C }) => {

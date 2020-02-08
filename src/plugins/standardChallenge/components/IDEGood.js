@@ -2,35 +2,36 @@ import React, { useState, useContext } from "react";
 
 import CodeInput from "./CodeInput";
 
-import { apiContext } from "ractf";
+import { apiContext, apiEndpoints } from "ractf";
 
-import "./IDEGood.scss"
+import "./IDEGood.scss";
 
 
 const Console = () => {
     const api = useContext(apiContext);
     let content;
     if (api.codeRunState.error)
-        content = "Error: " + api.codeRunState.error
+        content = "Error: " + api.codeRunState.error;
     else if (api.codeRunState.output)
-        content = api.codeRunState.output
+        content = api.codeRunState.output;
     else
-        content = ''
+        content = '';
     return <div className={"ide-console"}>{content}</div>;
 };
 
 export default ({ challenge, children }) => {
     const [console, setConsole] = useState(false);
     const [brief, setBrief] = useState(true);
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const [content, setContent] = useState('');
 
     const run = () => {
-        api.runCode("python", "main.py", content);
+        endpoints.runCode("python", "main.py", content);
         setConsole(true);
     };
     const stop = () => {
-        api.abortRunCode();
+        endpoints.abortRunCode();
     };
 
     return <div className={"ide-split"}>

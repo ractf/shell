@@ -14,4 +14,4 @@ export default ({ title, columns, data }) => {
             : null}
         <Table headings={columns} data={data} />
     </div>;
-}
+};

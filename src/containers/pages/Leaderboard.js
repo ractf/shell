@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
     XYPlot, LineSeries, HorizontalGridLines, VerticalGridLines,
     XAxis, YAxis, DiscreteColorLegend
@@ -11,7 +11,7 @@ import Page from "./bases/Page";
 
 import "./Leaderboard.scss";
 import colours from "../../Colours.scss";
-import { apiContext, Spinner } from "ractf";
+import { Spinner, useApi } from "ractf";
 
 
 const Graph = ({ data }) => {
@@ -44,46 +44,45 @@ const Graph = ({ data }) => {
 
 
 export default () => {
-    const api = useContext(apiContext);
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
 
+    const [leaderboard] = useApi("/leaderboard/");
+
     useEffect(() => {
-        api.ensure("leaderboard").then(data => {
-            let lbdata = data.d;
-            let userPlots = {};
-            let teamPlots = {};
-            let points = {};
-            let minTime = null;
+        if (!leaderboard) return;
+        let lbdata = [...leaderboard];
+        let userPlots = {};
+        let teamPlots = {};
+        let points = {};
+        let minTime = null;
 
-            lbdata.sort((a, b) => (new Date(a.time)) - (new Date(b.time))).map(i => {
-                if (!minTime) minTime = new Date(i.time);
+        lbdata.sort((a, b) => (new Date(a.time)) - (new Date(b.time))).map(i => {
+            if (!minTime) minTime = new Date(i.time);
 
-                if (!userPlots.hasOwnProperty(i.user_id)) {
-                    userPlots[i.user_id] = { data: [{x: minTime, y: 0}], name: i.name, id: i.user_id };
-                    points[i.user_id] = 0;
-                }
-                if (!teamPlots.hasOwnProperty(i.team_id)) {
-                    teamPlots[i.team_id] = { data: [{x: minTime, y: 0}], name: i.team_name, id: i.team_id };
-                    points[i.team_id] = 0;
-                }
-                points[i.user_id] += i.points;
-                points[i.team_id] += i.points;
-                userPlots[i.user_id].data.push({ x: new Date(i.time), y: points[i.user_id] });
-                teamPlots[i.team_id].data.push({ x: new Date(i.time), y: points[i.team_id] });
+            if (!userPlots.hasOwnProperty(i.user_id)) {
+                userPlots[i.user_id] = { data: [{x: minTime, y: 0}], name: i.name, id: i.user_id };
+                points[i.user_id] = 0;
+            }
+            if (!teamPlots.hasOwnProperty(i.team_id)) {
+                teamPlots[i.team_id] = { data: [{x: minTime, y: 0}], name: i.team_name, id: i.team_id };
+                points[i.team_id] = 0;
+            }
+            points[i.user_id] += i.points;
+            points[i.team_id] += i.points;
+            userPlots[i.user_id].data.push({ x: new Date(i.time), y: points[i.user_id] });
+            teamPlots[i.team_id].data.push({ x: new Date(i.time), y: points[i.team_id] });
 
-                return 0;
-            });
-
-            setUserGraphData(
-                Object.values(userPlots).sort((a, b) => points[b.id] - points[a.id])
-            );
-            setTeamGraphData(
-                Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
-            );
+            return 0;
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+
+        setUserGraphData(
+            Object.values(userPlots).sort((a, b) => points[b.id] - points[a.id])
+        );
+        setTeamGraphData(
+            Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
+        );
+    }, [leaderboard]);
 
     const userData = (lbdata) => {
         let users = {};
@@ -117,18 +116,18 @@ export default () => {
         <TabbedView center initial={1}>
             <Tab label='Users'>
                 <Graph data={userGraphData} />
-                {api.leaderboard
-                    ? <Table headings={["Ranking", "User", "Team", "Points"]} data={userData(api.leaderboard)} />
+                {leaderboard
+                    ? <Table headings={["Ranking", "User", "Team", "Points"]} data={userData(leaderboard)} />
                     : <Spinner />}
             </Tab>
 
             <Tab label='Teams'>
                 <Graph data={teamGraphData} />
-                {api.leaderboard
-                    ? <Table headings={["Ranking", "Team", "Points"]} data={teamData(api.leaderboard)} />
+                {leaderboard
+                    ? <Table headings={["Ranking", "Team", "Points"]} data={teamData(leaderboard)} />
                     : <Spinner />}
             </Tab>
         </TabbedView>
     </Page>;
 
-}
+};

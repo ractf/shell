@@ -4,7 +4,8 @@ import { storiesOf } from '@storybook/react';
 import Table from "./Table";
 
 const headings = [
-    "Name", "Mass (10^24kg)", "Diameter (km)", "Density (kg/m^3)", "Gravity (m/s^2)", "Length of day (hours)", "Distance from Sun (10^6km)", "Mean temperature (°C)", "Number of moons", "Notes"
+    "Name", "Mass (10^24kg)", "Diameter (km)", "Density (kg/m^3)", "Gravity (m/s^2)",
+    "Length of day (hours)", "Distance from Sun (10^6km)", "Mean temperature (°C)", "Number of moons", "Notes"
 ];
 const data = [
     ["Mercury", 0.330, 4879, 5427, 3.7, 4222.6, 57.9, 167, 0, "Closest to the Sun"],
@@ -15,9 +16,10 @@ const data = [
     ["Saturn", 568, 120536, 687, 9.0, 10.7, 1433.5, -140, 62, ""],
     ["Uranus", 86.8, 51118, 1271, 8.7, 17.2, 2872.5, -195, 27, ""],
     ["Neptune", 102, 49528, 1638, 11.0, 16.1, 4495.1, -200, 14, ""],
-    ["Pluto", 0.0146, 2370, 2095, 0.7, 153.3, 5906.4, -225, 5, "Declassified as a planet in 2006, but this remains controversial."]
+    ["Pluto", 0.0146, 2370, 2095, 0.7, 153.3, 5906.4, -225, 5,
+        "Declassified as a planet in 2006, but this remains controversial."]
 ];
 
 storiesOf("Table", module)
-    .add("Default", () => <Table headings={headings} data={data}/>)
-    .add("Non-Sortable", () => <Table headings={headings} data={data} noSort/>);
+    .add("Default", () => <Table headings={headings} data={data} />)
+    .add("Non-Sortable", () => <Table headings={headings} data={data} noSort />);

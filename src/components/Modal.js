@@ -14,7 +14,7 @@ const Modal = ({ onHide, children, centre, small }) => {
             //app.setModalOpen(false);
             if (hider)
                 hider(e);
-        }
+        };
     };
 
     return <div className={"modalWrap"}>
@@ -27,11 +27,11 @@ const Modal = ({ onHide, children, centre, small }) => {
             </div>
         </div>
     </div>;
-}
+};
 
 
 export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
-    return <Modal onHide={() => {promise.reject(); onHide && onHide()}} small={body.small} centre>
+    return <Modal onHide={() => {promise.reject(); onHide && onHide();}} small={body.small} centre>
         <p>
             { body.message }
             { inputs.length ? <br/> : null }
@@ -46,11 +46,11 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
             <ButtonRow>
                 <Button submit>{ body.okay || "Okay" }</Button>
                 {!body.noCancel &&
-                    <Button click={() => {promise.reject(); onHide && onHide()}}>{ body.cancel || "Cancel" }</Button>}
+                    <Button click={() => {promise.reject(); onHide && onHide();}}>{ body.cancel || "Cancel" }</Button>}
             </ButtonRow>
         </Form>
     </Modal>;
-}
+};
 
 
 export default Modal;

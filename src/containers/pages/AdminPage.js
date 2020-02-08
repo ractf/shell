@@ -1,20 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import useReactRouter from "../../useReactRouter";
 
-import { Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext, appContext } from "ractf";
+import {
+    Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
+    apiEndpoints, appContext, useApi
+} from "ractf";
 
 import "./AdminPage.scss";
 
 
 const MemberCard = ({ data }) => {
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
 
     const configSet = (key, value) => {
-        api.modifyUserAdmin(data.id, {[key]: value}).then(() => {
+        endpoints.modifyUserAdmin(data.id, {[key]: value}).then(() => {
             data[key] = value;
         }).catch(e => {
-            app.alert(api.getError(e));
+            app.alert(endpoints.getError(e));
         });
     };
 
@@ -38,14 +41,14 @@ const MemberCard = ({ data }) => {
 
 
 const TeamCard = ({ data }) => {
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
 
     const configSet = (key, value) => {
-        api.modifyTeamAdmin(data.id, {[key]: value}).then(() => {
+        endpoints.modifyTeamAdmin(data.id, {[key]: value}).then(() => {
             data[key] = value;
         }).catch(e => {
-            app.alert(api.getError(e));
+            app.alert(endpoints.getError(e));
         });
     };
 
@@ -64,26 +67,24 @@ const TeamCard = ({ data }) => {
 
 
 export default () => {
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const app = useContext(appContext);
 
-    useEffect(() => {
-        api.ensure("allUsersAdmin").catch(e => app.alert("Error listing users:\n" + api.getError(e)));
-        api.ensure("allTeamsAdmin").catch(e => app.alert("Error listing teams:\n" + api.getError(e)));
-        api.ensure("adminConfig").catch(e => app.alert("Error getting config:\n" + api.getError(e)));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const [allUsersAdmin] = useApi("/admin/members");
+    const [allTeamsAdmin] = useApi("/admin/teams");
+    const [adminConfig] = useApi("/admin/config");
 
     const { match } = useReactRouter();
     if (!match) return "uuuh.. admin?";
     const page = match.params.page;
 
     const configSet = (key, value) => {
-        api.setConfigValue(key, value).then(() => {
+        endpoints.setConfigValue(key, value).then(() => {
             api.config[key] = value;
-            api.adminConfig[key] = value;
+            adminConfig[key] = value;
         }).catch(e => {
-            app.alert(api.getError(e));
+            app.alert(endpoints.getError(e));
         });
     };
 
@@ -91,12 +92,12 @@ export default () => {
     switch (page) {
         case "config":
             content = <SBTSection title={"Configuration"}>
-                {api.adminConfig ? <>
+                {adminConfig ? <>
                     <Section title={"Login"}>
                         <Form>
                             <div className={"absfg"}>
                                 Enable or disable site login
-                                <Radio onChange={v => configSet("login", v)} value={api.adminConfig.login}
+                                <Radio onChange={v => configSet("login", v)} value={adminConfig.login}
                                     options={[["Enabled", true], ["Disabled", false]]} />
                             </div>
                         </Form>
@@ -105,7 +106,7 @@ export default () => {
                         <Form>
                             <div className={"absfg"}>
                                 Enable or disable site registration
-                                <Radio onChange={v => configSet("registration", v)} value={api.adminConfig.registration}
+                                <Radio onChange={v => configSet("registration", v)} value={adminConfig.registration}
                                     options={[["Enabled", true], ["Disabled", false]]} />
                             </div>
                         </Form>
@@ -114,12 +115,12 @@ export default () => {
                         <Form>
                             <div className={"absfg"}>
                                 Scoring
-                                <Radio onChange={v => configSet("scoring", v)} value={api.adminConfig.scoring}
+                                <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
                                     options={[["Enabled", true], ["Disabled", false]]} />
                             </div>
                             <div className={"absfg"}>
                                 Flag Submission
-                                <Radio onChange={v => configSet("flags_on", v)} value={api.adminConfig.flags_on}
+                                <Radio onChange={v => configSet("flags_on", v)} value={adminConfig.flags_on}
                                     options={[["Enabled", true], ["Disabled", false]]} />
                             </div>
                         </Form>
@@ -160,17 +161,17 @@ export default () => {
                     </Form>
                 </Section>
             </SBTSection>;
-            break
+            break;
         case "members":
             content = <SBTSection title={"Members"}>
-                {api.allUsersAdmin ? <>
+                {allUsersAdmin ? <>
                     <Section title={"Admins"}>
-                        {api.allUsersAdmin.filter(i => i.is_admin).map(i =>
+                        {allUsersAdmin.filter(i => i.is_admin).map(i =>
                             <MemberCard key={i.id} data={i} />
                         )}
                     </Section>
                     <Section title={"Standard Users"}>
-                        {api.allUsersAdmin.filter(i => !i.is_admin).map(i =>
+                        {allUsersAdmin.filter(i => !i.is_admin).map(i =>
                             <MemberCard key={i.id} data={i} />
                         )}
                     </Section>
@@ -179,15 +180,15 @@ export default () => {
             break;
         case "teams":
             content = <SBTSection title={"Teams"}>
-                {api.allTeamsAdmin ? <>
+                {allTeamsAdmin ? <>
                     <Section title={"All Teams"}>
-                        {api.allTeamsAdmin.map(i =>
+                        {allTeamsAdmin.map(i =>
                             <TeamCard key={i.id} data={i} />
                         )}
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;
-            break
+            break;
         default:
             content = <Spinner />;
             break;
@@ -195,5 +196,5 @@ export default () => {
 
     return <Page selfContained>
         {content}
-    </Page>
-}
+    </Page>;
+};

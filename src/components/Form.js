@@ -17,7 +17,7 @@ export default ({ children, submit, button, handle, locked }) => {
 
         if (handle)
             handle(data);
-    }
+    };
 
     if (submit) submit.callback = submitFunc;
 
@@ -74,13 +74,13 @@ export default ({ children, submit, button, handle, locked }) => {
         });
         newArray.reverse();
         return [newArray, changed];
-    }
+    };
     let [components] = recursor(children instanceof Array ? children : [children]);
 
     return <div className={"formWrapper"}>
         {components}
     </div>;
-}
+};
 
 export const FormError = ({ children }) => (
     <div className={"formError"}>{children}</div>

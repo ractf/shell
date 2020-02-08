@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 
 import "./Challenge.scss";
-import { apiContext, appContext } from "ractf";
+import { apiEndpoints, appContext } from "ractf";
 
 
 export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
-    const api = useContext(apiContext);
 
     const edit = () => {
         app.promptConfirm({message: "Edit hint"},
@@ -18,10 +18,10 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
 
             if (!cost.toString().match(/\d+/)) return app.alert("Invalid hint const!");
 
-            api.editHint(id, name, cost, body).then(() =>
+            endpoints.editHint(id, name, cost, body).then(() =>
                 app.alert("Hint edited!")
             ).catch(e =>
-                app.alert("Error editing hint:\n" + api.getError(e))
+                app.alert("Error editing hint:\n" + endpoints.getError(e))
             );
         });
     };

@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
 
-import { apiContext, Page, FormError, Spinner } from "ractf";
+import { apiEndpoints, Page, FormError, Spinner } from "ractf";
 import { Wrap } from "./Parts";
 
 
 export const EmailVerif = ({ location }) => {
     const [verif, setVerif] = useState(0);
     const [message, setMessage] = useState("");
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
 
     const uuid = window.location.search.substring(1, 37);
 
     useEffect(() => {
-        api.verify(uuid).then(() => {
+        endpoints.verify(uuid).then(() => {
             setVerif(2);
         }).catch((e) => {
-            setMessage(api.getError(e));
+            setMessage(endpoints.getError(e));
             setVerif(1);
         });
-    }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+    }, [endpoints, setVerif, setMessage, uuid]);
 
     return <Page vCentre>
         <Wrap>
@@ -35,7 +35,7 @@ export const EmailVerif = ({ location }) => {
             </> : null}
         </Wrap>
     </Page>;
-}
+};
 
 
 export const EmailMessage = () => {
@@ -48,4 +48,4 @@ export const EmailMessage = () => {
             Make sure to check your spam folder if you can't find it!
         </Wrap>
     </Page>;
-}
+};

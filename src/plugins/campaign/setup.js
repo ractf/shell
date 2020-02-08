@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { apiContext, registerPlugin } from "ractf";
+import { apiContext, apiEndpoints, registerPlugin } from "ractf";
 
 import AddNode from "./components/AddNode";
 import Node from "./components/Node";
@@ -33,6 +33,7 @@ const emptyChallenge = (x, y) => ({
 
 const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     const [reRender, setReRender] = useState(0);
+    const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
 
     let chalmap = {};
@@ -47,32 +48,48 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                     if (chalmap[[chal.metadata.x, chal.metadata.y - 1]]) {
                         chal.link ^= NORTH;
                         chalmap[[chal.metadata.x, chal.metadata.y - 1]].link ^= SOUTH;
-                        api.linkChallenges(chal, chalmap[[chal.metadata.x, chal.metadata.y - 1]], !!(chal.link & NORTH));
-                        api.linkChallenges(chalmap[[chal.metadata.x, chal.metadata.y - 1]], chal, !!(chal.link & NORTH));
+                        endpoints.linkChallenges(
+                            chal, chalmap[[chal.metadata.x, chal.metadata.y - 1]], !!(chal.link & NORTH)
+                        );
+                        endpoints.linkChallenges(
+                            chalmap[[chal.metadata.x, chal.metadata.y - 1]], chal, !!(chal.link & NORTH)
+                        );
                     }
                     break;
                 case "down":
                     if (chalmap[[chal.metadata.x, chal.metadata.y + 1]]) {
                         chal.link ^= SOUTH;
                         chalmap[[chal.metadata.x, chal.metadata.y + 1]].link ^= NORTH;
-                        api.linkChallenges(chal, chalmap[[chal.metadata.x, chal.metadata.y + 1]], !!(chal.link & SOUTH));
-                        api.linkChallenges(chalmap[[chal.metadata.x, chal.metadata.y + 1]], chal, !!(chal.link & SOUTH));
+                        endpoints.linkChallenges(
+                            chal, chalmap[[chal.metadata.x, chal.metadata.y + 1]], !!(chal.link & SOUTH)
+                        );
+                        endpoints.linkChallenges(
+                            chalmap[[chal.metadata.x, chal.metadata.y + 1]], chal, !!(chal.link & SOUTH)
+                        );
                     }
                     break;
                 case "left":
                     if (chalmap[[chal.metadata.x - 1, chal.metadata.y]]) {
                         chal.link ^= WEST;
                         chalmap[[chal.metadata.x - 1, chal.metadata.y]].link ^= EAST;
-                        api.linkChallenges(chal, chalmap[[chal.metadata.x - 1, chal.metadata.y]], !!(chal.link & WEST));
-                        api.linkChallenges(chalmap[[chal.metadata.x - 1, chal.metadata.y]], chal, !!(chal.link & WEST));
+                        endpoints.linkChallenges(
+                            chal, chalmap[[chal.metadata.x - 1, chal.metadata.y]], !!(chal.link & WEST)
+                        );
+                        endpoints.linkChallenges(
+                            chalmap[[chal.metadata.x - 1, chal.metadata.y]], chal, !!(chal.link & WEST)
+                        );
                     }
                     break;
                 case "right":
                     if (chalmap[[chal.metadata.x + 1, chal.metadata.y]]) {
                         chal.link ^= EAST;
                         chalmap[[chal.metadata.x + 1, chal.metadata.y]].link ^= WEST;
-                        api.linkChallenges(chal, chalmap[[chal.metadata.x + 1, chal.metadata.y]], !!(chal.link & EAST));
-                        api.linkChallenges(chalmap[[chal.metadata.x + 1, chal.metadata.y]], chal, !!(chal.link & EAST));
+                        endpoints.linkChallenges(
+                            chal, chalmap[[chal.metadata.x + 1, chal.metadata.y]], !!(chal.link & EAST)
+                        );
+                        endpoints.linkChallenges(
+                            chalmap[[chal.metadata.x + 1, chal.metadata.y]], chal, !!(chal.link & EAST)
+                        );
                     }
                     break;
                 default:
@@ -90,16 +107,20 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
         while (rows.length <= chal.metadata.y)
             rows.push([]);
         while (rows[chal.metadata.y].length <= chal.metadata.x)
-            if (isEdit) rows[chal.metadata.y].push(<AddNode click={showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal, true)} key={rows[chal.metadata.y].length} />);
+            if (isEdit) rows[chal.metadata.y].push(
+                <AddNode click={
+                    showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal, true)
+                } key={rows[chal.metadata.y].length} />
+            );
             else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
 
         let unlocked = isEdit || !chal.lock;
         // Admins are a special edge-case for unlocked challenges
         if (!isEdit && unlocked && api.user.is_admin && !chal.solved) {
             if (!((chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)
-                 || (chal.link & WEST && getChal(challenges, chal.metadata.x - 1, chal.metadata.y).solved)
-                 || (chal.link & NORTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)
-                 || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y - 1).solved))) {
+                || (chal.link & WEST && getChal(challenges, chal.metadata.x - 1, chal.metadata.y).solved)
+                || (chal.link & NORTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)
+                || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y - 1).solved))) {
                 unlocked = false;
             }
         }
@@ -109,12 +130,16 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
             unlocked={unlocked} done={isEdit ? false : chal.solved}
 
             chalmap={chalmap}
-            
-            lockDoneR={isEdit ? false : chal.solved && !(chal.link & EAST && !getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
-            lockDoneD={isEdit ? false : chal.solved && !(chal.link & SOUTH && !getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
 
-            lockUnlockedR={isEdit ? true : chal.solved || (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
-            lockUnlockedD={isEdit ? true : chal.solved || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
+            lockDoneR={isEdit ? false : chal.solved &&
+                !(chal.link & EAST && !getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
+            lockDoneD={isEdit ? false : chal.solved &&
+                !(chal.link & SOUTH && !getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
+
+            lockUnlockedR={isEdit ? true : chal.solved ||
+                (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
+            lockUnlockedD={isEdit ? true : chal.solved ||
+                (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
 
             click={isEdit ? showEditor(chal) : ""}
             isEdit={isEdit} toggleLink={toggleLink(chal)}
@@ -131,7 +156,10 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     rows.forEach((row, n) => {
         while (row.length <= max_x)
             if (isEdit)
-                row.push(<AddNode click={showEditor(emptyChallenge(row.length, n), challenges.chal, true)} key={row.length} />);
+                row.push(
+                    <AddNode click={showEditor(emptyChallenge(row.length, n), challenges.chal, true)}
+                        key={row.length} />
+                );
             else row.push(<div className={"campaignSpacer"} key={row.length} />);
 
         rows[n] = <Row key={n}>
@@ -142,7 +170,10 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
         let row = [];
         while (row.length <= max_x)
             if (isEdit)
-                row.push(<AddNode click={showEditor(emptyChallenge(row.length, rows.length), challenges.chal, true)} key={row.length} />);
+                row.push(
+                    <AddNode click={showEditor(emptyChallenge(row.length, rows.length), challenges.chal, true)}
+                        key={row.length} />
+                );
             else row.push(<div className={"campaignSpacer"} key={row.length} />);
 
         rows[rows.length] = <Row key={rows.length + 1}>
@@ -151,9 +182,9 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     }
 
     return rows;
-}
+};
 
 
 export default () => {
     registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
-}
+};

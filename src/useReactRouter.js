@@ -7,7 +7,7 @@ export default () => {
 
     const forceUpdate = useState(null)[1];
     useEffect(() => {
-        context.history.listen(() => forceUpdate())
+        context.history.listen(() => forceUpdate());
     }, [context, forceUpdate]);
     return context;
 };

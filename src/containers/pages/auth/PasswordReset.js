@@ -3,14 +3,17 @@ import { Redirect } from "react-router-dom";
 import zxcvbn from "zxcvbn";
 import qs from "query-string";
 
-import { Form, FormError, Page, SectionTitle2, Input, Button, apiContext, appContext } from "ractf";
+import {
+    Form, FormError, Page, SectionTitle2, Input, Button, apiEndpoints,
+    appContext
+} from "ractf";
 import { Wrap } from "./Parts";
 
 import useReactRouter from "../../../useReactRouter";
 
 
 export default () => {
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
@@ -18,7 +21,7 @@ export default () => {
     const { location } = useReactRouter();
     const props = qs.parse(location.search, { ignoreQueryPrefix: true });
 
-    if (!(props.secret && props.id)) return <Redirect to={"/login"} />
+    if (!(props.secret && props.id)) return <Redirect to={"/login"} />;
 
     const doReset = ({ passwd1, passwd2 }) => {
         if (passwd1 !== passwd2)
@@ -31,15 +34,15 @@ export default () => {
             return setMessage((strength.feedback.warning || "Password too weak."));
 
         setLocked(true);
-        api.completePasswordReset(props.id, props.secret, passwd1).then(() => {
-            app.alert("Password reset! Please log in using your new password.")
+        endpoints.completePasswordReset(props.id, props.secret, passwd1).then(() => {
+            app.alert("Password reset! Please log in using your new password.");
         }).catch(
             message => {
-                setMessage(api.getError(message))
+                setMessage(endpoints.getError(message));
                 setLocked(false);
             }
         );
-    }
+    };
 
     return <Page vCentre>
         <Wrap>

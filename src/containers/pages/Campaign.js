@@ -6,13 +6,16 @@ import useReactRouter from "../../useReactRouter";
 import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
-import { plugins, Button, ButtonRow, apiContext, Input, Form, FormError, SBTSection, Section, appContext } from "ractf";
+import {
+    plugins, Button, ButtonRow, apiContext, apiEndpoints, Input, Form,
+    FormError, SBTSection, Section, appContext
+} from "ractf";
 
 import "./Campaign.scss";
 
 
 const ANC = ({ hide, anc, modal }) => {
-    const api = useContext(apiContext);
+    const endpoints = useContext(apiEndpoints);
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
 
@@ -24,14 +27,15 @@ const ANC = ({ hide, anc, modal }) => {
 
         setLocked(true);
 
-        (anc.id ? api.editGroup(anc.id, cname, cdesc, ctype) : api.createGroup(cname, cdesc, ctype)).then(async resp => {
-            await api.setup();
-            if (hide)
-                hide();
-        }).catch(e => {
-            setError(api.getError(e));
-            setLocked(false);
-        });
+        (anc.id ? endpoints.editGroup(anc.id, cname, cdesc, ctype)
+            : endpoints.createGroup(cname, cdesc, ctype)).then(async resp => {
+                await endpoints.setup();
+                if (hide)
+                    hide();
+            }).catch(e => {
+                setError(endpoints.getError(e));
+                setLocked(false);
+            });
     };
 
     let body = <Form locked={locked} handle={create}>
@@ -41,7 +45,8 @@ const ANC = ({ hide, anc, modal }) => {
         <label htmlFor={"cdesc"}>Catgeory brief</label>
         <Input val={anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
         <label htmlFor={"ctype"}>Catgeory type</label>
-        <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }} placeholder={"Category type"} />
+        <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
+            placeholder={"Category type"} />
         {error && <FormError>{error}</FormError>}
         <ButtonRow>
             {anc.id &&
@@ -70,6 +75,7 @@ export default () => {
     const { match } = useReactRouter();
     const tabId = match.params.tabId;
 
+    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const api = useContext(apiContext);
 
@@ -80,7 +86,7 @@ export default () => {
             </Section>
         </SBTSection>;
     else if (!tabId)
-        return <Redirect to={"/campaign/" + api.challenges[0].id} />
+        return <Redirect to={"/campaign/" + api.challenges[0].id} />;
 
     const showEditor = (challenge, saveTo, isNew) => {
         return () => {
@@ -90,7 +96,7 @@ export default () => {
             });
             setIsEditor(true);
             setIsCreator(!!isNew);
-        }
+        };
     };
 
     const hideChal = () => {
@@ -105,10 +111,10 @@ export default () => {
                 flag = JSON.parse(changes.flag);
             } catch (e) {
                 if (!changes.flag.length) flag = "";
-                else return app.alert("Invalid flag JSON")
+                else return app.alert("Invalid flag JSON");
             }
 
-            (isCreator ? api.createChallenge : api.editChallenge)(
+            (isCreator ? endpoints.createChallenge : endpoints.editChallenge)(
                 (isCreator ? tabId : original.id),
                 changes.name, changes.points, changes.desc, changes.flag_type, flag,
                 changes.autoUnlock, original.metadata
@@ -118,11 +124,11 @@ export default () => {
                 if (lState.saveTo)
                     lState.saveTo.push(original);
 
-                await api.setup();
+                await endpoints.setup();
                 setIsEditor(false);
                 setChallenge(null);
-            }).catch(e => app.alert(api.getError(e)));
-        }
+            }).catch(e => app.alert(endpoints.getError(e)));
+        };
     };
 
     if (!api.challenges)
@@ -136,16 +142,18 @@ export default () => {
 
     if (!tab) {
         if (!api.challenges || !api.challenges.length) return <></>;
-        return <Redirect to={"/404"} />
+        return <Redirect to={"/404"} />;
     }
     handler = plugins.categoryType[tab.type];
     if (!handler) {
         challengeTab = <>
             Category renderer for type "{tab.type}" missing!<br /><br />
             Did you forget to install a plugin?
-        </>
+        </>;
     } else {
-        challengeTab = React.createElement(handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit });
+        challengeTab = React.createElement(
+            handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit }
+        );
     }
 
     if (challenge || isEditor) {
@@ -179,8 +187,8 @@ export default () => {
 
         <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
             {api.user.is_admin ? edit ?
-                <Button className={"campEditButton"} click={() => { setEdit(false) }} warning>Stop Editing</Button>
-                : <Button className={"campEditButton"} click={() => { setEdit(true) }} warning>Edit</Button> : null}
+                <Button className={"campEditButton"} click={() => { setEdit(false); }} warning>Stop Editing</Button>
+                : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>Edit</Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
 
             <div className={"campInner"}>{challengeTab}</div>
