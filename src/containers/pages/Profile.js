@@ -36,7 +36,7 @@ const UserSolve = ({ name, points, time }) => {
 export default () => {
     const { match } = useReactRouter();
     const user = match.params.user;
-    const [userData, error] = useApi("/members/" + user);
+    const [userData, error] = useApi("/members/" + (user === "me" ? "self" : user));
 
     if (error) return <Page title={"Users"} vCentre>
         <FormError>{error}</FormError>

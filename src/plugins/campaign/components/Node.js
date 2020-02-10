@@ -55,17 +55,13 @@ export default props => {
             done={props.done} unlocked={props.unlocked} />
     </>;
 
-    if (props.isEdit)
+    if (props.isEdit || !props.url)
         return <div tabIndex={props.unlocked || props.done ? "0" : ""}
             onMouseDown={(e => (e.target.click && e.target.click()))}
             onClick={(props.done || props.unlocked) ? props.click : null} className={nodeClass}>
             {inner}
         </div>;
 
-    if (!props.url)
-        return <div tabIndex={props.unlocked || props.done ? "0" : ""} className={nodeClass}>
-            {inner}
-        </div>;
     return <Link tabIndex={props.unlocked || props.done ? "0" : ""} to={props.url} className={nodeClass}>
         {inner}
     </Link>;

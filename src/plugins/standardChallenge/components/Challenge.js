@@ -185,7 +185,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
             <label htmlFor={"name"}>Challenge name</label>
             <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
             <label htmlFor={"points"}>Challenge points</label>
-            <Input val={challenge.base_score} name={"points"} placeholder={"Challenge points"} format={/\d+/} />
+            <Input val={challenge.base_score && challenge.base_score.toString()} name={"points"}
+                placeholder={"Challenge points"} format={/\d+/} />
 
             <label htmlFor={"desc"}>Challenge brief</label>
             <Input rows={5} val={challenge.description} name={"desc"} placeholder={"Challenge brief"} />

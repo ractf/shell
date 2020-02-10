@@ -104,6 +104,7 @@ class APIClass extends Component {
         }
 
         this.endpoints = {
+            setup: this.setup,
             hidePopup: this.hidePopup,
 
             configGet: this.configGet,
@@ -161,7 +162,6 @@ class APIClass extends Component {
             challenges: challenges,
             team: teamData,
             config: config,
-            setup: this.setup,
 
             codeRunState: { running: false },
 

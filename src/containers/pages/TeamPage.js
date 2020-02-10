@@ -22,7 +22,7 @@ export default () => {
 
     const { match } = useReactRouter();
     const team = match.params.team;
-    const [teamData, error] = useApi("/teams/" + team);
+    const [teamData, error] = useApi("/teams/" + (team === "me" ? "self" : team));
 
     if (error) return <Page title={"Teams"} vCentre>
         <FormError>{error}</FormError>
