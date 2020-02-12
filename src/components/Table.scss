@@ -14,33 +14,29 @@ table {
 
 tr {
     &.heading > td {
-        background-color: $bg_d1;
+        background-color: rgba(0, 0, 0, .25);
         font-weight: 600;
         font-family: $titleStack;
     }
         
     &:nth-child(2n) > td {
-        background-color: $bg_l2;
+        background-color: rgba(0, 0, 0, .1);
     }
     &:not(.heading) {
-        &:last-child > td {
-            border: none;
-        }
-
         > td {
             color: #eee;
         }
 
         &:hover > td {
             color: #fff;
-            background-color: $bg;
+            background-color: rgba(0, 0, 0, .15);
         }
     }
 }
 
 td {
-    background-color: $bg_l1;
-    border-bottom: 1px solid $bg_d1;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
     vertical-align: top;
 
     &.sortable {

@@ -17,8 +17,8 @@ import bgm from "./synthwave.mp3";
 import "./App.scss";
 
 
-// 3s grace period to connect to the server
-const LOADED_TIMEOUT = 3000;
+// 8s grace period to connect to the server
+const LOADED_TIMEOUT = 8000;
 
 
 const SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
