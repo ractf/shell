@@ -3,7 +3,7 @@ import React from "react";
 import { BrokenShards } from "./ErrorPages";
 import Page from "./bases/Page";
 
-import { Table, Spinner, FormError, useApi } from "ractf";
+import { Table, Spinner, FormError, useApi, SectionTitle2 } from "ractf";
 
 
 export const TeamsList = () => {
@@ -11,6 +11,10 @@ export const TeamsList = () => {
 
     return <Page
         title={"Teams"} vCentre={error || !allTeams}>
+        <div style={{ textAlign: "center" }}>
+            <SectionTitle2>All Teams</SectionTitle2>
+            <br />
+        </div>
         {error ? <>
             <FormError>
                 Something went wrong trying to get the teams list<br />
@@ -19,8 +23,9 @@ export const TeamsList = () => {
             <BrokenShards />
         </> :
             allTeams ?
-                <Table headings={["Team"]} data={allTeams.map(x => [x.name, "/team/" + x.id])} />
-                : <Spinner />
+                <Table headings={["Team", "Website", "Members"]} data={
+                    allTeams.map(x => [x.name, x.website, x.members, "/team/" + x.id])
+                } /> : <Spinner />
         }
     </Page>;
 };
@@ -31,6 +36,10 @@ export const UsersList = () => {
 
     return <Page
         title={"Users"} vCentre={error || !allUsers}>
+        <div style={{ textAlign: "center" }}>
+            <SectionTitle2>All Users</SectionTitle2>
+            <br />
+        </div>
         {error ? <>
             <FormError>
                 Something went wrong trying to get the user list<br />
