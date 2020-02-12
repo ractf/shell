@@ -3,7 +3,18 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Loadable from "react-loadable";
 
 import { TeamsList, UsersList } from "../pages/Lists";
+import PasswordReset from "../pages/auth/PasswordReset";
+import ChallengePage from "../pages/ChallengePage";
+import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
+import Leaderboard from "../pages/Leaderboard";
+import AdminPage from "../pages/AdminPage";
+import PostLogin from "../pages/auth/PostLogin";
+import HomePage from "../pages/HomePage";
+import TeamPage from "../pages/TeamPage";
+import SignUp from "../pages/auth/SignUp";
+import Login from "../pages/auth/Login";
+import Debug from "../pages/Debug";
 import TwoFA from "../pages/TwoFA";
 
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
@@ -21,21 +32,8 @@ const asyncRoute = (loader) => (
     })
 );
 
-const SettingsPage = asyncRoute(() => import("../pages/SettingsPage"));
-const Leaderboard = asyncRoute(() => import("../pages/Leaderboard"));
-
-const PasswordReset = asyncRoute(() => import("../pages/auth/PasswordReset"));
-const PostLogin = asyncRoute(() => import("../pages/auth/PostLogin"));
-const SignUp = asyncRoute(() => import("../pages/auth/SignUp"));
-const Login = asyncRoute(() => import("../pages/auth/Login"));
-
-const ChallengePage = asyncRoute(() => import("../pages/ChallengePage"));
-const AdminPage = asyncRoute(() => import("../pages/AdminPage"));
-const TeamPage = asyncRoute(() => import("../pages/TeamPage"));
-const HomePage = asyncRoute(() => import("../pages/HomePage"));
 const Campaign = asyncRoute(() => import("../pages/Campaign"));
 const Profile = asyncRoute(() => import("../pages/Profile"));
-const Debug = asyncRoute(() => import("../pages/Debug"));
 
 
 const Logout = () => {

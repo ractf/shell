@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile } from "react-icons/gi";
-import zxcvbn from "zxcvbn";
 
 import {
     Page, HR, ButtonRow, TabbedView, Tab, Button, Form, FormError, Input,
-    apiContext, appContext, apiEndpoints
+    apiContext, appContext, apiEndpoints, zxcvbn
 } from "ractf";
 
 import "./SettingsPage.scss";
@@ -62,7 +61,7 @@ export default () => {
         if (new1 !== new2)
             return setPwError("Passwords must match");
 
-        const strength = zxcvbn(new1);
+        const strength = zxcvbn()(new1);
         if (strength.score < 3)
             return setPwError((strength.feedback.warning || "Password too weak."));
 
@@ -133,7 +132,7 @@ export default () => {
                 <HR />
                 <Form handle={changePassword}>
                     <Input password name={"old"} placeholder={"Current Password"} />
-                    <Input zxcvbn={zxcvbn} password name={"new1"} placeholder={"New Password"} />
+                    <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={"New Password"} />
                     <Input password name={"new2"} placeholder={"New Password"} />
 
                     {pwError && <FormError>{pwError}</FormError>}

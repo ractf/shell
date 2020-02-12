@@ -24,7 +24,7 @@ const usePlotlyReady = () => {
     }, [plready]);
     if (!plready) setTimeout(check, 200);
     return plready;
-}
+};
 
 
 const Graph = ({ data }) => {
@@ -65,8 +65,18 @@ const Graph = ({ data }) => {
             plot_bgcolor: colours.bg_d0,
             plot_fgcolor: colours.fg,
             paper_bgcolor: colours.bg_d0,
-            xaxis: {gridcolor: colours.bg_l2, linecolor: colours.bg_l3, tickfont: {color: colours.bg_l4}, showspikes: true},
-            yaxis: {gridcolor: colours.bg_l2, linecolor: colours.bg_l3, tickfont: {color: colours.bg_l4}, showspikes: true},
+            xaxis: {
+                gridcolor: colours.bg_l2,
+                linecolor: colours.bg_l3,
+                tickfont: {color: colours.bg_l4},
+                showspikes: true
+            },
+            yaxis: {
+                gridcolor: colours.bg_l2,
+                linecolor: colours.bg_l3,
+                tickfont: {color: colours.bg_l4},
+                showspikes: true
+            },
         }}
     />;
 };
@@ -90,11 +100,17 @@ export default () => {
             if (!minTime) minTime = new Date(i.time);
 
             if (!userPlots.hasOwnProperty(i.user_id)) {
-                userPlots[i.user_id] = { x: [minTime], y: [0], type: "scatter", mode: "lines+markers", name: i.name, id: i.user_id };
+                userPlots[i.user_id] = {
+                    x: [minTime], y: [0], type: "scatter",
+                    mode: "lines+markers", name: i.name, id: i.user_id
+                };
                 points[i.user_id] = 0;
             }
             if (!teamPlots.hasOwnProperty(i.team_id)) {
-                teamPlots[i.team_id] = { x: [minTime], y: [0], type: "scatter", mode: "lines+markers", name: i.team_name, id: i.team_id };
+                teamPlots[i.team_id] = {
+                    x: [minTime], y: [0], type: "scatter",
+                    mode: "lines+markers", name: i.team_name, id: i.team_id
+                };
                 points[i.team_id] = 0;
             }
             points[i.user_id] += i.points;

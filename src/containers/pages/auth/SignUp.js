@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
-import zxcvbn from "zxcvbn";
 
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow, apiEndpoints
+    Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow,
+    apiEndpoints, zxcvbn
 } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
@@ -24,7 +24,7 @@ export default () => {
         if (!EMAIL_RE.test(email))
             return setMessage("Invalid email");
         
-        const strength = zxcvbn(passwd1);
+        const strength = zxcvbn()(passwd1);
         if (strength.score < 3) {
             return setMessage((strength.feedback.warning || "Password too weak."));
         }
@@ -45,7 +45,7 @@ export default () => {
     
                 <Input name={"username"} placeholder={"Username"} />
                 <Input format={EMAIL_RE} name={"email"} placeholder={"Email"} />
-                <Input zxcvbn={zxcvbn} name={"passwd1"} placeholder={"Password"} password />
+                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={"Password"} password />
                 <Input name={"passwd2"} placeholder={"Repeat Password"} password />
 
                 {message && <FormError>{message}</FormError>}

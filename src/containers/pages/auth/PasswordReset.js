@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
-import zxcvbn from "zxcvbn";
 import qs from "query-string";
 
 import {
     Form, FormError, Page, SectionTitle2, Input, Button, apiEndpoints,
-    appContext
+    appContext, zxcvbn
 } from "ractf";
 import { Wrap } from "./Parts";
 
@@ -29,7 +28,7 @@ export default () => {
         if (!passwd1)
             return setMessage("No password provided");
 
-        const strength = zxcvbn(passwd1);
+        const strength = zxcvbn()(passwd1);
         if (strength.score < 3)
             return setMessage((strength.feedback.warning || "Password too weak."));
 
@@ -49,7 +48,7 @@ export default () => {
             <Form locked={locked} handle={doReset}>
                 <SectionTitle2>Reset Password</SectionTitle2>
     
-                <Input zxcvbn={zxcvbn} name={"passwd1"} placeholder={"New Password"} password />
+                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={"New Password"} password />
                 <Input name={"passwd2"} placeholder={"Repeat Password"} password />
 
                 {message && <FormError>{message}</FormError>}
