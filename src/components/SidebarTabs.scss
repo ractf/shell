@@ -9,7 +9,7 @@
     &>.sbtSidebar {
         flex-shrink: 0;
         width: 200px;
-        background-color: $bg_d0;
+        background: $sidebar;
         padding: 32px 0;
         display: flex;
         flex-direction: column;
@@ -34,6 +34,7 @@
         &>.sbtItem {
             position: relative;
             display: flex;
+            color: $sidebar_heading;
             &>svg {
                 position: absolute;
                 left: 4px;
@@ -41,7 +42,7 @@
                 transform: translateY(-50%);
                 transition: transform 200ms ease-in;
             }
-            transition: background-color 200ms ease-in;
+            transition: background 100ms ease-in;
             &.sbtActive {
                 &>svg {
                     transform: translateY(-50%) rotate(90deg);
@@ -49,7 +50,7 @@
             }
             &:hover {
                 text-decoration: none;
-                background-color: $bg_d1;
+                background: $sidebar_focus;
             }
         }
         &>.sbtChildren {
@@ -57,9 +58,10 @@
             transition: height 200ms ease;
         }
         & .sbtSubitem {
-            color: lighten($bg, 50%);
+            color: $sidebar_link;
+            transition: background 100ms ease-in;
             &:hover, &.sbtActive {
-                background-color: $bg_d1;
+                background: $sidebar_focus;
                 text-decoration: none;
             }
         }
@@ -94,11 +96,11 @@
 
 .abSection {
     margin-top: 16px;
-    background-color: $bg_d0;
+    background: $bg_d0;
     border-radius: 4px;
 
     &.absLight {
-        background-color: $bg_l0;
+        background: $bg_l0;
     }
 
     &>.absTitle {
@@ -138,7 +140,7 @@
 
         &.online {
             &::before {
-                background-color: $bgreen;
+                background: $bgreen;
             }
             &::after {
                 content: "Online";
@@ -146,7 +148,7 @@
         }
         &.offline {
             &::before {
-                background-color: $red;
+                background: $red;
             }
             &::after {
                 content: "Offline";
@@ -154,7 +156,7 @@
         }
         &.partial {
             &::before {
-                background-color: orange;
+                background: orange;
             }
             &::after {
                 content: "Partial Outage";
@@ -162,7 +164,7 @@
         }
         &.unknown {
             &::before {
-                background-color: #777;
+                background: #777;
             }
             &::after {
                 content: "Unknown";
@@ -180,7 +182,7 @@
     }
 
     & .absMember {
-        background-color: $bg_d1;
+        background: $bg_d1;
         border-radius: 4px;
         position: relative;
         margin-bottom: 8px;
@@ -236,7 +238,7 @@
 
         &>.sbtHandle {
             display: block;
-            background-color: $bg_d1;
+            background: $bg_d1;
             border-right: 1px solid $bg_l0;
             position: absolute;
             left: 100%;
@@ -289,7 +291,7 @@
             top: 0;
             width: 100vw;
             height: 100vh;
-            background-color: #0005;
+            background: #0005;
             z-index: 50; 
         }
     }

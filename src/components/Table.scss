@@ -14,13 +14,13 @@ table {
 
 tr {
     &.heading > td {
-        background-color: rgba(0, 0, 0, .25);
+        background-color: $bg_d0;
         font-weight: 600;
         font-family: $titleStack;
     }
         
     &:nth-child(2n) > td {
-        background-color: rgba(0, 0, 0, .1);
+        background-color: $bg_d00;
     }
     &:not(.heading) {
         > td {
@@ -29,14 +29,14 @@ tr {
 
         &:hover > td {
             color: #fff;
-            background-color: rgba(0, 0, 0, .15);
+            background-color: $bg_d0;
         }
     }
 }
 
 td {
     background-color: transparent;
-    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    border-bottom: 1px solid $bg_d05;
     vertical-align: top;
 
     &.sortable {

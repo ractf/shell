@@ -92,6 +92,8 @@ export default () => {
         api.challenges.forEach(i => {
             chalCount += i.chals.length;
         });
+    
+    return <Page vCentre></Page>;
 
     return <Page vCentre>
         <div className={"homeLead"}>Welcome to RACTF</div>
