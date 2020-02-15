@@ -49,6 +49,10 @@ button {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    
+    &.brRight {
+        justify-content: flex-end;
+    }
 
     &>* {
         margin-left: 0;

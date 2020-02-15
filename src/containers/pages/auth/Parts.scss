@@ -29,10 +29,6 @@
         border-radius: 1px;
         transition: 100ms top ease-out, 100ms left ease-out;
     } 
-
-    & .buttonRow {
-        justify-content: flex-end;
-    }
 }
 
 @media only screen and (max-width: 600px) {

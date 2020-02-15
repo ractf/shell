@@ -4,7 +4,9 @@ import useReactRouter from "../useReactRouter";
 import "./Button.scss";
 
 
-export const ButtonRow = ({ children }) => <div className={"buttonRow"}>{children}</div>;
+export const ButtonRow = ({ children, right }) => (
+    <div className={"buttonRow" + (right ? " brRight" : "")}>{children}</div>
+);
 
 const Button = (props, ref) => {
     const { history } = useReactRouter();

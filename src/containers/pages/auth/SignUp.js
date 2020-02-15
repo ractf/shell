@@ -50,7 +50,7 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <ButtonRow>
+                <ButtonRow right>
                     <Button medium lesser to={"/login"}>Login</Button>
                     <Button medium submit>Register</Button>
                 </ButtonRow>
