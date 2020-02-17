@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import useReactRouter from "../../useReactRouter";
+import DatePicker from "react-datepicker";
 
 import {
     Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
     apiEndpoints, appContext, useApi
 } from "ractf";
 
+import "react-datepicker/dist/react-datepicker.css";
 import "./AdminPage.scss";
 
 
@@ -90,6 +92,49 @@ export default () => {
 
     let content;
     switch (page) {
+        case "ctf":
+            content = <SBTSection title={"CTF Management"}>
+                {adminConfig ? <>
+                    <Section title={"Start or Stop"}>
+                        <div className={"absfg"}>
+                            Start the event before the scheduled start time.
+                            <Button>Start event</Button>
+                        </div>
+                        <div className={"absfg"}>
+                            End the event before the scheduled end time.
+                            This will not disable automatic-start.
+                            <Button>Stop event</Button>
+                        </div>
+                    </Section>
+                    <Section title={"Automatic Timing"}>
+                        <Form>
+                            <div className={"absfg"}>
+                                <Form>
+                                    <label htmlFor={"eventStartTime"}>Event start time</label>
+                                    <DatePicker showTimeSelect
+                                        dateFormat="yyyy-MM-dd H:mm"
+                                        autoComplete="off"
+                                        selected={adminConfig.startTime}
+                                        onChange={date => configSet("startTime", date)}
+                                        name={"eventStartTime"} />
+                                </Form>
+                            </div>
+                            <div className={"absfg"}>
+                                <Form>
+                                    <label htmlFor={"eventEndTime"}>Event end time</label>
+                                    <DatePicker showTimeSelect
+                                        dateFormat="yyyy-MM-dd H:mm"
+                                        autoComplete="off"
+                                        selected={adminConfig.endTime}
+                                        onChange={date => configSet("endTime", date)}
+                                        name={"eventEndTime"} />
+                                </Form>
+                            </div>
+                        </Form>
+                    </Section>
+                </> : <Spinner />}
+            </SBTSection>;
+            break;
         case "config":
             content = <SBTSection title={"Configuration"}>
                 {adminConfig ? <>

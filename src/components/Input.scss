@@ -17,12 +17,12 @@ textarea {
     resize: vertical;
 }
 
-.inputMetaWrap {
+.inputMetaWrap, .react-datepicker-wrapper {
     position: relative;
     z-index: 1;
 }
 
-.inputWrapper {
+.inputWrapper, .react-datepicker__input-container {
     position: relative;
 
     padding: 5px 10px;
