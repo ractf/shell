@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Link } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
 import { SiteNav } from "../../components/SidebarTabs";
@@ -300,7 +300,7 @@ const PopupMessage = ({ data }) => {
     </div>;
 };
 
-const App = () => {
+const App = React.memo(() => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const ws = useContext(wsContext);
@@ -408,7 +408,7 @@ const App = () => {
 
             <Header />
             <SiteNav>
-                <Routes />
+                {<Routes />}
             </SiteNav>
             {/*<Footer />*/}
 
@@ -433,6 +433,6 @@ const App = () => {
             }
         </AppContext.Provider>
     );
-};
+});
 
 export default () => <BrowserRouter><API><App /></API></BrowserRouter>;

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Moment from 'react-moment';
 
 import { transparentize } from "polished";
@@ -7,7 +6,7 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi } from "ractf";
+import { Spinner, FormError, useApi, Link } from "ractf";
 
 import admin from "../../static/img/admin.png";
 import donor from "../../static/img/donor_large.png";

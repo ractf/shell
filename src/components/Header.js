@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { Link } from "ractf";
 
 import Wordmark from "./Wordmark";
 //import Button from "./Button";
@@ -7,7 +8,7 @@ import Wordmark from "./Wordmark";
 import "./Header.scss";
 
 
-export default () => <>
+export default React.memo(() => <>
     <div id={"headerPad"} />
     <header>
         <Link to="/">
@@ -16,4 +17,4 @@ export default () => <>
 
         {/*<Button small>Install App</Button>*/}
     </header>
-</>;
+</>);

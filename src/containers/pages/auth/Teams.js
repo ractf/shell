@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import {
     apiContext, apiEndpoints, Form, FormError, Page, SectionTitle2, HR, Input,
-    Button, ButtonRow, SubtleText
+    Button, ButtonRow, SubtleText, Link
 } from "ractf";
 import { Wrap } from "./Parts";
 

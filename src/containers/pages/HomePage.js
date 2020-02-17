@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import CountUp from "react-countup";
 
 import Page from "./bases/Page";
 
-import { apiContext, apiEndpoints, Spinner, useApi } from "ractf";
+import { apiContext, apiEndpoints, Spinner, useApi, Link } from "ractf";
 
 import "./HomePage.scss";
 
@@ -93,7 +92,9 @@ export default () => {
             chalCount += i.chals.length;
         });
     
-    return <Page vCentre></Page>;
+    return <Page vCentre>
+        Welcome to RACTF
+    </Page>;
 
     return <Page vCentre>
         <div className={"homeLead"}>Welcome to RACTF</div>

@@ -122,6 +122,7 @@ export default () => {
         <Route exact path={"/teams"}>
             <Page title={"Teams"} C={TeamsList} />
         </Route>
+
         <Route exact path={"/leaderboard"}>
             <Page title={"Leaderboard"} C={Leaderboard} />
         </Route>

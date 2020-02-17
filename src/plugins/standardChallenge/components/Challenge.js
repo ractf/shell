@@ -1,10 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints
+    apiEndpoints, Link
 } from "ractf";
 
 import File from "./File";

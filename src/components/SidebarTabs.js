@@ -1,8 +1,7 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
-import { Link, withRouter } from "react-router-dom";
+import React, { useState, useRef, useContext } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdMenu } from "react-icons/md";
 
-import { apiContext, apiEndpoints } from "ractf";
+import { apiContext, apiEndpoints, Link } from "ractf";
 import Wordmark from "./Wordmark";
 
 import "./SidebarTabs.scss";
@@ -73,17 +72,13 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
 };
 
 
-export const SiteNav = withRouter(({ children, history }) => {
+export const SiteNav = ({ children }) => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
 
     const [sbOpen, setSbOpen] = useState(false);
 
-    useEffect(() =>
-        history.listen(() => {
-            setSbOpen(false);
-        })
-    );
+    const close = () => setSbOpen(false);
 
     return <div className={"sbtWrap" + (sbOpen ? " sbtOpen" : "")}>
         <div onMouseDown={() => setSbOpen(false)} className={"sbtBurgerUnderlay"} />
@@ -91,45 +86,45 @@ export const SiteNav = withRouter(({ children, history }) => {
         <div className={"sbtSidebar"}>
             <hr />
             <SBMenu key={"ractf"} name={"RACTF"} initial>
-                <Link to={"/home"} className={"sbtSubitem"}>Home</Link>
-                <Link to={"/users"} className={"sbtSubitem"}>Users</Link>
-                <Link to={"/teams"} className={"sbtSubitem"}>Teams</Link>
-                <Link to={"/leaderboard"} className={"sbtSubitem"}>Leaderboard</Link>
+                <Link onClick={close} to={"/home"} className={"sbtSubitem"}>Home</Link>
+                <Link onClick={close} to={"/users"} className={"sbtSubitem"}>Users</Link>
+                <Link onClick={close} to={"/teams"} className={"sbtSubitem"}>Teams</Link>
+                <Link onClick={close} to={"/leaderboard"} className={"sbtSubitem"}>Leaderboard</Link>
             </SBMenu>
             <hr />
             {api.user ? <>
                 <SBMenu key={"challenges"} name={"Challenges"} initial>
                     {api.challenges.map(i =>
-                        <Link to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>{i.name}</Link>
+                        <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>{i.name}</Link>
                     )}
                     {api.user.is_admin &&
-                        <Link to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ Add new category</Link>
+                        <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ Add new category</Link>
                     }
                 </SBMenu>
                 <hr />
                 <SBMenu key={"user"} name={api.user.username}>
-                    <Link to={"/profile/me"} className={"sbtSubitem"}>Profile</Link>
-                    <Link to={"/team/me"} className={"sbtSubitem"}>Team</Link>
-                    <Link to={"/settings"} className={"sbtSubitem"}>Settings</Link>
-                    <Link to={"/logout"} className={"sbtSubitem"}>Logout</Link>
+                    <Link onClick={close} to={"/profile/me"} className={"sbtSubitem"}>Profile</Link>
+                    <Link onClick={close} to={"/team/me"} className={"sbtSubitem"}>Team</Link>
+                    <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>Settings</Link>
+                    <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>Logout</Link>
                 </SBMenu>
                 <hr />
             </> : (endpoints.configGet("login", true) || endpoints.configGet("registration", true)) ? <>
                 <SBMenu key={"login"} name={"Login"} initial>
                     {endpoints.configGet("login", true) &&
-                        <Link key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
+                        <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
                     {endpoints.configGet("registration", true) &&
-                    <Link key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
+                    <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
                 </SBMenu>
                 <hr />
             </> : null}
             {api.user && api.user.is_admin && <>
                 <SBMenu key={"admin"} name={"Admin"}>
-                    <Link to={"/admin/config"} className={"sbtSubitem"}>Configuration</Link>
-                    <Link to={"/admin/service"} className={"sbtSubitem"}>Service Status</Link>
-                    <Link to={"/admin/announcements"} className={"sbtSubitem"}>Announcements</Link>
-                    <Link to={"/admin/members"} className={"sbtSubitem"}>Members</Link>
-                    <Link to={"/admin/teams"} className={"sbtSubitem"}>Teams</Link>
+                    <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>Configuration</Link>
+                    <Link onClick={close} to={"/admin/service"} className={"sbtSubitem"}>Service Status</Link>
+                    <Link onClick={close} to={"/admin/announcements"} className={"sbtSubitem"}>Announcements</Link>
+                    <Link onClick={close} to={"/admin/members"} className={"sbtSubitem"}>Members</Link>
+                    <Link onClick={close} to={"/admin/teams"} className={"sbtSubitem"}>Teams</Link>
                 </SBMenu>
                 <hr />
             </>}
@@ -139,7 +134,7 @@ export const SiteNav = withRouter(({ children, history }) => {
             {children}
         </div>
     </div>;
-});
+};
 
 
 export const SBTSection = ({ title, children, subTitle, noHead }) => {
