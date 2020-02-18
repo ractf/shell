@@ -66,7 +66,7 @@ export default () => {
 
                 <Input name={"username"} placeholder={t("username")} />
                 <Input name={"password"} placeholder={t("password")} password />
-                <div onClick={openForget} className={"fgtpsdpmt"}>{t("pass_forgot")}</div>
+                <div onClick={openForget} className={"fgtpsdpmt"}>{t("auth.pass_forgot")}</div>
 
                 {message && <FormError>{message}</FormError>}
 

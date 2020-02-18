@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdMenu } from "react-icons/md";
+import { useTranslation } from 'react-i18next';
 
 import { apiContext, apiEndpoints, Link } from "ractf";
 import Wordmark from "./Wordmark";
@@ -75,6 +76,7 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
 export const SiteNav = ({ children }) => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
+    const { t } = useTranslation();
 
     const [sbOpen, setSbOpen] = useState(false);
 
@@ -85,47 +87,47 @@ export const SiteNav = ({ children }) => {
         <div onMouseDown={() => setSbOpen(!sbOpen)} className={"sbtBurger"}><MdMenu /></div>
         <div className={"sbtSidebar"}>
             <hr />
-            <SBMenu key={"ractf"} name={"RACTF"} initial>
-                <Link onClick={close} to={"/home"} className={"sbtSubitem"}>Home</Link>
-                <Link onClick={close} to={"/users"} className={"sbtSubitem"}>Users</Link>
-                <Link onClick={close} to={"/teams"} className={"sbtSubitem"}>Teams</Link>
-                <Link onClick={close} to={"/leaderboard"} className={"sbtSubitem"}>Leaderboard</Link>
+            <SBMenu key={"ractf"} name={t("sidebar.brand")} initial>
+                <Link onClick={close} to={"/home"} className={"sbtSubitem"}>{t("sidebar.home")}</Link>
+                <Link onClick={close} to={"/users"} className={"sbtSubitem"}>{t("user_plural")}</Link>
+                <Link onClick={close} to={"/teams"} className={"sbtSubitem"}>{t("team_plural")}</Link>
+                <Link onClick={close} to={"/leaderboard"} className={"sbtSubitem"}>{t("leaderboard")}</Link>
             </SBMenu>
             <hr />
             {api.user ? <>
-                <SBMenu key={"challenges"} name={"Challenges"} initial>
+                <SBMenu key={"challenges"} name={t("challenge_plural")} initial>
                     {api.challenges.map(i =>
                         <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>{i.name}</Link>
                     )}
                     {api.user.is_admin &&
-                        <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ Add new category</Link>
+                        <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ {t("challenge.new_cat")}</Link>
                     }
                 </SBMenu>
                 <hr />
                 <SBMenu key={"user"} name={api.user.username}>
-                    <Link onClick={close} to={"/profile/me"} className={"sbtSubitem"}>Profile</Link>
-                    <Link onClick={close} to={"/team/me"} className={"sbtSubitem"}>Team</Link>
-                    <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>Settings</Link>
-                    <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>Logout</Link>
+                    <Link onClick={close} to={"/profile/me"} className={"sbtSubitem"}>{t("settings.profile")}</Link>
+                    <Link onClick={close} to={"/team/me"} className={"sbtSubitem"}>{t("team")}</Link>
+                    <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>{t("setting_plural")}</Link>
+                    <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>{t("logout")}</Link>
                 </SBMenu>
                 <hr />
             </> : (endpoints.configGet("login", true) || endpoints.configGet("registration", true)) ? <>
-                <SBMenu key={"login"} name={"Login"} initial>
+                <SBMenu key={"login"} name={t("login")} initial>
                     {endpoints.configGet("login", true) &&
-                        <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
+                        <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>{t("login")}</Link>}
                     {endpoints.configGet("registration", true) &&
-                    <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
+                    <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>{t("register")}</Link>}
                 </SBMenu>
                 <hr />
             </> : null}
             {api.user && api.user.is_admin && <>
-                <SBMenu key={"admin"} name={"Admin"}>
-                    <Link onClick={close} to={"/admin/ctf"} className={"sbtSubitem"}>Event</Link>
-                    <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>Configuration</Link>
-                    <Link onClick={close} to={"/admin/service"} className={"sbtSubitem"}>Service Status</Link>
-                    <Link onClick={close} to={"/admin/announcements"} className={"sbtSubitem"}>Announcements</Link>
-                    <Link onClick={close} to={"/admin/members"} className={"sbtSubitem"}>Members</Link>
-                    <Link onClick={close} to={"/admin/teams"} className={"sbtSubitem"}>Teams</Link>
+                <SBMenu key={"admin"} name={t("sidebar.admin")}>
+                    <Link onClick={close} to={"/admin/ctf"} className={"sbtSubitem"}>{t("admin.event")}</Link>
+                    <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>{t("adminconfiguration")}</Link>
+                    <Link onClick={close} to={"/admin/service"} className={"sbtSubitem"}>{t("admin.status")}</Link>
+                    <Link onClick={close} to={"/admin/announcements"} className={"sbtSubitem"}>{t("admin.announce.head")}</Link>
+                    <Link onClick={close} to={"/admin/members"} className={"sbtSubitem"}>{t("admin.members")}</Link>
+                    <Link onClick={close} to={"/admin/teams"} className={"sbtSubitem"}>{t("admin.teams")}</Link>
                 </SBMenu>
                 <hr />
             </>}

@@ -17,7 +17,7 @@ setupPlugins();
 
 i18next.init({
     interpolation: { escapeValue: false },
-    lng: window.localStorage.getItem("lang")  || "en",
+    lng: "en",
     resources: {
         en: {
             translation: en,

@@ -186,5 +186,13 @@
     "team_secret_warn": "In order to display the secret for you above, we store it un-hashed. Don't put sensitive things like your bank details here.",
     "bio": "Bio",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "okay": "Okay",
+    "cancel": "Cancel",
+    "sidebar": {
+        "brand": "RACTF",
+        "home": "Home",
+        "logout": "Logout",
+        "admin": "Admin"
+    }
 }

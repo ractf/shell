@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 import Button, { ButtonRow } from "./Button";
 import Form from "./Form";
@@ -31,6 +32,8 @@ const Modal = ({ onHide, children, centre, small }) => {
 
 
 export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
+    const { t } = useTranslation();
+
     return <Modal onHide={() => {promise.reject(); onHide && onHide();}} small={body.small} centre>
         <p>
             { body.message }
@@ -44,9 +47,9 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
             </> : <Input key={n} width={'auto'} {...i} />)}
 
             <ButtonRow>
-                <Button submit>{ body.okay || "Okay" }</Button>
+                <Button submit>{ body.okay || t("okay") }</Button>
                 {!body.noCancel &&
-                    <Button click={() => {promise.reject(); onHide && onHide();}}>{ body.cancel || "Cancel" }</Button>}
+                    <Button click={() => {promise.reject(); onHide && onHide();}}>{ body.cancel || t("cancel") }</Button>}
             </ButtonRow>
         </Form>
     </Modal>;
