@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 import {
     Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow,
@@ -12,12 +13,13 @@ export default () => {
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
+    const { t } = useTranslation();
 
     const doLogin = ({ username, password, pin = null }) => {
         if (!username)
-            return setMessage("No username provided");
+            return setMessage(t("auth.no_uname"));
         if (!password)
-            return setMessage("No password provided");
+            return setMessage(t("auth.no_pass"));
 
         setLocked(true);
         endpoints.login(username, password, pin).catch(
@@ -26,13 +28,13 @@ export default () => {
                 if (message.response && message.response.data && message.response.status === 401) {
                     // 2fa required
                     const faPrompt = () => {
-                        app.promptConfirm({ message: "2-Factor Code Required", small: true },
-                            [{ name: 'pin', placeholder: '6-digit code', format: /^\d{6}$/, limit: 6 }]
+                        app.promptConfirm({ message: t("2fa.required"), small: true },
+                            [{ name: 'pin', placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
                         ).then(({ pin }) => {
                             if (pin.length !== 6) return faPrompt();
                             doLogin({ username: username, password: password, pin: pin });
                         }).catch(() => {
-                            setMessage("2-Factor Authentication Required!");
+                            setMessage(t("2fa.canceled"));
                             setLocked(false);
                         });
                     };
@@ -46,11 +48,11 @@ export default () => {
     };
 
     const openForget = () => {
-        app.promptConfirm({ message: "Enter your email to reset your password", okay: "Send Link", small: true },
-            [{ name: "email", placeholder: "Email", format: EMAIL_RE }]
+        app.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
+            [{ name: "email", placeholder: t("email"), format: EMAIL_RE }]
         ).then(({ email }) => {
             endpoints.requestPasswordReset(email).then(() => {
-                app.alert("Email sent, check your inbox");
+                app.alert(t("auth.email_sent"));
             }).catch(e => {
                 app.alert(endpoints.getError(e));
             });
@@ -60,17 +62,17 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doLogin}>
-                <SectionTitle2>Login to RACTF</SectionTitle2>
+                <SectionTitle2>{t("auth.login")}</SectionTitle2>
 
-                <Input name={"username"} placeholder={"Username"} />
-                <Input name={"password"} placeholder={"Password"} password />
-                <div onClick={openForget} className={"fgtpsdpmt"}>I forgot my password</div>
+                <Input name={"username"} placeholder={t("username")} />
+                <Input name={"password"} placeholder={t("password")} password />
+                <div onClick={openForget} className={"fgtpsdpmt"}>{t("pass_forgot")}</div>
 
                 {message && <FormError>{message}</FormError>}
 
                 <ButtonRow right>
-                    <Button medium lesser to={"/register"}>Register</Button>
-                    <Button medium submit>Login</Button>
+                    <Button medium lesser to={"/register"}>{t("register")}</Button>
+                    <Button medium submit>{t("login")}</Button>
                 </ButtonRow>
             </Form>
         </Wrap>

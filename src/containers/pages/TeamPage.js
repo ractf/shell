@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
@@ -23,15 +24,17 @@ export default () => {
     const team = match.params.team;
     const [teamData, error] = useApi("/teams/" + (team === "me" ? "self" : team));
 
-    if (error) return <Page title={"Teams"} vCentre>
+    const { t } = useTranslation();
+
+    if (error) return <Page title={t("teams.teams")} vCentre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (!teamData) return <Page title={"Teams"} vCentre><Spinner /></Page>;
+    if (!teamData) return <Page title={t("teams.teams")} vCentre><Spinner /></Page>;
 
     const UserSolve = ({ user_name, name, score }) => <div className={"userSolve"}>
         <div>{name}</div>
-        <div>{score} point{score === 1 ? "" : "s"} - Scored by {user_name}</div>
+        <div>{t("teams.solve", {count: parseInt(score, 10), user_name})}</div>
     </div>;
 
     return <Page title={teamData.name}>
@@ -40,7 +43,7 @@ export default () => {
                 <div className={"userName"}><FaUsers /> {teamData.name}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
                     ? " noBio" : "")}>
-                    {teamData.description}
+                    {teamData.description || t("teams.no_bio")}
                 </div>
 
                 {teamData.social && <>
@@ -73,7 +76,7 @@ export default () => {
             <div className={"userSolves"}>
                 {teamData.solves && teamData.solves.map(i => <UserSolve key={i.solve_timestamp} {...i} />)}
                 {(!teamData.solves || teamData.solves.length === 0) && <div className={"noSolves"}>
-                    {teamData.name} haven't solved any challenges yet
+                    {t("teams.no_solves", {name: teamData.name})}
                 </div>}
             </div>
         </div>

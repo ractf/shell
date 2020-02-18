@@ -1,9 +1,10 @@
 import React from "react";
+import i18next from 'i18next';
 
 import { Link } from "ractf";
 
 import Wordmark from "./Wordmark";
-//import Button from "./Button";
+import Button, { ButtonRow } from "./Button";
 
 import "./Header.scss";
 
@@ -15,6 +16,9 @@ export default React.memo(() => <>
             <Wordmark />
         </Link>
 
-        {/*<Button small>Install App</Button>*/}
+        <ButtonRow>
+            <Button click={() => i18next.changeLanguage("de")} small>i18n strings</Button>
+            <Button click={() => i18next.changeLanguage("en")} small>English</Button>
+        </ButtonRow>
     </header>
 </>);

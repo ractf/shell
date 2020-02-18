@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import QRCode from "qrcode.react";
 
 import {
@@ -17,6 +18,8 @@ export default () => {
     const [secret, setSecret] = useState('');
     const [message, setMessage] = useState(null);
 
+    const { t } = useTranslation();
+
     const startFlow = () => {
         setPage(1);
 
@@ -33,8 +36,8 @@ export default () => {
     };
 
     const faPrompt = () => {
-        app.promptConfirm({ message: "2-Factor Code Required", small: true },
-            [{ name: 'pin', placeholder: '6-digit code', format: /^\d{6}$/, limit: 6 }]).then(({ pin }) => {
+        app.promptConfirm({ message: t("2fa.required"), small: true },
+            [{ name: 'pin', placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]).then(({ pin }) => {
                 if (pin.length !== 6) return faPrompt();
 
                 endpoints.verify_2fa(pin).then(async resp => {
@@ -42,10 +45,10 @@ export default () => {
                     setPage(3);
                 }).catch(e => {
                     console.error(e);
-                    setMessage("Code validation failed.");
+                    setMessage(t("2fa.valudation_fail"));
                 });
             }).catch(() => {
-                setMessage("Unable to activate two-factor authentication.");
+                setMessage(t("2fa.unable_to_active"));
             });
     };
 
@@ -60,49 +63,44 @@ export default () => {
         );
     };
 
-    return <Page title={"2-Factor Authentication"}>
+    return <Page title={t("2fa.2fa")}>
         <Wrap>
             {page === 0 ? <>
-                {api.user["2fa_status"] === "on" ?
-                    "You are about to replace the existing 2-factor authentication keys for your account!"
-                    : "You are about to enable 2-factor authentication for you account."}
+                {api.user["2fa_status"] === "on" ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
                 <br /><br />
-                <b>
-                    Note that once added, 2-factor cannot be removed from your account!
-                </b>
+                <b>{t("2fa.no_remove_warning")}</b>
 
                 <ButtonRow>
-                    <Button to={"/settings"} lesser>Nevermind</Button>
-                    <Button click={startFlow}>Enable 2FA</Button>
+                    <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
+                    <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
                 </ButtonRow>
             </> : page === 1 ? <>
-                Enabling 2-Factor...
+                {t("2fa.enabling")}
                 <Spinner />
             </> : page === 2 ? <>
-                <SectionTitle2>Finalise Setup</SectionTitle2>
+                <SectionTitle2>{t("2fa.finalise")}</SectionTitle2>
                 <br />
-                Please scan the QR code below to add RACTF to your 2-factor app.
+                {t("2fa.please_scan_qr")}
                 <br /><br />
                 <QRCode renderAs={"svg"} size={128} fgColor={"#161422"} value={buildURI(secret)} includeMargin />
                 <br /><br />
-                If you are unable to scan the code, use the key shown below:
+                {t("2fa.unable_to_qr")}
                 <TextBlock>
                     {formatSecret(secret)}
                 </TextBlock>
 
                 {message && <FormError>{message}</FormError>}
 
-                <Button click={faPrompt}>I've got it</Button>
+                <Button click={faPrompt}>{t("2fa.got_it")}</Button>
             </> : page === 3 ? <>
-                <SectionTitle2>Congratulations!</SectionTitle2>
+                <SectionTitle2>{t("2fa.congratulations")}</SectionTitle2>
                 <br />
-                Two-factor authentication has been setup!
+                {t("2fa.setup")}
                 <Button to={"/"}>Yay!</Button>
             </> : <>
-                                Something went wrong when setting up two-factor authentication.
-
-                <Button click={() => setPage(0)}>Restart</Button>
-                            </>}
+                {t("2fa.error")}
+                <Button click={() => setPage(0)}>{t("2fa.restart")}</Button>
+            </>}
         </Wrap>
     </Page>;
 };

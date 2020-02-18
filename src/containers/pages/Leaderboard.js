@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import createPlotlyComponent from 'react-plotly.js/factory';
+import { useTranslation } from 'react-i18next';
 
 import TabbedView, { Tab } from "../../components/TabbedView";
 import Table from "../../components/Table";
@@ -59,22 +60,22 @@ const Graph = ({ data }) => {
         data={data}
         layout={{
             width: width, height: 300,
-            margin: {l: 50, r: 50, t: 50, pad: 0},
+            margin: { l: 50, r: 50, t: 50, pad: 0 },
             hovermode: "closest",
-            legend: {orientation: "h", font: {color: colours.bg_l4}},
+            legend: { orientation: "h", font: { color: colours.bg_l4 } },
             plot_bgcolor: colours.bg_d0,
             plot_fgcolor: colours.fg,
             paper_bgcolor: colours.bg_d0,
             xaxis: {
                 gridcolor: colours.bg_l2,
                 linecolor: colours.bg_l3,
-                tickfont: {color: colours.bg_l4},
+                tickfont: { color: colours.bg_l4 },
                 showspikes: true
             },
             yaxis: {
                 gridcolor: colours.bg_l2,
                 linecolor: colours.bg_l3,
-                tickfont: {color: colours.bg_l4},
+                tickfont: { color: colours.bg_l4 },
                 showspikes: true
             },
         }}
@@ -85,6 +86,7 @@ const Graph = ({ data }) => {
 export default () => {
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
+    const { t } = useTranslation();
 
     const [leaderboard] = useApi("/leaderboard/");
 
@@ -170,19 +172,21 @@ export default () => {
         );
     };
 
-    return <Page title={"Leaderboard"}>
+    return <Page title={t("leaderboard")}>
         <TabbedView center initial={1}>
-            <Tab label='Users'>
+            <Tab label={t("user_plural")}>
                 <Graph data={userGraphData} />
                 {leaderboard
-                    ? <Table headings={["Ranking", "User", "Team", "Points"]} data={userData(leaderboard)} />
+                    ? <Table headings={[t("rank"), t("user"), t("team"), t("point_plural")]}
+                        data={userData(leaderboard)} />
                     : <Spinner />}
             </Tab>
 
-            <Tab label='Teams'>
+            <Tab label={t("team_plural")}>
                 <Graph data={teamGraphData} />
                 {leaderboard
-                    ? <Table headings={["Ranking", "Team", "Points"]} data={teamData(leaderboard)} />
+                    ? <Table headings={[t("rank"), t("team"), t("point_plural")]}
+                        data={teamData(leaderboard)} />
                     : <Spinner />}
             </Tab>
         </TabbedView>

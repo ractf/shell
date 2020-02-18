@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
@@ -16,6 +17,7 @@ export default () => {
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
+    const { t } = useTranslation();
 
     const { location } = useReactRouter();
     const props = qs.parse(location.search, { ignoreQueryPrefix: true });
@@ -24,17 +26,17 @@ export default () => {
 
     const doReset = ({ passwd1, passwd2 }) => {
         if (passwd1 !== passwd2)
-            return setMessage("Passwords must match");
+            return setMessage(t("auth.pass_match"));
         if (!passwd1)
-            return setMessage("No password provided");
+            return setMessage(t("auth.no_pass"));
 
         const strength = zxcvbn()(passwd1);
         if (strength.score < 3)
-            return setMessage((strength.feedback.warning || "Password too weak."));
+            return setMessage((strength.feedback.warning || t("auth.pass_weak")));
 
         setLocked(true);
         endpoints.completePasswordReset(props.id, props.secret, passwd1).then(() => {
-            app.alert("Password reset! Please log in using your new password.");
+            app.alert(t("auth.pass_reset"));
         }).catch(
             message => {
                 setMessage(endpoints.getError(message));
@@ -46,14 +48,14 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doReset}>
-                <SectionTitle2>Reset Password</SectionTitle2>
+                <SectionTitle2>{t("auth.reset_password")}</SectionTitle2>
     
-                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={"New Password"} password />
-                <Input name={"passwd2"} placeholder={"Repeat Password"} password />
+                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
+                <Input name={"passwd2"} placeholder={t("password_repeat")} password />
 
                 {message && <FormError>{message}</FormError>}
 
-                <Button medium submit>Reset</Button>
+                <Button medium submit>{t("auth.reset")}</Button>
             </Form>
         </Wrap>
     </Page>;

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { GiCaptainHatProfile } from "react-icons/gi";
+import { useTranslation } from 'react-i18next';
 
 import {
     Page, HR, ButtonRow, TabbedView, Tab, Button, Form, FormError, Input,
@@ -9,20 +10,20 @@ import {
 import "./SettingsPage.scss";
 
 
-const makeOwner = (api, endpoints, app, member) => {
+const makeOwner = (api, endpoints, app, member, t) => {
     return () => {
         app.promptConfirm({
             message: (<>
-                Are you sure you want to make {member.name} the new team owner?<br /><br />
-                You will cease to own the team!
+                {t("settings.owner_confirm", {name: member.name})}<br /><br /><br /><br />
+                {t("settings.stop_own_team")}
             </>), small: true
         }).then(() => {
             // Kick 'em
             endpoints.modifyTeam(api.team.id, { captain: member.id }).then(() => {
-                app.promptConfirm({ message: "You are no longer the team captain!", noCancel: true, small: true });
+                app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 endpoints.setup();
             }).catch(e => {
-                endpoints.promptConfirm({ message: "Error: " + endpoints.getError(e), noCancel: true, small: true });
+                endpoints.promptConfirm({ message: t("error") + endpoints.getError(e), noCancel: true, small: true });
             });
         }).catch(() => {
         });
@@ -31,9 +32,11 @@ const makeOwner = (api, endpoints, app, member) => {
 
 
 const TeamMember = ({ api, endpoints, app, member, isOwner, isCaptain }) => {
+    const { t } = useTranslation();
+
     return <div className={"memberTheme"}>
         <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")}
-            onClick={isOwner ? makeOwner(api, endpoints, app, member) : null}><GiCaptainHatProfile /></div>
+            onClick={isOwner ? makeOwner(api, endpoints, app, member, t) : null}><GiCaptainHatProfile /></div>
         {/*(isOwner && !isCaptain) && <div className={"memberIcon clickable bad"}
                                            onClick={kickMember(api, app, member)}><GiThorHammer /></div>*/}
         <div>
@@ -47,6 +50,7 @@ export default () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const app = useContext(appContext);
+    const { t } = useTranslation();
 
     const [unError, setUnError] = useState("");
     const [pfError, setPfError] = useState("");
@@ -55,18 +59,18 @@ export default () => {
 
     const changePassword = ({ old, new1, new2 }) => {
         if (!old)
-            return setPwError("Current password required");
+            return setPwError(t("settings.curr_pass_required"));
         if (!new1 || !new2)
-            return setPwError("New password required");
+            return setPwError(t("settings.new_pass_required"));
         if (new1 !== new2)
-            return setPwError("Passwords must match");
+            return setPwError(t("auth.pass_match"));
 
         const strength = zxcvbn()(new1);
         if (strength.score < 3)
-            return setPwError((strength.feedback.warning || "Password too weak."));
+            return setPwError((strength.feedback.warning || t("auth.pass_weak")));
 
         endpoints.modifyUser(api.user.id, { oPass: old, nPass: new1 }).then(() => {
-            app.alert("Password changed. Please log back in.");
+            app.alert(t("settings.pass_changed"));
             endpoints.logout();
         }).catch(e => {
             setPwError(endpoints.getError(e));
@@ -75,12 +79,12 @@ export default () => {
 
     const changeUsername = ({ name }) => {
         if (!name)
-            return setUnError("Username required");
+            return setUnError(t("settings.uname_required"));
         if (name === api.user.username)
-            return setUnError("Username has not changed");
+            return setUnError(t("settings.uname_unchanged"));
 
         endpoints.modifyUser(api.user.id, { name: name }).then(() => {
-            app.alert("Username changed. Please log back in.");
+            app.alert(t("settings.uname_changed"));
             endpoints.logout();
         }).catch(e => {
             setUnError(endpoints.getError(e));
@@ -91,7 +95,7 @@ export default () => {
         endpoints.modifyUser(api.user.id, {
             discord: discord, discordid: discordid, twitter: twitter, reddit: reddit, bio: bio
         }).then(() => {
-            app.alert("Personal details updated succesfully.");
+            app.alert(t("settings.details_changed"));
             endpoints.setup();
             setPfError(null);
         }).catch(e => {
@@ -101,7 +105,7 @@ export default () => {
 
     const alterTeam = ({ name, desc, pass }) => {
         endpoints.modifyTeam(api.team.id, { name: name, description: desc, password: pass }).then(() => {
-            app.alert("Team details updated succesfully.");
+            app.alert(t("settings.team_details_changed"));
             endpoints.setup();
             setTeamError(null);
         }).catch(e => {
@@ -111,35 +115,35 @@ export default () => {
 
     const teamOwner = (api.team ? api.team.owner.id === api.user.id : null);
 
-    return <Page title={"Settings for " + api.user.username}>
+    return <Page title={t("settings.for", {name: api.user.username})}>
         <TabbedView>
-            <Tab label="User">
+            <Tab label={t("user")}>
                 {
                     api.user['2fa_status'] !== "on" && <>
-                        <FormError>Your account has 2 factor authentication <b>DISABLED</b></FormError>
-                        <Button to={"/settings/2fa"}>Enable 2FA Now!</Button>
+                        <FormError>{t("settings.2fa_disabled")}</FormError>
+                        <Button to={"/settings/2fa"}>{t("settings.enable_2fa")}</Button>
                         <HR />
                     </>
                 }
 
                 <Form handle={changeUsername}>
-                    <label htmlFor={"name"}>Username</label>
-                    <Input name={"name"} val={api.user.username} limit={36} placeholder={"Username"} />
+                    <label htmlFor={"name"}>{t("username")}</label>
+                    <Input name={"name"} val={api.user.username} limit={36} placeholder={t("username")} />
 
                     {unError && <FormError>{unError}</FormError>}
-                    <Button submit>Save</Button>
+                    <Button submit>{t("save")}</Button>
                 </Form>
                 <HR />
                 <Form handle={changePassword}>
-                    <Input password name={"old"} placeholder={"Current Password"} />
-                    <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={"New Password"} />
-                    <Input password name={"new2"} placeholder={"New Password"} />
+                    <Input password name={"old"} placeholder={t("curr_pass")} />
+                    <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={t("new_pass")} />
+                    <Input password name={"new2"} placeholder={t("new_pass")} />
 
                     {pwError && <FormError>{pwError}</FormError>}
-                    <Button submit>Change Password</Button>
+                    <Button submit>{t("change_pass")}</Button>
                 </Form>
             </Tab>
-            <Tab label="Profile">
+            <Tab label={t("settings.profile")}>
                 <Form handle={updateDetails}>
                     <label htmlFor={"discord"}>Discord</label>
                     <Input name={"discord"} val={api.user.social.discord} limit={36} placeholder={"Discord"} />
@@ -150,40 +154,37 @@ export default () => {
                     <label htmlFor={"reddit"}>Reddit</label>
                     <Input name={"reddit"} val={api.user.social.reddit} limit={36} placeholder={"Reddit"} />
 
-                    <label htmlFor={"bio"}>Bio</label>
+                    <label htmlFor={"bio"}>{t("bio")}</label>
                     <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={"Bio"} />
 
                     {pfError && <FormError>{pfError}</FormError>}
-                    <Button submit>Save</Button>
+                    <Button submit>{t("save")}</Button>
                 </Form>
             </Tab>
-            <Tab label="Team">
+            <Tab label={t("team")}>
                 {api.team ? <>
                     <Form handle={alterTeam} locked={!teamOwner}>
-                        <Input val={api.team.name} name={"name"} limit={36} placeholder={"Team Name"} />
-                        <Input val={api.team.description} name={"desc"} rows={5} placeholder={"Team Description"} />
-                        <Input val={api.team.password} name={"pass"} password placeholder={"Team Secret"} />
-                        <div style={{ opacity: .5 }}>
-                            In order to display the secret for you above, we store it un-hashed.
-                            Don't put sensitive things like your bank details here.
-                        </div>
+                        <Input val={api.team.name} name={"name"} limit={36} placeholder={t("team_name")} />
+                        <Input val={api.team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
+                        <Input val={api.team.password} name={"pass"} password placeholder={t("team_secret")} />
+                        <div style={{ opacity: .5 }}>{t("team_secret_warn")}</div>
 
                         {teamError && <FormError>{teamError}</FormError>}
-                        {teamOwner && <Button submit>Modify Team</Button>}
+                        {teamOwner && <Button submit>{t("settings.modify_team")}</Button>}
                     </Form>
                 </> : <div>
-                        You are not in a team!
+                    {t("settings.not_in_team")}
                     <br /><br />
-                        To be able to participate, you must join or create a team (even if you never invite anyone).
+                    {t("settings.team_prompt")}
                     <HR />
                         <ButtonRow>
-                            <Button to={"/team/join"}>Join a Team</Button>
-                            <Button to={"/team/new"}>Create a Team</Button>
+                            <Button to={"/team/join"}>{t("join_a_team")}</Button>
+                            <Button to={"/team/new"}>{t("create_a_team")}</Button>
                         </ButtonRow>
                     </div>}
             </Tab>
             {api.team &&
-                <Tab label="Team Members">
+                <Tab label={t("team_members")}>
                     <br />
                     {api.team.members.map((i, n) => (
                         <TeamMember key={n} api={api} endpoints={endpoints} app={app}
