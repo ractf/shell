@@ -3,7 +3,7 @@ import React from "react";
 import { SectionTitle2, HR, useApi } from "ractf";
 
 export default () => {
-    const [backendVersion] = useApi("/debug/version");
+    const [backendVersion] = useApi("/stats/version");
 
     return <>
         <SectionTitle2>RACTF Debug Versions:</SectionTitle2>

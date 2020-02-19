@@ -35,7 +35,7 @@ const UserSolve = ({ name, points, time }) => {
 export default () => {
     const { match } = useReactRouter();
     const user = match.params.user;
-    const [userData, error] = useApi("/members/" + (user === "me" ? "self" : user));
+    const [userData, error] = useApi("/member/" + (user === "me" ? "self" : user));
 
     if (error) return <Page title={"Users"} vCentre>
         <FormError>{error}</FormError>
@@ -53,25 +53,25 @@ export default () => {
                 </div>
 
                 {userData.social && <>
-                    {userData.social.twitter && userData.social.twitter.length !== 0 &&
+                    {userData.twitter && userData.twitter.length !== 0 &&
                         <a className={"userSocial"} target={"_blank"}
-                            href={"https://twitter.com/" + encodeURIComponent(userData.social.twitter)}>
-                            <FaTwitter /><span>@{userData.social.twitter}</span>
+                            href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
+                            <FaTwitter /><span>@{userData.twitter}</span>
                         </a>}
-                    {userData.social.reddit && userData.social.reddit.length !== 0 &&
+                    {userData.reddit && userData.reddit.length !== 0 &&
                         <a className={"userSocial"} target={"_blank"}
-                            href={"https://reddit.com/u/" + encodeURIComponent(userData.social.reddit)}>
-                            <FaRedditAlien /><span>/u/{userData.social.reddit}</span>
+                            href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
+                            <FaRedditAlien /><span>/u/{userData.reddit}</span>
                         </a>}
-                    {userData.social.discord && userData.social.discord.length !== 0 &&
-                        (userData.social.discordid && userData.social.discordid.length !== 0
+                    {userData.discord && userData.discord.length !== 0 &&
+                        (userData.discordid && userData.discordid.length !== 0
                             ? <a target={"_blank"}
-                                href={"https://discordapp.com/users/" + encodeURIComponent(userData.social.discordid)}
+                                href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
                                 className={"userSocial"}>
-                                <FaDiscord /><span>{userData.social.discord}</span>
+                                <FaDiscord /><span>{userData.discord}</span>
                             </a>
                             : <span className={"userSocial"}>
-                                <FaDiscord /><span>{userData.social.discord}</span>
+                                <FaDiscord /><span>{userData.discord}</span>
                             </span>)}
                 </>}
 

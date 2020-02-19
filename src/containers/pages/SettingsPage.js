@@ -142,13 +142,13 @@ export default () => {
             <Tab label="Profile">
                 <Form handle={updateDetails}>
                     <label htmlFor={"discord"}>Discord</label>
-                    <Input name={"discord"} val={api.user.social.discord} limit={36} placeholder={"Discord"} />
-                    <Input name={"discordid"} val={api.user.social.discordid} format={/\d+/} limit={18}
+                    <Input name={"discord"} val={api.user.discord} limit={36} placeholder={"Discord"} />
+                    <Input name={"discordid"} val={api.user.discordid} format={/\d+/} limit={18}
                         placeholder={"Discord User ID"} />
                     <label htmlFor={"twitter"}>Twitter</label>
-                    <Input name={"twitter"} val={api.user.social.twitter} limit={36} placeholder={"Twitter"} />
+                    <Input name={"twitter"} val={api.user.twitter} limit={36} placeholder={"Twitter"} />
                     <label htmlFor={"reddit"}>Reddit</label>
-                    <Input name={"reddit"} val={api.user.social.reddit} limit={36} placeholder={"Reddit"} />
+                    <Input name={"reddit"} val={api.user.reddit} limit={36} placeholder={"Reddit"} />
 
                     <label htmlFor={"bio"}>Bio</label>
                     <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={"Bio"} />

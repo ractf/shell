@@ -1,26 +1,33 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
+import qs from "query-string";
 
 import { apiEndpoints, Page, FormError, Spinner } from "ractf";
 import { Wrap } from "./Parts";
 
+import useReactRouter from "../../../useReactRouter";
 
-export const EmailVerif = ({ location }) => {
+
+export const EmailVerif = () => {
     const [verif, setVerif] = useState(0);
     const [message, setMessage] = useState("");
     const endpoints = useContext(apiEndpoints);
 
-    const uuid = window.location.search.substring(1, 37);
-
+    const { location } = useReactRouter();
+    const props = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const id = props.id;
+    const secret = props.secret;
+    
     useEffect(() => {
-        endpoints.verify(uuid).then(() => {
+        endpoints.verify(id, secret).then(() => {
             setVerif(2);
         }).catch((e) => {
             setMessage(endpoints.getError(e));
             setVerif(1);
         });
-    }, [endpoints, setVerif, setMessage, uuid]);
-
+    }, [endpoints, setVerif, setMessage, id, secret]);
+    if (!(secret && id)) return <Redirect to={"/login"} />;
+    
     return <Page vCentre>
         <Wrap>
             {verif === 0 ? <>

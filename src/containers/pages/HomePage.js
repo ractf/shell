@@ -84,7 +84,7 @@ const Clouds = () => {
 export default () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
-    const [stats] = useApi("/stats/");
+    const [stats] = useApi("/stats/stats");
 
     let chalCount = 0;
     if (api.challenges)

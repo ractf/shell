@@ -12,7 +12,7 @@ class APIClass extends Component {
     API_BASE = process.env.REACT_APP_API_BASE;
     BASE_URL = this.DOMAIN + this.API_BASE;
     ENDPOINTS = {
-        COUNTDOWN: "/countdown/",
+        COUNTDOWN: "/stats/countdown",
         CONFIG: "/admin/config",
         ADMIN_CONFIG: "/admin/admin_config",
         USER_LIST_ADMIN: "/admin/members",
@@ -24,9 +24,9 @@ class APIClass extends Component {
         LOGIN: "/auth/login",
         ADD_2FA: "/auth/add_2fa",
         VERIFY_2FA: "/auth/verify_2fa",
-        VERIFY: "/auth/verify",
+        VERIFY: "/auth/verify_email",
         REQUEST_RESET: "/auth/request_password_reset",
-        COMPLETE_RESET: "/auth/complete_password_reset",
+        COMPLETE_RESET: "/auth/password_reset",
 
         CHALLENGES: "/challenges/",
         FLAG_TEST: "/challenges/<uuid>/attempt",
@@ -43,19 +43,19 @@ class APIClass extends Component {
         GROUP_CREATE: "/group/new",
         GROUP_EDIT: "/group/edit",
 
-        USER_MODIFY: "/members/mod/",
-        USER_SELF: "/members/self",
-        USER_LIST: "/members/list",
-        USER: "/members/",
+        USER_MODIFY: "/member/mod/",
+        USER_SELF: "/member/self",
+        USER_LIST: "/member/list",
+        USER: "/member/",
 
-        TEAM_CREATE: "/teams/create",
-        TEAM_MODIFY: "/teams/mod/",
-        TEAM_JOIN: "/teams/join",
-        TEAM_SELF: "/teams/self",
-        TEAM_LIST: "/teams/list",
-        TEAM: "/teams/",
+        TEAM_CREATE: "/team/create",
+        TEAM_MODIFY: "/team/mod/",
+        TEAM_JOIN: "/team/join",
+        TEAM_SELF: "/team/self",
+        TEAM_LIST: "/team/list",
+        TEAM: "/team/",
 
-        STATS: "/stats/",
+        STATS: "/stats/stats",
     };
 
     constructor(props) {
@@ -232,6 +232,7 @@ class APIClass extends Component {
                 url: this.BASE_URL + url,
                 method: "get",
                 headers: this._getHeaders(),
+                withCredentials: true,
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
@@ -245,6 +246,7 @@ class APIClass extends Component {
                 method: "post",
                 data: data,
                 headers: this._getHeaders(),
+                withCredentials: true,
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
@@ -254,14 +256,14 @@ class APIClass extends Component {
     _getHeaders = () => {
         let headers = {};
         if (localStorage.getItem("token"))
-            headers.Authorization = localStorage.getItem("token");
+            headers.Authorization = 'Token ' + localStorage.getItem("token");
         return headers;
     };
 
     _reloadCache = async () => {
         let userData, teamData, challenges, ready = true;
         try {
-            userData = await this.cachedGet("/members/self");
+            userData = await this.cachedGet("/member/self");
         } catch (e) {
             if (e.response && e.response.data)
                 return this.logout();
@@ -269,18 +271,20 @@ class APIClass extends Component {
             this.setState({ ready: false });
         }
 
-        try {
-            teamData = await this.cachedGet("/teams/self");
-        } catch (e) {
-            if (e.request && e.request.status === 404) {
-                teamData = null;
-            } else {
-                if (e.response && e.response.data)
-                    return this.logout();
-                ready = false;
-                this.setState({ ready: false });
+        if (userData.team !== null) {
+            try {
+                teamData = await this.cachedGet("/team/self");
+            } catch (e) {
+                if (e.request && e.request.status === 404) {
+                    teamData = null;
+                } else {
+                    if (e.response && e.response.data)
+                        return this.logout();
+                    ready = false;
+                    this.setState({ ready: false });
+                }
             }
-        }
+        } else teamData = null;
 
         try {
             challenges = (await this._getChallenges()).d;
@@ -401,7 +405,7 @@ class APIClass extends Component {
     _getConfig = () => this.get(this.ENDPOINTS.CONFIG);
     _getAdminConfig = () => this.get(this.ENDPOINTS.ADMIN_CONFIG);
     _getChallenges = () => this.get(this.ENDPOINTS.CHALLENGES);
-    setConfigValue = (key, value) => this.post(this.ENDPOINTS.ADMIN_CONFIG, { key: key, value: value });
+    setConfigValue = (key, value) => this.post(this.ENDPOINTS.ADMIN_CONFIG, { key, value });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);
@@ -425,8 +429,8 @@ class APIClass extends Component {
             }).catch(reject);
         });
     };
-    modifyUserAdmin = (id, data) => this.post(this.ENDPOINTS.USER_MODIFY_ADMIN, { id: id, ...data });
-    modifyTeamAdmin = (id, data) => this.post(this.ENDPOINTS.TEAM_MODIFY_ADMIN, { id: id, ...data });
+    modifyUserAdmin = (id, data) => this.post(this.ENDPOINTS.USER_MODIFY_ADMIN, { id, ...data });
+    modifyTeamAdmin = (id, data) => this.post(this.ENDPOINTS.TEAM_MODIFY_ADMIN, { id, ...data });
 
     modifyTeam = (teamId, data) => {
         return new Promise((resolve, reject) => {
@@ -443,9 +447,9 @@ class APIClass extends Component {
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
-            this.post(this.ENDPOINTS.TEAM_CREATE, { name: name, password: password }
+            this.post(this.ENDPOINTS.TEAM_CREATE, { name, password }
             ).then(async data => {
-                let team = await this.cachedGet("/teams/self");
+                let team = await this.cachedGet("/team/self");
                 this.setState({ team: team });
                 localStorage.setItem("teamData", team);
 
@@ -456,9 +460,9 @@ class APIClass extends Component {
 
     joinTeam = (name, password) => {
         return new Promise((resolve, reject) => {
-            this.post(this.ENDPOINTS.TEAM_JOIN, { name: name, password: password }
+            this.post(this.ENDPOINTS.TEAM_JOIN, { name, password }
             ).then(async data => {
-                let team = await this.cachedGet("/teams/self");
+                let team = await this.cachedGet("/team/self");
                 this.setState({ team: team });
                 localStorage.setItem("teamData", team);
 
@@ -480,11 +484,8 @@ class APIClass extends Component {
     };
 
     login = (username, password, otp = null) => {
-        let payload = { username: username, password: password };
-        if (otp) payload.otp = otp;
-
         return new Promise((resolve, reject) => {
-            this.post(this.ENDPOINTS.LOGIN, payload
+            this.post(this.ENDPOINTS.LOGIN, { username, password, otp }
             ).then(data => {
                 this._postLogin(data.d.token);
                 resolve();
@@ -493,27 +494,25 @@ class APIClass extends Component {
     };
 
     add_2fa = () => this.post(this.ENDPOINTS.ADD_2FA);
-    verify_2fa = (otp) => this.post(this.ENDPOINTS.VERIFY_2FA, { otp: otp });
-    requestPasswordReset = (email) => this.post(this.ENDPOINTS.REQUEST_RESET, { username: email });
-    verify = (uuid) => this.post(this.ENDPOINTS.VERIFY, { uuid: uuid }).then(data => {
+    verify_2fa = (otp) => this.post(this.ENDPOINTS.VERIFY_2FA, { otp });
+    requestPasswordReset = (email) => this.post(this.ENDPOINTS.REQUEST_RESET, { email });
+    verify = (uid, token) => this.post(this.ENDPOINTS.VERIFY, { uid, token }).then(data => {
         this._postLogin(data.d.token);
     });
     createGroup = (name, desc, type) => (
-        this.post(this.ENDPOINTS.GROUP_CREATE, { name: name, desc: desc, type: type })
+        this.post(this.ENDPOINTS.GROUP_CREATE, { name, desc, type })
     );
     editGroup = (id, name, desc, type) => (
-        this.post(this.ENDPOINTS.GROUP_EDIT, { id: id, name: name, desc: desc, type: type })
+        this.post(this.ENDPOINTS.GROUP_EDIT, { id, name, desc, type })
     );
     editChallenge = (id, name, points, desc, flag_type, flag, autoUnlock, meta) => (
         this.post(this.ENDPOINTS.CHALLENGE_EDIT, {
-            id: id, name: name, points: points, desc: desc, flag_type: flag_type,
-            flag: flag, auto_unlock: autoUnlock, meta: meta
+            id, name, points, desc, flag_type, flag, meta, auto_unlock: autoUnlock
         })
     );
     createChallenge = (group, name, points, desc, flag_type, flag, autoUnlock, meta) => (
         this.post(this.ENDPOINTS.CHALLENGE_CREATE, {
-            group: group, name: name, points: points, desc: desc, flag_type: flag_type,
-            flag: flag, auto_unlock: autoUnlock, meta: meta
+            group, name, points, desc, flag_type, flag, meta, auto_unlock: autoUnlock
         })
     );
     linkChallenges = (chal1, chal2, linkState) =>
@@ -522,7 +521,7 @@ class APIClass extends Component {
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {
             this.post(this.ENDPOINTS.COMPLETE_RESET,
-                { uuid: id, secret: secret, new_password: password }
+                { uid: id, token: secret, password: password }
             ).then(response => {
                 this.props.history.push("/login");
                 resolve();
@@ -533,7 +532,7 @@ class APIClass extends Component {
     register = (username, password, email) => {
         return new Promise((resolve, reject) => {
             this.post(this.ENDPOINTS.REGISTER,
-                { username: username, password: password, email: email }
+                { username, password, email }
             ).then(response => {
                 this.props.history.push("/register/email");
                 resolve();
@@ -547,7 +546,7 @@ class APIClass extends Component {
     );
 
     editFile = (id, name, url, size) =>
-        this.post(this.ENDPOINTS.EDIT_FILE, { id: id, name: name, url: url, size: size }).then(() => {
+        this.post(this.ENDPOINTS.EDIT_FILE, { id, name, url, size }).then(() => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal =>
                     chal.files.forEach(file => {
@@ -562,7 +561,7 @@ class APIClass extends Component {
             this.setState({ challenges: this.state.challenges });
         });
     newFile = (chalId, name, url, size) =>
-        this.post(this.ENDPOINTS.NEW_FILE, { chal_id: chalId, name: name, url: url, size: size }).then((resp) => {
+        this.post(this.ENDPOINTS.NEW_FILE, { chal_id: chalId, name, url, size }).then((resp) => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal => {
                     if (chal.id === chalId) {
@@ -574,7 +573,7 @@ class APIClass extends Component {
         });
 
     editHint = (id, name, cost, body) =>
-        this.post(this.ENDPOINTS.EDIT_HINT, { id: id, name: name, cost: cost, body: body }).then(() => {
+        this.post(this.ENDPOINTS.EDIT_HINT, { id, name, cost, body }).then(() => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal =>
                     chal.hints.forEach(hint => {
@@ -589,7 +588,7 @@ class APIClass extends Component {
             this.setState({ challenges: this.state.challenges });
         });
     newHint = (chalId, name, cost, body) =>
-        this.post(this.ENDPOINTS.NEW_HINT, { chal_id: chalId, name: name, cost: cost, body: body }).then((resp) => {
+        this.post(this.ENDPOINTS.NEW_HINT, { chal_id: chalId, name, cost, body }).then((resp) => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal => {
                     if (chal.id === chalId) {
@@ -600,7 +599,7 @@ class APIClass extends Component {
             this.setState({ challenges: this.state.challenges });
         });
     useHint = (id) =>
-        this.post(this.ENDPOINTS.USE_HINT, { id: id }).then(resp => resp.d).then(body => {
+        this.post(this.ENDPOINTS.USE_HINT, { id }).then(resp => resp.d).then(body => {
             this.state.challenges.forEach(group =>
                 group.chals.forEach(chal =>
                     chal.hints.forEach(hint => {

@@ -7,7 +7,7 @@ import { Table, Spinner, FormError, useApi, SectionTitle2 } from "ractf";
 
 
 export const TeamsList = () => {
-    const [allTeams, error] = useApi("/teams/list");
+    const [allTeams, error] = useApi("/team");
 
     return <Page
         title={"Teams"} vCentre={error || !allTeams}>
@@ -32,7 +32,7 @@ export const TeamsList = () => {
 
 
 export const UsersList = () => {
-    const [allUsers, error] = useApi("/members/list");
+    const [allUsers, error] = useApi("/member");
 
     return <Page
         title={"Users"} vCentre={error || !allUsers}>
@@ -49,7 +49,7 @@ export const UsersList = () => {
         </> :
             allUsers ?
                 <Table headings={["Name", "Team"]}
-                    data={allUsers.map(x => [x.name, x.team_name, "/profile/" + x.id])} />
+                    data={allUsers.map(x => [x.username, x.team, "/profile/" + x.id])} />
                 : <Spinner />
         }
     </Page>;

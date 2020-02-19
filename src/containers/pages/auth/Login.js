@@ -22,7 +22,6 @@ export default () => {
         setLocked(true);
         endpoints.login(username, password, pin).catch(
             message => {
-                window.m = message;
                 if (message.response && message.response.data && message.response.status === 401) {
                     // 2fa required
                     const faPrompt = () => {
