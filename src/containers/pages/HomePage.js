@@ -89,7 +89,8 @@ export default () => {
     let chalCount = 0;
     if (api.challenges)
         api.challenges.forEach(i => {
-            chalCount += i.chals.length;
+            if (i.challenges)
+                chalCount += i.challenges.length;
         });
     
     return <Page vCentre>
@@ -153,7 +154,7 @@ export default () => {
                 </div>
             </Link>
         </div>
-        {api.user && api.user.is_admin &&
+        {api.user && api.user.is_staff &&
             <div className={"cardRow"}>
                 <Link className={"cardTypeLink"} to={"/admin"}>
                     <div className={"cardTitle"}>Admin Panel</div>

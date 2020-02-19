@@ -13,7 +13,7 @@ const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
 
 const getChal = (tab, x, y) => {
     for (let i = 0; i < tab.chals.length; i++) {
-        if (tab.chals[i].metadata.x === x && tab.chals[i].metadata.y === y)
+        if (tab.chals[i].challenge_metadata.x === x && tab.chals[i].challenge_metadata.y === y)
             return tab.chals[i];
     }
     return {};
@@ -23,8 +23,9 @@ const getChal = (tab, x, y) => {
 const emptyChallenge = (x, y) => ({
     lock: false,
     solve: false,
-    deps: [],
-    metadata: {
+    unlocks: [],
+    files: [],
+    challenge_metadata: {
         x: x,
         y: y
     }
@@ -37,58 +38,59 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     const api = useContext(apiContext);
 
     let chalmap = {};
+    challenges.chals = challenges.challenges || [];
     challenges.chals.forEach((chal) => {
-        chalmap[[chal.metadata.x, chal.metadata.y]] = chal;
+        chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y]] = chal;
     });
 
     const toggleLink = chal => {
         return side => {
             switch (side) {
                 case "up":
-                    if (chalmap[[chal.metadata.x, chal.metadata.y - 1]]) {
+                    if (chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y - 1]]) {
                         chal.link ^= NORTH;
-                        chalmap[[chal.metadata.x, chal.metadata.y - 1]].link ^= SOUTH;
+                        chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y - 1]].link ^= SOUTH;
                         endpoints.linkChallenges(
-                            chal, chalmap[[chal.metadata.x, chal.metadata.y - 1]], !!(chal.link & NORTH)
+                            chal, chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y - 1]], !!(chal.link & NORTH)
                         );
                         endpoints.linkChallenges(
-                            chalmap[[chal.metadata.x, chal.metadata.y - 1]], chal, !!(chal.link & NORTH)
+                            chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y - 1]], chal, !!(chal.link & NORTH)
                         );
                     }
                     break;
                 case "down":
-                    if (chalmap[[chal.metadata.x, chal.metadata.y + 1]]) {
+                    if (chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y + 1]]) {
                         chal.link ^= SOUTH;
-                        chalmap[[chal.metadata.x, chal.metadata.y + 1]].link ^= NORTH;
+                        chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y + 1]].link ^= NORTH;
                         endpoints.linkChallenges(
-                            chal, chalmap[[chal.metadata.x, chal.metadata.y + 1]], !!(chal.link & SOUTH)
+                            chal, chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y + 1]], !!(chal.link & SOUTH)
                         );
                         endpoints.linkChallenges(
-                            chalmap[[chal.metadata.x, chal.metadata.y + 1]], chal, !!(chal.link & SOUTH)
+                            chalmap[[chal.challenge_metadata.x, chal.challenge_metadata.y + 1]], chal, !!(chal.link & SOUTH)
                         );
                     }
                     break;
                 case "left":
-                    if (chalmap[[chal.metadata.x - 1, chal.metadata.y]]) {
+                    if (chalmap[[chal.challenge_metadata.x - 1, chal.challenge_metadata.y]]) {
                         chal.link ^= WEST;
-                        chalmap[[chal.metadata.x - 1, chal.metadata.y]].link ^= EAST;
+                        chalmap[[chal.challenge_metadata.x - 1, chal.challenge_metadata.y]].link ^= EAST;
                         endpoints.linkChallenges(
-                            chal, chalmap[[chal.metadata.x - 1, chal.metadata.y]], !!(chal.link & WEST)
+                            chal, chalmap[[chal.challenge_metadata.x - 1, chal.challenge_metadata.y]], !!(chal.link & WEST)
                         );
                         endpoints.linkChallenges(
-                            chalmap[[chal.metadata.x - 1, chal.metadata.y]], chal, !!(chal.link & WEST)
+                            chalmap[[chal.challenge_metadata.x - 1, chal.challenge_metadata.y]], chal, !!(chal.link & WEST)
                         );
                     }
                     break;
                 case "right":
-                    if (chalmap[[chal.metadata.x + 1, chal.metadata.y]]) {
+                    if (chalmap[[chal.challenge_metadata.x + 1, chal.challenge_metadata.y]]) {
                         chal.link ^= EAST;
-                        chalmap[[chal.metadata.x + 1, chal.metadata.y]].link ^= WEST;
+                        chalmap[[chal.challenge_metadata.x + 1, chal.challenge_metadata.y]].link ^= WEST;
                         endpoints.linkChallenges(
-                            chal, chalmap[[chal.metadata.x + 1, chal.metadata.y]], !!(chal.link & EAST)
+                            chal, chalmap[[chal.challenge_metadata.x + 1, chal.challenge_metadata.y]], !!(chal.link & EAST)
                         );
                         endpoints.linkChallenges(
-                            chalmap[[chal.metadata.x + 1, chal.metadata.y]], chal, !!(chal.link & EAST)
+                            chalmap[[chal.challenge_metadata.x + 1, chal.challenge_metadata.y]], chal, !!(chal.link & EAST)
                         );
                     }
                     break;
@@ -103,43 +105,43 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     let rows = [];
     let max_x = 0;
     challenges.chals.forEach((chal, n) => {
-        max_x = Math.max(chal.metadata.x, max_x);
-        while (rows.length <= chal.metadata.y)
+        max_x = Math.max(chal.challenge_metadata.x, max_x);
+        while (rows.length <= chal.challenge_metadata.y)
             rows.push([]);
-        while (rows[chal.metadata.y].length <= chal.metadata.x)
-            if (isEdit) rows[chal.metadata.y].push(
+        while (rows[chal.challenge_metadata.y].length <= chal.challenge_metadata.x)
+            if (isEdit) rows[chal.challenge_metadata.y].push(
                 <AddNode click={
-                    showEditor(emptyChallenge(rows[chal.metadata.y].length, chal.metadata.y), challenges.chal, true)
-                } key={rows[chal.metadata.y].length} />
+                    showEditor(emptyChallenge(rows[chal.challenge_metadata.y].length, chal.challenge_metadata.y), challenges.chal, true)
+                } key={rows[chal.challenge_metadata.y].length} />
             );
-            else rows[chal.metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.metadata.y].length} />);
+            else rows[chal.challenge_metadata.y].push(<div className={"campaignSpacer"} key={rows[chal.challenge_metadata.y].length} />);
 
         let unlocked = isEdit || !chal.lock;
         // Admins are a special edge-case for unlocked challenges
-        if (!isEdit && unlocked && api.user.is_admin && !chal.solved) {
-            if (!((chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)
-                || (chal.link & WEST && getChal(challenges, chal.metadata.x - 1, chal.metadata.y).solved)
-                || (chal.link & NORTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)
-                || (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y - 1).solved))) {
+        if (!isEdit && unlocked && api.user.is_staff && !chal.solved) {
+            if (!((chal.link & EAST && getChal(challenges, chal.challenge_metadata.x + 1, chal.challenge_metadata.y).solved)
+                || (chal.link & WEST && getChal(challenges, chal.challenge_metadata.x - 1, chal.challenge_metadata.y).solved)
+                || (chal.link & NORTH && getChal(challenges, chal.challenge_metadata.x, chal.challenge_metadata.y + 1).solved)
+                || (chal.link & SOUTH && getChal(challenges, chal.challenge_metadata.x, chal.challenge_metadata.y - 1).solved))) {
                 unlocked = false;
             }
         }
 
-        rows[chal.metadata.y][chal.metadata.x] = <Node
-            x={chal.metadata.x} y={chal.metadata.y} key={chal.id}
+        rows[chal.challenge_metadata.y][chal.challenge_metadata.x] = <Node
+            x={chal.challenge_metadata.x} y={chal.challenge_metadata.y} key={chal.id}
             unlocked={unlocked} done={isEdit ? false : chal.solved}
 
             chalmap={chalmap}
 
             lockDoneR={isEdit ? false : chal.solved &&
-                !(chal.link & EAST && !getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
+                !(chal.link & EAST && !getChal(challenges, chal.challenge_metadata.x + 1, chal.challenge_metadata.y).solved)}
             lockDoneD={isEdit ? false : chal.solved &&
-                !(chal.link & SOUTH && !getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
+                !(chal.link & SOUTH && !getChal(challenges, chal.challenge_metadata.x, chal.challenge_metadata.y + 1).solved)}
 
             lockUnlockedR={isEdit ? true : chal.solved ||
-                (chal.link & EAST && getChal(challenges, chal.metadata.x + 1, chal.metadata.y).solved)}
+                (chal.link & EAST && getChal(challenges, chal.challenge_metadata.x + 1, chal.challenge_metadata.y).solved)}
             lockUnlockedD={isEdit ? true : chal.solved ||
-                (chal.link & SOUTH && getChal(challenges, chal.metadata.x, chal.metadata.y + 1).solved)}
+                (chal.link & SOUTH && getChal(challenges, chal.challenge_metadata.x, chal.challenge_metadata.y + 1).solved)}
 
             click={isEdit ? showEditor(chal) : ""}
             isEdit={isEdit} toggleLink={toggleLink(chal)}

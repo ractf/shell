@@ -79,7 +79,7 @@ export default () => {
     const app = useContext(appContext);
     const api = useContext(apiContext);
 
-    if (tabId === "new" && api.user.is_admin)
+    if (tabId === "new" && api.user.is_staff)
         return <SBTSection key={"anc"} title={"Add new category"} noHead>
             <Section light title={"Add new category"}>
                 <ANC anc={true} />
@@ -108,17 +108,15 @@ export default () => {
         return changes => {
             let flag;
             try {
-                flag = JSON.parse(changes.flag);
+                flag = JSON.parse(changes.flag_metadata);
             } catch (e) {
-                if (!changes.flag.length) flag = "";
+                if (!changes.flag_metadata.length) flag = "";
                 else return app.alert("Invalid flag JSON");
             }
 
-            (isCreator ? endpoints.createChallenge : endpoints.editChallenge)(
-                (isCreator ? tabId : original.id),
-                changes.name, changes.points, changes.desc, changes.flag_type, flag,
-                changes.autoUnlock, original.metadata
-            ).then(async () => {
+            (isCreator ? endpoints.createChallenge : endpoints.editChallenge)({
+                ...original, ...changes, id: (isCreator ? tabId : original.id), flag_metadata: flag
+            }).then(async () => {
                 for (let i in changes)
                     original[i] = changes[i];
                 if (lState.saveTo)
@@ -136,7 +134,7 @@ export default () => {
 
     let tab = (() => {
         for (let i in api.challenges)
-            if (api.challenges[i].id === tabId) return api.challenges[i];
+            if (api.challenges[i].id.toString() === tabId) return api.challenges[i];
     })();
     let chalEl, handler, challengeTab;
 
@@ -144,10 +142,10 @@ export default () => {
         if (!api.challenges || !api.challenges.length) return <></>;
         return <Redirect to={"/404"} />;
     }
-    handler = plugins.categoryType[tab.type];
+    handler = plugins.categoryType[tab.contained_type];
     if (!handler) {
         challengeTab = <>
-            Category renderer for type "{tab.type}" missing!<br /><br />
+            Category renderer for type "{tab.contained_type}" missing!<br /><br />
             Did you forget to install a plugin?
         </>;
     } else {
@@ -186,7 +184,7 @@ export default () => {
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
         <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
-            {api.user.is_admin ? edit ?
+            {api.user.is_staff ? edit ?
                 <Button className={"campEditButton"} click={() => { setEdit(false); }} warning>Stop Editing</Button>
                 : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>Edit</Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}

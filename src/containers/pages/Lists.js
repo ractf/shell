@@ -3,11 +3,11 @@ import React from "react";
 import { BrokenShards } from "./ErrorPages";
 import Page from "./bases/Page";
 
-import { Table, Spinner, FormError, useApi, SectionTitle2 } from "ractf";
+import { Table, Spinner, FormError, useApi, SectionTitle2, ENDPOINTS } from "ractf";
 
 
 export const TeamsList = () => {
-    const [allTeams, error] = useApi("/team");
+    const [allTeams, error] = useApi(ENDPOINTS.TEAM);
 
     return <Page
         title={"Teams"} vCentre={error || !allTeams}>
@@ -32,7 +32,7 @@ export const TeamsList = () => {
 
 
 export const UsersList = () => {
-    const [allUsers, error] = useApi("/member");
+    const [allUsers, error] = useApi(ENDPOINTS.MEMBER);
 
     return <Page
         title={"Users"} vCentre={error || !allUsers}>

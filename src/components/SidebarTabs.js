@@ -97,7 +97,7 @@ export const SiteNav = ({ children }) => {
                     {api.challenges.map(i =>
                         <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>{i.name}</Link>
                     )}
-                    {api.user.is_admin &&
+                    {api.user.is_staff &&
                         <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ Add new category</Link>
                     }
                 </SBMenu>
@@ -118,7 +118,7 @@ export const SiteNav = ({ children }) => {
                 </SBMenu>
                 <hr />
             </> : null}
-            {api.user && api.user.is_admin && <>
+            {api.user && api.user.is_staff && <>
                 <SBMenu key={"admin"} name={"Admin"}>
                     <Link onClick={close} to={"/admin/ctf"} className={"sbtSubitem"}>Event</Link>
                     <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>Configuration</Link>

@@ -5,7 +5,7 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link, apiContext } from "ractf";
+import { Spinner, FormError, useApi, Link, apiContext, ENDPOINTS } from "ractf";
 import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
 
 import "./Profile.scss";
@@ -23,7 +23,7 @@ export default () => {
     const { match } = useReactRouter();
     const team = match.params.team;
     const api = useContext(apiContext);
-    const [teamData, error] = useApi("/team/" + (team === "me" ? "self" : team));
+    const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
 
     if (api.user.team === null) return <Redirect to={"/noteam"} />
 

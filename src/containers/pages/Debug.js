@@ -1,9 +1,9 @@
 import React from "react";
 
-import { SectionTitle2, HR, useApi } from "ractf";
+import { SectionTitle2, HR, useApi, ENDPOINTS } from "ractf";
 
 export default () => {
-    const [backendVersion] = useApi("/stats/version");
+    const [backendVersion] = useApi(ENDPOINTS.VERSION);
 
     return <>
         <SectionTitle2>RACTF Debug Versions:</SectionTitle2>

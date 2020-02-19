@@ -6,7 +6,7 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link } from "ractf";
+import { Spinner, FormError, useApi, Link, ENDPOINTS } from "ractf";
 
 import admin from "../../static/img/admin.png";
 import donor from "../../static/img/donor_large.png";
@@ -35,7 +35,7 @@ const UserSolve = ({ name, points, time }) => {
 export default () => {
     const { match } = useReactRouter();
     const user = match.params.user;
-    const [userData, error] = useApi("/member/" + (user === "me" ? "self" : user));
+    const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
 
     if (error) return <Page title={"Users"} vCentre>
         <FormError>{error}</FormError>
@@ -84,7 +84,7 @@ export default () => {
                     <UserSpecial col={"#66bb66"} ico={beta}>Beta Tester</UserSpecial>}
                 {userData.is_donor &&
                     <UserSpecial col={"#bbbb33"} ico={donor}>Donor</UserSpecial>}
-                {userData.is_admin &&
+                {userData.is_staff &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
                 {userData.solves && userData.solves.map((i, n) => <UserSolve key={n} {...i} />)}

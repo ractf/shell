@@ -5,7 +5,7 @@ import TabbedView, { Tab } from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
-import { Spinner, useApi } from "ractf";
+import { Spinner, useApi, ENDPOINTS } from "ractf";
 
 import "./Leaderboard.scss";
 import colours from "../../Colours.scss";
@@ -86,7 +86,7 @@ export default () => {
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
 
-    const [leaderboard] = useApi("/leaderboard/");
+    const [leaderboard] = useApi(ENDPOINTS.LEADERBOARD);
 
     useEffect(() => {
         if (!leaderboard) return;

@@ -49,7 +49,7 @@ const Page = ({ title, auth, admin, noAuth, C }) => {
 
     if (auth && !api.authenticated) return <Redirect to={"/login"} />;
     if (noAuth && api.authenticated) return <Redirect to={"/home"} />;
-    if (admin && (!api.user || !api.user.is_admin)) return <Redirect to={"/home"} />;
+    if (admin && (!api.user || !api.user.is_staff)) return <Redirect to={"/home"} />;
 
     return <C />;
 };

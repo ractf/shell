@@ -25,7 +25,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
     const [hint, setHint] = useState(null);
-    const [mdRaw, setMdRaw] = useState(JSON.stringify(challenge.metadata, null, 4));
+    const [mdRaw, setMdRaw] = useState(JSON.stringify(challenge.challenge_metadata, null, 4));
 
     const regex = /^ractf{.+}$/;
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
@@ -93,12 +93,12 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
             { name: 'url', placeholder: 'File URL', label: "URL" },
             { name: 'size', placeholder: 'File size', label: "Size (bytes)", format: /\d+/ }]
         ).then(({ name, url, size }) => {
-
             if (!size.match(/\d+/)) return app.alert("Invalid file size!");
 
-            endpoints.newFile(challenge.id, name, url, size).then(() =>
-                app.alert("New file added!")
-            ).catch(e =>
+            endpoints.newFile(challenge.id, name, url, size).then((id) => {
+                challenge.files.push(id);
+                app.alert("New file added!");
+            }).catch(e =>
                 app.alert("Error creating new file:\n" + endpoints.getError(e))
             );
         });
@@ -157,14 +157,14 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
     if (isEditRaw) {
         const saveEditRaw = () => {
-            let metadata;
+            let challenge_metadata;
             try {
-                metadata = JSON.parse(mdRaw);
+                challenge_metadata = JSON.parse(mdRaw);
             } catch (e) {
                 app.alert(<>Failed to save metadata:<br /><br /><pre><code>{e.toString()}</code></pre></>);
                 return;
             }
-            challenge.metadata = metadata;
+            challenge.challenge_metadata = challenge_metadata;
             setEditRaw(false);
         };
 
@@ -183,19 +183,21 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
             <label htmlFor={"name"}>Challenge name</label>
             <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
-            <label htmlFor={"points"}>Challenge points</label>
-            <Input val={challenge.base_score && challenge.base_score.toString()} name={"points"}
+            <label htmlFor={"score"}>Challenge points</label>
+            <Input val={challenge.base_score && challenge.base_score.toString()} name={"score"}
                 placeholder={"Challenge points"} format={/\d+/} />
+            <label htmlFor={"author"}>Challenge author</label>
+            <Input val={challenge.author} name={"author"} placeholder={"Challenge author"} />
 
-            <label htmlFor={"desc"}>Challenge brief</label>
-            <Input rows={5} val={challenge.description} name={"desc"} placeholder={"Challenge brief"} />
+            <label htmlFor={"description"}>Challenge brief</label>
+            <Input rows={5} val={challenge.description} name={"description"} placeholder={"Challenge brief"} />
 
-            <label htmlFor={"flag"}>Challenge flag type</label>
+            <label htmlFor={"flag_type"}>Challenge flag type</label>
             <Input placeholder="Challenge flag type" name={"flag_type"} monospace
                 val={challenge.flag_type} />
-            <label htmlFor={"flag"}>Challenge flag</label>
+            <label htmlFor={"flag_metadata"}>Challenge flag</label>
             <Input placeholder="Challenge flag"
-                name={"flag"} monospace format={{
+                name={"flag_metadata"} monospace format={{
                     test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
                 }}
                 val={challenge.flag} />
@@ -208,7 +210,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
             <div>
                 Always Unlocked
-                <Radio name={"autoUnlock"} value={challenge.auto_unlock}
+                <Radio name={"autoUnlock"} value={!!challenge.auto_unlock}
                     options={[["Enabled", true], ["Disabled", false]]} />
             </div>
 
