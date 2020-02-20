@@ -49,7 +49,7 @@ const TeamCard = ({ data }) => {
     const app = useContext(appContext);
 
     const configSet = (key, value) => {
-        endpoints.modifyTeamAdmin(data.id, { [key]: value }).then(() => {
+        endpoints.modifyTeam(data.id, { [key]: value }).then(() => {
             data[key] = value;
         }).catch(e => {
             app.alert(endpoints.getError(e));
@@ -61,7 +61,7 @@ const TeamCard = ({ data }) => {
         <div className={"absmBody"}>
             <div className={"absfg"}>
                 Team Visible
-                <Radio onChange={v => configSet("visible", v)} value={data.visible}
+                <Radio onChange={v => configSet("visible", v)} value={data.is_visible || false}
                     options={[["Enabled", true], ["Disabled", false]]} />
             </div>
             <div className={"absmVml"}>VIEW MORE</div>

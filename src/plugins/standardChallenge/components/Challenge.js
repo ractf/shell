@@ -200,7 +200,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 name={"flag_metadata"} monospace format={{
                     test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
                 }}
-                val={challenge.flag} />
+                val={JSON.stringify(challenge.flag_metadata)} />
 
             <ButtonRow>
                 <Button click={() => setEditFiles(true)}>Edit Files</Button>

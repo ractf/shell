@@ -23,7 +23,7 @@ export const ENDPOINTS = {
     REQUEST_RESET: "/auth/request_password_reset",
     COMPLETE_RESET: "/auth/password_reset",
 
-    CATEGORIES: "/challenges/categories",
+    CATEGORIES: "/challenges/categories/",
     CHALLENGES: "/challenges/",
     SUBMIT_FLAG: "/challenges/submit_flag/",
 
@@ -265,7 +265,7 @@ class APIClass extends Component {
     _reloadCache = async () => {
         let userData, teamData, challenges, ready = true;
         try {
-            userData = await this.cachedGet("/member/self");
+            userData = await this.cachedGet(ENDPOINTS.USER + "self/");
         } catch (e) {
             if (e.response && e.response.data)
                 return this.logout();
@@ -273,9 +273,9 @@ class APIClass extends Component {
             this.setState({ ready: false });
         }
 
-        if (userData.team !== null) {
+        if (userData && userData.team !== null) {
             try {
-                teamData = await this.cachedGet("/team/self");
+                teamData = await this.cachedGet(ENDPOINTS.TEAM + "self/");
             } catch (e) {
                 if (e.request && e.request.status === 404) {
                     teamData = null;
