@@ -8,62 +8,73 @@ import NodeLink from "./NodeLink";
 import "./Node.scss";
 
 
-export default props => {
+export default ({
+    name, unlocked, done, right, below, linksU, linksD, linksR, linksL, isEdit,
+    click, toggleLink, largeName, orange, url
+}) => {
     const toggle = side => {
         return e => {
-            if (props.isEdit) {
+            if (isEdit) {
                 e.preventDefault();
                 e.stopPropagation();
-                props.toggleLink(side);
+                toggleLink(side);
             }
         };
     };
 
     let nodeClass = "chalNode";
-    if (props.largeName) nodeClass += " largeName";
-    if (props.done) nodeClass += " done";
-    if (props.unlocked) nodeClass += " unlocked";
-    if (props.orange) nodeClass += " orange";
+    if (largeName) nodeClass += " largeName";
+    if (done) nodeClass += " done";
+    if (unlocked) nodeClass += " unlocked";
+    if (orange) nodeClass += " orange";
+
+    let lockDoneR = done && right && right.solved;
+    let lockDoneD = done && below && below.solved;
+
+    let lockUnlockedR = ((done && right && !right.solved)
+        || (!done && right && right.solved));
+    let lockUnlockedD = ((done && below && !below.solved)
+        || (!done && below && below.solved));
 
     let lockClassR = "lockRight";
-    if (props.lockDoneR) lockClassR += " lockDoneR";
-    if (props.lockDoneR) lockClassR += " lockUnlockedR";
+    if (lockDoneR) lockClassR += " lockDoneR";
+    if (lockUnlockedR) lockClassR += " lockUnlockedR";
     let lockClassD = "lockDown";
-    if (props.lockDoneD) lockClassD += " lockDoneD";
-    if (props.lockDoneD) lockClassD += " lockUnlockedD";
+    if (lockDoneD) lockClassR += " lockDoneD";
+    if (lockUnlockedD) lockClassR += " lockUnlockedD";
 
     let inner = <>
-        <div>{props.name}</div>
+        <div>{name}</div>
 
-        {props.right && <div className={lockClassR}>
-            {props.lockDoneR ? <FaCheck /> : props.lockUnlockedR ? <FaLockOpen /> : <FaLock />}
+        {linksR && <div className={lockClassR}>
+            {lockDoneR ? <FaCheck /> : lockUnlockedR ? <FaLockOpen /> : <FaLock />}
         </div>}
-        {props.down && <div className={lockClassD}>
-            {props.lockDoneD ? <FaCheck /> : props.lockUnlockedD ? <FaLockOpen /> : <FaLock />}
+        {linksD && <div className={lockClassD}>
+            {lockDoneD ? <FaCheck /> : lockUnlockedD ? <FaLockOpen /> : <FaLock />}
         </div>}
 
         <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
-            onClick={toggle('left')} isEdit={props.isEdit} show={props.left} left
-            done={props.done} unlocked={props.unlocked} />
+            onClick={toggle('left')} isEdit={isEdit} show={linksL} left
+            done={done} unlocked={unlocked} />
         <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
-            onClick={toggle('right')} isEdit={props.isEdit} show={props.right} right
-            done={props.done} unlocked={props.unlocked} />
+            onClick={toggle('right')} isEdit={isEdit} show={linksR} right
+            done={done} unlocked={unlocked} />
         <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
-            onClick={toggle('up')} isEdit={props.isEdit} show={props.up} up
-            done={props.done} unlocked={props.unlocked} />
+            onClick={toggle('up')} isEdit={isEdit} show={linksU} up
+            done={done} unlocked={unlocked} />
         <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
-            onClick={toggle('down')} isEdit={props.isEdit} show={props.down} down
-            done={props.done} unlocked={props.unlocked} />
+            onClick={toggle('down')} isEdit={isEdit} show={linksD} down
+            done={done} unlocked={unlocked} />
     </>;
 
-    if (props.isEdit || !props.url)
-        return <div tabIndex={props.unlocked || props.done ? "0" : ""}
+    if (isEdit || !url)
+        return <div tabIndex={unlocked || done ? "0" : ""}
             onMouseDown={(e => (e.target.click && e.target.click()))}
-            onClick={(props.done || props.unlocked) ? props.click : null} className={nodeClass}>
+            onClick={(done || unlocked) ? click : null} className={nodeClass}>
             {inner}
         </div>;
 
-    return <Link tabIndex={props.unlocked || props.done ? "0" : ""} to={props.url} className={nodeClass}>
+    return <Link tabIndex={unlocked || done ? "0" : ""} to={url} className={nodeClass}>
         {inner}
     </Link>;
 };

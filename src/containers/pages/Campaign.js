@@ -89,7 +89,9 @@ export default () => {
         return <Redirect to={"/campaign/" + api.challenges[0].id} />;
 
     const showEditor = (challenge, saveTo, isNew) => {
+        console.log("!")
         return () => {
+            console.log("?")
             setChallenge(challenge || {});
             setLState({
                 saveTo: saveTo

@@ -290,7 +290,7 @@ class APIClass extends Component {
 
         try {
             challenges = (await this._getChallenges()).d;
-            this._createChallengeLinks(challenges);
+            //this._createChallengeLinks(challenges);
         } catch (e) {
             if (e.response && e.response.data)
                 return this.logout();
@@ -312,6 +312,7 @@ class APIClass extends Component {
     };
 
     // Misc
+    /*
     _createChallengeLinks = (challenges) => {
         const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
 
@@ -328,23 +329,23 @@ class APIClass extends Component {
                     i.deps && i.deps.forEach(dep => {
                         if (challenges[dep]) {
                             let depChallenge = challenges[dep];
-                            if (depChallenge.metadata.x === i.metadata.x + 1 &&
-                                depChallenge.metadata.y === i.metadata.y) {
+                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x + 1 &&
+                                depChallenge.challenge_metadata.y === i.challenge_metadata.y) {
                                 i.link |= EAST;
                                 depChallenge.link |= WEST;
                             }
-                            if (depChallenge.metadata.x === i.metadata.x - 1 &&
-                                depChallenge.metadata.y === i.metadata.y) {
+                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x - 1 &&
+                                depChallenge.challenge_metadata.y === i.challenge_metadata.y) {
                                 i.link |= WEST;
                                 depChallenge.link |= EAST;
                             }
-                            if (depChallenge.metadata.x === i.metadata.x &&
-                                depChallenge.metadata.y === i.metadata.y - 1) {
+                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x &&
+                                depChallenge.challenge_metadata.y === i.challenge_metadata.y - 1) {
                                 i.link |= NORTH;
                                 depChallenge.link |= SOUTH;
                             }
-                            if (depChallenge.metadata.x === i.metadata.x &&
-                                depChallenge.metadata.y === i.metadata.y + 1) {
+                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x &&
+                                depChallenge.challenge_metadata.y === i.challenge_metadata.y + 1) {
                                 i.link |= SOUTH;
                                 depChallenge.link |= NORTH;
                             }
@@ -354,6 +355,7 @@ class APIClass extends Component {
             }
         });
     };
+    */
 
     getUUID = () => {
         if (window.crypto)
@@ -527,8 +529,17 @@ class APIClass extends Component {
         })
     );
 
-    linkChallenges = (chal1, chal2, linkState) =>
-        this.post(ENDPOINTS.CHALLENGE_LINK, { cfrom: chal1.id, cto: chal2.id, state: linkState });
+    linkChallenges = (chal1, chal2, linkState) => {
+        if (linkState) {
+            chal1.unlocks.push(chal2.id);
+            chal2.unlocks.push(chal1.id);
+        } else {
+            chal1.unlocks = chal1.unlocks.filter(i => i !== chal2.id);
+            chal2.unlocks = chal2.unlocks.filter(i => i !== chal1.id);
+        }
+        this.patch(ENDPOINTS.CHALLENGES, { id: chal1.id, unlocks: chal1.unlocks });
+        this.patch(ENDPOINTS.CHALLENGES, { id: chal2.id, unlocks: chal2.unlocks });
+    }
 
     completePasswordReset = (id, secret, password) => {
         return new Promise((resolve, reject) => {
