@@ -32,7 +32,7 @@ export const TeamsList = () => {
 
 
 export const UsersList = () => {
-    const [allUsers, error] = useApi(ENDPOINTS.MEMBER);
+    const [allUsers, error] = useApi(ENDPOINTS.USER);
 
     return <Page
         title={"Users"} vCentre={error || !allUsers}>

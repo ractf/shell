@@ -25,7 +25,7 @@ export const ENDPOINTS = {
 
     CATEGORIES: "/challenges/categories",
     CHALLENGES: "/challenges/",
-    FLAG_TEST: "/challenges/<uuid>/attempt",
+    SUBMIT_FLAG: "/challenges/submit_flag/",
 
     EDIT_FILE: "/files/edit",
     NEW_FILE: "/files/new",
@@ -211,7 +211,7 @@ class APIClass extends Component {
             return e.message;
         }
         // TITSUP!
-        return "Unknown error occured.";
+        return "Unknown error occurred.";
     };
 
     get = url => {
@@ -508,9 +508,12 @@ class APIClass extends Component {
         this.post(ENDPOINTS.CATEGORIES, { id, name, desc, type })
     );
 
-    editChallenge = ({ id, name, score, description, flag_type, flag_metadata, autoUnlock, challenge_metadata, author, challenge_type, unlocks, files }) => (
-        this.patch(ENDPOINTS.CHALLENGES, {
-            id, name, score, description,
+    editChallenge = ({
+        id, name, score, description, flag_type, flag_metadata, autoUnlock,
+        challenge_metadata, author, challenge_type, unlocks, files
+    }) => (
+        this.patch(ENDPOINTS.CHALLENGES + "/" + id + "/", {
+            name, score, description,
             flag_type, flag_metadata,
             challenge_metadata,
             author, unlocks, files,
@@ -518,7 +521,10 @@ class APIClass extends Component {
             auto_unlock: autoUnlock,
         })
     );
-    createChallenge = ({ id, name, score, description, flag_type, flag_metadata, autoUnlock, challenge_metadata, author, challenge_type, unlocks, files }) => (
+    createChallenge = ({
+        id, name, score, description, flag_type, flag_metadata, autoUnlock,
+        challenge_metadata, author, challenge_type, unlocks, files
+    }) => (
         this.post(ENDPOINTS.CHALLENGES, {
             category: id, name, score, description,
             flag_type, flag_metadata,
@@ -537,8 +543,8 @@ class APIClass extends Component {
             chal1.unlocks = chal1.unlocks.filter(i => i !== chal2.id);
             chal2.unlocks = chal2.unlocks.filter(i => i !== chal1.id);
         }
-        this.patch(ENDPOINTS.CHALLENGES, { id: chal1.id, unlocks: chal1.unlocks });
-        this.patch(ENDPOINTS.CHALLENGES, { id: chal2.id, unlocks: chal2.unlocks });
+        this.patch(ENDPOINTS.CHALLENGES + "/" + chal1.id + "/", { unlocks: chal1.unlocks });
+        this.patch(ENDPOINTS.CHALLENGES + "/" + chal2.id + "/", { unlocks: chal2.unlocks });
     }
 
     completePasswordReset = (id, secret, password) => {
@@ -564,8 +570,7 @@ class APIClass extends Component {
     };
 
     attemptFlag = (flag, challenge) => this.post(
-        ENDPOINTS.FLAG_TEST.replace('<uuid>', challenge.id),
-        { flag: flag }
+        ENDPOINTS.SUBMIT_FLAG, { challenge: challenge.id, flag: flag }
     );
 
     editFile = (id, name, url, size) =>

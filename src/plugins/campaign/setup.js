@@ -8,8 +8,6 @@ import Row from "./components/Row";
 import "./components/Spacer.scss";
 
 
-const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
-
 const meta = "challenge_metadata";
 
 const emptyChallenge = (x, y) => ({
@@ -101,21 +99,22 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
 
-            let unlocked = isEdit || !chal.lock;
+            let unlocked = isEdit || chal.unlocked;
             // Admins are a special edge-case for unlocked challenges
-            if (!isEdit && unlocked && api.user.is_staff && !chal.solved) {
+            /*if (!isEdit && unlocked && api.user.is_staff && !chal.solved) {
                 if (!((linksU && above.solved) || (linksD && below.solved)
                     || (linksR && right.solved) || (linksL && left.solved)))
                     unlocked = false;
-            }
+            }*/
 
             return <Node
-                x={x} y={y} key={chal.id} id={chal.id} unlocks={chal.unlocks}
-                unlocked={unlocked} done={isEdit ? false : chal.solved}
+                key={chal.id} unlocked={unlocked}
+                done={isEdit ? false : chal.solved}
 
-                linksR={linksR} linksL={linksL} linksU={linksU} linksD={linksD}
+                linksR={linksR} linksL={linksL}
+                linksU={linksU} linksD={linksD}
 
-                right={right} left={left} above={above} below={below}
+                right={right} below={below}
 
                 click={isEdit ? showEditor(chal) : ""}
                 isEdit={isEdit} toggleLink={toggleLink(chal)}
@@ -208,11 +207,11 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
             {row}
         </Row>;
     }
+    return rows;
     */
 
     return reactRows;
 
-    return rows;
 };
 
 

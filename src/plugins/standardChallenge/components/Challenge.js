@@ -184,7 +184,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
             <label htmlFor={"name"}>Challenge name</label>
             <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
             <label htmlFor={"score"}>Challenge points</label>
-            <Input val={challenge.base_score && challenge.base_score.toString()} name={"score"}
+            <Input val={challenge.score && challenge.score.toString()} name={"score"}
                 placeholder={"Challenge points"} format={/\d+/} />
             <label htmlFor={"author"}>Challenge author</label>
             <Input val={challenge.author} name={"author"} placeholder={"Challenge author"} />
@@ -259,7 +259,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     if (!isEditor) {
         let solveMsg = challenge.first ? "First solved by " + challenge.first : "Nobody has solved this challenge yet";
 
-        chalContent = <SBTSection subTitle={challenge.base_score + " points - " + solveMsg} title={challenge.name}>
+        chalContent = <SBTSection subTitle={challenge.score + " points - " + solveMsg} title={challenge.name}>
             <Link className={"backToChals"} to={".."}>Back to challenges</Link>
             {chalContent}
         </SBTSection>;

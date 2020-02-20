@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { BrowserRouter, Link } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
 import { SiteNav } from "../../components/SidebarTabs";

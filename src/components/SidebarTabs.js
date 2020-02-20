@@ -95,10 +95,14 @@ export const SiteNav = ({ children }) => {
             {api.user ? <>
                 <SBMenu key={"challenges"} name={"Challenges"} initial>
                     {api.challenges.map(i =>
-                        <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>{i.name}</Link>
+                        <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>
+                            {i.name}
+                        </Link>
                     )}
                     {api.user.is_staff &&
-                        <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>+ Add new category</Link>
+                        <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>
+                            + Add new category
+                        </Link>
                     }
                 </SBMenu>
                 <hr />

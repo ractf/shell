@@ -16,7 +16,7 @@ const JeopardyChallenges = ({ challenges }) => {
         let catChals = [];
         cat.chals.forEach((chal, n) => {
             catChals.push(
-                <Challenge key={n} name={chal.name} done={chal.done} points={chal.base_score} />
+                <Challenge key={n} name={chal.name} done={chal.done} points={chal.score} />
             );
         });
         sections.push(

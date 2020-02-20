@@ -92,10 +92,6 @@ export default () => {
             if (i.challenges)
                 chalCount += i.challenges.length;
         });
-    
-    return <Page vCentre>
-        Welcome to RACTF
-    </Page>;
 
     return <Page vCentre>
         <div className={"homeLead"}>Welcome to RACTF</div>

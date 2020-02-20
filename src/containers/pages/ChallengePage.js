@@ -16,13 +16,14 @@ export default () => {
 
     let tab = (() => {
         for (let i in api.challenges) {
-            if (api.challenges[i].id === tabId) return api.challenges[i];
+            if (api.challenges[i].id.toString() === tabId.toString()) return api.challenges[i];
         }
     })();
     let challenge = (() => {
         if (!tab) return null;
-        for (let i in tab.chals)
-            if (tab.chals[i].id === chalId) return tab.chals[i];
+        let chals = tab.challenges || [];
+        for (let i in chals)
+            if (chals[i].id.toString() === chalId.toString()) return chals[i];
     })();
     let chalEl, handler;
 
