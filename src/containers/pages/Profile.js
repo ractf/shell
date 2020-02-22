@@ -23,10 +23,10 @@ const UserSpecial = ({ children, col, ico }) => (
     </div>
 );
 
-const UserSolve = ({ name, points, time }) => {
+const UserSolve = ({ challenge, points, time }) => {
     return (
         <div className={"userSolve"}>
-            <div>{name}</div>
+            <div>{challenge}</div>
             <div>{points} point{points === 1 ? "" : "s"}</div>
         </div>
     );

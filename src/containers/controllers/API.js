@@ -12,8 +12,7 @@ export const API_BASE = process.env.REACT_APP_API_BASE;
 export const BASE_URL = DOMAIN + API_BASE;
 export const ENDPOINTS = {
     COUNTDOWN: "/stats/countdown",
-    CONFIG: "/admin/config",
-    ADMIN_CONFIG: "/admin/admin_config",
+    CONFIG: "/config/",
 
     REGISTER: "/auth/register",
     LOGIN: "/auth/login",
@@ -157,6 +156,8 @@ class APIClass extends Component {
             countdown: countdown,
 
         };
+
+        window.__ractf_api = this;
     }
 
     async componentDidMount() {
@@ -166,8 +167,9 @@ class APIClass extends Component {
     async _setupConfig() {
         let config;
         try {
-            config = (await this._getConfig()).d;
+            config = (await this._getConfig());
         } catch (e) {
+            console.error("Error loading config:", e);
             return;
         }
 
@@ -406,10 +408,13 @@ class APIClass extends Component {
             else this.setState({ countdown: countdown, siteOpen: false, ready: true });
         }
     });
-    _getConfig = () => this.get(ENDPOINTS.CONFIG);
-    _getAdminConfig = () => this.get(ENDPOINTS.ADMIN_CONFIG);
+    _getConfig = () => this.get(ENDPOINTS.CONFIG).then(({ d }) => {
+        let config = {};
+        d.forEach(({ key, value}) => config[key] = value.value);
+        return config;
+    });
     _getChallenges = () => this.get(ENDPOINTS.CATEGORIES);
-    setConfigValue = (key, value) => this.post(ENDPOINTS.ADMIN_CONFIG, { key, value });
+    setConfigValue = (key, value) => this.patch(ENDPOINTS.CONFIG + key + "/", { value: {value: value} });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);
@@ -421,31 +426,8 @@ class APIClass extends Component {
             this.props.history.push("/noteam");
     };
 
-    modifyUser = (userId, data) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: BASE_URL + ENDPOINTS.USER + userId + "/",
-                method: "patch",
-                data: data,
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
-
-    modifyTeam = (teamId, data) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: BASE_URL + ENDPOINTS.TEAM + teamId + "/",
-                method: "patch",
-                data: data,
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
+    modifyUser = (userId, data) => this.patch(BASE_URL + ENDPOINTS.USER + userId + "/", data);
+    modifyTeam = (teamId, data) => this.patch(BASE_URL + ENDPOINTS.TEAM + teamId + "/", data);
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {

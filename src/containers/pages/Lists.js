@@ -24,7 +24,7 @@ export const TeamsList = () => {
         </> :
             allTeams ?
                 <Table headings={["Team", "Website", "Members"]} data={
-                    allTeams.map(x => [x.name, x.website, x.members, "/team/" + x.id])
+                    allTeams.map(x => [x.name, x.website, x.members.length, "/team/" + x.id])
                 } /> : <Spinner />
         }
     </Page>;

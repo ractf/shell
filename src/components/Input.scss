@@ -17,6 +17,10 @@ textarea {
     resize: vertical;
 }
 
+.react-datepicker-popper {
+    z-index: 2 !important;
+}
+
 .inputMetaWrap, .react-datepicker-wrapper {
     position: relative;
     z-index: 1;

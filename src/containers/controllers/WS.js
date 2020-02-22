@@ -57,10 +57,10 @@ export default class WS extends Component {
                 this.api.addPopup(
                     "Challenge solved",
                     <>
-                        <b>{data.data.challenge_name}</b> was solved by <b>
-                            {data.data.user_name}</b> for <b>
-                            {data.data.team_name}</b> scoring <b>
-                            {data.data.challenge_score}</b> points
+                        <b>{data.challenge_name}</b> was solved by <b>
+                            {data.username}</b> for <b>
+                            {data.team_name}</b> scoring <b>
+                            {data.challenge_score}</b> points
                     </>
                 );
                 break;

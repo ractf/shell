@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import useReactRouter from "../../useReactRouter";
 import DatePicker from "react-datepicker";
 
@@ -70,27 +70,56 @@ const TeamCard = ({ data }) => {
 };
 
 
+const DatePick = ({ initial, configSet, name, configKey }) => {
+    const [value, setValue] = useState(initial * 1000);
+
+    const onChange = value => {
+        setValue(value);
+        configSet(configKey, value.getTime() / 1000);
+    };
+
+    return <DatePicker showTimeSelect
+        dateFormat="yyyy-MM-dd H:mm"
+        autoComplete="off"
+        selected={value}
+        onChange={onChange}
+        style={{zIndex: 50}}
+        name={name} />;
+} 
+
+
 export default () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const app = useContext(appContext);
+    const [adminConfig, setAdminConfig] = useState(null);
 
     const [allUsersAdmin] = useApi(ENDPOINTS.USER);
     const [allTeamsAdmin] = useApi(ENDPOINTS.TEAM);
-    const [adminConfig] = useApi("/admin/config");
-
+    const [adminConfig_] = useApi(ENDPOINTS.CONFIG);
+    
     const { match } = useReactRouter();
     if (!match) return "uuuh.. admin?";
     const page = match.params.page;
 
     const configSet = (key, value) => {
         endpoints.setConfigValue(key, value).then(() => {
-            api.config[key] = value;
-            adminConfig[key] = value;
+            if (api.config)
+                api.config[key] = value;
+            setAdminConfig({...adminConfig, key: value});
         }).catch(e => {
+            console.error(e);
             app.alert(endpoints.getError(e));
         });
     };
+
+    useEffect(() => {
+        if (adminConfig_) {
+            let config = {};
+            adminConfig_.forEach(({ key, value }) => config[key] = value.value);
+            setAdminConfig(config);
+        }
+    }, [adminConfig_]);
 
     let content;
     switch (page) {
@@ -112,24 +141,26 @@ export default () => {
                         <Form>
                             <div className={"absfg"}>
                                 <Form>
+                                    <label htmlFor={"regStartTime"}>Registration start time</label>
+                                    <DatePick initial={adminConfig.register_start_time}
+                                              configSet={configSet} name={"regStartTime"}
+                                              configKey={"register_start_time"} />
+                                </Form>
+                            </div>
+                            <div className={"absfg"}>
+                                <Form>
                                     <label htmlFor={"eventStartTime"}>Event start time</label>
-                                    <DatePicker showTimeSelect
-                                        dateFormat="yyyy-MM-dd H:mm"
-                                        autoComplete="off"
-                                        selected={adminConfig.startTime}
-                                        onChange={date => configSet("startTime", date)}
-                                        name={"eventStartTime"} />
+                                    <DatePick initial={adminConfig.start_time}
+                                              configSet={configSet} name={"eventStartTime"}
+                                              configKey={"start_time"} />
                                 </Form>
                             </div>
                             <div className={"absfg"}>
                                 <Form>
                                     <label htmlFor={"eventEndTime"}>Event end time</label>
-                                    <DatePicker showTimeSelect
-                                        dateFormat="yyyy-MM-dd H:mm"
-                                        autoComplete="off"
-                                        selected={adminConfig.endTime}
-                                        onChange={date => configSet("endTime", date)}
-                                        name={"eventEndTime"} />
+                                    <DatePick initial={adminConfig.end_time}
+                                              configSet={configSet} name={"eventEndTime"}
+                                              configKey={"end_time"} />
                                 </Form>
                             </div>
                         </Form>
@@ -153,7 +184,7 @@ export default () => {
                         <Form>
                             <div className={"absfg"}>
                                 Enable or disable site registration
-                                <Radio onChange={v => configSet("registration", v)} value={adminConfig.registration}
+                                <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
                                     options={[["Enabled", true], ["Disabled", false]]} />
                             </div>
                         </Form>
@@ -167,7 +198,7 @@ export default () => {
                             </div>
                             <div className={"absfg"}>
                                 Flag Submission
-                                <Radio onChange={v => configSet("flags_on", v)} value={adminConfig.flags_on}
+                                <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
                                     options={[["Enabled", true], ["Disabled", false]]} />
                             </div>
                         </Form>
