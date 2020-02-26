@@ -195,6 +195,9 @@ class APIClass extends Component {
     };
 
     cachedGet = route => {
+        // Ensure we always have a trailing slash
+        if (!(/.*(\/|stats)$/.test(route))) route = route + "/";
+
         return this.get(route).then(data => data.d).then(data => {
             this._cache[route] = data;
             localStorage.setItem("apiCache", JSON.stringify(this._cache));

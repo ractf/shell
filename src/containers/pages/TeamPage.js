@@ -33,9 +33,9 @@ export default () => {
     </Page>;
     if (!teamData) return <Page title={"Teams"} vCentre><Spinner /></Page>;
 
-    const UserSolve = ({ user_name, name, score }) => <div className={"userSolve"}>
+    const UserSolve = ({ user_name, name, points }) => <div className={"userSolve"}>
         <div>{name}</div>
-        <div>{score} point{score === 1 ? "" : "s"} - Scored by {user_name}</div>
+        <div>{points} point{points === 1 ? "" : "s"} - Scored by {user_name}</div>
     </div>;
 
     return <Page title={teamData.name}>
@@ -71,7 +71,7 @@ export default () => {
                 </>}
 
                 {teamData.members.map((i, n) => <><Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
-                    <FaUser /> {i.name}
+                    <FaUser /> {i.username}
                 </Link><br /></>)}
             </div>
             <div className={"userSolves"}>

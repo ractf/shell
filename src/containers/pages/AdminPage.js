@@ -85,7 +85,7 @@ const DatePick = ({ initial, configSet, name, configKey }) => {
         onChange={onChange}
         style={{zIndex: 50}}
         name={name} />;
-} 
+};
 
 
 export default () => {

@@ -65,7 +65,7 @@ export default () => {
         if (strength.score < 3)
             return setPwError((strength.feedback.warning || "Password too weak."));
 
-        endpoints.modifyUser(api.user.id, { oPass: old, nPass: new1 }).then(() => {
+        endpoints.modifyUser("self", { oPass: old, nPass: new1 }).then(() => {
             app.alert("Password changed. Please log back in.");
             endpoints.logout();
         }).catch(e => {
@@ -79,7 +79,7 @@ export default () => {
         if (name === api.user.username)
             return setUnError("Username has not changed");
 
-        endpoints.modifyUser(api.user.id, { name: name }).then(() => {
+        endpoints.modifyUser("self", { name: name }).then(() => {
             app.alert("Username changed. Please log back in.");
             endpoints.logout();
         }).catch(e => {
@@ -88,7 +88,7 @@ export default () => {
     };
 
     const updateDetails = ({ discord, discordid, twitter, reddit, bio }) => {
-        endpoints.modifyUser(api.user.id, {
+        endpoints.modifyUser("self", {
             discord: discord, discordid: discordid, twitter: twitter, reddit: reddit, bio: bio
         }).then(() => {
             app.alert("Personal details updated succesfully.");
@@ -100,7 +100,7 @@ export default () => {
     };
 
     const alterTeam = ({ name, desc, pass }) => {
-        endpoints.modifyTeam(api.team.id, { name: name, description: desc, password: pass }).then(() => {
+        endpoints.modifyTeam("self", { name: name, description: desc, password: pass }).then(() => {
             app.alert("Team details updated succesfully.");
             endpoints.setup();
             setTeamError(null);
@@ -109,7 +109,7 @@ export default () => {
         });
     };
 
-    const teamOwner = (api.team ? api.team.owner.id === api.user.id : null);
+    const teamOwner = (api.team ? api.team.owner_id === api.user.id : null);
 
     return <Page title={"Settings for " + api.user.username}>
         <TabbedView>
@@ -187,7 +187,7 @@ export default () => {
                     <br />
                     {api.team.members.map((i, n) => (
                         <TeamMember key={n} api={api} endpoints={endpoints} app={app}
-                            isCaptain={i.id === api.team.owner.id} isOwner={teamOwner} member={i} />
+                            isCaptain={i.id === api.team.owner_id} isOwner={teamOwner} member={i} />
                     ))}
                 </Tab>
             }

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { apiContext, apiEndpoints, registerPlugin } from "ractf";
+import { apiEndpoints, registerPlugin } from "ractf";
 
 import AddNode from "./components/AddNode";
 import Node from "./components/Node";
@@ -25,7 +25,6 @@ const emptyChallenge = (x, y) => ({
 const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     const [reRender, setReRender] = useState(0);
     const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
 
     let chals = challenges.challenges || [];
 
