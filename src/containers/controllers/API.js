@@ -533,6 +533,9 @@ class APIClass extends Component {
     }
 
     completePasswordReset = (id, secret, password) => {
+        try {
+            id = parseInt(id, 10);
+        } catch(e) {}
         return new Promise((resolve, reject) => {
             this.post(ENDPOINTS.COMPLETE_RESET,
                 { uid: id, token: secret, password: password }
