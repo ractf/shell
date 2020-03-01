@@ -483,9 +483,14 @@ class APIClass extends Component {
     add_2fa = () => this.post(ENDPOINTS.ADD_2FA);
     verify_2fa = (otp) => this.post(ENDPOINTS.VERIFY_2FA, { otp });
     requestPasswordReset = (email) => this.post(ENDPOINTS.REQUEST_RESET, { email });
-    verify = (uid, token) => this.post(ENDPOINTS.VERIFY, { uid, token }).then(data => {
-        this._postLogin(data.d.token);
-    });
+    verify = (uid, token) => {
+        try {
+            uid = parseInt(uid, 10);
+        } catch(e) {};
+        return this.post(ENDPOINTS.VERIFY, { uid, token }).then(data => {
+            this._postLogin(data.d.token);
+        });
+    };
     createGroup = (name, desc, type) => (
         this.post(ENDPOINTS.CATEGORIES, { name, metadata: null, description: desc, contained_type: type })
     );

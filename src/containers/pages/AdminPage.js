@@ -129,6 +129,7 @@ const MemberCard = ({ data }) => {
         <AdminTreeValue name={"is_staff"} value={data.is_staff} setValue={data.id !== api.user.id && set("is_staff")} />
         <AdminTreeValue name={"points"} value={data.points} setValue={set("points")} />
         <AdminTree name={"metadata"}>
+            <AdminTreeValue name={"email"} value={data.email} setValue={set("email")} />
             <AdminTreeValue name={"bio"} value={data.bio} setValue={set("bio")} />
             <AdminTreeValue name={"discord"} value={data.discord} setValue={set("discord")} />
             <AdminTreeValue name={"discord_id"} value={data.discordid} setValue={set("discordid")} />
@@ -172,6 +173,7 @@ const TeamCard = ({ data }) => {
         <AdminTreeValue name={"points"} value={points} />
         <AdminTreeValue name={"owner_id"} value={data.owner} setValue={set("owner")} />
         <AdminTree name={"metadata"}>
+            <AdminTreeValue name={"password"} value={data.password} setValue={set("password")} />
             <AdminTreeValue name={"description"} value={data.description} setValue={set("description")} />
         </AdminTree>
         <AdminTree name={"members"}>
@@ -182,7 +184,7 @@ const TeamCard = ({ data }) => {
         </AdminTree>
         <AdminTree name={"solves"}>
             {data.solves.map(i => <AdminTree name={i.challenge_name}>
-                <AdminTreeValue name={"solved_by"} value={i.solved_by} />
+                <AdminTreeValue name={"solved_by"} value={i.solved_by_name} />
                 <AdminTreeValue name={"points"} value={i.points} />
                 <AdminTreeValue name={"first_blood"} value={i.first_blood} />
                 <AdminTreeValue name={"timestamp"} value={i.timestamp} />
