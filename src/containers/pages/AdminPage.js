@@ -130,6 +130,7 @@ const MemberCard = ({ data }) => {
         <AdminTreeValue name={"points"} value={data.points} setValue={set("points")} />
         <AdminTree name={"metadata"}>
             <AdminTreeValue name={"email"} value={data.email} setValue={set("email")} />
+            <AdminTreeValue name={"email_verified"} value={data.email_verified} setValue={set("email_verified")} />
             <AdminTreeValue name={"bio"} value={data.bio} setValue={set("bio")} />
             <AdminTreeValue name={"discord"} value={data.discord} setValue={set("discord")} />
             <AdminTreeValue name={"discord_id"} value={data.discordid} setValue={set("discordid")} />
