@@ -110,16 +110,20 @@ const MemberCard = ({ data }) => {
     const [rerender, setRerender] = useState(0);
 
     const configSet = (key, value) => {
+        let initial = data[key];
+        data[key] = value;
+        setRerender(rerender + 1);
         endpoints.modifyUser(data.id, { [key]: value }).then(() => {
-            data[key] = value;
-            setRerender(rerender + 1);
         }).catch(e => {
+            data[key] = initial;
+            setRerender(rerender + 1);
             app.alert(endpoints.getError(e));
         });
     };
     const set = key => value => configSet(key, value);
 
     return <AdminTree name={data.username}>
+        <AdminTreeValue name={"id"} value={data.id} />
         <AdminTreeValue name={"enabled"} value={data.is_active} setValue={!data.is_staff && set("is_active")} />
         <AdminTreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
         <AdminTreeValue name={"is_staff"} value={data.is_staff} setValue={data.id !== api.user.id && set("is_staff")} />
@@ -148,10 +152,13 @@ const TeamCard = ({ data }) => {
     const [rerender, setRerender] = useState(0);
 
     const configSet = (key, value) => {
+        let initial = data[key];
+        data[key] = value;
+        setRerender(rerender + 1);
         endpoints.modifyTeam(data.id, { [key]: value }).then(() => {
-            data[key] = value;
-            setRerender(rerender + 1);
         }).catch(e => {
+            data[key] = initial;
+            setRerender(rerender + 1);
             app.alert(endpoints.getError(e));
         });
     };
@@ -160,13 +167,16 @@ const TeamCard = ({ data }) => {
     data.members.forEach(i => points += i.points);
 
     return <AdminTree name={data.name}>
+        <AdminTreeValue name={"id"} value={data.id} />
         <AdminTreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
         <AdminTreeValue name={"points"} value={points} />
+        <AdminTreeValue name={"owner_id"} value={data.owner} setValue={set("owner")} />
         <AdminTree name={"metadata"}>
             <AdminTreeValue name={"description"} value={data.description} setValue={set("description")} />
         </AdminTree>
         <AdminTree name={"members"}>
             {data.members.map(i => <AdminTree name={i.username}>
+                <AdminTreeValue name={"id"} value={i.id} />
                 <AdminTreeValue name={"points"} value={i.points} />
             </AdminTree>)}
         </AdminTree>

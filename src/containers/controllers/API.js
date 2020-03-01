@@ -11,37 +11,39 @@ export const DOMAIN = process.env.REACT_APP_API_DOMAIN;
 export const API_BASE = process.env.REACT_APP_API_BASE;
 export const BASE_URL = DOMAIN + API_BASE;
 export const ENDPOINTS = {
-    COUNTDOWN: "/stats/countdown",
+    COUNTDOWN: "/stats/countdown/",
     CONFIG: "/config/",
 
-    REGISTER: "/auth/register",
-    LOGIN: "/auth/login",
-    ADD_2FA: "/auth/add_2fa",
-    VERIFY_2FA: "/auth/verify_2fa",
-    VERIFY: "/auth/verify_email",
-    REQUEST_RESET: "/auth/request_password_reset",
-    COMPLETE_RESET: "/auth/password_reset",
+    REGISTER: "/auth/register/",
+    LOGIN: "/auth/login/",
+    ADD_2FA: "/auth/add_2fa/",
+    VERIFY_2FA: "/auth/verify_2fa/",
+    VERIFY: "/auth/verify_email/",
+    REQUEST_RESET: "/auth/request_password_reset/",
+    COMPLETE_RESET: "/auth/password_reset/",
 
     CATEGORIES: "/challenges/categories/",
     CHALLENGES: "/challenges/",
     SUBMIT_FLAG: "/challenges/submit_flag/",
 
-    EDIT_FILE: "/files/edit",
-    NEW_FILE: "/files/new",
-    EDIT_HINT: "/hints/edit",
-    NEW_HINT: "/hints/new",
-    USE_HINT: "/hints/use",
+    EDIT_FILE: "/files/edit/",
+    NEW_FILE: "/files/new/",
+    EDIT_HINT: "/hints/edit/",
+    NEW_HINT: "/hints/new/",
+    USE_HINT: "/hints/use/",
 
     USER: "/member/",
     TEAM: "/team/",
 
-    TEAM_CREATE: "/team/create",
-    TEAM_JOIN: "/team/join",
+    TEAM_CREATE: "/team/create/",
+    TEAM_JOIN: "/team/join/",
 
-    LEADERBOARD: "/leaderboard/",
+    LEADERBOARD_GRAPH: "/leaderboard/graph/",
+    LEADERBOARD_USER: "/leaderboard/user/",
+    LEADERBOARD_TEAM: "/leaderboard/team/",
 
-    STATS: "/stats/stats",
-    VERSION: "/stats/version",
+    STATS: "/stats/stats/",
+    VERSION: "/stats/version/",
 };
 
 
@@ -197,7 +199,7 @@ class APIClass extends Component {
 
     cachedGet = route => {
         // Ensure we always have a trailing slash
-        if (!(/.*(\/|stats)$/.test(route))) route = route + "/";
+        if (!(/.*(\/|self)$/.test(route))) route = route + "/";
 
         return this.get(route).then(data => data.d).then(data => {
             this._cache[route] = data;
@@ -268,7 +270,7 @@ class APIClass extends Component {
     _reloadCache = async () => {
         let userData, teamData, challenges, ready = true;
         try {
-            userData = await this.cachedGet(ENDPOINTS.USER + "self/");
+            userData = await this.cachedGet(ENDPOINTS.USER + "self");
         } catch (e) {
             if (e.response && e.response.data)
                 return this.logout();
@@ -278,7 +280,7 @@ class APIClass extends Component {
 
         if (userData && userData.team !== null) {
             try {
-                teamData = await this.cachedGet(ENDPOINTS.TEAM + "self/");
+                teamData = await this.cachedGet(ENDPOINTS.TEAM + "self");
             } catch (e) {
                 if (e.request && e.request.status === 404) {
                     teamData = null;

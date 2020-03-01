@@ -5,7 +5,7 @@ import TabbedView, { Tab } from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
-import { Spinner, useApi, ENDPOINTS } from "ractf";
+import { Spinner, useApi, usePaginated, Button, ENDPOINTS } from "ractf";
 
 import "./Leaderboard.scss";
 import colours from "../../Colours.scss";
@@ -86,53 +86,52 @@ export default () => {
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
 
-    const [leaderboard] = useApi(ENDPOINTS.LEADERBOARD);
+    const [graph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
+    const [uResults, uNext, uLoading] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
+    const [tResults, tNext, tLoading] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
 
     useEffect(() => {
-        if (!leaderboard) return;
-        let lbdata = [...leaderboard];
+        if (!graph) return;
+        let lbdata = {user: [...graph.user], team: [...graph.team]};
         let userPlots = {};
         let teamPlots = {};
         let points = {};
         let minTime = null;
 
-        lbdata.sort((a, b) => (new Date(a.time)) - (new Date(b.time))).map(i => {
+        lbdata.user.sort((a, b) => (new Date(a.time)) - (new Date(b.time)))
+        lbdata.team.sort((a, b) => (new Date(a.time)) - (new Date(b.time)))
+        
+        
+        lbdata.user.forEach(i => {
             if (!minTime) minTime = new Date(i.time);
+            let id = "user_" + i.user_name;
 
-            if (!userPlots.hasOwnProperty(i.user_id)) {
-                userPlots[i.user_id] = {
+            if (!userPlots.hasOwnProperty(id)) {
+                userPlots["user_" + i.user_name] = {
                     x: [minTime], y: [0], type: "scatter",
-                    mode: "lines+markers", name: i.name, id: i.user_id
+                    mode: "lines+markers", name: i.user_name, id: id
                 };
-                points[i.user_id] = 0;
+                points[id] = 0;
             }
-            if (!teamPlots.hasOwnProperty(i.team_id)) {
-                teamPlots[i.team_id] = {
-                    x: [minTime], y: [0], type: "scatter",
-                    mode: "lines+markers", name: i.team_name, id: i.team_id
-                };
-                points[i.team_id] = 0;
-            }
-            points[i.user_id] += i.points;
-            points[i.team_id] += i.points;
-            userPlots[i.user_id].x.push(new Date(i.time));
-            userPlots[i.user_id].y.push(points[i.user_id]);
-            teamPlots[i.team_id].x.push(new Date(i.time));
-            teamPlots[i.team_id].y.push(points[i.team_id]);
-
-            return 0;
+            
+            points[id] += i.points;
+            userPlots[id].x.push(new Date(i.timestamp));
+            userPlots[id].y.push(points[id]);
         });
-        /*
-        let now = new Date();
-        for (let i in userPlots) {
-            userPlots[i].x.push(now);
-            userPlots[i].y.push(points[i]);
-        }
-        for (let i in teamPlots) {
-            teamPlots[i].x.push(now);
-            teamPlots[i].y.push(points[i]);
-        }
-        */
+        lbdata.user.forEach(i => {
+            let id = "team_" + i.user_name;
+            
+            if (!teamPlots.hasOwnProperty(id)) {
+                teamPlots[id] = {
+                    x: [minTime], y: [0], type: "scatter",
+                    mode: "lines+markers", name: i.team_name, id: id
+                };
+                points[id] = 0;
+            }
+            points[id] += i.points;
+            teamPlots[id].x.push(new Date(i.timestamp));
+            teamPlots[id].y.push(points[id]);
+        });
 
         setUserGraphData(
             Object.values(userPlots).sort((a, b) => points[b.id] - points[a.id])
@@ -140,50 +139,29 @@ export default () => {
         setTeamGraphData(
             Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
         );
-    }, [leaderboard]);
+
+        console.log(teamGraphData);
+    }, [graph]);
 
     const userData = (lbdata) => {
-        let users = {};
-
-        lbdata.map(i => {
-            if (!users.hasOwnProperty(i.user_id))
-                users[i.user_id] = { id: i.user_id, name: i.name, team: i.team_name, points: 0 };
-            users[i.user_id].points += i.points;
-            return 0;
-        });
-        return Object.values(users).sort((a, b) => b.points - a.points).map(
-            (i, n) => [n + 1, i.name, i.team, i.points, "/profile/" + i.id]
-        );
+        return lbdata.map((i, n) => [i.username, i.leaderboard_points]);
     };
-
     const teamData = (lbdata) => {
-        let users = {};
-
-        lbdata.map(i => {
-            if (!users.hasOwnProperty(i.team_id))
-                users[i.team_id] = { id: i.team_id, name: i.team_name, points: 0 };
-            users[i.team_id].points += i.points;
-            return 0;
-        });
-        return Object.values(users).sort((a, b) => b.points - a.points).map(
-            (i, n) => [n + 1, i.name, i.points, "/team/" + i.id]
-        );
+        return lbdata.map((i, n) => [i.name, i.leaderboard_points]);
     };
 
     return <Page title={"Leaderboard"}>
         <TabbedView center initial={1}>
             <Tab label='Users'>
                 <Graph data={userGraphData} />
-                {leaderboard
-                    ? <Table headings={["Ranking", "User", "Team", "Points"]} data={userData(leaderboard)} />
-                    : <Spinner />}
+                <Table headings={["User", "Points"]} data={userData(uResults.results)} />
+                {uResults.hasMore && <Button disabled={uLoading} click={uNext}>Load More</Button>}
             </Tab>
 
             <Tab label='Teams'>
                 <Graph data={teamGraphData} />
-                {leaderboard
-                    ? <Table headings={["Ranking", "Team", "Points"]} data={teamData(leaderboard)} />
-                    : <Spinner />}
+                <Table headings={["Team", "Points"]} data={teamData(tResults.results)} />
+                {tResults.hasMore && <Button disabled={tLoading} click={tNext}>Load More</Button>}
             </Tab>
         </TabbedView>
     </Page>;

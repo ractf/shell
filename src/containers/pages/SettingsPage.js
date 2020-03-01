@@ -13,7 +13,7 @@ const makeOwner = (api, endpoints, app, member) => {
     return () => {
         app.promptConfirm({
             message: (<>
-                Are you sure you want to make {member.name} the new team owner?<br /><br />
+                Are you sure you want to make {member.username} the new team owner?<br /><br />
                 You will cease to own the team!
             </>), small: true
         }).then(() => {
@@ -33,11 +33,11 @@ const makeOwner = (api, endpoints, app, member) => {
 const TeamMember = ({ api, endpoints, app, member, isOwner, isCaptain }) => {
     return <div className={"memberTheme"}>
         <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")}
-            onClick={isOwner ? makeOwner(api, endpoints, app, member) : null}><GiCaptainHatProfile /></div>
-        {/*(isOwner && !isCaptain) && <div className={"memberIcon clickable bad"}
-                                           onClick={kickMember(api, app, member)}><GiThorHammer /></div>*/}
+            onClick={isOwner && !isCaptain ? makeOwner(api, endpoints, app, member) : null}>
+                <GiCaptainHatProfile />
+        </div>
         <div>
-            {member.name}
+            {member.username}
         </div>
     </div>;
 };
@@ -109,7 +109,7 @@ export default () => {
         });
     };
 
-    const teamOwner = (api.team ? api.team.owner_id === api.user.id : null);
+    const teamOwner = (api.team ? api.team.owner === api.user.id : null);
 
     return <Page title={"Settings for " + api.user.username}>
         <TabbedView>
@@ -187,7 +187,7 @@ export default () => {
                     <br />
                     {api.team.members.map((i, n) => (
                         <TeamMember key={n} api={api} endpoints={endpoints} app={app}
-                            isCaptain={i.id === api.team.owner_id} isOwner={teamOwner} member={i} />
+                            isCaptain={i.id === api.team.owner} isOwner={teamOwner} member={i} />
                     ))}
                 </Tab>
             }
