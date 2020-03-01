@@ -1,2 +1,96 @@
 @import "../../Colours.scss";
 
+
+.adminTree {
+    &>ul>li {
+        margin-left: 0;
+    }
+
+    i {
+        display: inline-block;
+        vertical-align: top;
+        width: 24px;
+        height: 24px;
+
+        svg {
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            z-index: 1;
+        }
+
+        &.treeItem {
+            position: relative;
+            margin-right: 2px;
+        }
+
+        &:not(.treeItem) {
+            position: relative;
+
+            &::after {
+                display: block;
+                content: "";
+                position: absolute;
+                width: 11px;
+                height: 1px;
+                top: 12px;
+                left: 13px;
+                border-top: 1px dashed $bg_l2;
+            }
+        }
+    }
+
+    ul {
+        display: block;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        list-style-image: none;
+    }
+
+    span.parent {
+        display: inline-block;
+        line-height: 24px;
+        height: 24px;
+        color: $bg_l3;
+        &:hover {
+            text-decoration: none;
+            color: $bg_l5;
+        }
+    }
+
+    li {
+        cursor: pointer;
+        position: relative;
+
+        min-height: 24px;
+        line-height: 24px;
+        margin: 0;
+        margin-left: 24px;
+        min-width: 24px;
+
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            top: 0;
+            left: 12px;
+            border-left: 1px dashed $bg_l2;
+        }
+        &:last-child::after {
+            height: 12px;
+        }
+    }
+
+    span.value {
+        font-size: 90%;
+        color: $bg_l4;
+        &::before {
+            content: " - ";
+        }
+    }
+}

@@ -38,6 +38,7 @@ export default class WS extends Component {
     }
 
     onopen = () => {
+        console.log("OPEN")
         this.setState({
             cooldown: 1000,
             timer: 1,
@@ -69,11 +70,12 @@ export default class WS extends Component {
         }
     };
 
-    onerror = () => {
-
+    onerror = (e) => {
+        throw e;
     };
 
     onclose = () => {
+        console.log("close")
         let cooldown = Math.min(16000, this.cooldown * 2);
         setTimeout(this._setupWS, cooldown);
         this.setState({

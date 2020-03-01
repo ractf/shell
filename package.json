@@ -7,11 +7,8 @@
     "@hot-loader/react-dom": "^16.11.0",
     "@sentry/browser": "^5.11.0",
     "@svgr/webpack": "4.1.0",
-    "@typescript-eslint/eslint-plugin": "1.6.0",
-    "@typescript-eslint/parser": "1.6.0",
     "axios": "^0.19.1",
     "babel-eslint": "10.0.1",
-    "babel-jest": "^24.8.0",
     "babel-loader": "8.0.5",
     "babel-plugin-named-asset-import": "^0.3.5",
     "babel-preset-react-app": "^9.1.0",
@@ -33,14 +30,14 @@
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
     "is-wsl": "^1.1.0",
-    "jest": "24.7.1",
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.7.1",
-    "jest-watch-typeahead": "0.3.0",
     "mini-css-extract-plugin": "0.5.0",
+    "moment": "^2.24.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
+    "polished": "^3.4.4",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
     "postcss-normalize": "7.0.1",
@@ -61,7 +58,6 @@
     "react-loadable": "^5.5.0",
     "react-markdown": "^4.3.1",
     "react-moment": "^0.9.7",
-    "react-panelgroup": "^1.0.10",
     "react-plotly.js": "^2.4.0",
     "react-router-dom": "^5.1.2",
     "react-simple-code-editor": "^0.11.0",
@@ -70,7 +66,6 @@
     "semver": "6.0.0",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "1.2.3",
-    "ts-pnp": "1.1.2",
     "url-loader": "1.1.2",
     "webpack": "4.29.6",
     "webpack-dev-server": "3.2.1",
@@ -80,10 +75,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build": "node scripts/build.js"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -114,13 +106,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@storybook/addon-actions": "^5.3.0",
-    "@storybook/addon-knobs": "^5.3.0",
-    "@storybook/addon-links": "^5.3.0",
-    "@storybook/addons": "^5.3.0",
-    "@storybook/react": "^5.3.0"
-  },
+  "devDependencies": {},
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
@@ -160,10 +146,6 @@
       "web.jsx",
       "jsx",
       "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
     ]
   },
   "babel": {

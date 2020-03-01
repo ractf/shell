@@ -33,8 +33,8 @@ export default () => {
     </Page>;
     if (!teamData) return <Page title={"Teams"} vCentre><Spinner /></Page>;
 
-    const UserSolve = ({ user_name, name, points }) => <div className={"userSolve"}>
-        <div>{name}</div>
+    const UserSolve = ({ user_name, challenge_name, points }) => <div className={"userSolve"}>
+        <div>{challenge_name}</div>
         <div>{points} point{points === 1 ? "" : "s"} - Scored by {user_name}</div>
     </div>;
 

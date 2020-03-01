@@ -1,5 +1,5 @@
 import { withRouter } from "react-router-dom";
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import axios from "axios";
 
 import WS from "./WS";
@@ -139,6 +139,7 @@ class APIClass extends Component {
             _reloadCache: this._reloadCache,
             getCache: this.getCache,
             cachedGet: this.cachedGet,
+            get: this.get,
         };
         this.state = {
             popups: [],
@@ -225,7 +226,6 @@ class APIClass extends Component {
                 url: BASE_URL + url,
                 method: "get",
                 headers: this._getHeaders(),
-                withCredentials: true,
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
@@ -239,7 +239,6 @@ class APIClass extends Component {
                 method: "post",
                 data: data,
                 headers: this._getHeaders(),
-                withCredentials: true,
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
@@ -253,7 +252,6 @@ class APIClass extends Component {
                 method: "patch",
                 data: data,
                 headers: this._getHeaders(),
-                withCredentials: true,
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
@@ -657,9 +655,8 @@ class APIClass extends Component {
     render() {
         return <APIContext.Provider value={this.state}>
             <APIEndpoints.Provider value={this.endpoints}>
-                <WS api={this}>
-                    {this.props.children}
-                </WS>
+                {/*<WS api={this} />*/}
+                {this.props.children}
             </APIEndpoints.Provider>
         </APIContext.Provider>;
     };

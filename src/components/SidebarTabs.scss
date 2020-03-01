@@ -108,8 +108,6 @@
         font-size: 1em;
         font-weight: 700;
         font-family: $titleStack;
-    }
-    &>.absTitle, &>.absBody {
         padding: 16px;
     }
     &>.absBody {
@@ -186,30 +184,44 @@
         }
     }
 
-    & .absMember {
-        background: $bg_d1;
+    & .absCard {
+        background: rgba(0, 0, 0, .1);
         border-radius: 4px;
         position: relative;
         margin-bottom: 8px;
+        border: 1px solid $bg;
 
-        &>.absmName {
-            border-bottom: 1px solid $bg_l1;
+        .abscName {
+            border-bottom: 1px solid $bg;
             font-size: 1em;
             font-weight: 700;
             font-family: $titleStack;
+
+            &.abscn {
+                cursor: pointer;
+            }
         }
-        &>.absmName, &>.absmBody {
+        .abscName, .abscBody, .abscExtra {
             padding: 16px;
         }
-        & .absmVml {
+        & .abscVml {
             position: absolute;
             right: 16px;
-            bottom: 16px;
+            top: 12px;
             font-size: .8em;
+            cursor: pointer;
+        }
+        .abscExtra {
+            margin-top: -8px;
         }
 
         &:last-child {
             margin-bottom: 0;
+        }
+
+        & button {
+            margin: 0;
+            font-size: .9em;
         }
     }
 }

@@ -23,10 +23,10 @@ const UserSpecial = ({ children, col, ico }) => (
     </div>
 );
 
-const UserSolve = ({ challenge, points, time }) => {
+const UserSolve = ({ challenge_name, points }) => {
     return (
         <div className={"userSolve"}>
-            <div>{challenge}</div>
+            <div>{challenge_name}</div>
             <div>{points} point{points === 1 ? "" : "s"}</div>
         </div>
     );
@@ -75,8 +75,8 @@ export default () => {
                             </span>)}
                 </>}
 
-                {userData.team && <Link to={"/team/" + userData.team.id} className={"teamMemberico"}>
-                    <FaUsers /> {userData.team.name}
+                {userData.team && <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
+                    <FaUsers /> {userData.team_name}
                 </Link>}
             </div>
             <div className={"userSolves"}>
