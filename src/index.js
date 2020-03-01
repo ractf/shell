@@ -19,7 +19,6 @@ const render = () => {
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register({
     onUpdate: registration => {
-        alert("RACTF rebooting ;)")
         if (registration && registration.waiting) {
             registration.waiting.postMessage({ type: 'SKIP_WAITING' });
         }
