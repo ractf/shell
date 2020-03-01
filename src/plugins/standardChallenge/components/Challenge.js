@@ -257,8 +257,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     </>;
 
     if (!isEditor) {
-        let solveMsg = (challenge.first_blood
-            ? "First solved by " + challenge.first_blood
+        let solveMsg = (challenge.first_blood_name
+            ? "First solved by " + challenge.first_blood_name
             : "Nobody has solved this challenge yet");
 
         chalContent = <SBTSection subTitle={challenge.score + " points - " + solveMsg} title={challenge.name}>

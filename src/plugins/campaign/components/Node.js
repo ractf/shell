@@ -40,8 +40,8 @@ export default ({
     if (lockDoneR) lockClassR += " lockDoneR";
     if (lockUnlockedR) lockClassR += " lockUnlockedR";
     let lockClassD = "lockDown";
-    if (lockDoneD) lockClassR += " lockDoneD";
-    if (lockUnlockedD) lockClassR += " lockUnlockedD";
+    if (lockDoneD) lockClassD += " lockDoneD";
+    if (lockUnlockedD) lockClassD += " lockUnlockedD";
 
     let inner = <>
         <div>{name}</div>
