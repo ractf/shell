@@ -8,62 +8,99 @@
     
     &>.sbtSidebar {
         flex-shrink: 0;
-        width: 200px;
-        background: $sidebar;
-        padding: 32px 0;
+        width: 220px;
+        background: $bg_d0;
         display: flex;
         flex-direction: column;
         font-size: .9em;
 
-        &>.sbtBrand {
-            width: 150px;
+        .sbtSkip {
+            flex-grow: 1;
+        }
+        .sbtFoot {
+            background-color: rgba(0, 0, 0, .1);
+            padding: 20px 25px;
+            font-size: .8em;
+            color: $bg_l4;
+            .sbtfCopy {
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+
+            a:hover {
+                text-decoration: none;
+            }
+
+            img {
+                margin-right: 8px;
+                width: 16px;
+            }
+        }
+
+        .sbtHead {
             display: block;
-            margin: 0 auto 32px;
+            padding: 32px 25px;
+            &>svg, &>img {
+                max-width: 120px;
+                display: block;
+                margin: auto;
+            }
         }
-        &>hr {
-            width: 100%;
-            border: none;
-            margin: 8px 0;
-            border-bottom: 1px solid $bg_l1;
-        }
-        & .sbtItem, & .sbtSubitem {
-            padding: 8px 15px 8px 25px;
+        .sbtItem, .sbtSubitem {
             cursor: pointer;
             display: block;
+            border-left: 4px solid transparent;
+            transition: background 100ms ease-in, border-color 200ms ease-in, color 100ms ease-in;
         }
-        &>.sbtItem {
+        
+        .sbtSubitem {
+            padding: 7px 10px 7px 11px;
+            padding-left: 32px;
+            color: $bg_l4;
+            &:hover {
+                background: $sidebar_focus !important;
+                color: $sidebar_link;
+                text-decoration: none;
+            }
+        }
+
+        .sbtItem {
+            padding: 14px 20px 14px 21px;
             position: relative;
             display: flex;
-            color: $sidebar_heading;
-            &>svg {
+            color: $bg_l4;
+
+            svg {
                 position: absolute;
-                left: 4px;
+                right: 12px;
                 top: 50%;
                 transform: translateY(-50%);
                 transition: transform 200ms ease-in;
             }
-            transition: background 100ms ease-in;
             &.sbtActive {
-                &>svg {
-                    transform: translateY(-50%) rotate(90deg);
+                svg {
+                    transform: translateY(-50%) rotate(-90deg);
+                }
+
+                color: $sidebar_heading;
+                border-color: $sidebar_accent;
+                background-color: rgba(0, 0, 0, .1);
+                &~.sbtChildren .sbtSubitem {
+                    border-color: $sidebar_accent;
+                    background-color: rgba(0, 0, 0, .1);
                 }
             }
             &:hover {
+                color: $sidebar_heading;
                 text-decoration: none;
                 background: $sidebar_focus;
             }
         }
-        &>.sbtChildren {
+
+        .sbtChildren {
             overflow-y: hidden;
             transition: height 200ms ease;
-        }
-        & .sbtSubitem {
-            color: $sidebar_link;
-            transition: background 100ms ease-in;
-            &:hover, &.sbtActive {
-                background: $sidebar_focus;
-                text-decoration: none;
-            }
         }
     }
 }
@@ -251,7 +288,6 @@
         font-size: 1.1em;
         overflow-y: auto;
         height: 100vh;
-        display: block;
 
         &>.sbtHandle {
             display: block;

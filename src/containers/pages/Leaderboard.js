@@ -98,10 +98,9 @@ export default () => {
         let points = {};
         let minTime = null;
 
-        lbdata.user.sort((a, b) => (new Date(a.time)) - (new Date(b.time)))
-        lbdata.team.sort((a, b) => (new Date(a.time)) - (new Date(b.time)))
-        
-        
+        lbdata.user.sort((a, b) => (new Date(a.time)) - (new Date(b.time)));
+        lbdata.team.sort((a, b) => (new Date(a.time)) - (new Date(b.time)));
+
         lbdata.user.forEach(i => {
             if (!minTime) minTime = new Date(i.time);
             let id = "user_" + i.user_name;
@@ -139,8 +138,6 @@ export default () => {
         setTeamGraphData(
             Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
         );
-
-        console.log(teamGraphData);
     }, [graph]);
 
     const userData = (lbdata) => {

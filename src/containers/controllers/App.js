@@ -427,7 +427,7 @@ const App = React.memo(() => {
                 {popupsEl}
             </div>
 
-            {!ws.connected &&
+            {false && !ws.connected &&
                 <SpinningSpine
                     text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />
             }

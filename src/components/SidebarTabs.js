@@ -22,7 +22,7 @@ export const SBMenu = ({ name, children, initial }) => {
 
     return <>
         <div onClick={toggle} className={"sbtItem" + (height === 0 ? "" : " sbtActive")}>
-            {children && children.length && <MdKeyboardArrowRight />}{name}
+            {children && children.length && <MdKeyboardArrowLeft />}{name}
         </div>
         <div className={"sbtChildren"} style={{ height: height }} ref={childs}>
             {children}
@@ -84,14 +84,16 @@ export const SiteNav = ({ children }) => {
         <div onMouseDown={() => setSbOpen(false)} className={"sbtBurgerUnderlay"} />
         <div onMouseDown={() => setSbOpen(!sbOpen)} className={"sbtBurger"}><MdMenu /></div>
         <div className={"sbtSidebar"}>
-            <hr />
+            <div class="sbtHead">
+                <Wordmark />
+            </div>
+
             <SBMenu key={"ractf"} name={"RACTF"} initial>
                 <Link onClick={close} to={"/home"} className={"sbtSubitem"}>Home</Link>
                 <Link onClick={close} to={"/users"} className={"sbtSubitem"}>Users</Link>
                 <Link onClick={close} to={"/teams"} className={"sbtSubitem"}>Teams</Link>
                 <Link onClick={close} to={"/leaderboard"} className={"sbtSubitem"}>Leaderboard</Link>
             </SBMenu>
-            <hr />
             {api.user ? <>
                 <SBMenu key={"challenges"} name={"Challenges"} initial>
                     {api.challenges.map(i =>
@@ -105,14 +107,12 @@ export const SiteNav = ({ children }) => {
                         </Link>
                     }
                 </SBMenu>
-                <hr />
                 <SBMenu key={"user"} name={api.user.username}>
                     <Link onClick={close} to={"/profile/me"} className={"sbtSubitem"}>Profile</Link>
                     <Link onClick={close} to={"/team/me"} className={"sbtSubitem"}>Team</Link>
                     <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>Settings</Link>
                     <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>Logout</Link>
                 </SBMenu>
-                <hr />
             </> : (endpoints.configGet("login", true) || endpoints.configGet("registration", true)) ? <>
                 <SBMenu key={"login"} name={"Login"} initial>
                     {endpoints.configGet("login", true) &&
@@ -120,7 +120,6 @@ export const SiteNav = ({ children }) => {
                     {endpoints.configGet("registration", true) &&
                     <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
                 </SBMenu>
-                <hr />
             </> : null}
             {api.user && api.user.is_staff && <>
                 <SBMenu key={"admin"} name={"Admin"}>
@@ -131,8 +130,17 @@ export const SiteNav = ({ children }) => {
                     <Link onClick={close} to={"/admin/members"} className={"sbtSubitem"}>Members</Link>
                     <Link onClick={close} to={"/admin/teams"} className={"sbtSubitem"}>Teams</Link>
                 </SBMenu>
-                <hr />
             </>}
+
+            <div class="sbtSkip" />
+            <div class="sbtFoot">
+                <div class="sbtfCopy">
+                    <img src={"https://ractf.co.uk/static/img/spine.png"} />
+                    &copy; Really Awesome Technology Ltd 2020
+                </div>
+                <a href="/">Home</a> - <a href="/privacy">Privacy</a> - <a href="/terms">Terms</a>
+            </div>
+
         </div>
 
         <div className={"sbtBody"}>

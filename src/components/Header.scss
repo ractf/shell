@@ -5,12 +5,15 @@ header {
     height: 60px;
     background: $header;
     padding: 16px 32px;
-    position: relative;
     z-index: 50;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: space-around;
     text-align: center;
+
+    position: fixed;
+    left: 0;
+    top: 0;
 
     &>a {
         font-size: 1.4em;
@@ -40,9 +43,7 @@ header {
 
 @media (max-width: 800px) {
     header {
-        position: fixed;
-        left: 0;
-        top: 0;
+        display: flex;
     }
 
     #headerPad {

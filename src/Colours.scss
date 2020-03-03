@@ -44,8 +44,9 @@ $header: rgba($bg_d1, 0.73);
 // Sidebar
 $sidebar: $bg_d0;
 $sidebar_focus: rgba(0, 0, 0, .4);
-$sidebar_heading: #ffffff;
+$sidebar_heading: #eee;
 $sidebar_link: $bg_l5;
+$sidebar_accent: $accent;
 
 
 :export {
