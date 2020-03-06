@@ -98,7 +98,7 @@ export default () => {
         {api.challenges ? <>
             <div className={"homeSub"}>Pick a category below to get started</div>
             <div className="homeLinks">
-                {api.challenges.map(i => <Link to={"/campaign/" + i.id}><span>
+                {api.challenges.map(i => <Link key={i.id} to={"/campaign/" + i.id}><span>
                     {i.name}
                 </span></Link>)}
             </div>

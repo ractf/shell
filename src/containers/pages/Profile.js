@@ -52,28 +52,26 @@ export default () => {
                     {userData.bio}
                 </div>
 
-                {userData.social && <>
-                    {userData.twitter && userData.twitter.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"}
-                            href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
-                            <FaTwitter /><span>@{userData.twitter}</span>
-                        </a>}
-                    {userData.reddit && userData.reddit.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"}
-                            href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
-                            <FaRedditAlien /><span>/u/{userData.reddit}</span>
-                        </a>}
-                    {userData.discord && userData.discord.length !== 0 &&
-                        (userData.discordid && userData.discordid.length !== 0
-                            ? <a target={"_blank"}
-                                href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
-                                className={"userSocial"}>
-                                <FaDiscord /><span>{userData.discord}</span>
-                            </a>
-                            : <span className={"userSocial"}>
-                                <FaDiscord /><span>{userData.discord}</span>
-                            </span>)}
-                </>}
+                {userData.twitter && userData.twitter.length !== 0 &&
+                    <a className={"userSocial"} target={"_blank"}
+                        href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
+                        <FaTwitter /><span>@{userData.twitter}</span>
+                    </a>}
+                {userData.reddit && userData.reddit.length !== 0 &&
+                    <a className={"userSocial"} target={"_blank"}
+                        href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
+                        <FaRedditAlien /><span>/u/{userData.reddit}</span>
+                    </a>}
+                {userData.discord && userData.discord.length !== 0 &&
+                    (userData.discordid && userData.discordid.length !== 0
+                        ? <a target={"_blank"}
+                            href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
+                            className={"userSocial"}>
+                            <FaDiscord /><span>{userData.discord}</span>
+                        </a>
+                        : <span className={"userSocial"}>
+                            <FaDiscord /><span>{userData.discord}</span>
+                        </span>)}
 
                 {userData.team && <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
                     <FaUsers /> {userData.team_name}
