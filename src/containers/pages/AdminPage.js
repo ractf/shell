@@ -23,8 +23,8 @@ const AdminCard = ({ children, extra, name }) => {
         e.stopPropagation();
     };
 
-    return <div class={"absCard"}>
-        {name && <div class={"abscName" + (extra ? " abscn" : "")} onClick={toggle}>{name}</div>}
+    return <div className={"absCard"}>
+        {name && <div className={"abscName" + (extra ? " abscn" : "")} onClick={toggle}>{name}</div>}
         {extra ? <div className={"abscVml"} onClick={toggle}>
             {open ? "VIEW LESS" : "VIEW MORE"}
         </div> : null}

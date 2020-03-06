@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints, Link
+    apiEndpoints, Link, apiContext
 } from "ractf";
 
 import File from "./File";
@@ -31,6 +31,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
     const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
+    const api = useContext(apiContext);
 
     const changeFlag = (flag) => {
         setFlagValid(regex.test(flag));
@@ -233,14 +234,20 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
                 {challenge.solved ? <>
                     You have already solved this challenge!
-                </> : <Form handle={tryFlag(challenge)} locked={locked}>
+                </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
                         <Input placeholder="Flag format: ractf{...}"
                             format={partial} name={"flag"}
                             callback={changeFlag} light monospace
                             center width={"80%"} />
                         {message && <FormError>{message}</FormError>}
                         <Button disabled={!flagValid} submit>Attempt flag</Button>
-                    </Form>}
+                    </Form> : <>
+                    You can only submit flags if you are in a team.
+                    <ButtonRow>
+                        <Button to={"/team/new"}>Join a team</Button>
+                        <Button to={"/team/new"}>Create a team</Button>
+                    </ButtonRow>
+                </>}
 
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                     {challenge.files.map(file => {

@@ -8,7 +8,7 @@ import Page from "./bases/Page";
 
 import {
     plugins, Button, ButtonRow, apiContext, apiEndpoints, Input, Form,
-    FormError, SBTSection, Section, appContext
+    FormError, SBTSection, Section, appContext, Link
 } from "ractf";
 
 import "./Campaign.scss";
@@ -27,6 +27,8 @@ const ANC = ({ hide, anc, modal }) => {
 
         setLocked(true);
 
+        console.log(anc);
+
         (anc.id ? endpoints.editGroup(anc.id, cname, cdesc, ctype)
             : endpoints.createGroup(cname, cdesc, ctype)).then(async resp => {
                 await endpoints.setup();
@@ -43,9 +45,9 @@ const ANC = ({ hide, anc, modal }) => {
         <label htmlFor={"cname"}>Catgeory name</label>
         <Input val={anc.name} name={"cname"} placeholder={"Catgeory name"} />
         <label htmlFor={"cdesc"}>Catgeory brief</label>
-        <Input val={anc.desc} name={"cdesc"} rows={5} placeholder={"Category brief"} />
+        <Input val={anc.description} name={"cdesc"} rows={5} placeholder={"Category brief"} />
         <label htmlFor={"ctype"}>Catgeory type</label>
-        <Input val={anc.type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
+        <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
             placeholder={"Category type"} />
         {error && <FormError>{error}</FormError>}
         <ButtonRow>
@@ -183,12 +185,13 @@ export default () => {
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
-        <SBTSection key={tab.id} subTitle={tab.desc} title={tab.name}>
+        <SBTSection key={tab.id} subTitle={tab.description} title={tab.name}>
             {api.user.is_staff ? edit ?
                 <Button className={"campEditButton"} click={() => { setEdit(false); }} warning>Stop Editing</Button>
                 : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>Edit</Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
 
+            <Link className={"backToChals"} to={"/"}>Back to categories</Link>
             <div className={"campInner"}>{challengeTab}</div>
         </SBTSection>
     </Page>;

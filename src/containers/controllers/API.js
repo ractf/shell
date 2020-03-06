@@ -495,7 +495,7 @@ class APIClass extends Component {
         this.post(ENDPOINTS.CATEGORIES, { name, metadata: null, description: desc, contained_type: type })
     );
     editGroup = (id, name, desc, type) => (
-        this.post(ENDPOINTS.CATEGORIES, { id, name, desc, type })
+        this.patch(ENDPOINTS.CATEGORIES + id + "/", { name, description: desc, contained_type: type })
     );
 
     editChallenge = ({

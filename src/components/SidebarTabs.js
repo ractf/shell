@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdMenu } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdMenu } from "react-icons/md";
 
 import { apiContext, apiEndpoints, Link } from "ractf";
 import Wordmark from "./Wordmark";
@@ -84,7 +84,7 @@ export const SiteNav = ({ children }) => {
         <div onMouseDown={() => setSbOpen(false)} className={"sbtBurgerUnderlay"} />
         <div onMouseDown={() => setSbOpen(!sbOpen)} className={"sbtBurger"}><MdMenu /></div>
         <div className={"sbtSidebar"}>
-            <div class="sbtHead">
+            <div className={"sbtHead"}>
                 <Wordmark />
             </div>
 
@@ -132,10 +132,10 @@ export const SiteNav = ({ children }) => {
                 </SBMenu>
             </>}
 
-            <div class="sbtSkip" />
-            <div class="sbtFoot">
-                <div class="sbtfCopy">
-                    <img src={"https://ractf.co.uk/static/img/spine.png"} />
+            <div className="sbtSkip" />
+            <div className="sbtFoot">
+                <div className="sbtfCopy">
+                    <img alt={""} src={"https://ractf.co.uk/static/img/spine.png"} />
                     &copy; Really Awesome Technology Ltd 2020
                 </div>
                 <a href="/">Home</a> - <a href="/privacy">Privacy</a> - <a href="/terms">Terms</a>
