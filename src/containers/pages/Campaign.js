@@ -31,7 +31,7 @@ const ANC = ({ hide, anc, modal }) => {
 
         (anc.id ? endpoints.editGroup(anc.id, cname, cdesc, ctype)
             : endpoints.createGroup(cname, cdesc, ctype)).then(async resp => {
-                await endpoints.setup();
+                await endpoints.setup(true);
                 if (hide)
                     hide();
             }).catch(e => {
@@ -187,8 +187,11 @@ export default () => {
 
         <SBTSection key={tab.id} subTitle={tab.description} title={tab.name}>
             {api.user.is_staff ? edit ?
-                <Button className={"campEditButton"} click={() => { setEdit(false); }} warning>Stop Editing</Button>
-                : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>Edit</Button> : null}
+                <Button className={"campEditButton"} click={() => { setEdit(false); endpoints.setup(true); }} warning>
+                    Stop Editing
+                </Button> : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>
+                    Edit
+                </Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
 
             <Link className={"backToChals"} to={"/"}>Back to categories</Link>

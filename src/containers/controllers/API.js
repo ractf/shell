@@ -179,10 +179,10 @@ class APIClass extends Component {
         localStorage.setItem("config", JSON.stringify(config));
         this.setState({ config: config });
     }
-    async setup() {
+    async setup(minimal) {
         let token = localStorage.getItem('token');
         if (token) {
-            this._reloadCache();
+            this._reloadCache(minimal);
         } else {
             this.setState({
                 ready: true,
@@ -267,31 +267,33 @@ class APIClass extends Component {
         return headers;
     };
 
-    _reloadCache = async () => {
+    _reloadCache = async (minimal) => {
         let userData, teamData, challenges, ready = true;
-        try {
-            userData = await this.cachedGet(ENDPOINTS.USER + "self");
-        } catch (e) {
-            if (e.response && e.response.data)
-                return this.logout();
-            ready = false;
-            this.setState({ ready: false });
-        }
-
-        if (userData && userData.team !== null) {
+        if (!minimal) {
             try {
-                teamData = await this.cachedGet(ENDPOINTS.TEAM + "self");
+                userData = await this.cachedGet(ENDPOINTS.USER + "self");
             } catch (e) {
-                if (e.request && e.request.status === 404) {
-                    teamData = null;
-                } else {
-                    if (e.response && e.response.data)
-                        return this.logout();
-                    ready = false;
-                    this.setState({ ready: false });
-                }
+                if (e.response && e.response.data)
+                    return this.logout();
+                ready = false;
+                this.setState({ ready: false });
             }
-        } else teamData = null;
+
+            if (userData && userData.team !== null) {
+                try {
+                    teamData = await this.cachedGet(ENDPOINTS.TEAM + "self");
+                } catch (e) {
+                    if (e.request && e.request.status === 404) {
+                        teamData = null;
+                    } else {
+                        if (e.response && e.response.data)
+                            return this.logout();
+                        ready = false;
+                        this.setState({ ready: false });
+                    }
+                }
+            } else teamData = null;
+        }
 
         try {
             challenges = (await this._getChallenges()).d;
@@ -304,12 +306,16 @@ class APIClass extends Component {
 
         let newState = { ready: ready, authenticated: ready };
         if (ready) {
-            localStorage.setItem("userData", JSON.stringify(userData));
-            localStorage.setItem("teamData", JSON.stringify(teamData));
+            if (!minimal) {
+                localStorage.setItem("userData", JSON.stringify(userData));
+                localStorage.setItem("teamData", JSON.stringify(teamData));
+            }
             localStorage.setItem("challenges", JSON.stringify(challenges));
 
-            newState.user = userData;
-            newState.team = teamData;
+            if (!minimal) {
+                newState.user = userData;
+                newState.team = teamData;
+            }
             newState.challenges = challenges;
             newState.siteOpen = true;
         }

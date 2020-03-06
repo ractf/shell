@@ -70,7 +70,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     };
 
     if (isEdit) {
-        maxX++;
+        if (maxX < 2) maxX++;
         rows.push([]);
     }
     rows.forEach(row => {
