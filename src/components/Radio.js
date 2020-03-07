@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import "./Radio.scss";
 
+import { fastClick } from "ractf";
+
 
 export default class Radio extends Component {
     isInput = true;
@@ -32,7 +34,7 @@ export default class Radio extends Component {
     render() {
         return <div className={"radioWrap"}>
             {this.props.options.map((i, n) => <div key={n}>
-                <div onClick={e => this.change(i[1])} onMouseDown={e=>e.target.click()}
+                <div onClick={e => this.change(i[1])} {...fastClick}
                     onKeyDown={this.okd} tabIndex="0"
                     className={"radioLabel" + (i[1] === this.state.val ? " checked" : "")}
                     htmlFor={this.ids[n]}>

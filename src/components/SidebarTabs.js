@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 import { MdKeyboardArrowLeft, MdMenu } from "react-icons/md";
 
-import { apiContext, apiEndpoints, Link } from "ractf";
+import { apiContext, apiEndpoints, Link, fastClick } from "ractf";
 import Wordmark from "./Wordmark";
 
 import "./SidebarTabs.scss";
@@ -81,8 +81,8 @@ export const SiteNav = ({ children }) => {
     const close = () => setSbOpen(false);
 
     return <div className={"sbtWrap" + (sbOpen ? " sbtOpen" : "")}>
-        <div onMouseDown={() => setSbOpen(false)} className={"sbtBurgerUnderlay"} />
-        <div onMouseDown={() => setSbOpen(!sbOpen)} className={"sbtBurger"}><MdMenu /></div>
+        <div onClick={() => setSbOpen(false)} {...fastClick} className={"sbtBurgerUnderlay"} />
+        <div onClick={() => setSbOpen(!sbOpen)} {...fastClick} className={"sbtBurger"}><MdMenu /></div>
         <div className={"sbtSidebar"}>
             <div className={"sbtHead"}>
                 <Wordmark />

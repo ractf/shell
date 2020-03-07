@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
 
-import { Link } from "ractf";
+import { Link, fastClick } from "ractf";
 
 import NodeLink from "./NodeLink";
 
@@ -53,23 +53,22 @@ export default ({
             {lockDoneD ? <FaCheck /> : lockUnlockedD ? <FaLockOpen /> : <FaLock />}
         </div>}
 
-        <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
+        <NodeLink {...fastClick}
             onClick={toggle('left')} isEdit={isEdit} show={linksL} left
             done={done} unlocked={unlocked} />
-        <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
+        <NodeLink {...fastClick}
             onClick={toggle('right')} isEdit={isEdit} show={linksR} right
             done={done} unlocked={unlocked} />
-        <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
+        <NodeLink {...fastClick}
             onClick={toggle('up')} isEdit={isEdit} show={linksU} up
             done={done} unlocked={unlocked} />
-        <NodeLink onMouseDown={(e => { e.preventDefault(); e.stopPropagation(); })}
+        <NodeLink {...fastClick}
             onClick={toggle('down')} isEdit={isEdit} show={linksD} down
             done={done} unlocked={unlocked} />
     </>;
 
     if (isEdit || !url)
-        return <div tabIndex={unlocked || done ? "0" : ""}
-            onMouseDown={(e => (e.target.click && e.target.click()))}
+        return <div tabIndex={unlocked || done ? "0" : ""} {...fastClick}
             onClick={(done || unlocked) ? click : null} className={nodeClass}>
             {inner}
         </div>;

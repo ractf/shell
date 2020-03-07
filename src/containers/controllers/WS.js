@@ -12,6 +12,7 @@ export default class WS extends Component {
     constructor(props) {
         super(props);
         this.api = this.props.api;
+        this.api._loginCallback = this._loginCallback;
 
         setInterval((() => {
             if (!this.state.connected)
@@ -28,6 +29,18 @@ export default class WS extends Component {
         this._setupWS();
     }
 
+    _loginCallback = (token) => {
+        token = token || localStorage.getItem("token");
+        if (token && this.ws.readyState === WebSocket.OPEN)
+            this.send({token: token});
+    };
+
+    send = (data) => {
+        if (this.ws.readyState !== WebSocket.OPEN)
+            return console.error("Failed to send WS message: Not open.", data)
+        this.ws.send(JSON.stringify(data));
+    }
+
     _setupWS = () => {
         this.ws = new WebSocket(this.WSS_URL);
 
@@ -35,7 +48,7 @@ export default class WS extends Component {
         this.ws.onmessage = this.onmessage;
         this.ws.onerror = this.onerror;
         this.ws.onclose = this.onclose;
-    }
+    };
 
     onopen = () => {
         console.log("OPEN")
@@ -44,6 +57,7 @@ export default class WS extends Component {
             timer: 1,
             connected: true
         });
+        this._loginCallback();
     };
 
     onmessage = message => {

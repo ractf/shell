@@ -14,5 +14,6 @@ export default props => {
     if (props.show) className += " show";
     if (props.done) className += " done";
 
-    return <div onClick={props.onClick} onMouseDown={props.onMouseDown} className={className}/>;
+    return <div onClick={props.onClick} onMouseDown={props.onMouseDown}
+        onTouchStart={props.onTouchStart} className={className} />;
 };

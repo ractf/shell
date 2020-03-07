@@ -1,5 +1,5 @@
 import { withRouter } from "react-router-dom";
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import axios from "axios";
 
 import WS from "./WS";
@@ -93,6 +93,8 @@ class APIClass extends Component {
             countdown = {};
             siteOpen = false;
         }
+
+        this._loginCallback = null;
 
         this.endpoints = {
             setup: this.setup,
@@ -323,51 +325,6 @@ class APIClass extends Component {
     };
 
     // Misc
-    /*
-    _createChallengeLinks = (challenges) => {
-        const NORTH = 1, WEST = 2, SOUTH = 4, EAST = 8;
-
-        challenges.forEach(group => {
-            if (group.type === "campaign") {
-                let challenges = {};
-                group.chals.forEach(
-                    i => {
-                        challenges[i.id] = i;
-                        i.link = 0;
-                    }
-                );
-                group.chals.forEach(i => {
-                    i.deps && i.deps.forEach(dep => {
-                        if (challenges[dep]) {
-                            let depChallenge = challenges[dep];
-                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x + 1 &&
-                                depChallenge.challenge_metadata.y === i.challenge_metadata.y) {
-                                i.link |= EAST;
-                                depChallenge.link |= WEST;
-                            }
-                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x - 1 &&
-                                depChallenge.challenge_metadata.y === i.challenge_metadata.y) {
-                                i.link |= WEST;
-                                depChallenge.link |= EAST;
-                            }
-                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x &&
-                                depChallenge.challenge_metadata.y === i.challenge_metadata.y - 1) {
-                                i.link |= NORTH;
-                                depChallenge.link |= SOUTH;
-                            }
-                            if (depChallenge.challenge_metadata.x === i.challenge_metadata.x &&
-                                depChallenge.challenge_metadata.y === i.challenge_metadata.y + 1) {
-                                i.link |= SOUTH;
-                                depChallenge.link |= NORTH;
-                            }
-                        }
-                    });
-                });
-            }
-        });
-    };
-    */
-
     getUUID = () => {
         if (window.crypto)
             return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -427,6 +384,7 @@ class APIClass extends Component {
 
     _postLogin = async token => {
         localStorage.setItem("token", token);
+        if (this._loginCallback) this._loginCallback(token);
         await this._reloadCache();
 
         if (this.state.team)
@@ -671,7 +629,7 @@ class APIClass extends Component {
     render() {
         return <APIContext.Provider value={this.state}>
             <APIEndpoints.Provider value={this.endpoints}>
-                {/*<WS api={this} />*/}
+                <WS api={this} />
                 {this.props.children}
             </APIEndpoints.Provider>
         </APIContext.Provider>;

@@ -87,8 +87,11 @@ export default () => {
                 <ANC anc={true} />
             </Section>
         </SBTSection>;
-    else if (!tabId)
-        return <Redirect to={"/campaign/" + api.challenges[0].id} />;
+    else if (!tabId) {
+        if (api.challenges.length)
+            return <Redirect to={"/campaign/" + api.challenges[0].id} />;
+        return <Redirect to={"/campaign/new"} />;
+    }
 
     const showEditor = (challenge, saveTo, isNew) => {
         return () => {

@@ -82,8 +82,8 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
         <Row key={y}>{row.map((chal, x) => {
             if (!chal) {
                 if (isEdit)
-                    return <AddNode click={showEditor(emptyChallenge(x, y), chals, true)} key={x} />;
-                 return <div className={"campaignSpacer"} key={x} />;
+                    return <AddNode click={showEditor(emptyChallenge(x, y), chals, true)} key={"add_" + x + "," + y} />;
+                 return <div className={"campaignSpacer"} key={"spacer_" + x + "," + y} />;
             }
 
             // ( ... || []) ensures we have a list to lookup with [x].
