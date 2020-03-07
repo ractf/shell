@@ -159,7 +159,6 @@ class APIClass extends Component {
 
             siteOpen: siteOpen,
             countdown: countdown,
-
         };
 
         window.__ractf_api = this;
@@ -363,11 +362,11 @@ class APIClass extends Component {
 
     getCountdown = () => this.get(ENDPOINTS.COUNTDOWN).then(data => {
         if (data.s) {
-            let ct = new Date(data.d.countdown_timestamp);
+            let ct = new Date(data.d.countdown_timestamp * 1000);
             let st = new Date(data.d.server_timestamp);
             let now = new Date();
 
-            let countdown = { time: data.d.countdown_timestamp, offset: st - now };
+            let countdown = { time: data.d.countdown_timestamp * 1000, offset: st - now };
             localStorage.setItem("countdown", JSON.stringify(countdown));
 
             if (ct - st < 0) this.setState({ countdown: countdown, siteOpen: true });

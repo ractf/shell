@@ -113,11 +113,11 @@ export const SiteNav = ({ children }) => {
                     <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>Settings</Link>
                     <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>Logout</Link>
                 </SBMenu>
-            </> : (endpoints.configGet("login", true) || endpoints.configGet("registration", true)) ? <>
+            </> : (endpoints.configGet("login", true) || endpoints.configGet("register", true)) ? <>
                 <SBMenu key={"login"} name={"Login"} initial>
                     {endpoints.configGet("login", true) &&
                         <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
-                    {endpoints.configGet("registration", true) &&
+                    {endpoints.configGet("register", true) &&
                     <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
                 </SBMenu>
             </> : null}
