@@ -117,7 +117,7 @@ export default () => {
             userPlots[id].x.push(new Date(i.timestamp));
             userPlots[id].y.push(points[id]);
         });
-        lbdata.user.forEach(i => {
+        lbdata.team.forEach(i => {
             let id = "team_" + i.user_name;
             
             if (!teamPlots.hasOwnProperty(id)) {
