@@ -374,7 +374,7 @@ const App = React.memo(() => {
         setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
     }, []);
 
-    if (1 || !process.env.REACT_APP_NO_SITE_LOCK)
+    if (!process.env.REACT_APP_NO_SITE_LOCK)
         if (!api.siteOpen && !hasCode) return <SiteLocked setHasCode={setHasCode} setLoaded={setLoaded} />;
 
     if (consoleMode) return <VimDiv />;
