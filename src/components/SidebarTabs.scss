@@ -55,7 +55,7 @@
         }
         
         .sbtSubitem {
-            padding: 7px 10px 7px 11px;
+            padding: 8px 10px 8px 11px;
             padding-left: 32px;
             color: $bg_l4;
             &:hover {
@@ -327,6 +327,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
     .sbtOpen {
         &>.sbtSidebar {

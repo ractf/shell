@@ -29,7 +29,7 @@ const Button = (props, ref) => {
     if (props.disabled) className += " disabled";
 
     return <button className={className} disabled={props.disabled} ref={ref}
-                   onClick={onClick} {...fastClick}>
+                   onClick={onClick} {...(props.to ? fastClick : {})}>
         {props.children}
     </button>;
 };
