@@ -128,7 +128,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
             <div className={"challengeLinkGroup"}>
                 {challenge.files.map(file =>
-                    <File key={file.id} name={file.name} url={file.url} id={file.id} size={file.size} isEdit />
+                    file && <File key={file.id} name={file.name} url={file.url} id={file.id} size={file.size} isEdit />
                 )}
             </div>
 
@@ -252,9 +252,9 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 </>}
 
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
-                    {challenge.files.map(file => {
-                        return <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />;
-                    })}
+                    {challenge.files.map(file =>
+                        file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
+                    )}
                 </div>}
                 {challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
                     {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
