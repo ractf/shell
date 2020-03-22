@@ -29,26 +29,26 @@
     max-width: 356px;
     margin-bottom: 8px;
 
-    &>.userName {
+    .userName {
         font-size: 2em;
         font-weight: 600;
         font-family: $titleStack;
         word-wrap: break-word;
 
-        &>svg {
+        svg {
             margin-bottom: -0.125em;
         }
     }
-    &>.teamMemberico {
+    .teamMemberico {
         font-size: .9em;
         color: $fg;
 
-        &>svg {
+        svg {
             margin-bottom: -0.125em;
             margin-right: .25em;
         }
     }
-    &>.userBio {
+    .userBio {
         font-size: .8em;
         margin-bottom: 1em;
         &.noBio::before {
@@ -56,23 +56,23 @@
                 content: "No bio set";
         }
     }
-    &>.userSocial {
+    .userSocial {
         display: flex;
         align-items: center;
         margin: 8px 0;
-        color: $bg-l3;
+        color: $bg_l4;
         transition: 150ms color ease;
         cursor: pointer;
 
-        &>*:first-child {
+        *:first-child {
             margin-right: 8px;
             font-size: 1.2em;
         }
-        &>*:last-child {
+        *:last-child {
             font-size: .9em;
         }
         &:hover {
-            color: $bg-l5;
+            color: $bg_l5;
             text-decoration: none;
         }
     }
@@ -80,7 +80,7 @@
 .userSolves {
     flex-grow: 1;
 
-    &>.noSolves {
+    .noSolves {
         font-style: italic;
         text-align: left;
         font-size: .9em;

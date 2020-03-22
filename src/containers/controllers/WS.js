@@ -27,7 +27,11 @@ export default class WS extends Component {
             timer: 1,
         };
         this._setupWS();
+
+        window.__ws = this;
     }
+
+    log = window.console.log.bind(window.console, "%c[Websocket]", "color: #d3d; font-weight: 800");
 
     _loginCallback = (token) => {
         token = token || localStorage.getItem("token");
@@ -36,13 +40,19 @@ export default class WS extends Component {
     };
 
     send = (data) => {
-        if (this.ws.readyState !== WebSocket.OPEN)
-            return console.error("Failed to send WS message: Not open.", data)
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN)
+            return this.log("Error: Failed to send WS message: Not open.", data);
         this.ws.send(JSON.stringify(data));
     }
 
     _setupWS = () => {
-        this.ws = new WebSocket(this.WSS_URL);
+        try {
+            this.ws = new WebSocket(this.WSS_URL);
+        } catch(e) {
+            this.ws = null;
+            this.onclose();
+            return;
+        }
 
         this.ws.onopen = this.onopen;
         this.ws.onmessage = this.onmessage;
@@ -51,7 +61,7 @@ export default class WS extends Component {
     };
 
     onopen = () => {
-        console.log("OPEN")
+        this.log("OPEN");
         this.setState({
             cooldown: 1000,
             timer: 1,
@@ -65,10 +75,10 @@ export default class WS extends Component {
 
         switch (data.event_code) {
             case this.CONNECTION:
-                console.log(data.message);
+                this.log(data.message);
                 break;
             case this.CHALLENGE_SCORE:
-                console.log(data);
+                this.log(data);
                 this.api.addPopup(
                     "Challenge solved",
                     <>
@@ -85,12 +95,12 @@ export default class WS extends Component {
     };
 
     onerror = (e) => {
-        throw e;
+        this.log("Error:", e);
     };
 
     onclose = () => {
-        console.log("close")
-        let cooldown = Math.min(16000, this.cooldown * 2);
+        this.log("CLOSE");
+        let cooldown = Math.min(16000, this.state.cooldown * 2);
         setTimeout(this._setupWS, cooldown);
         this.setState({
             connected: false,
@@ -100,6 +110,8 @@ export default class WS extends Component {
     };
 
     render() {
-        return <WSContext.Provider value={this.state}>{this.props.children}</WSContext.Provider>;
+        return <WSContext.Provider value={this.state}>
+            {this.props.children}
+        </WSContext.Provider>;
     }
 }

@@ -1,9 +1,11 @@
 $fontStack: 'Lato', sans-serif;
 
-$titleStack: 'Open Sans', sans-serif;
+$titleStack: 'Gilroy', sans-serif;
 $monoStack: 'Roboto Mono', monospace;
 
 $background: #222034;
+//$background: #0f0e1a;
+$background: #181626;
 $foreground: #ffffff;
 $bg: $background;
 $fg: $foreground;
@@ -14,7 +16,7 @@ $red: #e53935;
 
 $accent: #aa3132;
 
-$do-lighten: false;
+$do-lighten: true;
 
 $bg_l0: saturate(lighten($bg, 3%), 1%);
 $bg_l1: desaturate(lighten($bg, 7%), 5%);
@@ -35,17 +37,18 @@ $bg_d1: saturate(darken($bg, 8%), 4%);
     $bg_d1: desaturate(lighten($bg, 8%), 4%);
 }
 
-$link_color: $bg_l4;
-$link_hover: $bg_l3;
+$link_color: $bg_l5;
+$link_hover: $bg_l4;
 
 
 // Header
 $header: rgba($bg_d1, 0.73);
 // Sidebar
-$sidebar: $bg_d0;
+$sidebar: $bg_l0;
 $sidebar_focus: rgba(0, 0, 0, .4);
 $sidebar_heading: #eee;
-$sidebar_link: $bg_l5;
+$sidebar_link: $bg_l4;
+$sidebar_link_hover: $bg_l5;
 $sidebar_accent: $accent;
 
 

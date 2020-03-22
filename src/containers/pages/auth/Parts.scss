@@ -3,32 +3,12 @@
 
 .authWrap {
     text-align: center;
-    max-width: 600px;
+    max-width: 480px;
     width: 100%;
     margin: auto;
-    padding: 56px 64px;
-    padding-bottom: 48px;
     position: relative;
 
-
-    background-color: $bg_l0;
-    position: relative;
     color: $fg;
-    border-radius: 1px;
-
-    &::before {
-        position: absolute;
-        left: 3px;
-        height: 100%;
-        top: 5px;
-        width: 100%;
-        content: "";
-        display: block;
-        background-color: $bg_d0;
-        z-index: -1;
-        border-radius: 1px;
-        transition: 100ms top ease-out, 100ms left ease-out;
-    } 
 }
 
 @media only screen and (max-width: 600px) {
@@ -60,6 +40,6 @@
 
     &:hover {
         text-decoration: underline;
-        opacity: .8;
+        opacity: .7;
     }
 }

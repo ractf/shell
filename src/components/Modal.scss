@@ -25,18 +25,6 @@
 
 .modalBoxWrap {
     position: relative;
-    &::before {
-        position: absolute;
-        left: 3px;
-        height: 100%;
-        top: 5px;
-        width: 100%;
-        content: "";
-        display: block;
-        background-color: $bg_d0;
-        z-index: -1;
-        border-radius: 1px;
-    }
 }
 
 .modalX {
@@ -65,6 +53,7 @@
 .modalBox {
     padding: 32px 48px;
     background-color: $bg_l0;
+    border-radius: 2px;
     box-shadow: 0 0 5px -10px #000;
     display: flex;
     flex-direction: column;

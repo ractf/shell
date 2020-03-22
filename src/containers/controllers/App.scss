@@ -1,4 +1,5 @@
 @import "../../Colours.scss";
+@import "../../Fonts.scss";
 
 * {
     box-sizing: border-box;
@@ -269,6 +270,7 @@ b {
     left: 16px;
     opacity: .7;
     display: flex;
+    z-index: 1000;
 
     &>img {
         height: 32px;

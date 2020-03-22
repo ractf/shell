@@ -2,15 +2,15 @@
 
 button {
     background-color: $bg_l1;
-    border-radius: 0;
-    border: 1px solid $bg_l2;
+    border-radius: 2px;
+    border: none;
     display: block;
     cursor: pointer;
     color: $fg;
-    font-size: 1.2rem;
-    padding: 6px 12px;
+    font-size: 18px;
+    padding: 9px 12px;
     text-decoration: none;
-    transition: background-color 1s;
+    transition: background-color 200ms, color 200ms;
     margin: 1rem auto 0;
     min-width: 100px;
 
@@ -18,25 +18,36 @@ button {
         padding: .6rem 2rem;
     }
     &.medium {
-        padding: 8px 18px;
-        min-width: 120px;
+        padding: 9px 24px;
+        min-width: 140px;
+        min-height: 46px;
     }
     &.lesser {
-        background: none;
-        color: darken($fg, 20%);
-        border-color: $bg_l1;
+        background-color: $bg_l0;
+        color: $bg_l5;
     }
     &.warning {
-        background: rgba($red, .3);
-        border-color: rgba($red, .4);
+        background-color: rgba($red, .5);
     }
 
     &:not(.disabled):hover {
-        background-color: $bg;
+        background-color: $bg_l2;
+
+        &.lesser {
+            background-color: $bg_l1;
+            color: $fg;
+        }
+        &.warning {
+            background-color: rgba($red, .8);
+        }
     }
     &.disabled {
         color: #999;
         cursor: not-allowed;
+
+        &.warning {
+            color: #bbb;
+        }
     }
 
     &:hover {

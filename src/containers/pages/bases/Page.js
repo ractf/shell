@@ -25,12 +25,14 @@ const LinkDropdown = ({ name, children }) => {
 */
 
 
-export default ({ children, vCentre, selfContained }) => {
-    return (<>
+export default ({ children, vCentre, selfContained, noPad }) => {
+    const style = noPad ? {padding: 0} : {};
+    
+    return (<div className="sbtBody" style={style}>
         {selfContained ? children :
             <div className={"pageContent" + (vCentre ? " vCentre" : "")}>
                 {children}
             </div>
         }
-    </>);
+    </div>);
 };

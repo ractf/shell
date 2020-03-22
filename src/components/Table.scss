@@ -14,13 +14,16 @@ table {
 
 tr {
     &.heading > td {
-        background-color: $bg_d0;
+        background-color: $bg_l2;
         font-weight: 600;
         font-family: $titleStack;
     }
-        
+    
+    td {
+        background-color: $bg_l1;
+    }
     &:nth-child(2n) > td {
-        background-color: $bg_d00;
+        background-color: $bg_l0;
     }
     &:not(.heading) {
         > td {
@@ -29,7 +32,7 @@ tr {
 
         &:hover > td {
             color: #fff;
-            background-color: $bg_d0;
+            background-color: $bg_l2;
         }
     }
 }

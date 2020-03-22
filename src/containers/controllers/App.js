@@ -300,12 +300,18 @@ const PopupMessage = ({ data }) => {
     </div>;
 };
 
+const WSSpine = () => {
+    const ws = useContext(wsContext);
+    if (ws.connected) return null;
+
+    return <SpinningSpine
+            text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
+};
+
 const App = React.memo(() => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
-    const ws = useContext(wsContext);
     window.__api = api;
-    window.__ws = ws;
 
     const [hasCode, setHasCode] = useState(false);
 
@@ -427,10 +433,7 @@ const App = React.memo(() => {
                 {popupsEl}
             </div>
 
-            {false && !ws.connected &&
-                <SpinningSpine
-                    text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />
-            }
+            <WSSpine />
         </AppContext.Provider>
     );
 });

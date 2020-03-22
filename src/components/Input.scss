@@ -29,19 +29,25 @@ textarea {
 .inputWrapper, .react-datepicker__input-container {
     position: relative;
 
-    padding: 5px 10px;
-
+    min-height: 46px;
+    padding: 11px 24px;
+    font-size: 18px;
     border-radius: 2px;
-    color: #ddd;
-    font-size: 21px;
-    padding: 5px 10px;
+
+    color: $fg;
     outline: none;
 
-    background-color: $bg;
-    transition: 100ms background-color ease;
+    background-color: $bg_l2;
     &:focus-within {
-        transition: 100ms background-color ease;
-        background-color: $bg_d0;
+        background-color: $bg_l3;
+
+        .placeholder {
+            color: $bg_l5;
+        }
+
+        > div:nth-of-type(1) {
+            opacity: 0.8;
+        }
     }
     &.light:not(:focus-within) {
         background-color: $bg_l1;
@@ -50,19 +56,7 @@ textarea {
             background-color: $bg-l2;
         }
     }
-
-    &::before {
-        display: block;
-        position: absolute;
-        left: 2px;
-        top: 3px;
-        width: 100%;
-        height: 100%;
-        content: "";
-        background-color: $bg_l1;
-        z-index: -1;
-    }
-
+    
     &.center {
         text-align: center;
     }
@@ -80,7 +74,7 @@ textarea {
         }
     }
     &.password {
-        padding-left: 38px;
+        padding-left: 50px;
     }
     &.disabled {
         background-color: $bg_l1;
@@ -92,23 +86,20 @@ textarea {
         display: none;
     }
 
-    &:focus-within > div:nth-of-type(1) {
-        opacity: 0.8;
-    }
-
-    & .lengthCounter {
+    .lengthCounter {
         position: absolute;
         right: 8px;
-        top: 4px;
+        top: 8px;
         font-size: 0.8em;
         opacity: 0.4;
+        user-select: none;
     }
-    & .styledEye {
+    .styledEye {
         position: absolute;
         top: 50%;
         width: 20px;
         height: 20px;
-        left: 10px;
+        left: 16px;
         font-size: 20px;
         transform: translateY(-50%);
         display: flex;
@@ -122,7 +113,7 @@ textarea {
         }
     }
 
-    & .placeholder {
+    .placeholder {
         position: absolute;
         left: 0;
         top: 0;
@@ -130,14 +121,14 @@ textarea {
         height: 100%;
         padding: inherit;
         text-align: left;
-        font-size: 21px;
-        color: #777;
+        font-size: 1em;
+        color: $bg_l4;
 
         user-select: none;
         pointer-events: none;
     }
 
-    & .inputStrength {
+    .inputStrength {
         position: absolute;
         height: 2px;
         background-color: #000;

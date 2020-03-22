@@ -628,8 +628,9 @@ class APIClass extends Component {
     render() {
         return <APIContext.Provider value={this.state}>
             <APIEndpoints.Provider value={this.endpoints}>
-                <WS api={this} />
-                {this.props.children}
+                <WS api={this}>
+                    {this.props.children}
+                </WS>
             </APIEndpoints.Provider>
         </APIContext.Provider>;
     };

@@ -9,10 +9,21 @@
     &>.sbtSidebar {
         flex-shrink: 0;
         width: 220px;
-        background: $bg_d0;
-        display: flex;
-        flex-direction: column;
+        background: $sidebar;
         font-size: .9em;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        overflow-y: auto;
+        z-index: 5;
+        
+        .sbtsInner {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
         .sbtSkip {
             flex-grow: 1;
@@ -57,10 +68,10 @@
         .sbtSubitem {
             padding: 8px 10px 8px 11px;
             padding-left: 32px;
-            color: $bg_l4;
+            color: $sidebar_link;
             &:hover {
                 background: $sidebar_focus !important;
-                color: $sidebar_link;
+                color: $sidebar_link_hover;
                 text-decoration: none;
             }
         }
@@ -69,7 +80,7 @@
             padding: 14px 20px 14px 21px;
             position: relative;
             display: flex;
-            color: $bg_l4;
+            color: $sidebar_link;
 
             svg {
                 position: absolute;
@@ -118,22 +129,23 @@
 .abTitle {
     padding: 16px;
     font-size: 1.5em;
-    font-weight: 700;
+    font-weight: 600;
     font-family: $titleStack;
     border-bottom: 2px solid $bg_l1;
     word-wrap: break-word;
 
-    &>div {
+    div {
         font-size: .6em;
         margin-top: .3em;
         font-weight: initial;
         white-space: pre-line;
+        font-family: $fontStack;
     }
 }
 
 .abSection {
     margin-top: 16px;
-    background: $bg_d0;
+    background: $bg_l0;
     border-radius: 4px;
 
     &.absLight {
@@ -143,7 +155,7 @@
     &>.absTitle {
         border-bottom: 1px solid $bg_l1;
         font-size: 1em;
-        font-weight: 700;
+        font-weight: 600;
         font-family: $titleStack;
         padding: 16px;
     }
@@ -231,7 +243,7 @@
         .abscName {
             border-bottom: 1px solid $bg;
             font-size: 1em;
-            font-weight: 700;
+            font-weight: 600;
             font-family: $titleStack;
 
             &.abscn {
@@ -263,7 +275,11 @@
     }
 }
 
-.sbtHandle, .sbtBurger, .sbtBurgerUnderlay {
+.sbtBurgerUnderlay {
+    width: 220px;
+}
+
+.sbtHandle, .sbtBurger {
     display: none;
 }
 
@@ -278,6 +294,10 @@
         padding: 4px;
     }
 
+    .sbtBurgerUnderlay {
+        width: auto;
+    }
+
     .sbtWrap > .sbtSidebar {
         width: 300px;
         transition: left 200ms ease;
@@ -289,7 +309,7 @@
         overflow-y: auto;
         height: 100vh;
 
-        &>.sbtHandle {
+        .sbtHandle {
             display: block;
             background: $bg_d1;
             border-right: 1px solid $bg_l0;

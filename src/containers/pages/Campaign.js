@@ -66,6 +66,28 @@ const ANC = ({ hide, anc, modal }) => {
 };
 
 
+const CategoryList = () => {
+    const api = useContext(apiContext);
+
+    return <Page>
+        <SBTSection subTitle={"Pick one of the categories below to get started"} title={"All Categories"}>
+            {api.challenges.map(i => {
+                let solved = i.challenges.filter(j => j.solved).length;
+                return <Link to={"/campaign/" + i.id}
+                             className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
+                    <div className={"catName"}>{i.name}</div>
+                    <div className={"catStat"}>{
+                        solved === 0 ? "No challenges completed" :
+                        solved === i.challenges.length ? "All challenges completed" :
+                        `${solved} of ${i.challenges.length} challenge${i.challenges.length === 1 ? "" : "s"} completed`
+                    }</div>
+                </Link>;
+            })}
+        </SBTSection>
+    </Page>;
+};
+
+
 export default () => {
     const [challenge, setChallenge] = useState(null);
     const [edit, setEdit] = useState(false);
@@ -82,15 +104,13 @@ export default () => {
     const api = useContext(apiContext);
 
     if (tabId === "new" && api.user.is_staff)
-        return <SBTSection key={"anc"} title={"Add new category"} noHead>
+        return <Page><SBTSection key={"anc"} title={"Add new category"} noHead>
             <Section light title={"Add new category"}>
                 <ANC anc={true} />
             </Section>
-        </SBTSection>;
+        </SBTSection></Page>;
     else if (!tabId) {
-        if (api.challenges.length)
-            return <Redirect to={"/campaign/" + api.challenges[0].id} />;
-        return <Redirect to={"/campaign/new"} />;
+        return <CategoryList />;
     }
 
     const showEditor = (challenge, saveTo, isNew) => {
@@ -197,7 +217,7 @@ export default () => {
                 </Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
 
-            <Link className={"backToChals"} to={"/"}>Back to categories</Link>
+            <Link className={"backToChals"} to={"/campaign"}>Back to categories</Link>
             <div className={"campInner"}>{challengeTab}</div>
         </SBTSection>
     </Page>;

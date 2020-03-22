@@ -1,5 +1,65 @@
 @import "../../Colours.scss";
 
+.catList {
+    background-color: $bg_l2;
+    padding: 16px 24px;
+    border-radius: 2px;
+    margin: 14px 0;
+    cursor: pointer;
+    transition: 150ms background-color ease;
+    display: block;
+    color: $fg;
+
+    &.catDone {
+        background-color: desaturate($green, 10%);
+        .catStat {
+            color: $bgreen;
+        }
+        &::after {
+            border-color: desaturate($bgreen, 20%);
+        }
+
+        &:hover {
+            background-color: desaturate(lighten($green, 7%), 4%);
+            &::after {
+                border-color: desaturate($bgreen, 10%);
+            }
+        }
+    }
+
+    .catName {
+        font-weight: 600;
+        font-family: $titleStack;
+    }
+    .catStat {
+        color: $bg_l5;
+        font-size: .9em;
+    }
+
+    position: relative;
+    &::after {
+        transition: 150ms border-color ease;
+        content: "";
+        display: block;
+        border: 4px solid $bg_l3;
+        border-left: 0;
+        border-top: 0;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        width: 10px;
+        height: 10px;
+    }
+    &:hover {
+        background-color: $bg_l3;
+        &::after {
+            border-color: $bg_l5;
+        }
+        text-decoration: none;
+        color: $fg;
+    }
+}
 
 .campEditButton {
     position: absolute;
@@ -34,7 +94,7 @@
     cursor: pointer;
     z-index: 2;
 
-    &>* {
+    * {
         width: 24px;
         height: 24px;
         position: absolute;
@@ -44,8 +104,8 @@
         transform: rotateY(0);
     }
     &.sbHidden {
-        &>* {
-        transform: rotateY(180deg);
+        * {
+            transform: rotateY(180deg);
         }
     }
 }
@@ -68,20 +128,21 @@
     height: 100%;
     padding: 16px 0;
 
-    &>* {
+    & > * {
         flex-shrink: 0;
     }
 
     .sbSpace {
         flex-grow: 1;
     }
-    &>*:not(.head):not(.sbSpace) {
+    & > *:not(.head):not(.sbSpace) {
         padding: 12px 20px;
         position: relative;
         cursor: pointer;
         margin-top: 1px;
 
-        &:hover:not(.sbSpace), &.active {
+        &:hover:not(.sbSpace),
+        &.active {
             background-color: $bg_d1;
         }
         &::before {
@@ -106,8 +167,7 @@
         }
     }
 
-
-        /*
+    /*
         padding: 8px 24px;
         border-bottom: 1px solid $bg_l1;
         transition: padding 100ms ease, background-color 100ms ease;
@@ -121,20 +181,20 @@
         padding-left: 32px;
         background-color: $bg_d05;
     }*/
-    &>*.head {
+    & > *.head {
         padding: 12px 16px;
         border-bottom: 2px solid $bg_l2;
         font-weight: 500;
     }
 }
- 
+
 .challengeBody {
     text-align: center;
     width: 100%;
     position: relative;
     padding: 24px 64px;
 }
- 
+
 .campInner {
     text-align: center;
     padding-top: 24px;
@@ -144,8 +204,8 @@
     .sbBurger {
         width: 48px;
         height: 48px;
-        
-        &>* {
+
+        & > * {
             width: 38px;
             height: 38px;
             left: 6px;
