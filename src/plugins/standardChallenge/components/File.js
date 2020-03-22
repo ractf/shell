@@ -22,10 +22,10 @@ export default ({ name, url, size, id, isEdit }) => {
     };
 
     const edit = () => {
-        app.promptConfirm({message: "Edit file"},
+        app.promptConfirm({message: "Edit file", remove: () => endpoints.removeFile(id)},
             [{name: 'name', placeholder: 'File name', label: "Name", val: name},
              {name: 'url', placeholder: 'File URL', label: "URL", val: url},
-             {name: 'size', placeholder: 'File size', label: "Size (bytes)", val: size, format: /\d+/}]
+             {name: 'size', placeholder: 'File size', label: "Size (bytes)", val: size.toString(), format: /\d+/}]
         ).then(({ name, url, size }) => {
 
             if (!size.toString().match(/\d+/)) return app.alert("Invalid file size!");

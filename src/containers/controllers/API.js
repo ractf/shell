@@ -129,6 +129,7 @@ class APIClass extends Component {
 
             editFile: this.editFile,
             newFile: this.newFile,
+            removeFile: this.removeFile,
             editHint: this.editHint,
             newHint: this.newHint,
             useHint: this.useHint,
@@ -197,10 +198,13 @@ class APIClass extends Component {
         return this._cache[route];
     };
 
-    cachedGet = route => {
+    appendSlash = url => {
         // Ensure we always have a trailing slash
-        if (!(/.*(\/|self)$/.test(route))) route = route + "/";
+        if (!(/.*(\/|self)$/.test(url))) url = url + "/";
+        return url;
+    }
 
+    cachedGet = route => {
         return this.get(route).then(data => data.d).then(data => {
             this._cache[route] = data;
             localStorage.setItem("apiCache", JSON.stringify(this._cache));
@@ -225,7 +229,7 @@ class APIClass extends Component {
     get = url => {
         return new Promise((resolve, reject) => {
             axios({
-                url: BASE_URL + url,
+                url: this.appendSlash(BASE_URL + url),
                 method: "get",
                 headers: this._getHeaders(),
             }).then(response => {
@@ -237,7 +241,7 @@ class APIClass extends Component {
     post = (url, data) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: BASE_URL + url,
+                url: this.appendSlash(BASE_URL + url),
                 method: "post",
                 data: data,
                 headers: this._getHeaders(),
@@ -250,7 +254,7 @@ class APIClass extends Component {
     patch = (url, data) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: BASE_URL + url,
+                url: this.appendSlash(BASE_URL + url),
                 method: "patch",
                 data: data,
                 headers: this._getHeaders(),
@@ -263,7 +267,7 @@ class APIClass extends Component {
     delete = (url) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: BASE_URL + url,
+                url: this.appendSlash(BASE_URL + url),
                 method: "delete",
                 headers: this._getHeaders(),
             }).then(response => {
@@ -541,7 +545,7 @@ class APIClass extends Component {
     );
 
     editFile = (id, name, url, size) =>
-        this.patch(ENDPOINTS.FILE, { id, name, url, size }).then(() => {
+        this.patch(ENDPOINTS.FILE + id, { name, url, size }).then(() => {
             this.state.challenges.forEach(group =>
                 group.challenges.forEach(chal =>
                     chal.files.forEach(file => {
@@ -566,9 +570,19 @@ class APIClass extends Component {
             );
             this.setState({ challenges: this.state.challenges });
         });
+    removeFile = (id) =>
+        this.delete(ENDPOINTS.FILE + id).then(resp => resp.d).then(body => {
+            this.state.challenges.forEach(group =>
+                group.challenges.forEach(chal =>
+                    chal.files = chal.files.filter(i => i.id.toString() !== id.toString())
+                )
+            );
+            this.setState({ challenges: this.state.challenges });
+            return body;
+        });
 
     editHint = (id, name, cost, body) =>
-        this.patch(ENDPOINTS.HINT, { id, name, cost, body }).then(() => {
+        this.patch(ENDPOINTS.HINT + id, { name, cost, body }).then(() => {
             this.state.challenges.forEach(group =>
                 group.challenges.forEach(chal =>
                     chal.hints.forEach(hint => {
@@ -599,8 +613,8 @@ class APIClass extends Component {
                 group.challenges.forEach(chal =>
                     chal.hints.forEach(hint => {
                         if (hint.id === id) {
-                            hint.text = body;
-                            hint.hint_used = true;
+                            hint.text = body.text;
+                            hint.used = true;
                         }
                     })
                 )
@@ -612,7 +626,7 @@ class APIClass extends Component {
         this.delete(ENDPOINTS.HINT + id).then(resp => resp.d).then(body => {
             this.state.challenges.forEach(group =>
                 group.challenges.forEach(chal =>
-                    chal.hints = chal.hints.filter(i => i.id !== id)
+                    chal.hints = chal.hints.filter(i => i.id.toString() !== id.toString())
                 )
             );
             this.setState({ challenges: this.state.challenges });

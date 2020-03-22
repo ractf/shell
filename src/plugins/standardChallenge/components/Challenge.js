@@ -43,7 +43,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
     const promptHint = (hint) => {
         return () => {
-            if (hint.hint_used) return app.alert(hint.name + ":\n" + hint.text);
+            if (hint.used) return app.alert(hint.name + ":\n" + hint.text);
 
             let msg = <>
                 Are you sure you want to use a hint?<br /><br />
@@ -51,7 +51,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
                 endpoints.useHint(hint.id).then(body =>
-                    app.alert(hint.name + ":\n" + body)
+                    app.alert(hint.name + ":\n" + body.text)
                 ).catch(e =>
                     app.alert("Error using hint:\n" + endpoints.getError(e))
                 );
@@ -258,7 +258,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 </div>}
                 {challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
                     {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                        return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.hint_used}
+                        return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
                             points={hint.penalty} id={hint.id} key={hint.id} />;
                     })}
                 </div>}

@@ -6,6 +6,8 @@ const isLocalhost = Boolean(
     )
 );
 
+const log = window.console.log.bind(window.console, "%c[serviceWorker]", "color: #d3d; font-weight: 800");
+
 export function register(config) {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
         const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
@@ -35,13 +37,13 @@ function registerValidSW(swUrl, config) {
             installingWorker.onstatechange = () => {
                 if (installingWorker.state === 'installed') {
                     if (navigator.serviceWorker.controller) {
-                        console.log("You are seeing an old version of the site.");
+                        log("You are seeing an old version of the site.");
 
                         if (config && config.onUpdate) {
                             config.onUpdate(registration);
                         }
                     } else {
-                        console.log("Site ready to operate offline");
+                        log("Site ready to operate offline");
 
                         if (config && config.onSuccess) {
                             config.onSuccess(registration);
@@ -51,7 +53,7 @@ function registerValidSW(swUrl, config) {
             };
         };
     }).catch(error => {
-        console.error("Error during service worker registration:", error);
+        log("Error during service worker registration:", error);
     });
 }
 
@@ -71,7 +73,7 @@ function checkValidServiceWorker(swUrl, config) {
             registerValidSW(swUrl, config);
         }
     }).catch(() => {
-        console.log("No internet connection found. App is running in offline mode.");
+        log("No internet connection found. App is running in offline mode.");
     });
 }
 

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 import TabbedView, { Tab } from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
-import { Spinner, useApi, usePaginated, Button, ENDPOINTS } from "ractf";
+import { Spinner, useApi, usePaginated, Button, apiContext, ENDPOINTS } from "ractf";
 
 import "./Leaderboard.scss";
 import colours from "../../Colours.scss";
@@ -90,6 +90,8 @@ export default () => {
     const [uResults, uNext, uLoading] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
     const [tResults, tNext, tLoading] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
 
+    const api = useContext(apiContext);
+
     useEffect(() => {
         if (!graph) return;
         let lbdata = {user: [...graph.user], team: [...graph.team]};
@@ -105,6 +107,8 @@ export default () => {
             minTime = lbdata.user[0].timestamp;
         if (lbdata.team.length && (!minTime || lbdata.team[0].timestamp < minTime))
             minTime = lbdata.team[0].timestamp;
+        if (new Date(api.config.start_time * 1000) < new Date(minTime))
+            minTime = new Date(api.config.start_time * 1000);
 
         lbdata.user.forEach(i => {
             let id = "user_" + i.user_name;
