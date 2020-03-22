@@ -17,7 +17,7 @@ export const JoinTeam = () => {
     const [locked, setLocked] = useState(false);
 
     if (api.team !== null)
-        return <Redirect to={"/"} />;
+        return <Redirect to={"/campaign"} />;
 
     const doJoinTeam = ({ name, password }) => {
         if (!name.length)
@@ -74,7 +74,7 @@ export const CreateTeam = () => {
     const [locked, setLocked] = useState(false);
 
     if (api.team !== null)
-        return <Redirect to={"/"} />;
+        return <Redirect to={"/campaign"} />;
 
     const doCreateTeam = ({ name, password }) => {
         if (!name.length)

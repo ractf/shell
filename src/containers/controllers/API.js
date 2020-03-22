@@ -387,7 +387,7 @@ class APIClass extends Component {
         await this._reloadCache();
 
         if (this.state.team)
-            this.props.history.push("/home");
+            this.props.history.push("/campaign");
         else
             this.props.history.push("/noteam");
     };

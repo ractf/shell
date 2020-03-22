@@ -203,11 +203,13 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 }}
                 val={JSON.stringify(challenge.flag_metadata)} />
 
-            <ButtonRow>
-                <Button click={() => setEditFiles(true)}>Edit Files</Button>
-                <Button click={() => setEditHints(true)}>Edit Hints</Button>
-                <Button click={() => setEditRaw(true)}>Edit Metadata</Button>
-            </ButtonRow>
+            {!isCreator && 
+                <ButtonRow>
+                    <Button click={() => setEditFiles(true)}>Edit Files</Button>
+                    <Button click={() => setEditHints(true)}>Edit Hints</Button>
+                    <Button click={() => setEditRaw(true)}>Edit Metadata</Button>
+                </ButtonRow>
+            }
 
             <div>
                 Always Unlocked

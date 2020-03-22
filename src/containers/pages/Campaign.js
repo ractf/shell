@@ -27,8 +27,6 @@ const ANC = ({ hide, anc, modal }) => {
 
         setLocked(true);
 
-        console.log(anc);
-
         (anc.id ? endpoints.editGroup(anc.id, cname, cdesc, ctype)
             : endpoints.createGroup(cname, cdesc, ctype)).then(async resp => {
                 await endpoints.setup(true);
