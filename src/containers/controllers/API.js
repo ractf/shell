@@ -556,7 +556,7 @@ class APIClass extends Component {
             this.setState({ challenges: this.state.challenges });
         });
     newFile = (chalId, name, url, size) =>
-        this.post(ENDPOINTS.FILE, { chal_id: chalId, name, url, size }).then((resp) => {
+        this.post(ENDPOINTS.FILE, { challenge: chalId, name, url, size }).then((resp) => {
             this.state.challenges.forEach(group =>
                 group.challenges.forEach(chal => {
                     if (chal.id === chalId) {

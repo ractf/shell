@@ -98,11 +98,15 @@ export default () => {
         let points = {};
         let minTime = null;
 
-        lbdata.user.sort((a, b) => (new Date(a.time)) - (new Date(b.time)));
-        lbdata.team.sort((a, b) => (new Date(a.time)) - (new Date(b.time)));
+        lbdata.user.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
+        lbdata.team.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
+
+        if (lbdata.user.length)
+            minTime = lbdata.user[0].timestamp;
+        if (lbdata.team.length && (!minTime || lbdata.team[0].timestamp < minTime))
+            minTime = lbdata.team[0].timestamp;
 
         lbdata.user.forEach(i => {
-            if (!minTime) minTime = new Date(i.time);
             let id = "user_" + i.user_name;
 
             if (!userPlots.hasOwnProperty(id)) {
@@ -118,7 +122,7 @@ export default () => {
             userPlots[id].y.push(points[id]);
         });
         lbdata.team.forEach(i => {
-            let id = "team_" + i.user_name;
+            let id = "team_" + i.team_name;
             
             if (!teamPlots.hasOwnProperty(id)) {
                 teamPlots[id] = {
