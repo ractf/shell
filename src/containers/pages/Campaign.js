@@ -71,7 +71,7 @@ const CategoryList = () => {
         <SBTSection subTitle={"Pick one of the categories below to get started"} title={"All Categories"}>
             {api.challenges.map(i => {
                 let solved = i.challenges.filter(j => j.solved).length;
-                return <Link to={"/campaign/" + i.id}
+                return <Link key={i.id} to={"/campaign/" + i.id}
                              className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
                     <div className={"catName"}>{i.name}</div>
                     <div className={"catStat"}>{

@@ -200,7 +200,7 @@ class APIClass extends Component {
 
     appendSlash = url => {
         // Ensure we always have a trailing slash
-        if (!(/.*(\/|self)$/.test(url))) url = url + "/";
+        if (!(/.*\/$/.test(url))) url = url + "/";
         return url;
     }
 
