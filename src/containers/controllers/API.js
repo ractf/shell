@@ -199,9 +199,11 @@ class APIClass extends Component {
     };
 
     appendSlash = url => {
+        // Split the url and the query string
+        let [_, base, query] = /^([^?]*?)(\?.*)?$/.exec(url);
         // Ensure we always have a trailing slash
-        if (!(/.*\/$/.test(url))) url = url + "/";
-        return url;
+        if (!(/.*\/$/.test(base))) base = base + "/";
+        return base + (query || "");
     }
 
     cachedGet = route => {
