@@ -394,7 +394,7 @@ class APIClass extends Component {
         return config;
     });
     _getChallenges = () => this.get(ENDPOINTS.CATEGORIES);
-    setConfigValue = (key, value) => this.patch(ENDPOINTS.CONFIG + key + "/", { value: {value: value} });
+    setConfigValue = (key, value) => this.patch(ENDPOINTS.CONFIG + key, { value: {value: value} });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);
@@ -407,8 +407,8 @@ class APIClass extends Component {
             this.props.history.push("/noteam");
     };
 
-    modifyUser = (userId, data) => this.patch(BASE_URL + ENDPOINTS.USER + userId + "/", data);
-    modifyTeam = (teamId, data) => this.patch(BASE_URL + ENDPOINTS.TEAM + teamId + "/", data);
+    modifyUser = (userId, data) => this.patch(BASE_URL + ENDPOINTS.USER + userId, data);
+    modifyTeam = (teamId, data) => this.patch(BASE_URL + ENDPOINTS.TEAM + teamId, data);
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
@@ -473,14 +473,14 @@ class APIClass extends Component {
         this.post(ENDPOINTS.CATEGORIES, { name, metadata: null, description: desc, contained_type: type })
     );
     editGroup = (id, name, desc, type) => (
-        this.patch(ENDPOINTS.CATEGORIES + id + "/", { name, description: desc, contained_type: type })
+        this.patch(ENDPOINTS.CATEGORIES + id, { name, description: desc, contained_type: type })
     );
 
     editChallenge = ({
         id, name, score, description, flag_type, flag_metadata, autoUnlock,
         challenge_metadata, author, challenge_type, unlocks, files
     }) => (
-        this.patch(ENDPOINTS.CHALLENGES + "/" + id + "/", {
+        this.patch(ENDPOINTS.CHALLENGES + id, {
             name, score, description,
             flag_type, flag_metadata,
             challenge_metadata,
@@ -511,8 +511,8 @@ class APIClass extends Component {
             chal1.unlocks = chal1.unlocks.filter(i => i !== chal2.id);
             chal2.unlocks = chal2.unlocks.filter(i => i !== chal1.id);
         }
-        this.patch(ENDPOINTS.CHALLENGES + "/" + chal1.id + "/", { unlocks: chal1.unlocks });
-        this.patch(ENDPOINTS.CHALLENGES + "/" + chal2.id + "/", { unlocks: chal2.unlocks });
+        this.patch(ENDPOINTS.CHALLENGES + chal1.id, { unlocks: chal1.unlocks });
+        this.patch(ENDPOINTS.CHALLENGES + chal2.id, { unlocks: chal2.unlocks });
     }
 
     completePasswordReset = (id, secret, password) => {
@@ -637,7 +637,7 @@ class APIClass extends Component {
     runCode = (runType, fileName, fileContent) => {
         if (this.state.codeRunState.running) return;
 
-        this.post(ENDPOINTS.RUN_CODE + "/" + runType, { exec: btoa(fileContent) }).then(resp => {
+        this.post(ENDPOINTS.RUN_CODE + runType, { exec: btoa(fileContent) }).then(resp => {
             //
         }).catch(e => {
             this.setState({
