@@ -26,10 +26,8 @@ export const ENDPOINTS = {
     CHALLENGES: "/challenges/",
     SUBMIT_FLAG: "/challenges/submit_flag/",
 
-    EDIT_FILE: "/files/edit/",
-    NEW_FILE: "/files/new/",
-    EDIT_HINT: "/hints/edit/",
-    NEW_HINT: "/hints/new/",
+    FILE: "/challenges/files/",
+    HINT: "/hints/",
     USE_HINT: "/hints/use/",
 
     USER: "/member/",
@@ -134,6 +132,7 @@ class APIClass extends Component {
             editHint: this.editHint,
             newHint: this.newHint,
             useHint: this.useHint,
+            removeHint: this.removeHint,
 
             getError: this.getError,
 
@@ -254,6 +253,18 @@ class APIClass extends Component {
                 url: BASE_URL + url,
                 method: "patch",
                 data: data,
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    };
+
+    delete = (url) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: BASE_URL + url,
+                method: "delete",
                 headers: this._getHeaders(),
             }).then(response => {
                 resolve(response.data);
@@ -530,9 +541,9 @@ class APIClass extends Component {
     );
 
     editFile = (id, name, url, size) =>
-        this.post(ENDPOINTS.EDIT_FILE, { id, name, url, size }).then(() => {
+        this.patch(ENDPOINTS.FILE, { id, name, url, size }).then(() => {
             this.state.challenges.forEach(group =>
-                group.chals.forEach(chal =>
+                group.challenges.forEach(chal =>
                     chal.files.forEach(file => {
                         if (file.id === id) {
                             file.name = name;
@@ -545,9 +556,9 @@ class APIClass extends Component {
             this.setState({ challenges: this.state.challenges });
         });
     newFile = (chalId, name, url, size) =>
-        this.post(ENDPOINTS.NEW_FILE, { chal_id: chalId, name, url, size }).then((resp) => {
+        this.post(ENDPOINTS.FILE, { chal_id: chalId, name, url, size }).then((resp) => {
             this.state.challenges.forEach(group =>
-                group.chals.forEach(chal => {
+                group.challenges.forEach(chal => {
                     if (chal.id === chalId) {
                         chal.files.push(resp.d);
                     }
@@ -557,14 +568,14 @@ class APIClass extends Component {
         });
 
     editHint = (id, name, cost, body) =>
-        this.post(ENDPOINTS.EDIT_HINT, { id, name, cost, body }).then(() => {
+        this.patch(ENDPOINTS.HINT, { id, name, cost, body }).then(() => {
             this.state.challenges.forEach(group =>
-                group.chals.forEach(chal =>
+                group.challenges.forEach(chal =>
                     chal.hints.forEach(hint => {
                         if (hint.id === id) {
                             hint.name = name;
-                            hint.cost = cost;
-                            hint.body = body;
+                            hint.penalty = cost;
+                            hint.text = body;
                         }
                     })
                 )
@@ -572,9 +583,9 @@ class APIClass extends Component {
             this.setState({ challenges: this.state.challenges });
         });
     newHint = (chalId, name, cost, body) =>
-        this.post(ENDPOINTS.NEW_HINT, { chal_id: chalId, name, cost, body }).then((resp) => {
+        this.post(ENDPOINTS.HINT, { challenge: chalId, name, penalty: cost, text: body }).then((resp) => {
             this.state.challenges.forEach(group =>
-                group.chals.forEach(chal => {
+                group.challenges.forEach(chal => {
                     if (chal.id === chalId) {
                         chal.hints.push(resp.d);
                     }
@@ -585,13 +596,23 @@ class APIClass extends Component {
     useHint = (id) =>
         this.post(ENDPOINTS.USE_HINT, { id }).then(resp => resp.d).then(body => {
             this.state.challenges.forEach(group =>
-                group.chals.forEach(chal =>
+                group.challenges.forEach(chal =>
                     chal.hints.forEach(hint => {
                         if (hint.id === id) {
-                            hint.body = body;
+                            hint.text = body;
                             hint.hint_used = true;
                         }
                     })
+                )
+            );
+            this.setState({ challenges: this.state.challenges });
+            return body;
+        });
+    removeHint = (id) =>
+        this.delete(ENDPOINTS.HINT + id).then(resp => resp.d).then(body => {
+            this.state.challenges.forEach(group =>
+                group.challenges.forEach(chal =>
+                    chal.hints = chal.hints.filter(i => i.id !== id)
                 )
             );
             this.setState({ challenges: this.state.challenges });

@@ -43,11 +43,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
     const promptHint = (hint) => {
         return () => {
-            if (hint.hint_used) return app.alert(hint.name + ":\n" + hint.body);
+            if (hint.hint_used) return app.alert(hint.name + ":\n" + hint.text);
 
             let msg = <>
                 Are you sure you want to use a hint?<br /><br />
-                This hint will deduct {hint.cost} points from this challenge.
+                This hint will deduct {hint.penalty} points from this challenge.
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
                 endpoints.useHint(hint.id).then(body =>
@@ -145,7 +145,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
 
             <div className={"challengeLinkGroup"}>
                 {challenge.hints.map(hint =>
-                    <Hint key={hint.id} points={hint.cost} name={hint.name} id={hint.id} body={hint.body} isEdit />
+                    <Hint key={hint.id} points={hint.penalty} name={hint.name} id={hint.id} body={hint.text} isEdit />
                 )}
             </div>
 
@@ -259,7 +259,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
                 {challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
                     {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
                         return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.hint_used}
-                            points={hint.cost} id={hint.id} key={hint.id} />;
+                            points={hint.penalty} id={hint.id} key={hint.id} />;
                     })}
                 </div>}
             </>}

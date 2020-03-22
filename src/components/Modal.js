@@ -33,10 +33,10 @@ const Modal = ({ onHide, children, centre, small }) => {
 
 
 export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
-    return <Modal onHide={() => {promise.reject(); onHide && onHide();}} small={body.small} centre>
+    return <Modal onHide={() => { promise.reject(); onHide && onHide(); }} small={body.small} centre>
         <p>
-            { body.message }
-            { inputs.length ? <br/> : null }
+            {body.message}
+            {inputs.length ? <br /> : null}
         </p>
 
         <Form handle={promise.resolve}>
@@ -46,9 +46,11 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
             </> : <Input key={n} width={'auto'} {...i} />)}
 
             <ButtonRow>
-                <Button submit>{ body.okay || "Okay" }</Button>
+                <Button submit>{body.okay || "Okay"}</Button>
                 {!body.noCancel &&
-                    <Button click={() => {promise.reject(); onHide && onHide();}}>{ body.cancel || "Cancel" }</Button>}
+                    <Button click={() => { promise.reject(); onHide && onHide(); }}>{body.cancel || "Cancel"}</Button>}
+                {body.remove &&
+                    <Button warning click={() => { body.remove().then(() => { promise.reject(); onHide && onHide(); }); }}>Remove</Button>}
             </ButtonRow>
         </Form>
     </Modal>;

@@ -10,7 +10,7 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
     const app = useContext(appContext);
 
     const edit = () => {
-        app.promptConfirm({message: "Edit hint"},
+        app.promptConfirm({message: "Edit hint", remove: () => endpoints.removeHint(id)},
             [{name: 'name', placeholder: 'Hint name', val: name, label: "Name"},
              {name: 'cost', placeholder: 'Hint cost', val: points, label: "Cost", format: /\d+/},
              {name: 'body', placeholder: 'Hint text', val: body, label: "Message", rows: 5}]
