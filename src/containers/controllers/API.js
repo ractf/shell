@@ -200,7 +200,7 @@ class APIClass extends Component {
 
     appendSlash = url => {
         // Split the url and the query string
-        let [_, base, query] = /^([^?]*?)(\?.*)?$/.exec(url);
+        let [base, query] = /^([^?]*?)(\?.*)?$/.exec(url).slice(1);
         // Ensure we always have a trailing slash
         if (!(/.*\/$/.test(base))) base = base + "/";
         return base + (query || "");
@@ -419,7 +419,6 @@ class APIClass extends Component {
                 let team = await this.cachedGet("/team/self");
                 this.setState({ team: team });
                 localStorage.setItem("teamData", team);
-
                 resolve(data);
             }).catch(reject);
         });
@@ -439,7 +438,7 @@ class APIClass extends Component {
     };
 
     logout = () => {
-        console.log("%c[Logout]", "color: #d3d", "Logged out user")
+        console.log("%c[Logout]", "color: #d3d", "Logged out user");
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
         localStorage.removeItem('challenges');

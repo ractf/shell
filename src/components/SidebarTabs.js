@@ -119,7 +119,9 @@ export const SiteNav = ({ children }) => {
                         {endpoints.configGet("login", true) &&
                             <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
                         {endpoints.configGet("register", true) &&
-                        <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>Register</Link>}
+                        <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>
+                            Register
+                        </Link>}
                     </SBMenu>
                 </> : null}
                 {api.user && api.user.is_staff && <>

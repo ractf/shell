@@ -59,7 +59,11 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
                 {!body.noCancel &&
                     <Button click={() => { promise.reject(); onHide && onHide(); }}>{body.cancel || "Cancel"}</Button>}
                 {body.remove &&
-                    <Button warning click={() => { body.remove().then(() => { promise.reject(); onHide && onHide(); }); }}>Remove</Button>}
+                    <Button warning click={() => {
+                        body.remove().then(() => {
+                            promise.reject(); onHide && onHide();
+                        });
+                    }}>Remove</Button>}
             </ButtonRow>
         </Form>
     </Modal>;

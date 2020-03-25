@@ -146,7 +146,7 @@ export default () => {
         setTeamGraphData(
             Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
         );
-    }, [graph]);
+    }, [graph, api.config.start_time]);
 
     const userData = (lbdata) => {
         return lbdata.map((i, n) => [i.username, i.leaderboard_points]);

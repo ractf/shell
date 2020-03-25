@@ -13,6 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./AdminPage.scss";
 
 
+/*
 const AdminCard = ({ children, extra, name }) => {
     const [open, setOpen] = useState(false);
 
@@ -36,6 +37,7 @@ const AdminCard = ({ children, extra, name }) => {
         </div>}
     </div>;
 };
+*/
 
 
 const AdminCardSection = ({ children, name }) => {
@@ -269,7 +271,7 @@ const ImportExport = () => {
     };
 
     const exportCTF = () => {
-        downloadJSON(api.challenges.map(i => ({...i, challenges: i.challenges.map(cleanChallenge)})), "challenges");
+        downloadJSON(api.challenges.map(i => ({ ...i, challenges: i.challenges.map(cleanChallenge) })), "challenges");
     };
 
     const exportCat = () => {
@@ -286,7 +288,11 @@ const ImportExport = () => {
     };
     const exportChal = () => {
         app.promptConfirm({ message: "Select challenge", small: true }, [
-            { name: "chal", options: api.challenges.map(i => i.challenges).flat().map(i => ({ key: i.id, value: i.name })) }
+            {
+                name: "chal", options: api.challenges.map(i => i.challenges).flat().map(
+                    i => ({ key: i.id, value: i.name })
+                )
+            }
         ]).then(({ chal }) => {
             if (typeof chal === "number") {
                 let challenge = api.challenges.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
@@ -363,9 +369,8 @@ const ImportExport = () => {
             downloadCSV([[
                 "username", "points"
             ], ...data], "user leaderboard");
-
         });
-    }
+    };
 
     return <SBTSection title={"Import and Export"}>
         <Section title={"Import"}>
@@ -504,7 +509,7 @@ export default () => {
             </SBTSection>;
             break;
         case "port":
-            content = <ImportExport />
+            content = <ImportExport />;
             break;
         case "service":
             content = <SBTSection title={"Service Status"}>
