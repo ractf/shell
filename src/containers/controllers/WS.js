@@ -31,7 +31,7 @@ export default class WS extends Component {
         window.__ws = this;
     }
 
-    log = window.console.log.bind(window.console, "%c[Websocket]", "color: #d3d; font-weight: 800");
+    log = window.console.log.bind(window.console, "%c[Websocket]", "color: #d3d");
 
     _loginCallback = (token) => {
         token = token || localStorage.getItem("token");

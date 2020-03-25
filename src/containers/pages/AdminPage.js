@@ -218,7 +218,7 @@ const ImportExport = () => {
     const app = useContext(appContext);
 
     const downloadData = (data, filename, mimetype) => {
-        let blob = new Blob([data], {type: `${mimetype};charset=utf-8;`});
+        let blob = new Blob([data], { type: `${mimetype};charset=utf-8;` });
         if (navigator.msSaveBlob)
             return navigator.msSaveBlob(blob, filename);
 
@@ -249,26 +249,48 @@ const ImportExport = () => {
         });
         downloadData(csv, filename + ".csv", "text/csv");
     };
-    const exportCTF = () => {
-        downloadJSON(api.challenges, "challenges");
+
+    const stripKeys = (orig, keys) => (
+        Object.keys(orig).filter(
+            key => !keys.includes(key)
+        ).reduce((obj, key) => {
+            obj[key] = orig[key];
+            return obj;
+        }, {})
+    );
+    const cleanChallenge = (chal) => {
+        chal = stripKeys(chal, [
+            "solved", "unlocked", "first_blood",
+            "first_blood_name", "solve_count",
+        ]);
+        chal.hints = chal.hints.map(hint => stripKeys(hint, ["used", "challenge"]));
+        chal.files = chal.files.map(file => stripKeys(file, ["challenge"]));
+        return chal;
     };
+
+    const exportCTF = () => {
+        downloadJSON(api.challenges.map(i => ({...i, challenges: i.challenges.map(cleanChallenge)})), "challenges");
+    };
+
     const exportCat = () => {
-        app.promptConfirm({message: "Select category", small: true}, [
-            {name: "cat", options: api.challenges.map(i => ({key: i.id, value: i.name}))}
+        app.promptConfirm({ message: "Select category", small: true }, [
+            { name: "cat", options: api.challenges.map(i => ({ key: i.id, value: i.name })) }
         ]).then(({ cat }) => {
             if (typeof cat === "number") {
                 let category = api.challenges.filter(i => i.id === cat)[0];
+                category.challenges = category.challenges.map(cleanChallenge);
                 if (!category) return app.alert("Something went wrong while trying to export");
                 downloadJSON(category, category.name);
             }
         });
     };
     const exportChal = () => {
-        app.promptConfirm({message: "Select challenge", small: true}, [
-            {name: "chal", options: api.challenges.map(i => i.challenges).flat().map(i => ({key: i.id, value: i.name}))}
+        app.promptConfirm({ message: "Select challenge", small: true }, [
+            { name: "chal", options: api.challenges.map(i => i.challenges).flat().map(i => ({ key: i.id, value: i.name })) }
         ]).then(({ chal }) => {
             if (typeof chal === "number") {
                 let challenge = api.challenges.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
+                challenge = cleanChallenge(challenge);
                 if (!challenge) return app.alert("Something went wrong while trying to export");
                 downloadJSON(challenge, challenge.name);
             }
@@ -287,7 +309,7 @@ const ImportExport = () => {
             results = [...results, ...data.results];
             page++;
         } while (data.next);
-        
+
         return results;
     };
 
