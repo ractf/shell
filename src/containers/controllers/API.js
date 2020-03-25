@@ -439,6 +439,7 @@ class APIClass extends Component {
     };
 
     logout = () => {
+        console.log("%c[Logout]", "color: #d3d", "Logged out user")
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
         localStorage.removeItem('challenges');

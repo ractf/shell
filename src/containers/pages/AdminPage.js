@@ -6,7 +6,7 @@ import { FaFolder, FaFolderOpen, FaRegFolder, FaPencilAlt, FaReceipt } from "rea
 
 import {
     Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
-    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated
+    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, ButtonRow
 } from "ractf";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -212,6 +212,161 @@ const DatePick = ({ initial, configSet, name, configKey }) => {
         name={name} />;
 };
 
+const ImportExport = () => {
+    const endpoints = useContext(apiEndpoints);
+    const api = useContext(apiContext);
+    const app = useContext(appContext);
+
+    const downloadData = (data, filename, mimetype) => {
+        let blob = new Blob([data], {type: `${mimetype};charset=utf-8;`});
+        if (navigator.msSaveBlob)
+            return navigator.msSaveBlob(blob, filename);
+
+        let elem = document.createElement("a");
+        elem.style = "display: none";
+        elem.href = URL.createObjectURL(blob);
+        elem.target = "_blank";
+        elem.setAttribute("download", filename);
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    };
+    const downloadJSON = (data, filename) => {
+        downloadData(JSON.stringify(data, null, 2), filename + ".json", "application/json");
+    };
+    const downloadCSV = (data, filename) => {
+        let csv = "";
+        data.forEach(rowData => {
+            let row = "";
+            rowData.forEach(cellData => {
+                if (row) row += ",";
+                let cell = JSON.stringify(cellData.toString());
+                if (cell[1] === "=")
+                    cell = `=${cell}`;
+                row += cell;
+            });
+            csv += row + "\n";
+        });
+        downloadData(csv, filename + ".csv", "text/csv");
+    };
+    const exportCTF = () => {
+        downloadJSON(api.challenges, "challenges");
+    };
+    const exportCat = () => {
+        app.promptConfirm({message: "Select category", small: true}, [
+            {name: "cat", options: api.challenges.map(i => ({key: i.id, value: i.name}))}
+        ]).then(({ cat }) => {
+            if (typeof cat === "number") {
+                let category = api.challenges.filter(i => i.id === cat)[0];
+                if (!category) return app.alert("Something went wrong while trying to export");
+                downloadJSON(category, category.name);
+            }
+        });
+    };
+    const exportChal = () => {
+        app.promptConfirm({message: "Select challenge", small: true}, [
+            {name: "chal", options: api.challenges.map(i => i.challenges).flat().map(i => ({key: i.id, value: i.name}))}
+        ]).then(({ chal }) => {
+            if (typeof chal === "number") {
+                let challenge = api.challenges.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
+                if (!challenge) return app.alert("Something went wrong while trying to export");
+                downloadJSON(challenge, challenge.name);
+            }
+        });
+    };
+
+    const fullyPaginate = async route => {
+        let page = 0;
+        let results = [];
+        let data;
+
+        do {
+            let path = (page === 0) ? route : (route + "?page=" + page);
+
+            data = (await endpoints.get(path)).d;
+            results = [...results, ...data.results];
+            page++;
+        } while (data.next);
+        
+        return results;
+    };
+
+    const exportPlayers = () => {
+        fullyPaginate(ENDPOINTS.USER).then(data => {
+            data = data.map(i => [
+                i.id, i.username, i.email, i.email_verified, i.date_joined,
+                i.is_active, i.is_visible, i.is_staff,
+                i.team, i.points, i.leaderboard_points,
+                i.reddit, i.twitter, i.discord, i.discordid,
+                i.bio,
+                i.solves.map(j => j.id).join(",")
+            ]);
+            downloadCSV([[
+                "id", "username", "email", "email verified", "date joined",
+                "active", "visible", "staff",
+                "team id", "points", "leaderboard points",
+                "reddit", "twitter", "discord", "discord id",
+                "bio", "solves"
+            ], ...data], "players");
+        }).catch(e => app.alert(endpoints.getError(e)));
+    };
+
+    const exportTeams = () => {
+        fullyPaginate(ENDPOINTS.TEAM).then(data => {
+            data = data.map(i => [
+                i.id, i.name, i.is_visible,
+                i.owner, i.password,
+                i.members.map(j => j.id).join(","),
+                i.solves.map(j => j.id).join(",")
+            ]);
+            downloadCSV([[
+                "id", "name", "visible", "owner", "password", "members", "solves"
+            ], ...data], "teams");
+        }).catch(e => app.alert(endpoints.getError(e)));
+    };
+
+    const exportLeaderboard = () => {
+        fullyPaginate(ENDPOINTS.LEADERBOARD_TEAM).then(data => {
+            data = data.map(i => [
+                i.name, i.leaderboard_points
+            ]);
+            downloadCSV([[
+                "team name", "points"
+            ], ...data], "team leaderboard");
+        });
+        fullyPaginate(ENDPOINTS.LEADERBOARD_USER).then(data => {
+            data = data.map(i => [
+                i.username, i.leaderboard_points
+            ]);
+            downloadCSV([[
+                "username", "points"
+            ], ...data], "user leaderboard");
+
+        });
+    }
+
+    return <SBTSection title={"Import and Export"}>
+        <Section title={"Import"}>
+            <ButtonRow>
+                <Button disabled warning>Import entire CTF</Button>
+                <Button disabled>Import category</Button>
+                <Button disabled>Import challenge</Button>
+            </ButtonRow>
+        </Section>
+        <Section title={"Export"}>
+            <ButtonRow>
+                <Button click={exportCTF}>Export CTF</Button>
+                <Button click={exportCat}>Export category</Button>
+                <Button click={exportChal}>Export challenge</Button>
+            </ButtonRow>
+            <ButtonRow>
+                <Button click={exportLeaderboard}>Export scoreboards</Button>
+                <Button click={exportPlayers}>Export player list</Button>
+                <Button click={exportTeams}>Export teams list</Button>
+            </ButtonRow>
+        </Section>
+    </SBTSection>;
+};
 
 export default () => {
     const endpoints = useContext(apiEndpoints);
@@ -325,6 +480,9 @@ export default () => {
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;
+            break;
+        case "port":
+            content = <ImportExport />
             break;
         case "service":
             content = <SBTSection title={"Service Status"}>

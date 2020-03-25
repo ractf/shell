@@ -1,0 +1,65 @@
+@import "../Colours.scss";
+
+
+.select {
+    position: relative;
+    user-select: none;
+    text-align: left;
+    z-index: 10;
+
+    .blanker {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    select {
+        display: none;
+    }
+
+    .head {
+        border-radius: 2px;
+
+        &:after {
+            position: absolute;
+            content: "";
+            top: calc(50% - 3px);
+            right: 12px;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-color: $bg_l4 transparent transparent transparent;
+        }
+    }
+
+    .items div,
+    .head {
+        min-width: 100px;
+
+        border-bottom: 1px solid $bg_l0;
+        cursor: pointer;
+
+        background-color: $bg_l1;
+
+        &:hover {
+            background-color: $bg_l2;
+        }
+    }
+    .items div {
+        padding: 11px 24px;
+    }
+    .head {
+        padding: 11px 34px 11px 24px;
+    }
+
+    .items {
+        position: fixed;
+        z-index: 99;
+        border-radius: 2px;
+        overflow-y: auto;
+        bottom: 0;
+    }
+}

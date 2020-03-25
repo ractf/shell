@@ -126,6 +126,7 @@ export const SiteNav = ({ children }) => {
                     <SBMenu key={"admin"} name={"Admin"}>
                         <Link onClick={close} to={"/admin/ctf"} className={"sbtSubitem"}>Event</Link>
                         <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>Configuration</Link>
+                        <Link onClick={close} to={"/admin/port"} className={"sbtSubitem"}>Import/Export</Link>
                         <Link onClick={close} to={"/admin/service"} className={"sbtSubitem"}>Service Status</Link>
                         <Link onClick={close} to={"/admin/announcements"} className={"sbtSubitem"}>Announcements</Link>
                         <Link onClick={close} to={"/admin/members"} className={"sbtSubitem"}>Members</Link>

@@ -3,6 +3,7 @@ import React from "react";
 import Button, { ButtonRow } from "./Button";
 import Form from "./Form";
 import Input from "./Input";
+import Select from "./Select";
 
 import "./Modal.scss";
 
@@ -40,10 +41,18 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
         </p>
 
         <Form handle={promise.resolve}>
-            {inputs.map((i, n) => i.label ? <>
-                <label htmlFor={i.name}>{i.label}</label>
-                <Input key={n} width={'auto'} {...i} />
-            </> : <Input key={n} width={'auto'} {...i} />)}
+            {inputs.map((i, n) => {
+                let parts = [];
+                if (i.label) parts.push(
+                    <label htmlFor={i.name}>{i.label}</label>
+                );
+                if (i.options) parts.push(
+                    <Select key={n} {...i} />
+                ); else parts.push(
+                    <Input key={n} width={'auto'} {...i} />
+                );
+                return parts;
+            })}
 
             <ButtonRow>
                 <Button submit>{body.okay || "Okay"}</Button>
