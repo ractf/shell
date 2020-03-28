@@ -372,12 +372,104 @@ const ImportExport = () => {
         });
     };
 
+    const askOpen = (accept) => {
+        return new Promise(resolve => {
+            let elem = document.createElement("input");
+            elem.setAttribute("type", "file");
+            elem.setAttribute("accept", accept);
+            elem.style = "display: none";
+            elem.onchange = () => {
+                if (elem.files.length > 0)
+                    resolve(elem.files[0]);
+            };
+            document.body.appendChild(elem);
+            elem.click();
+            document.body.removeChild(elem);
+        });
+    };
+    const askOpenJSON = () => {
+        return new Promise(resolve => {
+            askOpen("application/json").then(file => {
+                file.text().then(text => {
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch(e) {
+                        return app.alert("Failed to parse JSON");
+                    }
+                    resolve(data);
+                });
+            });
+        });
+    };
+
+    const validate_challenge = (data) => {
+        return (
+            data.hasOwnProperty("name") &&
+            data.hasOwnProperty("description") &&
+            data.hasOwnProperty("challenge_type") &&
+            data.hasOwnProperty("challenge_metadata") &&
+            data.hasOwnProperty("flag_type") &&
+            data.hasOwnProperty("author") &&
+            data.hasOwnProperty("auto_unlock") &&
+            data.hasOwnProperty("score") &&
+            data.hasOwnProperty("unlocks") &&
+            data.hasOwnProperty("flag_metadata") &&
+            data.hasOwnProperty("hints") &&
+            data.hasOwnProperty("files")
+        );
+    };
+
+    const importChal = () => {
+        askOpenJSON().then(data => {
+            if (!validate_challenge(data))
+                return app.alert("Invalid challenge data");
+
+            app.promptConfirm({ message: "Select category to import into", small: true }, [
+                {
+                    name: "cat", options: api.challenges.map(
+                        i => ({ key: i.id, value: i.name })
+                    )
+                }
+            ]).then(({ cat }) => {
+                if (typeof cat === "number") {
+                    endpoints.createChallenge({
+                        id: cat, name: data.name,
+                        description: data.description,
+                        challenge_type: data.challenge_type,
+                        // TODO: This, but better
+                        challenge_metadata: data.challenge_metadata,
+                        flag_type: data.flag_type,
+                        author: data.author,
+                        score: data.score,
+                        flag_metadata: data.flag_metadata,
+                    }).then(({ d }) => d).then(({ id }) => {
+                        return Promise.all([
+                            ...data.hints.map(hint => endpoints.newHint(
+                                id, hint.name, hint.penalty, hint.text
+                            )),
+                            ...data.files.map(file => endpoints.newFile(
+                                id, file.name, file.url, file.size
+                            ))
+                        ]);
+                    }).then(() => {
+                        endpoints._reloadCache();
+                        app.alert("Imported challenge!");
+                    }).catch(e => {
+                        app.alert("Failed to import challenge:\n" + endpoints.getError(e));
+                        console.error(e);
+                    });
+                }
+            });
+        });
+    };
+
     return <SBTSection title={"Import and Export"}>
         <Section title={"Import"}>
             <ButtonRow>
                 <Button disabled warning>Import entire CTF</Button>
                 <Button disabled>Import category</Button>
-                <Button disabled>Import challenge</Button>
+                <Button click={importChal}>Import challenge</Button>
             </ButtonRow>
         </Section>
         <Section title={"Export"}>
