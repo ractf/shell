@@ -17,7 +17,7 @@ import CodeInput from "./CodeInput";
 const HintModal = () => <h1>hi</h1>;
 
 
-export default ({ challenge, isEditor, isCreator, saveEdit }) => {
+export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) => {
     const [isEditFiles, setEditFiles] = useState(false);
     const [isEditHints, setEditHints] = useState(false);
     const [isEditRaw, setEditRaw] = useState(false);
@@ -218,7 +218,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit }) => {
             </div>
 
             <ButtonRow>
-                {!isCreator && <Button warning disabled>Remove Challenge</Button>}
+                {!isCreator && <Button click={removeChallenge} warning>Remove Challenge</Button>}
                 <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
             </ButtonRow>
         </Form></div> : <>

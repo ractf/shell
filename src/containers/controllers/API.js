@@ -105,6 +105,7 @@ class APIClass extends Component {
             getCountdown: this.getCountdown,
 
             createChallenge: this.createChallenge,
+            removeChallenge: this.removeChallenge,
             linkChallenges: this.linkChallenges,
             editChallenge: this.editChallenge,
             createGroup: this.createGroup,
@@ -504,6 +505,23 @@ class APIClass extends Component {
             auto_unlock: autoUnlock,
         })
     );
+    removeChallenge = async (challenge) => {
+        // Unlink all challenges
+        await Promise.all(challenge.unlocks.map(i => (
+            Promise.all(this.state.challenges.map(cat =>
+                Promise.all(cat.challenges.map(
+                    j => new Promise((res, rej) => {
+                        if (j.id === i)
+                            this.linkChallenges(challenge, j, false).then(res).catch(rej);
+                        else res();
+                    })
+                ))
+            ))
+        )));
+        return this.delete(ENDPOINTS.CHALLENGES + challenge.id).then(() => {
+            return this._reloadCache();
+        });
+    };
 
     linkChallenges = (chal1, chal2, linkState) => {
         if (linkState) {
@@ -513,9 +531,11 @@ class APIClass extends Component {
             chal1.unlocks = chal1.unlocks.filter(i => i !== chal2.id);
             chal2.unlocks = chal2.unlocks.filter(i => i !== chal1.id);
         }
-        this.patch(ENDPOINTS.CHALLENGES + chal1.id, { unlocks: chal1.unlocks });
-        this.patch(ENDPOINTS.CHALLENGES + chal2.id, { unlocks: chal2.unlocks });
-    }
+        return Promise.all([
+            this.patch(ENDPOINTS.CHALLENGES + chal1.id, { unlocks: chal1.unlocks }),
+            this.patch(ENDPOINTS.CHALLENGES + chal2.id, { unlocks: chal2.unlocks })
+        ]);
+    };
 
     completePasswordReset = (id, secret, password) => {
         try {

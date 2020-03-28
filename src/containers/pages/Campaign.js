@@ -152,6 +152,20 @@ export default () => {
         };
     };
 
+    const removeChallenge = (challenge) => {
+        return () => {
+            app.promptConfirm({message: "Remove challenge:\n" + challenge.name, small: true}).then(() => {
+                endpoints.removeChallenge(challenge).then(() => {
+                    app.alert("Challenge removed");
+                    setIsEditor(false);
+                    setChallenge(null);
+                }).catch(e => {
+                    app.alert("Error removing challenge:\n" + endpoints.getError(e));
+                });
+            }).catch(() => { });
+        };
+    };
+
     if (!api.challenges)
         api.challenges = [];
 
@@ -193,6 +207,7 @@ export default () => {
                 handler.component, {
                 challenge: challenge, doHide: hideChal,
                 isEditor: isEditor, saveEdit: saveEdit,
+                removeChallenge: removeChallenge(challenge),
                 isCreator: isCreator,
             });
         }
