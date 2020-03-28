@@ -394,7 +394,7 @@ const ImportExport = () => {
                     let data;
                     try {
                         data = JSON.parse(text);
-                    } catch(e) {
+                    } catch (e) {
                         return app.alert("Failed to parse JSON");
                     }
                     resolve(data);
@@ -419,6 +419,46 @@ const ImportExport = () => {
             data.hasOwnProperty("files")
         );
     };
+    const validate_category = (data) => {
+        return (
+            data.hasOwnProperty("name") &&
+            data.hasOwnProperty("contained_type") &&
+            data.hasOwnProperty("description") &&
+            data.hasOwnProperty("challenges") &&
+            data.challenges.every(i => (
+                i.hasOwnProperty("id") &&
+                validate_challenge(i) &&
+                // Ensure we aren't referencing any challenges outside of the
+                // category being imported, as the IDs won't match up.
+                i.unlocks.every(j => data.challenges.map(k => k.id).indexOf(j) !== -1)
+            ))
+        );
+    };
+
+    const importChallengeData = (cat, data) => {
+        return endpoints.createChallenge({
+            id: cat, name: data.name,
+            description: data.description,
+            challenge_type: data.challenge_type,
+            // TODO: This, but better
+            challenge_metadata: data.challenge_metadata,
+            autoUnlock: data.auto_unlock,
+            flag_type: data.flag_type,
+            author: data.author,
+            score: data.score,
+            flag_metadata: data.flag_metadata,
+        }).then(({ d }) => d).then(async (chal) => {
+            await Promise.all([
+                ...data.hints.map(hint => endpoints.newHint(
+                    chal.id, hint.name, hint.penalty, hint.text
+                )),
+                ...data.files.map(file => endpoints.newFile(
+                    chal.id, file.name, file.url, file.size
+                ))
+            ]);
+            return chal;
+        });
+    };
 
     const importChal = () => {
         askOpenJSON().then(data => {
@@ -433,29 +473,11 @@ const ImportExport = () => {
                 }
             ]).then(({ cat }) => {
                 if (typeof cat === "number") {
-                    endpoints.createChallenge({
-                        id: cat, name: data.name,
-                        description: data.description,
-                        challenge_type: data.challenge_type,
-                        // TODO: This, but better
-                        challenge_metadata: data.challenge_metadata,
-                        flag_type: data.flag_type,
-                        author: data.author,
-                        score: data.score,
-                        flag_metadata: data.flag_metadata,
-                    }).then(({ d }) => d).then(({ id }) => {
-                        return Promise.all([
-                            ...data.hints.map(hint => endpoints.newHint(
-                                id, hint.name, hint.penalty, hint.text
-                            )),
-                            ...data.files.map(file => endpoints.newFile(
-                                id, file.name, file.url, file.size
-                            ))
-                        ]);
-                    }).then(() => {
+                    importChallengeData(cat, data).then(() => {
                         endpoints._reloadCache();
                         app.alert("Imported challenge!");
                     }).catch(e => {
+                        endpoints._reloadCache();
                         app.alert("Failed to import challenge:\n" + endpoints.getError(e));
                         console.error(e);
                     });
@@ -464,11 +486,43 @@ const ImportExport = () => {
         });
     };
 
+    const importCategory = () => {
+        askOpenJSON().then(data => {
+            if (!validate_category(data))
+                return app.alert("Invalid category data");
+            endpoints.createGroup(data.name, data.description, data.contained_type)
+                .then(({ d }) => d)
+                .then(async ({ id }) => {
+                    let challenge_map = {};
+                    
+                    await Promise.all(data.challenges.map(chal => (importChallengeData(id, chal).then(cdat => {
+                        challenge_map[chal.id] = cdat;
+                    }))));
+                    console.log(challenge_map);
+                    return challenge_map;
+                }).then(challenge_map => {
+                    return Promise.all(data.challenges.map(chal => (
+                        endpoints.editChallenge({
+                            ...challenge_map[chal.id],
+                            unlocks: chal.unlocks.map(i => challenge_map[i].id)
+                        })
+                    )));
+                }).then(() => {
+                    endpoints._reloadCache();
+                    app.alert("Imported category!");
+                }).catch(e => {
+                    endpoints._reloadCache();
+                    app.alert("Failed to import category:\n" + endpoints.getError(e));
+                    console.error(e);
+                });
+        });
+    };
+
     return <SBTSection title={"Import and Export"}>
         <Section title={"Import"}>
             <ButtonRow>
                 <Button disabled warning>Import entire CTF</Button>
-                <Button disabled>Import category</Button>
+                <Button click={importCategory}>Import category</Button>
                 <Button click={importChal}>Import challenge</Button>
             </ButtonRow>
         </Section>
