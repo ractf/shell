@@ -75,8 +75,8 @@ const CategoryList = () => {
                              className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
                     <div className={"catName"}>{i.name}</div>
                     <div className={"catStat"}>{
-                        solved === 0 ? "No challenges completed" :
                         solved === i.challenges.length ? "All challenges completed" :
+                        solved === 0 ? "No challenges completed" :
                         `${solved} of ${i.challenges.length} challenge${i.challenges.length === 1 ? "" : "s"} completed`
                     }</div>
                 </Link>;
