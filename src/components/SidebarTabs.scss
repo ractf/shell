@@ -20,6 +20,7 @@
         
         .sbtsInner {
             min-height: 100%;
+            width: 220px;
             display: flex;
             flex-direction: column;
         }
@@ -307,6 +308,10 @@
         font-size: 1.1em;
         overflow-y: auto;
         height: 100vh;
+
+        .sbtsInner {
+            width: 300px;
+        }
 
         .sbtHandle {
             display: block;

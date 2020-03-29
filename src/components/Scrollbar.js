@@ -8,7 +8,7 @@ export default ({ children, className, primary }) => {
 
     const [dragStart, setDragStart] = useState(null);
 
-    const [style, setStyle] = useState({ height: 0, top: 0 });
+    const [style, setStyle] = useState({ height: 0, top: 0, opacity: primary ? 1 : 0 });
 
     const rafRef = useRef();
     const lastScrollHeight = useRef();

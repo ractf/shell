@@ -400,7 +400,7 @@ const App = React.memo(() => {
         )}</div>;
     }).reverse();
 
-    return <Scrollbar primary>
+    return <Scrollbar primary><div className={"bodyScroll"}>
         <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert }}>
             {!api.ready && loaded ? <div className={"siteWarning"}>
                 Site operating in offline mode:
@@ -435,7 +435,7 @@ const App = React.memo(() => {
 
             <WSSpine />
         </AppContext.Provider>
-    </Scrollbar>;
+    </div></Scrollbar>;
 });
 
 export default () => <BrowserRouter><API><App /></API></BrowserRouter>;
