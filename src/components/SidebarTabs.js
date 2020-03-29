@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from "react";
 import { MdKeyboardArrowLeft, MdMenu } from "react-icons/md";
 
 import { apiContext, apiEndpoints, Link, fastClick } from "ractf";
+import Scrollbar from "./Scrollbar";
 import Wordmark from "./Wordmark";
 
 import "./SidebarTabs.scss";
@@ -48,7 +49,7 @@ export const SidebarTabs = ({ children, noHead, feet, onChangeTab }) => {
             <div style={{ flexGrow: 1 }} />
             {feet && feet.map((i, n) =>
                 <div key={i.props.title} style={{ textAlign: "center" }}
-                className={"sbtItem" + (children.length + n === active ? " sbtActive" : "")}
+                    className={"sbtItem" + (children.length + n === active ? " sbtActive" : "")}
                     onClick={() => {
                         setActive(children.length + n);
                         setSbOpen(false);
@@ -83,7 +84,7 @@ export const SiteNav = ({ children }) => {
     return <div className={"sbtWrap" + (sbOpen ? " sbtOpen" : "")}>
         <div onClick={() => setSbOpen(false)} {...fastClick} className={"sbtBurgerUnderlay"} />
         <div onClick={() => setSbOpen(!sbOpen)} {...fastClick} className={"sbtBurger"}><MdMenu /></div>
-        <div className={"sbtSidebar"}>
+        <Scrollbar className={"sbtSidebar"}>
             <div className={"sbtsInner"}>
                 <div className={"sbtHead"}>
                     <Wordmark />
@@ -105,7 +106,7 @@ export const SiteNav = ({ children }) => {
                         {api.user.is_staff &&
                             <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>
                                 + Add new category
-                            </Link>
+                        </Link>
                         }
                     </SBMenu>
                     <SBMenu key={"user"} name={api.user.username}>
@@ -119,9 +120,9 @@ export const SiteNav = ({ children }) => {
                         {endpoints.configGet("login", true) &&
                             <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>Login</Link>}
                         {endpoints.configGet("register", true) &&
-                        <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>
-                            Register
-                        </Link>}
+                            <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>
+                                Register
+                    </Link>}
                     </SBMenu>
                 </> : null}
                 {api.user && api.user.is_staff && <>
@@ -140,12 +141,12 @@ export const SiteNav = ({ children }) => {
                 <div className="sbtFoot">
                     <div className="sbtfCopy">
                         <img alt={""} src={"https://ractf.co.uk/static/img/spine.png"} />
-                        &copy; Really Awesome Technology Ltd 2020
-                    </div>
+                    &copy; Really Awesome Technology Ltd 2020
+                </div>
                     <a href="/">Home</a> - <a href="/privacy">Privacy</a> - <a href="/terms">Terms</a>
                 </div>
             </div>
-        </div>
+        </Scrollbar>
 
         {children}
     </div>;

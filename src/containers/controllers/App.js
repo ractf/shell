@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ModalPrompt } from "../../components/Modal";
 import { SiteNav } from "../../components/SidebarTabs";
 import Header from "../../components/Header";
-//import Footer from "../../components/Footer";
+import Scrollbar from "../../components/Scrollbar";
 
 import { AppContext } from "./Contexts";
 import Routes from "./Routes";
@@ -400,7 +400,7 @@ const App = React.memo(() => {
         )}</div>;
     }).reverse();
 
-    return (
+    return <Scrollbar primary>
         <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert }}>
             {!api.ready && loaded ? <div className={"siteWarning"}>
                 Site operating in offline mode:
@@ -435,7 +435,7 @@ const App = React.memo(() => {
 
             <WSSpine />
         </AppContext.Provider>
-    );
+    </Scrollbar>;
 });
 
 export default () => <BrowserRouter><API><App /></API></BrowserRouter>;
