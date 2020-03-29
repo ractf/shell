@@ -489,26 +489,34 @@ const ImportExport = () => {
     const importCategory = () => {
         askOpenJSON().then(data => {
             if (!validate_category(data))
-                return app.alert("Invalid category data");
+            return app.alert("Invalid category data");
+            app.showProgress("Creating category...", 0);
             endpoints.createGroup(data.name, data.description, data.contained_type)
                 .then(({ d }) => d)
                 .then(async ({ id }) => {
                     let challenge_map = {};
+                    let progress = 0;
                     
                     await Promise.all(data.challenges.map(chal => (importChallengeData(id, chal).then(cdat => {
                         challenge_map[chal.id] = cdat;
+                        progress += 1 / data.challenges.length;
+                        app.showProgress("Creating challenges...", progress);
                     }))));
-                    console.log(challenge_map);
                     return challenge_map;
                 }).then(challenge_map => {
+                    let progress = 0;
                     return Promise.all(data.challenges.map(chal => (
                         endpoints.editChallenge({
                             ...challenge_map[chal.id],
                             unlocks: chal.unlocks.map(i => challenge_map[i].id)
+                        }).then(() => {
+                            progress += 1 / data.challenges.length;
+                            app.showProgress("Linking challenges...", progress);
                         })
                     )));
                 }).then(() => {
                     endpoints._reloadCache();
+                    app.showProgress(null);
                     app.alert("Imported category!");
                 }).catch(e => {
                     endpoints._reloadCache();

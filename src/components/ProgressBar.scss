@@ -1,0 +1,28 @@
+@import "../Colours.scss";
+
+.progressBar {
+    height: 8px;
+    border-radius: 4px;
+    background-color: $bg_l2;
+    width: 100%;
+    position: relative;
+    margin: 16px auto 0;
+    width: 200px;
+
+    >.pbInner {
+        background-color: $bg_l4;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        border-radius: 4px;
+    }
+
+    &.pbDone {
+        background-color: desaturate($green, 10%);
+        >.pbInner {
+            background-color: desaturate($bgreen, 20%);
+        }
+    }
+}

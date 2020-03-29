@@ -3,8 +3,10 @@ import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
 import { SiteNav } from "../../components/SidebarTabs";
-import Header from "../../components/Header";
+import ProgressBar from "../../components/ProgressBar";
 import Scrollbar from "../../components/Scrollbar";
+import Header from "../../components/Header";
+import Modal from "../../components/Modal";
 
 import { AppContext } from "./Contexts";
 import Routes from "./Routes";
@@ -317,6 +319,7 @@ const App = React.memo(() => {
 
     const [consoleMode, setConsole] = useState(false);
     const [currentPrompt, setCurrentPrompt] = useState(null);
+    const [progressBar, setProgressBar] = useState(null);
     const [loaded, setLoaded] = useState(false);
     const [popups, setPopups] = useState([
         /*{ type: 0, title: 'Achievement get', body: 'You got a thing!' },
@@ -351,6 +354,12 @@ const App = React.memo(() => {
     const showAlert = (message) => (
         promptConfirm({ message: message, noCancel: true, small: true })
     );
+
+    const showProgress = (text, progress) => {
+        if (text)
+            setProgressBar({text: text, progress: progress});
+        else setProgressBar(null);
+    };
 
     // Countdown
     useEffect(() => {
@@ -401,7 +410,7 @@ const App = React.memo(() => {
     }).reverse();
 
     return <Scrollbar primary><div className={"bodyScroll"}>
-        <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert }}>
+        <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert, showProgress: showProgress }}>
             {!api.ready && loaded ? <div className={"siteWarning"}>
                 Site operating in offline mode:
                     Failed to connect to the CTF servers!<br />
@@ -432,6 +441,11 @@ const App = React.memo(() => {
             <div className={"eventsWrap"}>
                 {popupsEl}
             </div>
+
+            {progressBar && <Modal small>
+                {progressBar.text}
+                <ProgressBar progress={progressBar.progress} />
+            </Modal>}
 
             <WSSpine />
         </AppContext.Provider>
