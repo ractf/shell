@@ -490,7 +490,7 @@ const ImportExport = () => {
         askOpenJSON().then(data => {
             if (!validate_category(data))
             return app.alert("Invalid category data");
-            app.showProgress("Creating category...", 0);
+            app.showProgress("Creating category...", .5);
             endpoints.createGroup(data.name, data.description, data.contained_type)
                 .then(({ d }) => d)
                 .then(async ({ id }) => {
@@ -516,7 +516,6 @@ const ImportExport = () => {
                     )));
                 }).then(() => {
                     endpoints._reloadCache();
-                    app.showProgress(null);
                     app.alert("Imported category!");
                 }).catch(e => {
                     endpoints._reloadCache();

@@ -351,12 +351,13 @@ const App = React.memo(() => {
         });
     };
 
-    const showAlert = (message) => (
-        promptConfirm({ message: message, noCancel: true, small: true })
-    );
+    const showAlert = (message) => {
+        setProgressBar(null);
+        return promptConfirm({ message: message, noCancel: true, small: true });
+    };
 
     const showProgress = (text, progress) => {
-        if (text)
+        if (text && !currentPrompt)
             setProgressBar({text: text, progress: progress});
         else setProgressBar(null);
     };

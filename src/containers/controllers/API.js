@@ -109,6 +109,7 @@ class APIClass extends Component {
             linkChallenges: this.linkChallenges,
             editChallenge: this.editChallenge,
             createGroup: this.createGroup,
+            removeGroup: this.removeGroup,
             editGroup: this.editGroup,
 
             login: this.login,
@@ -475,6 +476,11 @@ class APIClass extends Component {
     createGroup = (name, desc, type) => (
         this.post(ENDPOINTS.CATEGORIES, { name, metadata: null, description: desc, contained_type: type })
     );
+    removeGroup = async (id) => {
+        return this.delete(ENDPOINTS.CATEGORIES + id).then(() => {
+            return this._reloadCache();
+        });
+    };
     editGroup = (id, name, desc, type) => (
         this.patch(ENDPOINTS.CATEGORIES + id, { name, description: desc, contained_type: type })
     );
@@ -505,21 +511,24 @@ class APIClass extends Component {
             auto_unlock: autoUnlock,
         })
     );
-    removeChallenge = async (challenge) => {
-        // Unlink all challenges
-        await Promise.all(challenge.unlocks.map(i => (
-            Promise.all(this.state.challenges.map(cat =>
-                Promise.all(cat.challenges.map(
-                    j => new Promise((res, rej) => {
-                        if (j.id === i)
-                            this.linkChallenges(challenge, j, false).then(res).catch(rej);
-                        else res();
-                    })
+    removeChallenge = async (challenge, dumbRemove) => {
+        if (!dumbRemove) {
+            // Unlink all challenges
+            await Promise.all(challenge.unlocks.map(i => (
+                Promise.all(this.state.challenges.map(cat =>
+                    Promise.all(cat.challenges.map(
+                        j => new Promise((res, rej) => {
+                            if (j.id === i)
+                                this.linkChallenges(challenge, j, false).then(res).catch(rej);
+                            else res();
+                        })
+                    ))
                 ))
-            ))
-        )));
+            )));
+        }
         return this.delete(ENDPOINTS.CHALLENGES + challenge.id).then(() => {
-            return this._reloadCache();
+            if (!dumbRemove)
+                return this._reloadCache();
         });
     };
 

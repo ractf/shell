@@ -16,8 +16,10 @@ import "./Campaign.scss";
 
 const ANC = ({ hide, anc, modal }) => {
     const endpoints = useContext(apiEndpoints);
+    const app = useContext(appContext);
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
+    const { history } = useReactRouter();
 
     const create = ({ cname, cdesc, ctype }) => {
         if (!cname.length)
@@ -37,6 +39,28 @@ const ANC = ({ hide, anc, modal }) => {
                 setLocked(false);
             });
     };
+    const removeCategory = () => {
+        app.promptConfirm({
+            message: "Are you sure you want to remove the category:\n" + anc.name,
+            small: true
+        }).then(async () => {
+            app.showProgress("Removing challenges...", 0);
+            let progress = 0;
+            await Promise.all(anc.challenges.map(i => {
+                return endpoints.removeChallenge(i, true).then(() => {
+                    progress += 1 / anc.challenges.length;
+                    app.showProgress("Removing challenges...", progress);
+                });
+            }));
+            app.showProgress("Removing category...", .5);
+            await endpoints.removeGroup(anc.id);
+            history.push("/campaign");
+            app.alert("Category removed!");
+        }).catch(e => {
+            app.alert("Something went wrong removing the category:\n" + endpoints.getError(e));
+        });
+        hide();
+    };
 
     let body = <Form locked={locked} handle={create}>
         {modal && <SectionTitle2>{anc.id ? "Edit" : "Add new"} category</SectionTitle2>}
@@ -50,7 +74,7 @@ const ANC = ({ hide, anc, modal }) => {
         {error && <FormError>{error}</FormError>}
         <ButtonRow>
             {anc.id &&
-                <Button warning disabled>Remove Category</Button>
+                <Button warning click={removeCategory}>Remove Category</Button>
             }
             <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
         </ButtonRow>
