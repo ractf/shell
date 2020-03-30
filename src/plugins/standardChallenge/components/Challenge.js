@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints, Link, apiContext
+    apiEndpoints, Link, apiContext, Select, plugins
 } from "ractf";
 
 import File from "./File";
@@ -193,6 +193,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
             <label htmlFor={"description"}>Challenge brief</label>
             <Input rows={5} val={challenge.description} name={"description"} placeholder={"Challenge brief"} />
 
+            <label htmlFor={"challenge_type"}>Challenge type</label>
+            <Select options={Object.keys(plugins.challengeType).map(i => ({key: i, value: i}))}
+                    initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
+                    name={"challenge_type"} />
+            
             <label htmlFor={"flag_type"}>Challenge flag type</label>
             <Input placeholder="Challenge flag type" name={"flag_type"} monospace
                 val={challenge.flag_type} />
@@ -275,7 +280,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
             {chalContent}
         </SBTSection>;
 
-        if (challenge.flag_type === "code")
+        if (challenge.challenge_type === "code")
             chalContent = <IDE challenge={challenge}>
                 {chalContent}
             </IDE>;

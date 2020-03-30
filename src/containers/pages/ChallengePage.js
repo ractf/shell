@@ -37,7 +37,7 @@ export default () => {
         if (challenge.type)
             handler = plugins.challengeType[challenge.type];
         else
-            handler = plugins.challengeType["__default"];
+            handler = plugins.challengeType["default"];
 
         if (!handler)
             chalEl = <>

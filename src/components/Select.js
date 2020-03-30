@@ -4,7 +4,7 @@ import "./Select.scss";
 
 
 export default forwardRef(({ name, options, initial }, ref) => {
-    const [selected, setSelected] = useState(options[initial || 0]);
+    const [selected, setSelected] = useState(options[(initial && initial > -1) ? initial : 0]);
     const [itemsStyle, setItemsStyle] = useState({ display: "none" });
     const head = useRef();
 

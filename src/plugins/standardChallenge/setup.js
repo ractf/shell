@@ -9,6 +9,7 @@ export default () => {
         loading: () => "Loading",
     });
 
-    registerPlugin("challengeType", "__default", { component: chal });
+    registerPlugin("challengeType", "default", { component: chal });
+    registerPlugin("challengeType", "longText", { component: chal });
     registerPlugin("challengeType", "code", { component: chal });
 };
