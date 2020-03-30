@@ -28,9 +28,11 @@ const Modal = ({ onHide, children, centre, small }) => {
         <div className={"modalBoxWrap"}>
             {!small && <div className={"modalX"} onClick={doHide(onHide)}>&times;</div>}
             <div className={"modalBox" + (centre ? " centre" : "") + (small ? " small" : "")}>
-                <Scrollbar>
-                    {children}
-                </Scrollbar>
+                {small ? children : <Scrollbar>
+                    <div>
+                        {children}
+                    </div>
+                </Scrollbar>}
             </div>
         </div>
     </div>;

@@ -233,6 +233,7 @@ export default () => {
                 isEditor: isEditor, saveEdit: saveEdit,
                 removeChallenge: removeChallenge(challenge),
                 isCreator: isCreator,
+                category: tab,
             });
         }
 

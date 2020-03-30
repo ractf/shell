@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints, Link, apiContext, Select, plugins
+    apiEndpoints, Link, apiContext, Select, plugins, HR
 } from "ractf";
 
 import File from "./File";
@@ -12,20 +12,15 @@ import IDE from "./IDEGood";
 
 import "./Challenge.scss";
 import { ButtonRow } from "../../../components/Button";
-import CodeInput from "./CodeInput";
-
-const HintModal = () => <h1>hi</h1>;
 
 
-export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) => {
+export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, category }) => {
     const [isEditFiles, setEditFiles] = useState(false);
     const [isEditHints, setEditHints] = useState(false);
     const [isEditRaw, setEditRaw] = useState(false);
     const [flagValid, setFlagValid] = useState(false);
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
-    const [hint, setHint] = useState(null);
-    const [mdRaw, setMdRaw] = useState(JSON.stringify(challenge.challenge_metadata, null, 4));
 
     const regex = /^ractf{.+}$/;
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
@@ -37,10 +32,6 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
         if (challenge.challenge_type === "freeform" || challenge.challenge_type === "longText")
             return setFlagValid(!!flag);
         setFlagValid(regex.test(flag));
-    };
-
-    const useHint = () => {
-        setHint(null);
     };
 
     const promptHint = (hint) => {
@@ -159,23 +150,47 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
     }
 
     if (isEditRaw) {
-        const saveEditRaw = () => {
-            let challenge_metadata;
-            try {
-                challenge_metadata = JSON.parse(mdRaw);
-            } catch (e) {
-                app.alert(<>Failed to save metadata:<br /><br /><pre><code>{e.toString()}</code></pre></>);
-                return;
+        let fields = [];
+        Object.values(plugins.challengeMetadata).forEach(i => {
+            if (!i.check || i.check(challenge, category)) {
+                i.fields.forEach(field => {
+                    switch (field.type) {
+                        case "text":
+                        case "number":
+                            fields.push(<label htmlFor={field.name}>{field.label}</label>);
+                            let val = challenge.challenge_metadata[field.name];
+                            let format = field.type === "number" ? /\d+/ : /.+/;
+                            fields.push(
+                                <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
+                                    placeholder={field.label} format={format} />
+                            );
+                            break;
+                        case "label":
+                            fields.push(<div>{field.label}</div>);
+                            break;
+                        case "hr":
+                            fields.push(<HR />);
+                            break;
+                        default:
+                            fields.push("Unknown field type: " + field.type);
+                            break;
+                    }
+                });
             }
-            challenge.challenge_metadata = challenge_metadata;
+        });
+        const saveEdit = (changes) => {
+            challenge.challenge_metadata = {
+                ...challenge.challenge_metadata,
+                ...changes
+            };
             setEditRaw(false);
         };
 
-        return <div style={{ width: "100%" }}><Form handle={() => { }}>
-            <CodeInput lang={"javascript"} val={mdRaw} onChange={setMdRaw} />
+        return <div style={{ width: "100%" }}><Form handle={saveEdit}>
+            {fields}
             <ButtonRow>
                 <Button click={() => setEditRaw(false)}>Cancel</Button>
-                <Button click={() => saveEditRaw()}>Save Edit</Button>
+                <Button submit>Save Edit</Button>
             </ButtonRow>
         </Form></div>;
     }
@@ -207,13 +222,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
     }
 
     let chalContent = <>
-        {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
-
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
             <label htmlFor={"name"}>Challenge name</label>
             <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
             <label htmlFor={"score"}>Challenge points</label>
-            <Input val={challenge.score !== undefined && challenge.score.toString()} name={"score"}
+            <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined} name={"score"}
                 placeholder={"Challenge points"} format={/\d+/} />
             <label htmlFor={"author"}>Challenge author</label>
             <Input val={challenge.author} name={"author"} placeholder={"Challenge author"} />
