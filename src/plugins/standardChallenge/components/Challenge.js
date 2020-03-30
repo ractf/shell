@@ -34,6 +34,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
     const api = useContext(apiContext);
 
     const changeFlag = (flag) => {
+        if (challenge.challenge_type === "freeform" || challenge.challenge_type === "longText")
+            return setFlagValid(!!flag);
         setFlagValid(regex.test(flag));
     };
 
@@ -178,6 +180,32 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
         </Form></div>;
     }
 
+    let flagInput = null;
+    if (!isEditor) {
+        switch (challenge.challenge_type) {
+            case "code":
+                break;
+            case "freeform":
+                flagInput = <Input placeholder="Flag"
+                    name={"flag"} callback={changeFlag}
+                    light monospace
+                    center width={"80%"} />;
+                break;
+            case "longText":
+                flagInput = <Input rows={5} placeholder="Flag text"
+                    format={partial} name={"flag"}
+                    callback={changeFlag} light monospace
+                    center width={"80%"} />;
+                break;
+            default:
+                flagInput = <Input placeholder="Flag format: ractf{...}"
+                    format={partial} name={"flag"}
+                    callback={changeFlag} light monospace
+                    center width={"80%"} />;
+                break;
+        }
+    }
+
     let chalContent = <>
         {hint && <HintModal cancel={(() => setHint(null))} okay={useHint} />}
 
@@ -185,7 +213,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
             <label htmlFor={"name"}>Challenge name</label>
             <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
             <label htmlFor={"score"}>Challenge points</label>
-            <Input val={challenge.score && challenge.score.toString()} name={"score"}
+            <Input val={challenge.score !== undefined && challenge.score.toString()} name={"score"}
                 placeholder={"Challenge points"} format={/\d+/} />
             <label htmlFor={"author"}>Challenge author</label>
             <Input val={challenge.author} name={"author"} placeholder={"Challenge author"} />
@@ -194,10 +222,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
             <Input rows={5} val={challenge.description} name={"description"} placeholder={"Challenge brief"} />
 
             <label htmlFor={"challenge_type"}>Challenge type</label>
-            <Select options={Object.keys(plugins.challengeType).map(i => ({key: i, value: i}))}
-                    initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
-                    name={"challenge_type"} />
-            
+            <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
+                initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
+                name={"challenge_type"} />
+
             <label htmlFor={"flag_type"}>Challenge flag type</label>
             <Input placeholder="Challenge flag type" name={"flag_type"} monospace
                 val={challenge.flag_type} />
@@ -208,7 +236,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
                 }}
                 val={JSON.stringify(challenge.flag_metadata)} />
 
-            {!isCreator && 
+            {!isCreator &&
                 <ButtonRow>
                     <Button click={() => setEditFiles(true)}>Edit Files</Button>
                     <Button click={() => setEditHints(true)}>Edit Hints</Button>
@@ -242,19 +270,16 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge }) =
                 {challenge.solved ? <>
                     You have already solved this challenge!
                 </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
-                        <Input placeholder="Flag format: ractf{...}"
-                            format={partial} name={"flag"}
-                            callback={changeFlag} light monospace
-                            center width={"80%"} />
-                        {message && <FormError>{message}</FormError>}
-                        <Button disabled={!flagValid} submit>Attempt flag</Button>
-                    </Form> : <>
-                    You can only submit flags if you are in a team.
-                    <ButtonRow>
-                        <Button to={"/team/new"}>Join a team</Button>
-                        <Button to={"/team/new"}>Create a team</Button>
-                    </ButtonRow>
-                </>}
+                    {flagInput}
+                    {message && <FormError>{message}</FormError>}
+                    <Button disabled={!flagValid} submit>Attempt flag</Button>
+                </Form> : <>
+                            You can only submit flags if you are in a team.
+                            <ButtonRow>
+                                <Button to={"/team/new"}>Join a team</Button>
+                                <Button to={"/team/new"}>Create a team</Button>
+                            </ButtonRow>
+                        </>}
 
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                     {challenge.files.map(file =>

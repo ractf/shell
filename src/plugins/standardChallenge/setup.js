@@ -10,6 +10,7 @@ export default () => {
     });
 
     registerPlugin("challengeType", "default", { component: chal });
+    registerPlugin("challengeType", "freeform", { component: chal });
     registerPlugin("challengeType", "longText", { component: chal });
     registerPlugin("challengeType", "code", { component: chal });
 };
