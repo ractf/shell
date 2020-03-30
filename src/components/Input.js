@@ -14,7 +14,10 @@ export default class Input extends Component {
             val: props.val || "",
             valid: true,
             showPass: false,
+            rows: props.rows,
         };
+        if (props.rows && props.val)
+            this.state.rows = Math.max(props.rows, props.val.split("\n").length);
 
         this.handleChange = this.handleChange.bind(this);
         this.inputRef = createRef();
@@ -34,7 +37,10 @@ export default class Input extends Component {
             this.setState({ valid: valid });
         } else valid = true;
 
-        this.setState({ val: value });
+        let rows = 0;
+        if (this.props.rows)
+            rows = Math.max(this.props.rows, value.split("\n").length);
+        this.setState({ val: value, rows: rows });
         if (this.props.callback)
             this.props.callback(value, valid);
     }
@@ -70,7 +76,7 @@ export default class Input extends Component {
                         ref={this.inputRef}
                         value={this.state.val}
                         onChange={this.handleChange}
-                        rows={this.props.rows}
+                        rows={this.state.rows}
                         autofill={this.props.autofill}
                         className={this.props.monospace ? "monospaced" : ""}
                         disabled={this.props.disabled} />
