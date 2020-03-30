@@ -5,6 +5,8 @@ import Form from "./Form";
 import Input from "./Input";
 import Select from "./Select";
 
+import Scrollbar from "./Scrollbar";
+
 import "./Modal.scss";
 
 import { fastClick } from "ractf";
@@ -26,7 +28,9 @@ const Modal = ({ onHide, children, centre, small }) => {
         <div className={"modalBoxWrap"}>
             {!small && <div className={"modalX"} onClick={doHide(onHide)}>&times;</div>}
             <div className={"modalBox" + (centre ? " centre" : "") + (small ? " small" : "")}>
-                {children}
+                <Scrollbar>
+                    {children}
+                </Scrollbar>
             </div>
         </div>
     </div>;

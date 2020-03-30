@@ -1,13 +1,12 @@
 @import "../Colours.scss";
 
-
 .darken {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, .1);
+    background-color: rgba(0, 0, 0, 0.1);
     z-index: -1;
 }
 
@@ -68,8 +67,21 @@
         text-align: center;
     }
 
+    &:not(.small) > .scrolled {
+        > .scrollInner > div {
+            width: 834px !important;
+            max-width: calc(100vw - 96px);
+
+            @media (min-width: 800px) {
+                padding-right: 16px;
+            }
+        }
+        > .scrollTrack {
+            right: 0;
+        }
+    }
+
     max-height: 100vh;
-    overflow-y: auto;
 
     @media only screen and (max-width: 600px) {
         & {
@@ -83,7 +95,7 @@
         }
     }
 
-    &>p {
+    & > p {
         margin-top: 0;
         white-space: pre-wrap;
     }
