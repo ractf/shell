@@ -17,6 +17,15 @@
     border-radius: 2px;
     font-family: $titleStack;
     transition: 200ms ease background-color;
+
+    >.worth {
+        font-weight: 500;
+        position: absolute;
+        right: 3px;
+        bottom: 0px;
+        font-size: 1.1em;
+        opacity: .7;
+    }
     
     &>*:first-child {
         position: absolute;

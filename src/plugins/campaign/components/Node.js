@@ -10,7 +10,7 @@ import "./Node.scss";
 
 export default ({
     name, unlocked, done, right, below, linksU, linksD, linksR, linksL, isEdit,
-    click, toggleLink, largeName, orange, url
+    click, toggleLink, largeName, orange, url, points
 }) => {
     const toggle = side => {
         return e => {
@@ -45,6 +45,9 @@ export default ({
 
     let inner = <>
         <div>{name}</div>
+        {unlocked &&
+            <div className={"worth"}>{points}</div>
+        }
 
         {linksR && <div className={lockClassR}>
             {lockDoneR ? <FaCheck /> : lockUnlockedR ? <FaLockOpen /> : <FaLock />}

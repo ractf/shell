@@ -117,6 +117,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
 
                 click={isEdit ? showEditor(chal) : ""}
                 isEdit={isEdit} toggleLink={toggleLink(chal)}
+                points={chal.score}
 
                 url={unlocked ? "/campaign/" + challenges.id + "/challenge/" + chal.id : null}
 
