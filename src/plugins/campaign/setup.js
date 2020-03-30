@@ -137,7 +137,7 @@ export default () => {
         fields: [
             {label: "Campaign settings:", type: "label"},
             {name: "x", label: "X Position", type: "number"},
-            {name: "y", label: "X Position", type: "number"},
+            {name: "y", label: "Y Position", type: "number"},
             {type: "hr"},
         ],
         check: (challenge, category) => {

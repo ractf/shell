@@ -157,19 +157,19 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     switch (field.type) {
                         case "text":
                         case "number":
-                            fields.push(<label htmlFor={field.name}>{field.label}</label>);
+                            fields.push(<label key={fields.length} htmlFor={field.name}>{field.label}</label>);
                             let val = challenge.challenge_metadata[field.name];
                             let format = field.type === "number" ? /\d+/ : /.+/;
                             fields.push(
                                 <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
-                                    placeholder={field.label} format={format} />
+                                    placeholder={field.label} format={format} key={fields.length} />
                             );
                             break;
                         case "label":
-                            fields.push(<div>{field.label}</div>);
+                            fields.push(<div key={fields.length}>{field.label}</div>);
                             break;
                         case "hr":
-                            fields.push(<HR />);
+                            fields.push(<HR key={fields.length} />);
                             break;
                         default:
                             fields.push("Unknown field type: " + field.type);
@@ -221,6 +221,16 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
         }
     }
 
+    let challengeMods = [];
+    Object.keys(plugins.challengeMod).forEach(key => {
+        let i = plugins.challengeMod[key];
+        if (!i.check || i.check(challenge, category)) {
+            challengeMods.push(React.createElement(i.component, {
+                challenge: challenge, category: category, key: key,
+            }));
+        }
+    });
+
     let chalContent = <>
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
             <label htmlFor={"name"}>Challenge name</label>
@@ -268,6 +278,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
             </ButtonRow>
         </Form></div> : <>
+                {challengeMods}
                 <TextBlock className={"challengeBrief"}>
                     <ReactMarkdown
                         source={challenge.description}
