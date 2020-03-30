@@ -30,7 +30,7 @@ button {
         background-color: rgba($red, .5);
     }
 
-    &:not(.disabled):hover {
+    &:not(.disabled):hover, &:not(.disabled):focus {
         background-color: $bg_l2;
 
         &.lesser {

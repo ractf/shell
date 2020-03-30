@@ -19,7 +19,7 @@
             border-color: desaturate($bgreen, 20%);
         }
 
-        &:hover {
+        &:hover, &:focus {
             background-color: desaturate(lighten($green, 7%), 4%);
             &::after {
                 border-color: desaturate($bgreen, 10%);
@@ -51,7 +51,7 @@
         width: 10px;
         height: 10px;
     }
-    &:hover {
+    &:hover, &:focus {
         background-color: $bg_l3;
         &::after {
             border-color: $bg_l5;
@@ -142,6 +142,7 @@
         margin-top: 1px;
 
         &:hover:not(.sbSpace),
+        &:focus:not(.sbSpace),
         &.active {
             background-color: $bg_d1;
         }

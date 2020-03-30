@@ -121,7 +121,7 @@ a, .linkStyle {
     margin: 0;
     padding: 0;
 
-    &:hover {
+    &:hover, &:focus {
         color: $link-hover;
         text-decoration: underline;
     }

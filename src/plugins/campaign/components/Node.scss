@@ -14,6 +14,10 @@
     outline: none;
     user-select: none;
 
+    border-radius: 2px;
+    font-family: $titleStack;
+    transition: 200ms ease background-color;
+    
     &>*:first-child {
         position: absolute;
         font-size: 1.2em;
@@ -29,7 +33,7 @@
 
         z-index: 20;
         color: $fg;
-        font-weight: 400;
+        font-weight: 500;
     }
     &.largeName>*:first-child {
         font-size: 2.4em;
@@ -55,7 +59,7 @@
         color: $bg_l3;
         border-color: $bg_l3;
 
-        &:hover {
+        &:hover, &:focus {
             background-color: rgba($bg_l1, .33);
         }
     }
@@ -64,7 +68,7 @@
         border-color: #6b6;
         color: #6b6;
         
-        &:hover {
+        &:hover, &:focus {
             background-color: #66bb6633;
         }
     }

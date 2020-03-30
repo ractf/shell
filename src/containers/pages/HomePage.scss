@@ -36,7 +36,7 @@
         opacity: 1;
         transition: 400ms opacity ease;
     }
-    &:hover::before {
+    &:hover::before, &:focus::before {
         opacity: 0.9;
     }
 }
@@ -233,7 +233,7 @@
             opacity: 1;
             transition: 400ms opacity ease;
         }
-        &:hover::before {
+        &:hover::before, &:focus::before {
             opacity: 0.9;
         }
     }

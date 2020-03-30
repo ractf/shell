@@ -43,7 +43,7 @@
         cursor: pointer;
         transition: 200ms ease opacity;
 
-        &:hover {
+        &:hover, &:focus {
             opacity: 1;
         }
     }

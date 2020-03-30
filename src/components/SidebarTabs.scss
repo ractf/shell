@@ -69,7 +69,7 @@
             padding: 8px 10px 8px 11px;
             padding-left: 32px;
             color: $sidebar_link;
-            &:hover {
+            &:hover, &:focus {
                 background: $sidebar_focus !important;
                 color: $sidebar_link_hover;
                 text-decoration: none;
@@ -102,7 +102,7 @@
                     background-color: rgba(0, 0, 0, .1);
                 }
             }
-            &:hover {
+            &:hover, &:focus {
                 color: $sidebar_heading;
                 text-decoration: none;
                 background: $sidebar_focus;
