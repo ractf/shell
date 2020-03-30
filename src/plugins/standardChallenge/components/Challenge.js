@@ -151,28 +151,42 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
     if (isEditRaw) {
         let fields = [];
-        Object.values(plugins.challengeMetadata).forEach(i => {
+        Object.keys(plugins.challengeMetadata).forEach(key => {
+            let i = plugins.challengeMetadata[key];
+            let n = 0;
             if (!i.check || i.check(challenge, category)) {
                 i.fields.forEach(field => {
                     switch (field.type) {
+                        case "multiline":
+                        case "code":
                         case "text":
                         case "number":
-                            fields.push(<label key={fields.length} htmlFor={field.name}>{field.label}</label>);
+                            fields.push(<label key={key + (n++)} htmlFor={field.name}>{field.label}</label>);
                             let val = challenge.challenge_metadata[field.name];
                             let format = field.type === "number" ? /\d+/ : /.+/;
                             fields.push(
                                 <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
-                                    placeholder={field.label} format={format} key={fields.length} />
+                                    placeholder={field.label} format={format} key={key + (n++)}
+                                    rows={field.type === "multiline" || field.type === "code" ? 5 : ""}
+                                    monospace={field.type === "code"} />
+                            );
+                            break;
+                        case "select":
+                            fields.push(<label key={key + (n++)} htmlFor={field.name}>{field.label}</label>);
+                            let idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
+                            fields.push(
+                                <Select name={field.name} options={field.options}
+                                    key={key + (n++)} initial={idx !== -1 ? idx : 0} />
                             );
                             break;
                         case "label":
-                            fields.push(<div key={fields.length}>{field.label}</div>);
+                            fields.push(<div key={key + (n++)}>{field.label}</div>);
                             break;
                         case "hr":
-                            fields.push(<HR key={fields.length} />);
+                            fields.push(<HR key={key + (n++)} />);
                             break;
                         default:
-                            fields.push("Unknown field type: " + field.type);
+                            fields.push(<div key={key + (n++)}>"Unknown field type: " + field.type</div>);
                             break;
                     }
                 });

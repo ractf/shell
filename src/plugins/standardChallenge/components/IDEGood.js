@@ -24,10 +24,11 @@ export default ({ challenge, children }) => {
     const [brief, setBrief] = useState(true);
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState(challenge.challenge_metadata.code_default || "");
+    const lang = challenge.challenge_metadata.code_language || "python";
 
     const run = () => {
-        endpoints.runCode("python", "main.py", content);
+        endpoints.runCode(lang, "main.py", content);
         setConsole(true);
     };
     const stop = () => {
@@ -40,7 +41,7 @@ export default ({ challenge, children }) => {
         }
         <div className={"ide-editor" + (brief ? "" : " ie-row")}>
             <div className={"editor-top"}>
-                <CodeInput val={content} onChange={setContent} />
+                <CodeInput val={content} onChange={setContent} lang={lang} />
                 <div className={"editor-toolbar"}>
                     {api.codeRunState.running ?
                         <div className={"etb-button"} onClick={stop}>Stop</div>
