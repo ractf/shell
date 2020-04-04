@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import useReactRouter from "../../useReactRouter";
@@ -11,6 +12,7 @@ export default () => {
     const { match } = useReactRouter();
     const tabId = match.params.tabId;
     const chalId = match.params.chalId;
+    const { t } = useTranslation();
 
     const api = useContext(apiContext);
 
@@ -41,8 +43,8 @@ export default () => {
 
         if (!handler)
             chalEl = <>
-                Challenge renderer for type "{challenge.type}" missing!<br /><br />
-                Did you forget to install a plugin?
+                {t("challenge.renderer_missing", {type: challenge.type})}<br /><br />
+                {t("challenge.forgot_plugin")}
             </>;
         else {
             chalEl = React.createElement(

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 import { Link } from "ractf";
 
@@ -9,10 +10,18 @@ import "./ErrorPages.scss";
 export const BrokenShards = () => <img alt={""} className={"errorImg"} src={broken} />;
 
 
-export const ErrorPage = ({ code, details }) => <div className={"errorWrap"}>
-    <div>{code || "Something went wrong"}</div>
-    <div>{details}</div>
-    <Link to={"/"}>Back to safety</Link>
-</div>;
+export const ErrorPage = ({ code, details }) => {
+    const { t } = useTranslation();
 
-export const NotFound = () => <ErrorPage code={404} details={"Page not found"} />;
+    return <div className={"errorWrap"}>
+        <div>{code || t("errors.generic")}</div>
+        <div>{details}</div>
+        <Link to={"/"}>{t("errors.return")}</Link>
+    </div>;
+};
+
+export const NotFound = () => {
+    const { t } = useTranslation();
+
+    return <ErrorPage code={404} details={t("errors.404")} />;
+};

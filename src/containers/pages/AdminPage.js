@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import useReactRouter from "../../useReactRouter";
 import DatePicker from "react-datepicker";
 
@@ -553,6 +554,7 @@ export default () => {
     const api = useContext(apiContext);
     const app = useContext(appContext);
     const [adminConfig, setAdminConfig] = useState(null);
+    const { t } = useTranslation();
 
     const [allUsersAdmin] = useFullyPaginated(ENDPOINTS.USER);
     const [allTeamsAdmin] = useFullyPaginated(ENDPOINTS.TEAM);
@@ -584,19 +586,18 @@ export default () => {
     let content;
     switch (page) {
         case "ctf":
-            content = <SBTSection title={"CTF Management"}>
+            content = <SBTSection title={t("admin.event")}>
                 {adminConfig ? <>
-                    <Section title={"Start or Stop"}>
-                        <AdminCardSection name={"Start the event before the scheduled start time."}>
-                            <Button>Start event</Button>
+                    <Section title={t("admin.start_stop")}>
+                        <AdminCardSection name={t("admin.start_desc")}>
+                            <Button>{t("admin.start")}</Button>
                         </AdminCardSection>
-                        <AdminCardSection name={
-                            "End the event before the scheduled end time. This will not disable automatic-start."
-                        }>
-                            <Button>Stop event</Button>
+                        <AdminCardSection name={t("admin.stop_desc")}>
+                            <Button>{t("admin.stop")}</Button>
                         </AdminCardSection>
+
                     </Section>
-                    <Section title={"Automatic Timing"}>
+                    <Section title={t("admin.auto_time")}>
                         <Form>
                             <div className={"absfg"}>
                                 <Form>
@@ -608,7 +609,7 @@ export default () => {
                             </div>
                             <div className={"absfg"}>
                                 <Form>
-                                    <label htmlFor={"eventStartTime"}>Event start time</label>
+                                    <label htmlFor={"eventStartTime"}>{t("admin.start_time")}</label>
                                     <DatePick initial={adminConfig.start_time}
                                         configSet={configSet} name={"eventStartTime"}
                                         configKey={"start_time"} />
@@ -616,7 +617,7 @@ export default () => {
                             </div>
                             <div className={"absfg"}>
                                 <Form>
-                                    <label htmlFor={"eventEndTime"}>Event end time</label>
+                                    <label htmlFor={"eventEndTime"}>{t("admin.stop_time")}</label>
                                     <DatePick initial={adminConfig.end_time}
                                         configSet={configSet} name={"eventEndTime"}
                                         configKey={"end_time"} />
@@ -628,33 +629,33 @@ export default () => {
             </SBTSection>;
             break;
         case "config":
-            content = <SBTSection title={"Configuration"}>
+            content = <SBTSection title={t("admin.configuration")}>
                 {adminConfig ? <>
-                    <Section title={"Login"}>
+                    <Section title={t("admin.login")}>
                         <Form>
-                            <AdminCardSection name={"Enable or disable site login"}>
+                            <AdminCardSection name={t("admin.enable_login")}>
                                 <Radio onChange={v => configSet("login", v)} value={adminConfig.login}
-                                    options={[["Enabled", true], ["Disabled", false]]} />
+                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
                             </AdminCardSection>
                         </Form>
                     </Section>
-                    <Section title={"Registration"}>
+                    <Section title={t("admin.reg")}>
                         <Form>
-                            <AdminCardSection name={"Enable or disable site registration"}>
+                            <AdminCardSection name={t("admin.enable_registration")}>
                                 <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
-                                    options={[["Enabled", true], ["Disabled", false]]} />
+                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
                             </AdminCardSection>
                         </Form>
                     </Section>
-                    <Section title={"Main Game"}>
+                    <Section title={t("admin.main_game")}>
                         <Form>
-                            <AdminCardSection name={"Scoring"}>
+                            <AdminCardSection name={t("admin.scoring")}>
                                 <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
-                                    options={[["Enabled", true], ["Disabled", false]]} />
+                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
                             </AdminCardSection>
-                            <AdminCardSection name={"Flag Submission"}>
+                            <AdminCardSection name={t("admin.flags")}>
                                 <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
-                                    options={[["Enabled", true], ["Disabled", false]]} />
+                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
                             </AdminCardSection>
                         </Form>
                     </Section>
@@ -665,7 +666,7 @@ export default () => {
             content = <ImportExport />;
             break;
         case "service":
-            content = <SBTSection title={"Service Status"}>
+            content = <SBTSection title={t("admin.service")}>
                 <Section title={"Code Ingest"}>
                     <div className={"absIndicator unknown"} />
                 </Section>
@@ -681,34 +682,34 @@ export default () => {
             </SBTSection>;
             break;
         case "announcements":
-            content = <SBTSection title={"Announcements"}>
-                <Section title={"Active Announcements"}>
+            content = <SBTSection title={t("admin.announce.head")}>
+                <Section title={t("admin.announce.active")}>
                     <Form>
-                        <label>No announcements active</label>
+                        <label>{t("admin.announce.none")}</label>
                     </Form>
                 </Section>
-                <Section title={"Add Announcement"}>
+                <Section title={t("admin.announce.add")}>
                     <Form>
-                        <label htmlFor={"annTitle"}>Title</label>
+                        <label htmlFor={"annTitle"}>{t("admin.announce.title")}</label>
                         <Input name={"annTitle"} />
-                        <label htmlFor={"annBody"}>Announcement text</label>
+                        <label htmlFor={"annBody"}>{t("admin.announce.body")}</label>
                         <Input name={"annBody"} rows={4} />
-                        <Button>Add</Button>
+                        <Button>{t("admin.announce.add")}</Button>
                     </Form>
                 </Section>
             </SBTSection>;
             break;
         case "members":
-            content = <SBTSection title={"Members"}>
+            content = <SBTSection title={t("admin.members")}>
                 {allUsersAdmin ? <>
-                    <Section title={"Admins"}>
+                    <Section title={t("admin.admins")}>
                         <TreeWrap>
                             {allUsersAdmin.filter(i => i.is_staff).map(i =>
                                 <MemberCard key={i.id} data={i} />
                             )}
                         </TreeWrap>
                     </Section>
-                    <Section title={"Standard Users"}>
+                    <Section title={t("admin.users")}>
                         <TreeWrap>
                             {allUsersAdmin.filter(i => !i.is_staff).map(i =>
                                 <MemberCard key={i.id} data={i} />
@@ -719,9 +720,9 @@ export default () => {
             </SBTSection>;
             break;
         case "teams":
-            content = <SBTSection title={"Teams"}>
+            content = <SBTSection title={t("admin.teams")}>
                 {allTeamsAdmin ? <>
-                    <Section title={"All Teams"}>
+                    <Section title={t("admin.all_teams")}>
                         <TreeWrap>
                             {allTeamsAdmin.map(i =>
                                 <TeamCard key={i.id} data={i} />

@@ -51,9 +51,8 @@
     .userBio {
         font-size: .8em;
         margin-bottom: 1em;
-        &.noBio::before {
-                font-style: italic;
-                content: "No bio set";
+        &.noBio {
+            font-style: italic;
         }
     }
     .userSocial {

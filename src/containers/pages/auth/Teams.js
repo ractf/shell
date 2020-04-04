@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import {
@@ -11,6 +12,7 @@ import { Wrap } from "./Parts";
 export const JoinTeam = () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
+    const { t } = useTranslation();
 
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
@@ -21,7 +23,7 @@ export const JoinTeam = () => {
 
     const doJoinTeam = ({ name, password }) => {
         if (!name.length)
-            return setMessage("Team name missing");
+            return setMessage(t("team_wiz.name_missing"));
 
         setLocked(true);
         endpoints.joinTeam(name, password).then(resp => {
@@ -35,28 +37,30 @@ export const JoinTeam = () => {
     return <Page vCentre>
         <Wrap>{success ?
             <>
-                <SectionTitle2>Team Joined!</SectionTitle2>
+                <SectionTitle2>{t("team_wiz.joined")}</SectionTitle2>
                 <HR />
-                <div>Where now?</div>
+                <div>{t("team_wiz.next")}</div>
 
                 <ButtonRow>
-                    <Button medium to={"/campaign"}>Challenges</Button>
-                    <Button medium lesser to={"/settings"}>Settings</Button>
+                    <Button medium to={"/campaign"}>{t("challenge_plural")}</Button>
+                    <Button medium lesser to={"/settings"}>{t("setting_plural")}</Button>
                 </ButtonRow>
             </> : <>
-                <SectionTitle2>Join a Team</SectionTitle2>
+                <SectionTitle2>{t("join_a_team")}</SectionTitle2>
                 <SubtleText>
-                    Did you want to <Link to={"/team/new"}>create a team</Link> instead?
+                    {t("team_wiz.did_you_want_to")}
+                    <Link to={"/team/new"}>{t("team_wiz.create_a_team")}</Link>
+                    {t("team_wiz.instead")}
                 </SubtleText>
                 <br />
 
                 <Form locked={locked} handle={doJoinTeam}>
-                    <Input autofill={"off"} name={"name"} placeholder={"Team Name"} />
-                    <Input autofill={"off"} name={"password"} placeholder={"Team Secret"} password />
+                    <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
+                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
 
                     {message && <FormError>{message}</FormError>}
 
-                    <Button medium submit>Join Team</Button>
+                    <Button medium submit>{t("team_wiz.join")}</Button>
                 </Form>
             </>}
 
@@ -68,6 +72,7 @@ export const JoinTeam = () => {
 export const CreateTeam = () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
+    const { t } = useTranslation();
 
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
@@ -78,9 +83,9 @@ export const CreateTeam = () => {
 
     const doCreateTeam = ({ name, password }) => {
         if (!name.length)
-            return setMessage("Team name missing");
+            return setMessage(t("team_wiz.name_missing"));
         if (password.length < 8)
-            return setMessage("Password too short");
+            return setMessage(t("team_wiz.pass_short"));
 
         setLocked(true);
         endpoints.createTeam(name, password).then(resp => {
@@ -94,34 +99,33 @@ export const CreateTeam = () => {
     return <Page vCentre>
         <Wrap>{success ?
             <>
-                <SectionTitle2>Team created!</SectionTitle2>
+                <SectionTitle2>{t("team_wiz.created")}</SectionTitle2>
                 <HR />
-                <div>Where now?</div>
+                <div>{t("team_wiz.next")}</div>
 
                 <ButtonRow>
-                    <Button medium to={"/campaign"}>Challenges</Button>
-                    <Button medium lesser to={"/settings"}>Settings</Button>
+                    <Button medium to={"/campaign"}>{t("challenge_plural")}</Button>
+                    <Button medium lesser to={"/settings"}>{t("setting_plural")}</Button>
                 </ButtonRow>
             </> : <>
-                <SectionTitle2>Create a Team</SectionTitle2>
+                <SectionTitle2>{t("create_a_team")}</SectionTitle2>
                 <SubtleText>
-                    Did you want to <Link to={"/team/join"}>join a team</Link> instead?
-                    </SubtleText>
+                    {t("team_wiz.did_you_want_to")}
+                    <Link to={"/team/join"}>{t("team_wiz.join_a_team")}</Link>
+                    {t("team_wiz.instead")}
+                </SubtleText>
                 <br />
 
                 <Form locked={locked} handle={doCreateTeam}>
-                    <Input autofill={"off"} name={"name"} placeholder={"Team Name"} />
+                    <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
                     {/*<Input name={"affil"} placeholder={"Affiliation"} />
                     <Input name={"web"} placeholder={"Website"} />*/}
-                    <Input autofill={"off"} name={"password"} placeholder={"Team Secret"} password />
-                    <div style={{opacity: .5}}>
-                        You'll be able to view this secret again later, so we can't store it hashed.
-                        Don't put sensitive things like your bank details here.
-                    </div>
+                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
+                    <div style={{opacity: .5}}>{t("team_secret_warn")}</div>
 
                     {message && <FormError>{message}</FormError>}
 
-                    <Button medium submit>Create Team</Button>
+                    <Button medium submit>{t("team_wiz.create")}</Button>
                 </Form>
             </>}
         </Wrap>

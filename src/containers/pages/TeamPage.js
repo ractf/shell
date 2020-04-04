@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import { BrokenShards } from "./ErrorPages";
@@ -27,15 +28,17 @@ export default () => {
 
     if (api.user.team === null) return <Redirect to={"/noteam"} />;
 
-    if (error) return <Page title={"Teams"} vCentre>
+    const { t } = useTranslation();
+
+    if (error) return <Page title={t("teams.teams")} vCentre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (!teamData) return <Page title={"Teams"} vCentre><Spinner /></Page>;
+    if (!teamData) return <Page title={t("teams.teams")} vCentre><Spinner /></Page>;
 
     const UserSolve = ({ solved_by_name, challenge_name, points }) => <div className={"userSolve"}>
         <div>{challenge_name}</div>
-        <div>{points} point{points === 1 ? "" : "s"} - Scored by {solved_by_name}</div>
+        <div>{t("teams.solve", {count: parseInt(points, 10), solved_by_name})}</div>
     </div>;
 
     return <Page title={teamData.name}>
@@ -44,7 +47,7 @@ export default () => {
                 <div className={"userName"}><FaUsers /> {teamData.name}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
                     ? " noBio" : "")}>
-                    {teamData.description}
+                    {teamData.description || t("teams.no_bio")}
                 </div>
 
                 {teamData.social && <>
@@ -77,7 +80,7 @@ export default () => {
             <div className={"userSolves"}>
                 {teamData.solves && teamData.solves.map(i => <UserSolve key={i.solve_timestamp} {...i} />)}
                 {(!teamData.solves || teamData.solves.length === 0) && <div className={"noSolves"}>
-                    {teamData.name} haven't solved any challenges yet
+                    {t("teams.no_solves", {name: teamData.name})}
                 </div>}
             </div>
         </div>

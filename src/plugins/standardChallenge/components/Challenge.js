@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import ReactMarkdown from "react-markdown";
+import { useTranslation } from 'react-i18next';
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
@@ -27,6 +28,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
     const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const api = useContext(apiContext);
+
+    const { t } = useTranslation();
 
     const changeFlag = (flag) => {
         if (challenge.challenge_type === "freeform" || challenge.challenge_type === "longText")
@@ -247,27 +250,27 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
     let chalContent = <>
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
-            <label htmlFor={"name"}>Challenge name</label>
-            <Input val={challenge.name} name={"name"} placeholder={"Challenge name"} />
-            <label htmlFor={"score"}>Challenge points</label>
+            <label htmlFor={"name"}>{t("editor.chal_name")}</label>
+            <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} />
+            <label htmlFor={"score"}>{t("editor.chal_points")}</label>
             <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined} name={"score"}
-                placeholder={"Challenge points"} format={/\d+/} />
-            <label htmlFor={"author"}>Challenge author</label>
-            <Input val={challenge.author} name={"author"} placeholder={"Challenge author"} />
+                placeholder={t("editor.chal_points")} format={/\d+/} />
+            <label htmlFor={"author"}>{t("editor.chal_author")}</label>
+            <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")} />
 
-            <label htmlFor={"description"}>Challenge brief</label>
-            <Input rows={5} val={challenge.description} name={"description"} placeholder={"Challenge brief"} />
+            <label htmlFor={"description"}>{t("editor.chal_brief")}</label>
+            <Input rows={5} val={challenge.description} name={"description"} placeholder={t("editor.chal_brief")} />
 
-            <label htmlFor={"challenge_type"}>Challenge type</label>
+            <label htmlFor={"challenge_type"}>{t("editor.chal_type")}</label>
             <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
                 initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
                 name={"challenge_type"} />
 
-            <label htmlFor={"flag_type"}>Challenge flag type</label>
-            <Input placeholder="Challenge flag type" name={"flag_type"} monospace
+            <label htmlFor={"flag_type"}>{t("editor.chal_flag_type")}</label>
+            <Input placeholder={t("editor.chal_flag_type")} name={"flag_type"} monospace
                 val={challenge.flag_type} />
-            <label htmlFor={"flag_metadata"}>Challenge flag</label>
-            <Input placeholder="Challenge flag"
+            <label htmlFor={"flag_metadata"}>{t("editor.chal_flag")}</label>
+            <Input placeholder={t("editor.chal_flag")}
                 name={"flag_metadata"} monospace format={{
                     test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
                 }}
@@ -275,21 +278,21 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
             {!isCreator &&
                 <ButtonRow>
-                    <Button click={() => setEditFiles(true)}>Edit Files</Button>
-                    <Button click={() => setEditHints(true)}>Edit Hints</Button>
-                    <Button click={() => setEditRaw(true)}>Edit Metadata</Button>
+                    <Button click={() => setEditFiles(true)}>{t("editor.files")}</Button>
+                    <Button click={() => setEditHints(true)}>{t("editor.hints")}</Button>
+                    <Button click={() => setEditRaw(true)}>{t("editor.metadata")}</Button>
                 </ButtonRow>
             }
 
             <div>
-                Always Unlocked
+                {t("editor.auto_unlock")}
                 <Radio name={"autoUnlock"} value={!!challenge.auto_unlock}
-                    options={[["Enabled", true], ["Disabled", false]]} />
+                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
             </div>
 
             <ButtonRow>
-                {!isCreator && <Button click={removeChallenge} warning>Remove Challenge</Button>}
-                <Button submit>{isCreator ? "Create" : "Save"} Challenge</Button>
+                {!isCreator && <Button click={removeChallenge} warning>{t("editor.remove")}</Button>}
+                <Button submit>{isCreator ? t("editor.create") : t("editor.save")}</Button>
             </ButtonRow>
         </Form></div> : <>
                 {challengeMods}
@@ -306,16 +309,16 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 </TextBlock>
 
                 {challenge.solved ? <>
-                    You have already solved this challenge!
+                    {t("challenge.already_solved")}
                 </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
                     {flagInput}
                     {message && <FormError>{message}</FormError>}
-                    <Button disabled={!flagValid} submit>Attempt flag</Button>
+                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
                 </Form> : <>
-                            You can only submit flags if you are in a team.
+                            {t("challenge.no_team")}
                             <ButtonRow>
-                                <Button to={"/team/new"}>Join a team</Button>
-                                <Button to={"/team/new"}>Create a team</Button>
+                                <Button to={"/team/new"}>{t("join_a_team")}</Button>
+                                <Button to={"/team/new"}>{t("create_a_team")}</Button>
                             </ButtonRow>
                         </>}
 
@@ -335,11 +338,12 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
     if (!isEditor) {
         let solveMsg = (challenge.first_blood_name
-            ? "First solved by " + challenge.first_blood_name
-            : "Nobody has solved this challenge yet");
+            ? t("first_solve", { name: challenge.first_blood_name })
+            : t("challenge.no_solve"));
 
-        chalContent = <SBTSection subTitle={challenge.score + " points - " + solveMsg} title={challenge.name}>
-            <Link className={"backToChals"} to={".."}>Back to challenges</Link>
+        chalContent = <SBTSection subTitle={t("point_count", { count: challenge.score }) + " - " + solveMsg}
+            title={challenge.name}>
+            <Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>
             {chalContent}
         </SBTSection>;
 

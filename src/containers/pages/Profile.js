@@ -1,5 +1,6 @@
 import React from "react";
 import Moment from 'react-moment';
+import { useTranslation } from 'react-i18next';
 
 import { transparentize } from "polished";
 import { BrokenShards } from "./ErrorPages";
@@ -24,16 +25,19 @@ const UserSpecial = ({ children, col, ico }) => (
 );
 
 const UserSolve = ({ challenge_name, points }) => {
+    const { t } = useTranslation();
+
     return (
         <div className={"userSolve"}>
             <div>{challenge_name}</div>
-            <div>{points} point{points === 1 ? "" : "s"}</div>
+            <div>{t("point_count", {count: points})}</div>
         </div>
     );
 };
 
 export default () => {
     const { match } = useReactRouter();
+    const { t } = useTranslation();
     const user = match.params.user;
     const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
 
@@ -49,7 +53,7 @@ export default () => {
                 <div className={"userName"}>{userData.username}</div>
                 <div className={"userJoined"}>Joined <Moment fromNow>{userData.joined}</Moment></div>
                 <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
-                    {userData.bio}
+                    {userData.bio || t("profile.no_bio")}
                 </div>
 
                 {userData.twitter && userData.twitter.length !== 0 &&
@@ -87,7 +91,7 @@ export default () => {
 
                 {userData.solves && userData.solves.map((i, n) => <UserSolve key={n} {...i} />)}
                 {(!userData.solves || userData.solves.length === 0) && <div className={"noSolves"}>
-                    {userData.username} hasn't solved any challenges yet
+                    {t("profile.no_solves", {name: userData.username})}
                 </div>}
             </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import { SectionTitle2 } from "../../components/Misc";
@@ -20,12 +21,13 @@ const ANC = ({ hide, anc, modal }) => {
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
     const { history } = useReactRouter();
+    const { t } = useTranslation();
 
     const create = ({ cname, cdesc, ctype }) => {
         if (!cname.length)
-            return setError("No name provided!");
+            return setError(t("challenge.no_name"));
         if (!ctype.length || !plugins.categoryType[ctype])
-            return setError("Invalid category type!\nValid types: " + Object.keys(plugins.categoryType).join(", "));
+            return setError(t("challenge.invalid_cat") + Object.keys(plugins.categoryType).join(", "));
 
         setLocked(true);
 
@@ -63,25 +65,25 @@ const ANC = ({ hide, anc, modal }) => {
     };
 
     let body = <Form locked={locked} handle={create}>
-        {modal && <SectionTitle2>{anc.id ? "Edit" : "Add new"} category</SectionTitle2>}
-        <label htmlFor={"cname"}>Catgeory name</label>
-        <Input val={anc.name} name={"cname"} placeholder={"Catgeory name"} />
-        <label htmlFor={"cdesc"}>Catgeory brief</label>
-        <Input val={anc.description} name={"cdesc"} rows={5} placeholder={"Category brief"} />
-        <label htmlFor={"ctype"}>Catgeory type</label>
+        {modal && <SectionTitle2>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</SectionTitle2>}
+        <label htmlFor={"cname"}>{t("challenge.cat_name")}</label>
+        <Input val={anc.name} name={"cname"} placeholder={t("challenge.cat_name")} />
+        <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
+        <Input val={anc.description} name={"cdesc"} rows={5} placeholder={t("challenge.cat_brief")} />
+        <label htmlFor={"ctype"}>{t("challenge.cat_type")}</label>
         <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
-            placeholder={"Category type"} />
+            placeholder={t("challenge.cat_type")} />
         {error && <FormError>{error}</FormError>}
         <ButtonRow>
             {anc.id &&
-                <Button warning click={removeCategory}>Remove Category</Button>
+                <Button warning click={removeCategory}>{t("challenge.remove_cat")}</Button>
             }
-            <Button submit>{anc.id ? "Edit" : "Add"} Category</Button>
+            <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
         </ButtonRow>
     </Form>;
 
     if (modal)
-        return <Modal onHide={hide} title={"Add new challenge"}>
+        return <Modal onHide={hide} title={t("challenge.new_chal")}>
             {body}
         </Modal>;
     return body;
@@ -90,18 +92,19 @@ const ANC = ({ hide, anc, modal }) => {
 
 const CategoryList = () => {
     const api = useContext(apiContext);
+    const { t } = useTranslation();
 
     return <Page>
-        <SBTSection subTitle={"Pick one of the categories below to get started"} title={"All Categories"}>
+        <SBTSection subTitle={t("categories.pick")} title={t("categories.all")}>
             {api.challenges.map(i => {
                 let solved = i.challenges.filter(j => j.solved).length;
                 return <Link key={i.id} to={"/campaign/" + i.id}
                              className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
                     <div className={"catName"}>{i.name}</div>
                     <div className={"catStat"}>{
-                        solved === i.challenges.length ? "All challenges completed" :
-                        solved === 0 ? "No challenges completed" :
-                        `${solved} of ${i.challenges.length} challenge${i.challenges.length === 1 ? "" : "s"} completed`
+                        solved === i.challenges.length ? t("categories.finished") :
+                        solved === 0 ? t("categories.none") :
+                        t("categories.some", {count: i.challenges.length, total: solved})
                     }</div>
                 </Link>;
             })}
@@ -118,6 +121,7 @@ export default () => {
     const [lState, setLState] = useState({});
     const [anc, setAnc] = useState(false);
 
+    const { t } = useTranslation();
     const { match } = useReactRouter();
     const tabId = match.params.tabId;
 
@@ -126,8 +130,8 @@ export default () => {
     const api = useContext(apiContext);
 
     if (tabId === "new" && api.user.is_staff)
-        return <Page><SBTSection key={"anc"} title={"Add new category"} noHead>
-            <Section light title={"Add new category"}>
+        return <Page><SBTSection key={"anc"} title={t("challenge.new_cat")} noHead>
+            <Section light title={t("challenge.new_cat")}>
                 <ANC anc={true} />
             </Section>
         </SBTSection></Page>;
@@ -158,7 +162,7 @@ export default () => {
                 flag = JSON.parse(changes.flag_metadata);
             } catch (e) {
                 if (!changes.flag_metadata.length) flag = "";
-                else return app.alert("Invalid flag JSON");
+                else return app.alert(t("challenge.invalid_flag_json"));
             }
 
             (isCreator ? endpoints.createChallenge : endpoints.editChallenge)({
@@ -206,8 +210,8 @@ export default () => {
     handler = plugins.categoryType[tab.contained_type];
     if (!handler) {
         challengeTab = <>
-            Category renderer for type "{tab.contained_type}" missing!<br /><br />
-            Did you forget to install a plugin?
+            {t("challenge.cat_renderer_missing", {type: tab.contained_type})}<br /><br />
+            {t("challenge.forgot_plugin")}
         </>;
     } else {
         challengeTab = React.createElement(
@@ -223,8 +227,8 @@ export default () => {
 
         if (!handler)
             chalEl = <>
-                Challenge renderer for type "{challenge.type}" missing!<br /><br />
-                Did you forget to install a plugin?
+                {t("challenge.renderer_missing", {type: challenge.type})}<br /><br />
+                {t("challenge.forgot_plugin")}
             </>;
         else {
             chalEl = React.createElement(
@@ -242,20 +246,19 @@ export default () => {
         </Modal>;
     }
 
-    return <Page title={"Challenges"}>
+    return <Page title={t("challenge_plural")}>
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
         <SBTSection key={tab.id} subTitle={tab.description} title={tab.name}>
             {api.user.is_staff ? edit ?
                 <Button className={"campEditButton"} click={() => { setEdit(false); endpoints.setup(true); }} warning>
-                    Stop Editing
+                    {t("edit_stop")}
                 </Button> : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>
-                    Edit
+                    {t("edit")}
                 </Button> : null}
-            {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>Edit Details</Button>}
-
-            <Link className={"backToChals"} to={"/campaign"}>Back to categories</Link>
+            {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_save")}</Button>}
+            <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
             <div className={"campInner"}>{challengeTab}</div>
         </SBTSection>
     </Page>;
