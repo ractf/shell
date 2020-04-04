@@ -161,7 +161,9 @@ export const SiteNav = ({ children }) => {
                         <img alt={""} src={"https://ractf.co.uk/static/img/spine.png"} />
                     &copy; Really Awesome Technology Ltd 2020
                 </div>
-                    <a href="/">Home</a> - <a href="/privacy">Privacy</a> - <a href="/terms">Terms</a>
+                    <a href="/">{t("footer.home")}</a> -
+                    <a href="/privacy">{t("footer.privacy")}</a> -
+                    <a href="/terms">{t("footer.terms")}</a>
                 </div>
             </div>
         </Scrollbar>

@@ -219,6 +219,7 @@ const ImportExport = () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const app = useContext(appContext);
+    const { t } = useTranslation();
 
     const downloadData = (data, filename, mimetype) => {
         let blob = new Blob([data], { type: `${mimetype};charset=utf-8;` });
@@ -526,24 +527,24 @@ const ImportExport = () => {
         });
     };
 
-    return <SBTSection title={"Import and Export"}>
-        <Section title={"Import"}>
+    return <SBTSection title={t("admin.import_and_export")}>
+        <Section title={t("admin.import")}>
             <ButtonRow>
-                <Button disabled warning>Import entire CTF</Button>
-                <Button click={importCategory}>Import category</Button>
-                <Button click={importChal}>Import challenge</Button>
+                <Button disabled warning>{t("admin.import_ctf")}</Button>
+                <Button click={importCategory}>{t("admin.import_cat")}</Button>
+                <Button click={importChal}>{t("admin.import_chal")}</Button>
             </ButtonRow>
         </Section>
-        <Section title={"Export"}>
+        <Section title={t("admin.export")}>
             <ButtonRow>
-                <Button click={exportCTF}>Export CTF</Button>
-                <Button click={exportCat}>Export category</Button>
-                <Button click={exportChal}>Export challenge</Button>
+                <Button click={exportCTF}>{t("admin.export_ctf")}</Button>
+                <Button click={exportCat}>{t("admin.export_cat")}</Button>
+                <Button click={exportChal}>{t("admin.export_chal")}</Button>
             </ButtonRow>
             <ButtonRow>
-                <Button click={exportLeaderboard}>Export scoreboards</Button>
-                <Button click={exportPlayers}>Export player list</Button>
-                <Button click={exportTeams}>Export teams list</Button>
+                <Button click={exportLeaderboard}>{t("admin.export_sb")}</Button>
+                <Button click={exportPlayers}>{t("admin.export_players")}</Button>
+                <Button click={exportTeams}>{t("admin.export_teams")}</Button>
             </ButtonRow>
         </Section>
     </SBTSection>;
@@ -601,7 +602,7 @@ export default () => {
                         <Form>
                             <div className={"absfg"}>
                                 <Form>
-                                    <label htmlFor={"regStartTime"}>Registration start time</label>
+                                    <label htmlFor={"regStartTime"}>{t("admin.reg_start_time")}</label>
                                     <DatePick initial={adminConfig.register_start_time}
                                         configSet={configSet} name={"regStartTime"}
                                         configKey={"register_start_time"} />

@@ -145,17 +145,17 @@ export default () => {
             </Tab>
             <Tab label={t("settings.profile")}>
                 <Form handle={updateDetails}>
-                    <label htmlFor={"discord"}>Discord</label>
-                    <Input name={"discord"} val={api.user.discord} limit={36} placeholder={"Discord"} />
+                    <label htmlFor={"discord"}>{t("settings.discord")}</label>
+                    <Input name={"discord"} val={api.user.discord} limit={36} placeholder={t("settings.discord")} />
                     <Input name={"discordid"} val={api.user.discordid} format={/\d+/} limit={18}
-                        placeholder={"Discord User ID"} />
-                    <label htmlFor={"twitter"}>Twitter</label>
-                    <Input name={"twitter"} val={api.user.twitter} limit={36} placeholder={"Twitter"} />
-                    <label htmlFor={"reddit"}>Reddit</label>
-                    <Input name={"reddit"} val={api.user.reddit} limit={36} placeholder={"Reddit"} />
+                        placeholder={t("settings.discord_id")} />
+                    <label htmlFor={"twitter"}>{t("settings.twitter")}</label>
+                    <Input name={"twitter"} val={api.user.twitter} limit={36} placeholder={t("settings.twitter")} />
+                    <label htmlFor={"reddit"}>{t("settings.reddit")}</label>
+                    <Input name={"reddit"} val={api.user.reddit} limit={36} placeholder={t("settings.reddit")} />
 
                     <label htmlFor={"bio"}>{t("bio")}</label>
-                    <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={"Bio"} />
+                    <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={t("bio")} />
 
                     {pfError && <FormError>{pfError}</FormError>}
                     <Button submit>{t("save")}</Button>

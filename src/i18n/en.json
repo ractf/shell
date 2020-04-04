@@ -51,7 +51,11 @@
         "modify_team": "Modify Team",
         "not_in_team": "You are not in a team!",
         "team_prompt": "To be able to participate, you must join or create a team (even if you never invite anyone).",
-        "profile": "Profile"
+        "profile": "Profile",
+        "discord": "Discord",
+        "discord_id": "Discord User ID",
+        "twitter": "Twitter",
+        "reddit": "Reddit"
     },
     "lists": {
         "all_teams": "All Teams",
@@ -111,12 +115,14 @@
     },
     "admin": {
         "import_export": "Import/Export",
+        "import_and_export": "Import and Export",
         "account_active": "Account Active",
         "account_visible": "Account Visible",
         "team_visible": "Team Visible",
         "view_more": "VIEW MORE",
         "start": "Start event",
         "start_desc": "Start the event before the scheduled start time.",
+        "reg_start_time": "Registration start time",
         "start_time": "Event start time",
         "stop": "Stop event",
         "stop_desc": "End the event before the scheduled end time. This will not disable automatic-start.",
@@ -147,7 +153,18 @@
         "admins": "Admins",
         "users": "Standard Users",
         "teams": "Teams",
-        "all_teams": "All Teams"
+        "all_teams": "All Teams",
+        "import": "Import",
+        "export": "Export",
+        "import_ctf": "Import entire CTF",
+        "import_cat": "Import category",
+        "import_chal": "Import challenge",
+        "export_ctf": "Export CTF",
+        "export_cat": "Export category",
+        "export_chal": "Export challenge",
+        "export_sb": "Export scoreboards",
+        "export_players": "Export players list",
+        "export_teams": "export teams list"
     },
     "team_wiz": {
         "name_missing": "Team name missing",
@@ -222,6 +239,11 @@
         "home": "Home",
         "logout": "Logout",
         "admin": "Admin"
+    },
+    "footer": {
+        "home": "Home",
+        "privacy": "Privacy",
+        "terms": "Terms"
     },
     "back_to_chal": "Back to challenges",
     "back_to_cat": "Back to categories",
