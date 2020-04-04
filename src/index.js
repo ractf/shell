@@ -16,6 +16,19 @@ import en from "./i18n/en.json";
     require.context("./plugins", true, /setup\.js$/)
 );
 
+const gft = i18next.getFixedT.bind(i18next);
+i18next.getFixedT = (lng, ns) => {
+    const t = gft(lng, ns);
+    
+    const fixedT = (key, opts, ...rest) => {
+        let tl = t(key, opts, ...rest);
+        return <span style={{background: "#3a3"}}>{tl}</span>;
+    };
+    fixedT.lng = t.lng;
+    fixedT.ns = t.ns;
+    return fixedT;
+};
+
 i18next.init({
     interpolation: { escapeValue: false },
     lng: "not-en",
