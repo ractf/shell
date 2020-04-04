@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { FaInfoCircle } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 import "./Challenge.scss";
 import { apiEndpoints, appContext } from "ractf";
@@ -8,6 +9,7 @@ import { apiEndpoints, appContext } from "ractf";
 export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
     const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
+    const { t } = useTranslation();
 
     const edit = () => {
         app.promptConfirm({message: "Edit hint", remove: () => endpoints.removeHint(id)},
@@ -31,7 +33,7 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
         <FaInfoCircle />
         <div>
             {name}
-            <div className={"challengeLinkMeta"}>-{points} points.</div>
+            <div className={"challengeLinkMeta"}>-{t("point_count", {count: points})}.</div>
         </div>
     </div>;
 };
