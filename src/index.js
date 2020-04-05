@@ -22,7 +22,9 @@ i18next.getFixedT = (lng, ns) => {
     
     const fixedT = (key, opts, ...rest) => {
         let tl = t(key, opts, ...rest);
-        return <span style={{background: "#3a3"}}>{tl}</span>;
+        if (tl === key)
+            return <span style={{background: "#3a3"}}>{tl}</span>;
+        return tl;
     };
     fixedT.lng = t.lng;
     fixedT.ns = t.ns;
@@ -31,7 +33,7 @@ i18next.getFixedT = (lng, ns) => {
 
 i18next.init({
     interpolation: { escapeValue: false },
-    lng: "not-en",
+    lng: "en",
     resources: {
         en: {
             translation: en,

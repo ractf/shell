@@ -257,7 +257,7 @@ export default () => {
                 </Button> : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>
                     {t("edit")}
                 </Button> : null}
-            {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_save")}</Button>}
+            {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_details")}</Button>}
             <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
             <div className={"campInner"}>{challengeTab}</div>
         </SBTSection>

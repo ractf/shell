@@ -642,7 +642,7 @@ export default () => {
                     </Section>
                     <Section title={t("admin.reg")}>
                         <Form>
-                            <AdminCardSection name={t("admin.enable_registration")}>
+                            <AdminCardSection name={t("admin.enable_reg")}>
                                 <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
                                     options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
                             </AdminCardSection>
@@ -667,7 +667,7 @@ export default () => {
             content = <ImportExport />;
             break;
         case "service":
-            content = <SBTSection title={t("admin.service")}>
+            content = <SBTSection title={t("admin.status")}>
                 <Section title={"Code Ingest"}>
                     <div className={"absIndicator unknown"} />
                 </Section>

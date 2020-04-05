@@ -135,7 +135,7 @@ export const SiteNav = ({ children }) => {
                             {t("admin.event")}
                         </Link>
                         <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>
-                            {t("adminconfiguration")}
+                            {t("admin.configuration")}
                         </Link>
                         <Link onClick={close} to={"/admin/port"} className={"sbtSubitem"}>
                             {t("admin.import_export")}

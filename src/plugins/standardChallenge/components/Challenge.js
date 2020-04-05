@@ -338,7 +338,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
     if (!isEditor) {
         let solveMsg = (challenge.first_blood_name
-            ? t("first_solve", { name: challenge.first_blood_name })
+            ? t("challenge.first_solve", { name: challenge.first_blood_name })
             : t("challenge.no_solve"));
 
         chalContent = <SBTSection subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
