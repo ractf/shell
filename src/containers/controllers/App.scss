@@ -207,6 +207,20 @@ b {
     }
 }
 
+.announcementsWrap {
+    position: fixed;
+    top: 16px;
+    right: 50%;
+    transform: translateX(50%);
+    display: flex;
+    max-height: 80vh;
+    overflow-y: hidden;
+    z-index: 200;
+    min-width: 50vw;
+    width: auto !important;
+    flex-direction: column-reverse;
+}
+
 .eventsWrap {
     position: fixed;
     bottom: 64px;

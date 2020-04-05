@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { BrowserRouter } from "react-router-dom";
 
 import { ModalPrompt } from "../../components/Modal";
+import Announcement from "../../components/Announcement";
 import { SiteNav } from "../../components/SidebarTabs";
 import ProgressBar from "../../components/ProgressBar";
 import Scrollbar from "../../components/Scrollbar";
@@ -307,7 +308,7 @@ const WSSpine = () => {
     if (ws.connected) return null;
 
     return <SpinningSpine
-            text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
+        text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
 };
 
 const App = React.memo(() => {
@@ -325,6 +326,9 @@ const App = React.memo(() => {
         /*{ type: 0, title: 'Achievement get', body: 'You got a thing!' },
         { type: 'medal', medal: 'winner' },
         { type: 0, title: 'Challenge solved', body: 'solved a thing' },*/
+    ]);
+    const [announcements, setAnnouncements] = useState([
+        {title: "Hi there", body: "Ractf is go", time: new Date()}
     ]);
     const typedText = useRef();
     if (!typedText.current) typedText.current = [];
@@ -358,7 +362,7 @@ const App = React.memo(() => {
 
     const showProgress = (text, progress) => {
         if (text && !currentPrompt)
-            setProgressBar({text: text, progress: progress});
+            setProgressBar({ text: text, progress: progress });
         else setProgressBar(null);
     };
 
@@ -409,6 +413,12 @@ const App = React.memo(() => {
             handler.component, { popup: popup, key: n }
         )}</div>;
     }).reverse();
+    let notifsEl = announcements.map((notif, n) => {
+        let hide = () => {
+            setAnnouncements(a => a.filter((i, m) => m !== n));
+        };
+        return <Announcement {...notif} key={n} hide={hide} />;
+    }).reverse();
 
     return <Scrollbar primary><div className={"bodyScroll"}>
         <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert, showProgress: showProgress }}>
@@ -441,6 +451,10 @@ const App = React.memo(() => {
 
             <div className={"eventsWrap"}>
                 {popupsEl}
+            </div>
+
+            <div className={"announcementsWrap"}>
+                {notifsEl}
             </div>
 
             {progressBar && <Modal small>

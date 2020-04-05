@@ -43,7 +43,7 @@ export default () => {
                     <p>{t("home.para_6")}</p>
                     <ul>
                         <li>{t("home.osint")}</li>
-                        <li>{t("home.cryptp")}</li>
+                        <li>{t("home.crypto")}</li>
                         <li>{t("home.web")}</li>
                         <li>{t("home.binexp")}</li>
                         <li>{t("home.linux")}</li>
