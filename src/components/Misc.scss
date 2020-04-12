@@ -49,6 +49,7 @@
     border-radius: 2px;
     white-space: pre-wrap;
     font-family: $monoStack;
+    word-wrap: break-word;
 
     & img {
         max-width: 100%;
