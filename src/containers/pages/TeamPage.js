@@ -26,7 +26,7 @@ export default () => {
     const api = useContext(apiContext);
     const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
 
-    if (api.user.team === null) return <Redirect to={"/noteam"} />;
+    if (api.user.team === null && team === "me") return <Redirect to={"/noteam"} />;
 
     const { t } = useTranslation();
 
