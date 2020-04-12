@@ -119,7 +119,7 @@ export default () => {
         <TabbedView>
             <Tab label={t("user")}>
                 {
-                    api.user['2fa_status'] !== "on" && <>
+                    api.user.totp_status !== 2 && <>
                         <FormError>{t("settings.2fa_disabled")}</FormError>
                         <Button to={"/settings/2fa"}>{t("settings.enable_2fa")}</Button>
                         <HR />

@@ -278,6 +278,13 @@
         "permission_denied": "You do not have permission to perform this action.",
         "method_not_allowed": "HTTP method not allowed.",
         "not_acceptable": "Could not satisfy the request Accept header.",
-        "unsupported_media_type": "Unsupported media type in request."
+        "unsupported_media_type": "Unsupported media type in request.",
+        "incorrect_username_or_password": "Incorrect username or password.",
+        "email_verification_required": "Email verification has not been completed yet.",
+        "login_not_open": "Login is not open.",
+        "2fa_required": "A 2-factor code is required, but the prompt failed to load. Please report this.",
+        "incorrect_2fa": "Incorrect 2-factor code prodided.",
+        "registration_not_open": "Registration is not open.",
+        "email_already_verified": "Your email has already been verified"
     }
 }

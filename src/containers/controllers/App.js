@@ -427,7 +427,7 @@ const App = React.memo(() => {
                     Failed to connect to the CTF servers!<br />
                 Functionality will be limited until service is restored.
                 </div> : null}
-            {(api.user && api.user['2fa_status'] === "needs_verify") ? <div className={"siteWarning"}>
+            {(api.user && api.user.totp_status === 1) ? <div className={"siteWarning"}>
                 A previous attempt to add 2-factor authentication to your account failed!<br />
                 Please visit settings to finish configuration!
                 </div> : null}

@@ -66,7 +66,7 @@ export default () => {
     return <Page title={t("2fa.2fa")}>
         <Wrap>
             {page === 0 ? <>
-                {api.user["2fa_status"] === "on" ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
+                {api.user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
                 <br /><br />
                 <b>{t("2fa.no_remove_warning")}</b>
 
