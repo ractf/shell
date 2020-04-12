@@ -285,6 +285,7 @@
         "2fa_required": "A 2-factor code is required, but the prompt failed to load. Please report this.",
         "incorrect_2fa": "Incorrect 2-factor code prodided.",
         "registration_not_open": "Registration is not open.",
-        "email_already_verified": "Your email has already been verified"
+        "email_already_verified": "Your email has already been verified",
+        "invalid": "Validation failed on one of the provided fields."
     }
 }

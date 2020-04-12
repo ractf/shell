@@ -223,7 +223,27 @@ class APIClass extends Component {
             if (e.response.data.m) {
                 let error = e.response.data.m;
                 let translated = this.props.t("api." + error);
-                if (translated !== error && (typeof translated) !== "object") return translated;
+                if (translated !== error && (typeof translated) !== "object") error = translated;
+
+                switch (typeof e.response.data.d) {
+                    case "string":
+                        if (e.response.data.d.length > 0)
+                            error += "\n" + e.response.data.d;
+                        break;
+                    case "object":
+                        if (e.response.status === 400) error = "";
+                        let extra = "";
+                        Object.keys(e.response.data.d).forEach(i => {
+                            if (extra.length !== 0) extra += "\n";
+                            extra += e.response.data.d[i];
+                        });
+                        if (e.response.status === 400 && extra.length !== 0) error = extra;
+                        else error += "\n" + extra;
+                        break;
+                    default:
+                        break;
+                }
+
                 return error;
             }
             return e.response.data.toString();
