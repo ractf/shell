@@ -270,6 +270,14 @@
     "point_count_plural": "{{count}} points",
     "api": {
         "throttled": "You are being ratelimited.",
-        "invalid_token_or_uid": "Invalid token or UID."
+        "invalid_token_or_uid": "Invalid token or UID.",
+        "not_found": "The page or resource you were looking for could not be found.",
+        "parse_error": "Malformed request.",
+        "authentication_failed": "Incorrect authentication credentials.",
+        "not_authenticated": "Authentication credentials were not provided.",
+        "permission_denied": "You do not have permission to perform this action.",
+        "method_not_allowed": "HTTP method not allowed.",
+        "not_acceptable": "Could not satisfy the request Accept header.",
+        "unsupported_media_type": "Unsupported media type in request."
     }
 }
