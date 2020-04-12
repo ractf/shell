@@ -308,20 +308,6 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     />
                 </TextBlock>
 
-                {challenge.solved ? <>
-                    {t("challenge.already_solved")}
-                </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
-                    {flagInput}
-                    {message && <FormError>{message}</FormError>}
-                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
-                </Form> : <>
-                            {t("challenge.no_team")}
-                            <ButtonRow>
-                                <Button to={"/team/new"}>{t("join_a_team")}</Button>
-                                <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                            </ButtonRow>
-                        </>}
-
                 {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
                     {challenge.files.map(file =>
                         file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
@@ -332,6 +318,20 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                         return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
                             points={hint.penalty} id={hint.id} key={hint.id} />;
                     })}
+                </div>}
+                
+                {challenge.solved ? <>
+                    {t("challenge.already_solved")}
+                </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
+                    {flagInput}
+                    {message && <FormError>{message}</FormError>}
+                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                </Form> : <div className={"noTeamWarning"}>
+                    {t("challenge.no_team")}
+                    <ButtonRow>
+                        <Button to={"/team/new"}>{t("join_a_team")}</Button>
+                        <Button to={"/team/new"}>{t("create_a_team")}</Button>
+                    </ButtonRow>
                 </div>}
             </>}
     </>;

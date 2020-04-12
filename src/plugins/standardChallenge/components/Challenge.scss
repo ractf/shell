@@ -31,6 +31,18 @@
     font-size: 0.8em;
 }
 
+.noTeamWarning {
+    padding: 16px 24px;
+    border-radius: 2px;
+    margin: 14px 0 24px;
+
+    background-color: desaturate(darken($red, 30%), 40%);
+    color: saturate(lighten($red, 30%), 20%);
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
 .challengeLink {
     border: 1px solid $bg_l1;
     background-color: $bg_d0;
@@ -38,7 +50,7 @@
     padding: 8px 16px;
     text-align: left;
     text-decoration: none;
-    margin-top: 16px;
+    margin-bottom: 16px;
     color: $fg;
     display: flex;
     align-items: center;
