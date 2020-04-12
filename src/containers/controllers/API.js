@@ -1,5 +1,6 @@
 import { withRouter } from "react-router-dom";
 import React, { Component } from "react";
+import { useTranslation } from 'react-i18next';
 import axios from "axios";
 
 import WS from "./WS";
@@ -219,8 +220,12 @@ class APIClass extends Component {
     getError = e => {
         if (e.response && e.response.data) {
             // We got a response from the server, but it wasn't happy with something
-            if (e.response.data.m)
-                return e.response.data.m;
+            if (e.response.data.m) {
+                let error = e.response.data.m;
+                let translated = this.props.t("api." + error);
+                if (translated !== error && (typeof translated) !== "object") return translated;
+                return error;
+            }
             return e.response.data.toString();
         } else if (e.message) {
             // We didn't get a response from the server, but the browser is happy to tell us why
@@ -702,4 +707,9 @@ class APIClass extends Component {
     };
 }
 
-export const API = withRouter(APIClass);
+const APIRouter = withRouter(APIClass);
+
+export const API = (props) => {
+    const { t } = useTranslation();
+    return <APIRouter t={t} {...props} />;
+};

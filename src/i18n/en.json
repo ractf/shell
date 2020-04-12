@@ -267,5 +267,9 @@
     "back_to_chal": "Back to challenges",
     "back_to_cat": "Back to categories",
     "point_count": "{{count}} point",
-    "point_count_plural": "{{count}} points"
+    "point_count_plural": "{{count}} points",
+    "api": {
+        "throttled": "You are being ratelimited.",
+        "invalid_token_or_uid": "Invalid token or UID."
+    }
 }

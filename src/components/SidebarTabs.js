@@ -115,7 +115,7 @@ export const SiteNav = ({ children }) => {
                         <Link onClick={close} to={"/profile/me"} className={"sbtSubitem"}>{t("settings.profile")}</Link>
                         <Link onClick={close} to={"/team/me"} className={"sbtSubitem"}>{t("team")}</Link>
                         <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>{t("setting_plural")}</Link>
-                        <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>{t("logout")}</Link>
+                        <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>{t("sidebar.logout")}</Link>
                     </SBMenu>
                 </> : (endpoints.configGet("login", true) || endpoints.configGet("register", true)) ? <>
                     <SBMenu key={"login"} name={t("login")} initial>
