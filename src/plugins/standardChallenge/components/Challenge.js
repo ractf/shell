@@ -313,7 +313,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                         file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
                     )}
                 </div>}
-                {challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
+                {api.user.team && challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
                     {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
                         return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
                             points={hint.penalty} id={hint.id} key={hint.id} />;
