@@ -420,6 +420,7 @@ const App = React.memo(() => {
         return <Announcement {...notif} key={n} hide={hide} />;
     }).reverse();
 
+    window.__ractf_alert = showAlert;
     return <Scrollbar primary><div className={"bodyScroll"}>
         <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert, showProgress: showProgress }}>
             {!api.ready && loaded ? <div className={"siteWarning"}>

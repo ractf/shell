@@ -299,7 +299,7 @@ class APIClass extends Component {
                 userData = await this.cachedGet(ENDPOINTS.USER + "self");
             } catch (e) {
                 if (e.response && e.response.data)
-                    return this.logout();
+                    return this.logout(true);
                 ready = false;
                 this.setState({ ready: false });
             }
@@ -312,7 +312,7 @@ class APIClass extends Component {
                         teamData = null;
                     } else {
                         if (e.response && e.response.data)
-                            return this.logout();
+                            return this.logout(true);
                         ready = false;
                         this.setState({ ready: false });
                     }
@@ -325,7 +325,7 @@ class APIClass extends Component {
             //this._createChallengeLinks(challenges);
         } catch (e) {
             if (e.response && e.response.data)
-                return this.logout();
+                return this.logout(true);
             ready = false;
         }
 
@@ -444,7 +444,7 @@ class APIClass extends Component {
         });
     };
 
-    logout = () => {
+    logout = (wasForced) => {
         console.log("%c[Logout]", "color: #d3d", "Logged out user");
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
@@ -455,6 +455,9 @@ class APIClass extends Component {
             ready: true,
             challenges: [],
         });
+        if (wasForced && window.__ractf_alert)
+            window.__ractf_alert("Something went wrong loading the site. You have been logged out.\n" +
+                "If this persists, please contact an admin.");
     };
 
     login = (username, password, otp = null) => {
