@@ -53,6 +53,9 @@
         .editor-top {
             background-color: $bg-l1;
             overflow-y: auto;
+            .ractf-code {
+                padding-top: 6px;
+            }
             & > div:first-child {
                 height: calc(100% - 32px);
             }
