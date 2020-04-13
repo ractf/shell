@@ -44,8 +44,7 @@ export default () => {
 
             if (!userPlots.hasOwnProperty(id)) {
                 userPlots["user_" + i.user_name] = {
-                    x: [minTime], y: [0], type: "scatter",
-                    mode: "lines+markers", name: i.user_name, id: id
+                    x: [minTime], y: [0], name: i.user_name, id: id
                 };
                 points[id] = 0;
             }
@@ -59,8 +58,7 @@ export default () => {
             
             if (!teamPlots.hasOwnProperty(id)) {
                 teamPlots[id] = {
-                    x: [minTime], y: [0], type: "scatter",
-                    mode: "lines+markers", name: i.team_name, id: id
+                    x: [minTime], y: [0], name: i.team_name, id: id
                 };
                 points[id] = 0;
             }

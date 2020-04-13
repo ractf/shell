@@ -1,3 +1,7 @@
+.scrollTrack {
+    display: none;
+}
+
 @media (min-width: 800px) {
     .scrolled {
         overflow-x: hidden;
@@ -19,6 +23,7 @@
             right: 2px;
             bottom: 6px;
             width: 8px;
+            display: block;
 
             > .scrollbar {
                 position: absolute;

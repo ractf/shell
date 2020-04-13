@@ -414,10 +414,13 @@ const App = React.memo(() => {
         )}</div>;
     }).reverse();
     let notifsEl = announcements.map((notif, n) => {
+        return null;
+        /*
         let hide = () => {
             setAnnouncements(a => a.filter((i, m) => m !== n));
         };
         return <Announcement {...notif} key={n} hide={hide} />;
+        */
     }).reverse();
 
     window.__ractf_alert = showAlert;

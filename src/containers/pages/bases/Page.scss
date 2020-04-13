@@ -15,7 +15,7 @@
 }
 
 .pageContent {
-    padding: 32px 64px;
+    padding: 32px;
     max-width: 1200px;
     margin: auto;
     flex-grow: 1;
@@ -96,13 +96,13 @@
 
 @media (max-width: 1200px) {
     .pageContent {
-        padding: 16px 32px;
+        padding: 16px 24px;
     }
 }
 
 @media (max-width: 800px) {
     .pageContent {
-        padding: 4px;
+        padding: 4px 8px;
     }
 }
 
