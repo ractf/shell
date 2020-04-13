@@ -89,6 +89,7 @@ export const CreateTeam = () => {
 
         setLocked(true);
         endpoints.createTeam(name, password).then(resp => {
+            endpoints._reloadCache();
             setSuccess(true);
         }).catch(e => {
             setMessage(endpoints.getError(e));
