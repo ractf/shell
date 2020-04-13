@@ -76,10 +76,10 @@ export default () => {
     }, [graph, api.config.start_time]);
 
     const userData = (lbdata) => {
-        return lbdata.map((i, n) => [i.username, i.leaderboard_points]);
+        return lbdata.map((i, n) => [i.username, i.leaderboard_points, "/profile/" + i.id]);
     };
     const teamData = (lbdata) => {
-        return lbdata.map((i, n) => [i.name, i.leaderboard_points]);
+        return lbdata.map((i, n) => [i.name, i.leaderboard_points, "/team/" + i.id]);
     };
 
     return <Page title={t("leaderboard")}>
