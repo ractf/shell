@@ -6,8 +6,11 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link, apiContext, ENDPOINTS } from "ractf";
+import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS } from "ractf";
 import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
+import colours from "../../Colours.scss";
+import Graph from "../../components/charts/Graph";
+import Pie from "../../components/charts/Pie";
 
 import "./Profile.scss";
 
@@ -40,6 +43,32 @@ export default () => {
         <div>{challenge_name}</div>
         <div>{t("teams.solve", {count: parseInt(points, 10), solved_by_name})}</div>
     </div>;
+
+    let categoryValues = {};
+    let userValues = {};
+    let tData = teamData.solves.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
+    let scorePlotData = {x: [], y: [], name: "score", fill: "tozeroy"};
+    // OPTIONAL: Use start time instead of first solve
+    // scorePlotData.x.push(api.config.start_time);
+    // scorePlotData.y.push(0);
+    tData.forEach(solve => {
+        let category;
+        api.challenges && api.challenges.forEach(cat => {
+            cat.challenges.forEach(chal => {
+                if (chal.id === solve.challenge)
+                    category = cat.name;
+            });
+        });
+        if (category === null) return;
+        if (!categoryValues[category]) categoryValues[category] = 0;
+        categoryValues[category]++;
+        if (!userValues[solve.solved_by_name]) userValues[solve.solved_by_name] = 0;
+        userValues[solve.solved_by_name]++;
+
+        let score = (scorePlotData.y[scorePlotData.y.length - 1] || 0) + solve.points;
+        scorePlotData.x.push(new Date(solve.timestamp));
+        scorePlotData.y.push(score);
+    });
 
     return <Page title={teamData.name}>
         <div className={"profileSplit"}>
@@ -78,10 +107,49 @@ export default () => {
                 </Link><br /></>)}
             </div>
             <div className={"userSolves"}>
-                {teamData.solves && teamData.solves.map(i => <UserSolve key={i.solve_timestamp} {...i} />)}
-                {(!teamData.solves || teamData.solves.length === 0) && <div className={"noSolves"}>
+                {(!teamData.solves || teamData.solves.length === 0) ? <div className={"noSolves"}>
                     {t("teams.no_solves", {name: teamData.name})}
-                </div>}
+                </div> : <TabbedView initial={1}>
+                    <Tab label={"Solves"}>
+                        {teamData.solves && teamData.solves.map(i => <UserSolve key={i.solve_timestamp} {...i} />)}
+                    </Tab>
+                    <Tab label={"Stats"}>
+                        <div className={"ppwRow"}>
+                        <div className={"profilePieWrap"}>
+                            <div className={"ppwHead"}>Solve attempts</div>
+                            <Pie data={[{
+                            values: [420, 69],
+                            labels: ['Correct', 'Incorrect'],
+                            marker: {
+                                colors: [
+                                colours.bgreen,
+                                colours.red
+                                ]
+                            }
+                        }]} height={300} />
+                        </div>
+                        <div className={"profilePieWrap"}>
+                            <div className={"ppwHead"}>Category Breakdown</div>
+                            <Pie data={[{
+                                values: Object.values(categoryValues),
+                                labels: Object.keys(categoryValues),
+                            }]} height={281 + 19 * Object.keys(categoryValues).length} />
+                        </div>
+                        <div className={"profilePieWrap"}>
+                            <div className={"ppwHead"}>User Breakdown</div>
+                            <Pie data={[{
+                                values: Object.values(userValues),
+                                labels: Object.keys(userValues),
+                            }]} height={281 + 19 * Object.keys(userValues).length} />
+                        </div>
+                    </div>
+                    <HR />
+                    <div>
+                        <div className={"ppwHead"}>Score Over Time</div>
+                        <Graph data={[scorePlotData]} />
+                    </div>
+                    </Tab>
+                </TabbedView>}
             </div>
         </div>
     </Page>;
