@@ -63,6 +63,7 @@
     "react-plotly.js": "^2.4.0",
     "react-router-dom": "^5.1.2",
     "react-simple-code-editor": "^0.11.0",
+    "react-sizeme": "^2.6.12",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "semver": "6.0.0",

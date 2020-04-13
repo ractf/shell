@@ -1,37 +1,27 @@
 import React from "react";
+import { SizeMe } from 'react-sizeme';
 
 import { Spinner } from "ractf";
 import colours from "../../Colours.scss";
 
 import usePlotlyReady from "./usePlotlyReady";
-import useWindowSize from "./useWindowSize";
 import "./Charts.scss";
 
 
-export default ({ data }) => {
+const Graph = ({ data, width, height }) => {
     const plReady = usePlotlyReady();
-    const winSize = useWindowSize();
 
     if (!plReady) return <div className={"graph-loading"}>
         <Spinner />
     </div>;
 
-    let width;
-    if (winSize.innerWidth <= 800)
-        width = winSize.innerWidth - 32;
-    else if (winSize.innerWidth <= 1200)
-        width = winSize.innerWidth - 416;
-    else
-        width = winSize.innerWidth - 544;
-    width = Math.min(1004, width);
-
-    data = data.map(i => ({mode: "lines+markers", ...i, type: "scatter"}));
+    data = (data || []).map(i => ({ mode: "lines+markers", ...i, type: "scatter" }));
 
     const Plot = window.Plot;
     return <Plot
         data={data}
         layout={{
-            width: width, height: 300,
+            width: (width || 300), height: (height || 300),
             margin: { l: 50, r: 50, t: 50, pad: 0 },
             hovermode: "closest",
             legend: { orientation: "h", font: { color: colours.bg_l4 } },
@@ -52,4 +42,12 @@ export default ({ data }) => {
             },
         }}
     />;
+};
+
+export default props => {
+    if (props.width) return <Graph {...props} />;
+    return <SizeMe noPlaceholder>{({ size }) => <>
+        <div style={{ width: "100%" }} />
+        <Graph {...props} width={size.width} />
+    </>}</SizeMe>;
 };

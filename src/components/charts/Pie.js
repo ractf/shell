@@ -1,4 +1,5 @@
 import React from "react";
+import { SizeMe } from 'react-sizeme';
 
 import { Spinner } from "ractf";
 import colours from "../../Colours.scss";
@@ -7,29 +8,26 @@ import usePlotlyReady from "./usePlotlyReady";
 import "./Charts.scss";
 
 
-export default ({ data, width, height }) => {
+const Pie = ({ data, width, height }) => {
     const plReady = usePlotlyReady();
 
     if (!plReady) return <div className={"graph-loading"}>
         <Spinner />
     </div>;
 
-    width = width || 300;
-    height = height || 300;
-
     const defaultConfig = {
         hole: .4,
         hovertemplate: '%{label}<br>%{value}<extra></extra>', 
         sort: false,
     };
-    data = data.map(i => ({...defaultConfig, ...i, type: "pie"}));
+    data = (data || []).map(i => ({...defaultConfig, ...i, type: "pie"}));
 
     const Plot = window.Plot;
     return <Plot
         style={{margin: "auto"}}
         data={data}
         layout={{
-            width: width, height: height,
+            width: (width || 300), height: (height || 300),
             margin: { l: 0, r: 0, t: 0, b: 0, pad: 0 },
             hovermode: "closest",
             legend: { orientation: "h", font: { color: colours.bg_l4 } },
@@ -50,4 +48,13 @@ export default ({ data, width, height }) => {
             },
         }}
     />;
+};
+
+
+export default props => {
+    if (props.width) return <Pie {...props} />;
+    return <SizeMe noPlaceholder>{({ size }) => <>
+        <div style={{ width: "100%" }} />
+        <Pie {...props} width={size.width} />
+    </>}</SizeMe>;
 };

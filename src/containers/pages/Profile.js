@@ -18,6 +18,7 @@ import colours from "../../Colours.scss";
 
 import "./Profile.scss";
 import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
+import Graph from "../../components/charts/Graph";
 
 
 const UserSpecial = ({ children, col, ico }) => (
@@ -123,12 +124,12 @@ export default () => {
                 {userData.is_staff &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
-                <TabbedView initial={1}>
+                {(!userData.solves || userData.solves.length === 0) ? <div className={"noSolves"}>
+                    {t("profile.no_solves", {name: userData.username})}
+                </div> : <TabbedView initial={1}>
                     <Tab label="Solves">
                         {userData.solves && userData.solves.map((i, n) => <UserSolve key={n} {...i} />)}
-                        {(!userData.solves || userData.solves.length === 0) && <div className={"noSolves"}>
-                            {t("profile.no_solves", {name: userData.username})}
-                        </div>}
+                        
                     </Tab>
                     <Tab label="Stats">
                         <div className={"ppwRow"}>
@@ -154,8 +155,9 @@ export default () => {
                             </div>
                         </div>
                         <HR />
+                        <Graph data={[]} />
                     </Tab>
-                </TabbedView>
+                </TabbedView>}
             </div>
         </div>
     </Page>;
