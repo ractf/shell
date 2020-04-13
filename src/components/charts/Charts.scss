@@ -1,0 +1,10 @@
+.js-plotly-plot * {
+    user-select: none;
+}
+
+.graph-loading {
+    display: flex;
+    height: 300px;
+    align-items: center;
+    justify-content: center;
+}
