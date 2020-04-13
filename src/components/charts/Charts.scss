@@ -1,3 +1,7 @@
+.selfResizingSpacer ~ .js-plotly-plot {
+    width: 0;
+}
+
 .js-plotly-plot * {
     user-select: none;
 }

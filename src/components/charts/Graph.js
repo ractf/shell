@@ -47,7 +47,7 @@ const Graph = ({ data, width, height }) => {
 export default props => {
     if (props.width) return <Graph {...props} />;
     return <SizeMe noPlaceholder>{({ size }) => <>
-        <div style={{ width: "100%" }} />
+        <div className={"selfResizingSpacer"} style={{ width: "100%" }} />
         <Graph {...props} width={size.width} />
     </>}</SizeMe>;
 };

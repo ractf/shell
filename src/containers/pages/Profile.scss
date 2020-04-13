@@ -106,15 +106,19 @@
         margin-top: 0.6em;
     }
 
+    .ppwHead {
+        margin-bottom: 12px;
+        text-align: center;
+        font-size: 1.2em;
+        font-weight: 500;
+        font-family: $titleStack;
+    }
+
     .profilePieWrap {
         margin-bottom: 8px;
-        .ppwHead {
-            margin-bottom: 12px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: 500;
-            font-family: $titleStack;
-        }
+        max-width: 300px;
+        width: 15vw;
+
         .svg-container {
             margin: auto;
         }
@@ -180,5 +184,8 @@
         & > * {
             width: 100%;
         }
+    }
+    .userSolves .profilePieWrap {
+        width: 300px;
     }
 }

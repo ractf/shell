@@ -53,7 +53,7 @@ const Pie = ({ data, width, height }) => {
 
 export default props => {
     if (props.width) return <Pie {...props} />;
-    return <SizeMe noPlaceholder>{({ size }) => <>
+    return <SizeMe className={"selfResizingSpacer"} noPlaceholder>{({ size }) => <>
         <div style={{ width: "100%" }} />
         <Pie {...props} width={size.width} />
     </>}</SizeMe>;
