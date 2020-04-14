@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow
+    apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText
 } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
-import IDE from "./IDEGood";
+import IDE from "./IDE";
 
 import "./Challenge.scss";
 
@@ -229,7 +229,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     center width={"80%"} />;
                 break;
             default:
-                flagInput = <Input disabled placeholder="Flag format: ractf{...}"
+                flagInput = <Input placeholder="Flag format: ractf{...}"
                     format={partial} name={"flag"}
                     callback={changeFlag} light monospace
                     center width={"80%"} />;
@@ -325,13 +325,13 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     {flagInput}
                     {message && <FormError>{message}</FormError>}
                     <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
-                </Form> : <div className={"noTeamWarning"}>
+                </Form> : <FlashText warning bold>
                     {t("challenge.no_team")}
                     <FlexRow>
                         <Button to={"/team/new"}>{t("join_a_team")}</Button>
                         <Button to={"/team/new"}>{t("create_a_team")}</Button>
                     </FlexRow>
-                </div>}
+                </FlashText>}
             </>}
     </>;
 

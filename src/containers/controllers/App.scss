@@ -1,6 +1,17 @@
 @import "../../Colours.scss";
 @import "../../Fonts.scss";
 
+
+$base: (
+    background: $back_800,
+    color: $white_100
+);
+$link: (
+    color: $white_300,
+    hover: $white_400
+);
+
+
 * {
     box-sizing: border-box;
     font-family: inherit;
@@ -9,8 +20,8 @@
 
 body {
     font-family: $fontStack;
-    background-color: $bg;
-    color: $fg;
+    background-color: map-get($base, "background");
+    color: map-get($base, "color");
     min-height: 100%;
     width: 100%;
     margin: 0;
@@ -21,8 +32,8 @@ body {
 
 code {
     text-align: left;
-    background-color: $bg-l1;
-    color: darken($fg, 10%);
+    background-color: $back_700;
+    color: $white_200;
     font-family: $monoStack;
     padding: .2em .4em;
     margin: 0 2px;
@@ -117,12 +128,12 @@ pre > code {
 
 a, .linkStyle {
     text-decoration: none;
-    color: $link-color;
+    color: map-get($link, "color");
     margin: 0;
     padding: 0;
 
     &:hover, &:focus {
-        color: $link-hover;
+        color: map-get($link, "hover");
         text-decoration: underline;
     }
 }
@@ -146,7 +157,7 @@ b {
     vertical-align: middle;
 }
 .redacted::after {
-    background: $bg-l1;
+    background: $back_850;
     border-radius: 0.1em;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
     content: " ";

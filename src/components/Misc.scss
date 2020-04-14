@@ -1,9 +1,7 @@
 @import "../Colours.scss";
 
-
 $textblock_back: $back_700;
 $hr_color: $back_600;
-
 
 .hr {
     width: 800px;
@@ -23,13 +21,13 @@ $hr_color: $back_600;
 }
 
 .sectionHeading {
-    font-family: $titleStack;    
+    font-family: $titleStack;
     font-size: 2.3rem;
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
 }
 
 .textBlock {
-    margin: 1.5em .5em;
+    margin: 1.5em 0.5em;
     font-size: 1rem;
     background-color: $textblock_back;
     padding: 1em 2em;
@@ -51,8 +49,8 @@ $hr_color: $back_600;
 }
 
 .subtleText {
-    opacity: .9;
-    font-size: .9em;
+    opacity: 0.9;
+    font-size: 0.9em;
     margin-top: 1em;
 }
 
@@ -61,7 +59,7 @@ $hr_color: $back_600;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    
+
     &.frRight {
         justify-content: flex-end;
     }
@@ -69,11 +67,39 @@ $hr_color: $back_600;
         justify-content: flex-start;
     }
 
-    &>* {
+    & > * {
         margin-left: 0;
         margin-right: 16px;
     }
-    &>:last-child {
+    & > :last-child {
         margin-right: 0;
+    }
+}
+.flashText {
+    background-color: $back_600;
+    padding: 16px 24px;
+    border-radius: 2px;
+    margin: 14px 0 24px;
+    transition: 150ms background-color ease;
+    position: relative;
+
+    > .loadingSpinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.5em;
+        margin-top: -2.5em !important;
+    }
+
+    &.embolden {
+        font-weight: 700;
+        text-align: center;
+        font-size: 1.1em;
+    }
+
+    &.warning {
+        background-color: desaturate(darken($red_400, 30%), 40%);
+        color: saturate(lighten($red_400, 20%), 20%);
     }
 }

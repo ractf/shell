@@ -1,46 +1,5 @@
 @import "../../Colours.scss";
 
-.homeButton {
-    font-size: 1.2em;
-    color: #fff;
-    font-weight: 600;
-    display: inline-block;
-    padding: 16px 32px;
-    position: relative;
-    z-index: 2;
-    cursor: pointer;
-    text-decoration: none;
-
-    &::after {
-        content: "";
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -2;
-        background: -o-linear-gradient(83.64deg, #e53935 -1.08%, #ff5c59 96.92%);
-        background: linear-gradient(6.36deg, #e53935 -1.08%, #ff5c59 96.92%);
-    }
-    &::before {
-        z-index: -1;
-        content: "";
-        display: block;
-        position: absolute;
-        left: 2px;
-        right: 2px;
-        bottom: 2px;
-        top: 2px;
-        background-color: $bg;
-        opacity: 1;
-        transition: 400ms opacity ease;
-    }
-    &:hover::before, &:focus::before {
-        opacity: 0.9;
-    }
-}
-
 .fancySite {
     font-family: "Gilroy", Arial, Helvetica, sans-serif;
     font-weight: 500;
@@ -140,7 +99,7 @@
         height: 10em;
     }
     .secondary {
-        background-color: $bg_d00;
+        background-color: $back_850;
         padding: 2em 32px 6em;
         flex-grow: 1;
     }
@@ -229,7 +188,7 @@
             right: 2px;
             bottom: 2px;
             top: 2px;
-            background-color: $bg;
+            background-color: $back_800;
             opacity: 1;
             transition: 400ms opacity ease;
         }
@@ -412,167 +371,5 @@
             padding: 0 20px;
             padding-bottom: 16px;
         }
-    }
-}
-
-.homeLinks {
-    max-width: 800px;
-    margin: auto;
-    text-align: center;
-
-    & > a {
-        cursor: pointer;
-        width: 140px;
-        height: 0;
-        padding-bottom: 140px;
-        flex-shrink: 0;
-        margin: 2%;
-        display: inline-block;
-        position: relative;
-        color: $fg;
-
-        &:hover {
-            color: $fg;
-        }
-
-        &::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: #f0f;
-            z-index: -2;
-
-            background: -o-linear-gradient(83.64deg, #e53935 -1.08%, #ff5c59 96.92%);
-            background: linear-gradient(6.36deg, #e53935 -1.08%, #ff5c59 96.92%);
-        }
-        &::before {
-            content: "";
-            position: absolute;
-            left: 2px;
-            top: 2px;
-            right: 2px;
-            bottom: 2px;
-            z-index: -1;
-            background-color: $bg;
-            opacity: 1;
-        }
-        &:hover::before {
-            opacity: 0.9;
-        }
-
-        span {
-            text-align: center;
-            font-size: 1.2em;
-            position: absolute;
-            left: 10%;
-            top: 10%;
-            width: 80%;
-            height: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            word-break: break-word;
-        }
-    }
-}
-
-.cardRow {
-    display: flex;
-    flex-direction: row;
-}
-
-.homeLead,
-.homeSub {
-    font-size: 2.7em;
-    font-family: $titleStack;
-    text-align: left;
-}
-
-.homeSub {
-    font-size: 1.2em;
-    margin-bottom: 32px;
-    color: $bg_l5;
-}
-
-.cardTypeLink {
-    background-color: #292740;
-    position: relative;
-    display: block;
-    color: $fg;
-    padding: 16px;
-    flex-grow: 1;
-    margin: 16px;
-    text-align: left;
-    flex-basis: 0;
-    border-radius: 1px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-
-    & > * {
-        margin-bottom: 8px;
-    }
-
-    &::before {
-        position: absolute;
-        left: 3px;
-        height: 100%;
-        top: 5px;
-        width: 100%;
-        content: "";
-        display: block;
-        background-color: $bg_d1;
-        z-index: -1;
-        border-radius: 1px;
-        transition: 100ms top ease-out, 100ms left ease-out;
-    }
-    &:hover {
-        text-decoration: none;
-        color: $fg;
-    }
-
-    &:hover::before,
-    &:focus::before {
-        left: 5px;
-        top: 8px;
-    }
-
-    & > div:not(.cardTitle) {
-        font-size: 0.9em;
-        color: darken($fg, 15%);
-    }
-
-    & .loadingSpinner {
-        font-size: 0.5em !important;
-        margin-bottom: 5em !important;
-    }
-}
-
-.cardTitle {
-    font-size: 1.1em;
-    font-weight: 600;
-    font-family: $titleStack;
-}
-
-.cloudsOverlay {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: -2;
-    opacity: 0.5;
-}
-
-@media (max-width: 700px) {
-    .cardRow {
-        flex-direction: column;
-    }
-    .homeLead {
-        margin-top: 16px;
-        margin-bottom: 8px;
     }
 }

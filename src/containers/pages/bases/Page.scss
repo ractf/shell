@@ -1,19 +1,6 @@
 @import "../../../Colours.scss";
 
 
-.pageHead {
-    width: 100%;
-    background-color: rgba($bg_d1, .73);
-    padding: 24px;
-    padding-bottom: 8px;
-    &.minimal {
-        padding-top: 0;
-    }
-    text-align: center;
-    font-size: 2em;
-    position: relative;
-}
-
 .pageContent {
     padding: 32px;
     max-width: 1200px;
@@ -26,64 +13,6 @@
         justify-content: center;
         height: 100%;
     }
-}
-
-.headTitle {
-    margin-bottom: 36px;
-}
-
-.headLinks {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.headLink {
-    font-size: .9rem;
-    padding: .2em .8em;
-    color: #bbb;
-    cursor: pointer;
-
-    &:hover {
-        color: #eee;
-        text-decoration: none;
-    }
-
-    &:hover > ul {
-        display: flex;
-    }
-}
-.headLinkIcon {
-    font-size: .5em;
-    color: $fg;
-    margin-left: .4em;
-
-    &:hover {
-        color: #ddd;
-    }
-}
-.headDropdownBody {
-    position: absolute;
-    flex-direction: column;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 100%;
-    padding: 8px 0;
-    display: none;
-    margin: 0;
-    text-align: center;
-    min-width: 100%;
-    z-index: 100;
-
-    &:hover {
-        display: flex;
-    }
-
-    &>* {
-        margin: 2px 0;
-    }
-
-    background-color: rgba($bg_d1, .73);
 }
 .backToChals {
     &::before {
@@ -103,14 +32,5 @@
 @media (max-width: 800px) {
     .pageContent {
         padding: 4px 8px;
-    }
-}
-
-@media (max-width: 600px) {
-    .pageHead {
-        padding: 4px
-    }
-    .headTitle {
-        margin-bottom: 24px
     }
 }

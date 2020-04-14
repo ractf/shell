@@ -14,33 +14,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./AdminPage.scss";
 
 
-/*
-const AdminCard = ({ children, extra, name }) => {
-    const [open, setOpen] = useState(false);
-
-    const toggle = e => {
-        if (extra)
-            setOpen(!open);
-        e.preventDefault();
-        e.stopPropagation();
-    };
-
-    return <div className={"absCard"}>
-        {name && <div className={"abscName" + (extra ? " abscn" : "")} onClick={toggle}>{name}</div>}
-        {extra ? <div className={"abscVml"} onClick={toggle}>
-            {open ? "VIEW LESS" : "VIEW MORE"}
-        </div> : null}
-        {children && <div className={"abscBody"}>
-            {children}
-        </div>}
-        {open && <div className={"abscExtra"}>
-            {extra}
-        </div>}
-    </div>;
-};
-*/
-
-
 const AdminCardSection = ({ children, name }) => {
     return <div className={"absfg"}>
         <div>{name}</div>

@@ -20,6 +20,7 @@ $back_600: #37344c;
 $back_700: #272538;
 $back_750: #201f31;
 $back_800: #181626;
+$back_850: #110f1f;
 $back_900: #090815;
 
 // Red shades
@@ -83,18 +84,6 @@ $bg_d1: saturate(darken($bg, 8%), 4%);
 
 $link_color: $bg_l5;
 $link_hover: $bg_l4;
-
-
-// Header
-$header: rgba($bg_d1, 0.73);
-// Sidebar
-$sidebar: $bg_l0;
-$sidebar_focus: rgba(0, 0, 0, .4);
-$sidebar_heading: #eee;
-$sidebar_link: $bg_l4;
-$sidebar_link_hover: $bg_l5;
-$sidebar_accent: $accent;
-
 
 
 :export {

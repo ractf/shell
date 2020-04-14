@@ -1,6 +1,29 @@
+@import "../../../Colours.scss";
+
 $linkSize: 3%;
 $nodeSize: 25%;
 $nodeInner: 9rem;
 $linkPart: 10%;
 $nodeMargin: 5%;
 $iconSize: 100%;
+
+$node: (
+    locked: $back_600,
+    unlocked: $back_300,
+    done: #6b6
+);
+$node_hover: (
+    unlocked: $back_600,
+    completed: $back_700,
+    done: #66bb6633
+);
+$node_text: (
+    locked: $back_400,
+    unlocked: $white_200,
+    done: $white_200
+);
+$lock_color: (
+    locked: $back_600,
+    unlocked: $back_300,
+    done: #6b6
+);

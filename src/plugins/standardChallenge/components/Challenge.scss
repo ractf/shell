@@ -1,6 +1,13 @@
 @import "../../../Colours.scss";
 
 
+$challengeLink: (
+    border: $back_700,
+    background: $back_750,
+    text: $white_100
+);
+
+
 .challengeBrief {
     font-family: $fontStack;
     text-align: left;
@@ -31,27 +38,15 @@
     font-size: 0.8em;
 }
 
-.noTeamWarning {
-    padding: 16px 24px;
-    border-radius: 2px;
-    margin: 14px 0 24px;
-
-    background-color: desaturate(darken($red, 30%), 40%);
-    color: saturate(lighten($red, 30%), 20%);
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: 700;
-}
-
 .challengeLink {
-    border: 1px solid $bg_l1;
-    background-color: $bg_d0;
+    border: 1px solid map-get($challengeLink, "border");
+    background-color: map-get($challengeLink, "background");
     width: 100%;
     padding: 8px 16px;
     text-align: left;
     text-decoration: none;
     margin-bottom: 16px;
-    color: $fg;
+    color: map-get($challengeLink, "text");
     display: flex;
     align-items: center;
     max-width: 300px;
@@ -59,7 +54,6 @@
     position: relative;
 
     &:hover {
-        color: $fg;
         text-decoration: none;
     }
 

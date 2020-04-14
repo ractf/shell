@@ -6,7 +6,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: -1;
 }
 
@@ -43,15 +43,15 @@
         width: 100%;
         height: 42px;
         text-align: center;
-        background-color: $bg_d0;
-        border-bottom: 1px solid $bg_d1;
+        background-color: $back_700;
+        border-bottom: 1px solid $back_600;
         box-sizing: content-box;
     }
 }
 
 .modalBox {
     padding: 32px 48px;
-    background-color: $bg_l0;
+    background-color: saturate($back_750, 4%);
     border-radius: 2px;
     box-shadow: 0 0 5px -10px #000;
     display: flex;
@@ -85,12 +85,12 @@
 
     @media only screen and (max-width: 600px) {
         & {
-            padding: 32px 12px;
+            padding: 24px 32px;
         }
     }
 
     @media only screen and (max-width: 1000px) {
-        & {
+        &:not(.small) {
             padding-top: 64px;
         }
     }

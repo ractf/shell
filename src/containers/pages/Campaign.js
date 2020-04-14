@@ -131,7 +131,7 @@ export default () => {
 
     if (tabId === "new" && api.user.is_staff)
         return <Page><SBTSection key={"anc"} title={t("challenge.new_cat")} noHead>
-            <Section light title={t("challenge.new_cat")}>
+            <Section title={t("challenge.new_cat")}>
                 <ANC anc={true} />
             </Section>
         </SBTSection></Page>;

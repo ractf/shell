@@ -1,23 +1,6 @@
 @import "../../Colours.scss";
 
 
-.row {
-    display: flex;
-    margin-bottom: 16px;
-    
-    &>* {
-        flex-grow: 1;
-        min-width: auto;
-        width: auto;
-        margin: 0;
-        margin-right: 8px;
-    }
-    &>*:last-child {
-        flex-grow: 0;
-        margin-right: 0;
-    }
-}
-
 .memberTheme {
     display: flex;
     text-align: left;

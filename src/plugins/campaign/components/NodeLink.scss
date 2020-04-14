@@ -1,4 +1,3 @@
-@import "../../../Colours.scss";
 @import "./Theme.scss";
 
 .nodeLink {
@@ -14,12 +13,13 @@
         content: "";
     }
 
-    &.left, &.right {
+    &.left,
+    &.right {
         height: 2px;
         width: $linkPart;
         position: absolute;
         left: calc(100% + 2px);
-        @media (max-width: 600px)   {
+        @media (max-width: 600px) {
             left: calc(100% + 1px);
         }
         top: calc(50% - 1px);
@@ -29,12 +29,15 @@
         }
     }
     &.left {
-        left: auto; right: calc(100% + 2px);
-        @media (max-width: 600px)   {
-            left: auto; right: calc(100% + 1px);
+        left: auto;
+        right: calc(100% + 2px);
+        @media (max-width: 600px) {
+            left: auto;
+            right: calc(100% + 1px);
         }
     }
-    &.up, &.down {
+    &.up,
+    &.down {
         width: 2px;
         height: $linkPart;
         position: absolute;
@@ -49,18 +52,20 @@
         }
     }
     &.up {
-        top: auto; bottom: calc(100% + 2px);
+        top: auto;
+        bottom: calc(100% + 2px);
         @media (max-width: 600px) {
-            top: auto; bottom: calc(100% + 1px);
+            top: auto;
+            bottom: calc(100% + 1px);
         }
     }
 
-    background-color: $bg_l1;
+    background-color: map-get($node, "locked");
     &.unlocked {
-        background-color: $bg_l3;
+        background-color: map-get($node, "unlocked");
     }
     &.done {
-        background-color: #6b6;
+        background-color: map-get($node, "done");
     }
 
     &:not(.show) {

@@ -1,15 +1,11 @@
-@import "../../../Colours.scss";
 @import "./Theme.scss";
-
 
 .chalNode {
     width: $nodeSize;
     padding-bottom: $nodeSize;
     box-sizing: content-box;
-    border: 2px solid $bg_l1;
-    background-color: rgba($bg, .6);
+    border: 2px solid map-get($node, "locked");
     position: relative;
-    color: $fg;
     position: relative;
     outline: none;
     user-select: none;
@@ -18,16 +14,16 @@
     font-family: $titleStack;
     transition: 150ms ease background-color;
 
-    >.worth {
+    .worth {
         font-weight: 500;
         position: absolute;
         right: 3px;
         bottom: 0px;
         font-size: 1.1em;
-        opacity: .7;
+        opacity: 0.7;
     }
-    
-    &>*:first-child {
+
+    & > div:first-child {
         position: absolute;
         font-size: 1.2em;
         width: $nodeInner;
@@ -40,16 +36,22 @@
         overflow: hidden;
         overflow-wrap: break-word;
 
+        color: map-get($node_text, "locked");
         z-index: 20;
-        color: $fg;
         font-weight: 500;
+        user-select: none;
     }
-    &.largeName>*:first-child {
+    &.unlocked > div:first-child {
+        color: map-get($node_text, "unlocked");
+    }
+
+    &.largeName > *:first-child {
         font-size: 2.4em;
     }
 
-    +div::after, +div::before {
-        background-color: $bg_l1;
+    + div::after,
+    + div::before {
+        background-color: map-get($node, "locked");
     }
     margin: 0 $nodeMargin;
     &:first-child {
@@ -59,26 +61,30 @@
         margin-right: 0;
     }
 
-    &:not(.done):not(.unlocked) {
-        color: $bg_l2;
-        user-select: none;
-    }
-    &.done, &.unlocked {
+    &.done,
+    &.unlocked {
         cursor: pointer;
-        color: $bg_l3;
-        border-color: $bg_l3;
+        color: map-get($node, "unlocked");
+        border-color: map-get($node, "unlocked");
 
-        &:hover, &:focus {
-            background-color: rgba($bg_l1, .33);
+        &:hover,
+        &:focus {
+            background-color: rgba(map-get($node_hover, "unlocked"), 0.33);
         }
     }
 
     &.done {
-        border-color: #6b6;
-        color: #6b6;
-        
-        &:hover, &:focus {
-            background-color: #66bb6633;
+        border-color: map-get($node, "done");
+        color: map-get($node, "done");
+
+        &:hover,
+        &:focus {
+            background-color: map-get($node_hover, "done");
+        }
+
+        div:first-child {
+            color: map-get($node_text, "done");
+            user-select: none;
         }
     }
     &.orange {
@@ -86,45 +92,39 @@
     }
 }
 
-.lockRight, .lockDown {
-    &>svg {
+.lockRight,
+.lockDown {
+    svg {
         font-size: $iconSize;
         position: absolute;
         top: 50%;
         left: calc(120% + 2px);
         transform: translate(-50%, -50%);
-        color: $bg_l2;
+        color: map-get($lock_color, "locked");
     }
-    &.lockUnlockedR>svg {
-        color: $bg_l3;
+    &.lockUnlockedR > svg,
+    &.lockUnlockedD > svg {
+        color: map-get($lock_color, "unlocked");
     }
-    &.lockDoneR>svg {
-        color: #6b6;
+    &.lockDoneR > svg,
+    &.lockDoneD > svg {
+        color: map-get($lock_color, "done");
     }
 }
-.lockDown {
-    &>svg {
-        left: 50%;
-        top: calc(120% + 2px);
-        color: $bg_l2;
-    }
-    &.lockUnlockedD>svg {
-        color: $bg_l3;
-    }
-    &.lockDoneD>svg {
-        color: #6b6;
-    }
+.lockDown > svg {
+    left: 50%;
+    top: calc(120% + 2px);
 }
 
 @media (max-width: 600px) {
     .chalNode {
         border-width: 1px;
-        font-size: .6em;
+        font-size: 0.6em;
     }
-    .lockRight>svg {
+    .lockRight > svg {
         left: calc(120% + 1px);
     }
-    .lockDown>svg {
+    .lockDown > svg {
         top: calc(120% + 1px);
     }
 }

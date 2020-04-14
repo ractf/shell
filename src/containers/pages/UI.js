@@ -3,7 +3,7 @@ import React from "react";
 import {
     Page, SectionTitle, HR, SectionHeading, SectionTitle2, FlexRow, Button, Input,
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
-    Table, ToggleButton
+    Table, ToggleButton, FlashText
  } from "ractf";
 
 
@@ -100,5 +100,9 @@ export default () => <Page>
     <HR />
     <SectionTitle2>Misc</SectionTitle2>
     <TextBlock>Text block</TextBlock>
-    <Spinner />
+    <Spinner /><br />
+    <FlashText>This is a message for the user</FlashText>
+    <FlashText warning>This message is a warning</FlashText>
+    <FlashText warning bold>This one's a serious warning</FlashText>
+    This is text with <code>an inline snippet of code</code> inside it.
 </Page>;

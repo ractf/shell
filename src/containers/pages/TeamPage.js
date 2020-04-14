@@ -109,7 +109,7 @@ export default () => {
             <div className={"userSolves"}>
                 {(!teamData.solves || teamData.solves.length === 0) ? <div className={"noSolves"}>
                     {t("teams.no_solves", {name: teamData.name})}
-                </div> : <TabbedView initial={1}>
+                </div> : <TabbedView>
                     <Tab label={"Solves"}>
                         {teamData.solves && teamData.solves.map(i => <UserSolve key={i.solve_timestamp} {...i} />)}
                     </Tab>

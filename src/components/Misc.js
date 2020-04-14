@@ -28,3 +28,8 @@ export const FlexRow = ({ children, left, right, className }) => (
         {children}
     </div>
 );
+export const FlashText = ({ children, warning, bold }) => (
+    <div className={"flashText" + (warning ? " warning" : "") + (bold ? " embolden" : "")}>
+        {children}
+    </div>
+);

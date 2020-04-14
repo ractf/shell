@@ -2,7 +2,7 @@
 
 .ractf-code {
     padding: 0 .25em;
-    background-color: $bg-d1;
+    background-color: $back_700;
     overflow: auto;
     height: 100%;
     padding-left: 3em;
@@ -16,7 +16,7 @@
         top: 0;
         width: 1px;
         height: 100%;
-        background-color: $bg_l2;
+        background-color: $back_600;
     }
     
     .ractf-code-editor {

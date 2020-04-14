@@ -1,20 +1,18 @@
 import React from "react";
 
-import { registerPlugin, Spinner, useApi } from "ractf";
-
-import "./ChallengeServer.scss";
+import { registerPlugin, FlashText, Spinner, useApi } from "ractf";
 
 
 const ChallengeServer = ({ challenge }) => {
     const [instance, error] = useApi("/challengeserver/instance/" + challenge.challenge_metadata.cserv_name);
 
-    return <div className={"chalServ" + (error ? " csFailed" : "")}>
+    return <FlashText warning={!!error}>
         {error ? <div>Failed to request instance: {error}</div>
         : instance ? <div>IP:PORT! {JSON.stringify(instance)}</div> : <>
             <div>Requesting challenge instance...</div>
             <Spinner />
         </>}
-    </div>;
+    </FlashText>;
 };
 
 

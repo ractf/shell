@@ -1,24 +1,39 @@
 @import "../Colours.scss";
 
 
+$sidebar: saturate($back_750, 7%);
+$sidebar_accent: $accent;
+$sidebar_focus: rgba(0, 0, 0, .4);
+$footer_text: $back_200;
+
+$ab_rule: $back_700;
+$ab_background: $back_750;
+
+$sidebar_link: (
+    color: $back_200,
+    hover: $back_50
+);
+$sidebar_heading: $white_100;
+
+
 .sbtWrap {
     display: flex;
     flex-grow: 1;
     flex-direction: row;
     height: 100%;
-    
-    &>.sbtSidebar {
+
+    & > .sbtSidebar {
         flex-shrink: 0;
         width: 220px;
         background: $sidebar;
-        font-size: .9em;
+        font-size: 0.9em;
 
         position: fixed;
         top: 0;
         left: 0;
         height: 100%;
         z-index: 5;
-        
+
         .sbtsInner {
             min-height: 100%;
             width: 220px;
@@ -30,10 +45,10 @@
             flex-grow: 1;
         }
         .sbtFoot {
-            background-color: rgba(0, 0, 0, .1);
+            background-color: rgba(0, 0, 0, 0.1);
             padding: 20px 25px;
-            font-size: .8em;
-            color: $bg_l4;
+            font-size: 0.8em;
+            color: $footer_text;
             .sbtfCopy {
                 display: flex;
                 align-items: center;
@@ -53,26 +68,29 @@
         .sbtHead {
             display: block;
             padding: 32px 25px;
-            &>svg, &>img {
+            & > svg,
+            & > img {
                 max-width: 120px;
                 display: block;
                 margin: auto;
             }
         }
-        .sbtItem, .sbtSubitem {
+        .sbtItem,
+        .sbtSubitem {
             cursor: pointer;
             display: block;
             border-left: 4px solid transparent;
             transition: background 100ms ease-in, border-color 200ms ease-in, color 100ms ease-in;
         }
-        
+
         .sbtSubitem {
             padding: 8px 10px 8px 11px;
             padding-left: 32px;
-            color: $sidebar_link;
-            &:hover, &:focus {
+            color: map-get($sidebar_link, "color");
+            &:hover,
+            &:focus {
                 background: $sidebar_focus !important;
-                color: $sidebar_link_hover;
+                color: map-get($sidebar_link, "hover");
                 text-decoration: none;
             }
         }
@@ -81,7 +99,7 @@
             padding: 14px 20px 14px 21px;
             position: relative;
             display: flex;
-            color: $sidebar_link;
+            color: map-get($sidebar_link, "color");
 
             svg {
                 position: absolute;
@@ -97,13 +115,14 @@
 
                 color: $sidebar_heading;
                 border-color: $sidebar_accent;
-                background-color: rgba(0, 0, 0, .1);
-                &~.sbtChildren .sbtSubitem {
+                background-color: rgba(0, 0, 0, 0.1);
+                & ~ .sbtChildren .sbtSubitem {
                     border-color: $sidebar_accent;
-                    background-color: rgba(0, 0, 0, .1);
+                    background-color: rgba(0, 0, 0, 0.1);
                 }
             }
-            &:hover, &:focus {
+            &:hover,
+            &:focus {
                 color: $sidebar_heading;
                 text-decoration: none;
                 background: $sidebar_focus;
@@ -126,18 +145,17 @@
     transition: margin-right 200ms ease;
 }
 
-
 .abTitle {
     padding: 16px;
     font-size: 1.5em;
     font-weight: 600;
     font-family: $titleStack;
-    border-bottom: 2px solid $bg_l1;
+    border-bottom: 2px solid $ab_rule;
     word-wrap: break-word;
 
     div {
-        font-size: .6em;
-        margin-top: .3em;
+        font-size: 0.6em;
+        margin-top: 0.3em;
         font-weight: initial;
         white-space: pre-line;
         font-family: $fontStack;
@@ -146,24 +164,20 @@
 
 .abSection {
     margin-top: 16px;
-    background: $bg_l0;
+    background: $ab_background;
     border-radius: 4px;
 
-    &.absLight {
-        background: $bg_l0;
-    }
-
-    &>.absTitle {
-        border-bottom: 1px solid $bg_l1;
+    .absTitle {
+        border-bottom: 1px solid $ab_rule;
         font-size: 1em;
         font-weight: 600;
         font-family: $titleStack;
         padding: 16px;
     }
-    &>.absBody {
+    .absBody {
         padding: 24px;
     }
-    & .absfg {
+    .absfg {
         text-align: left;
         display: inline-block;
         margin-right: 96px;
@@ -173,7 +187,7 @@
         }
     }
 
-    & .absIndicator {
+    .absIndicator {
         &::before {
             content: "";
             display: block;
@@ -184,11 +198,11 @@
         }
         display: flex;
         align-items: center;
-        
+
         &::after {
             display: block;
             margin-left: 8px;
-            font-size: .9em;
+            font-size: 0.9em;
         }
 
         &.online {
@@ -225,53 +239,12 @@
         }
     }
 
-    & label {
+    label {
         &:first-child {
             margin-top: 0;
         }
         &:last-child {
             margin-bottom: 0 !important;
-        }
-    }
-
-    & .absCard {
-        background: rgba(0, 0, 0, .1);
-        border-radius: 4px;
-        position: relative;
-        margin-bottom: 8px;
-        border: 1px solid $bg;
-
-        .abscName {
-            border-bottom: 1px solid $bg;
-            font-size: 1em;
-            font-weight: 600;
-            font-family: $titleStack;
-
-            &.abscn {
-                cursor: pointer;
-            }
-        }
-        .abscName, .abscBody, .abscExtra {
-            padding: 16px;
-        }
-        & .abscVml {
-            position: absolute;
-            right: 16px;
-            top: 12px;
-            font-size: .8em;
-            cursor: pointer;
-        }
-        .abscExtra {
-            margin-top: -8px;
-        }
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        & button {
-            margin: 0;
-            font-size: .9em;
         }
     }
 }
@@ -280,7 +253,7 @@
     width: 220px;
 }
 
-.sbtHandle, .sbtBurger {
+.sbtBurger {
     display: none;
 }
 
@@ -314,31 +287,6 @@
         .sbtsInner {
             width: 300px;
         }
-
-        .sbtHandle {
-            display: block;
-            background: $bg_d1;
-            border-right: 1px solid $bg_l0;
-            position: absolute;
-            left: 100%;
-            top: 0;
-            width: 30px;
-            height: 100%;
-            z-index: 1;
-            cursor: pointer;
-            opacity: .73;
-
-            &>* {
-                position: absolute;
-                left: calc(50% - 1px);
-                top: 50%;
-                transform: translate(-50%, -50%) rotateY(180deg);
-                width: 40px;
-                height: 40px;
-            }
-
-        }
-
     }
     .sbtBurger {
         display: block;
@@ -356,12 +304,8 @@
         cursor: pointer;
     }
     .sbtOpen {
-        &>.sbtSidebar {
+        & > .sbtSidebar {
             left: 0;
-
-            &>.sbtHandle>* {
-                transform: translate(-50%, -50%) rotateY(0deg);
-            }
         }
 
         .sbtBurgerUnderlay {
@@ -372,7 +316,7 @@
             width: 100vw;
             height: 100vh;
             background: #0005;
-            z-index: 50; 
+            z-index: 50;
         }
     }
 }
