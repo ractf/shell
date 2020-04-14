@@ -7,7 +7,7 @@ import { FaFolder, FaFolderOpen, FaRegFolder, FaPencilAlt, FaReceipt } from "rea
 
 import {
     Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
-    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, ButtonRow
+    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, FlexRow
 } from "ractf";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -529,23 +529,23 @@ const ImportExport = () => {
 
     return <SBTSection title={t("admin.import_and_export")}>
         <Section title={t("admin.import")}>
-            <ButtonRow>
+            <FlexRow>
                 <Button disabled warning>{t("admin.import_ctf")}</Button>
                 <Button click={importCategory}>{t("admin.import_cat")}</Button>
                 <Button click={importChal}>{t("admin.import_chal")}</Button>
-            </ButtonRow>
+            </FlexRow>
         </Section>
         <Section title={t("admin.export")}>
-            <ButtonRow>
+            <FlexRow>
                 <Button click={exportCTF}>{t("admin.export_ctf")}</Button>
                 <Button click={exportCat}>{t("admin.export_cat")}</Button>
                 <Button click={exportChal}>{t("admin.export_chal")}</Button>
-            </ButtonRow>
-            <ButtonRow>
+            </FlexRow>
+            <FlexRow>
                 <Button click={exportLeaderboard}>{t("admin.export_sb")}</Button>
                 <Button click={exportPlayers}>{t("admin.export_players")}</Button>
                 <Button click={exportTeams}>{t("admin.export_teams")}</Button>
-            </ButtonRow>
+            </FlexRow>
         </Section>
     </SBTSection>;
 };

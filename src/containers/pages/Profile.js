@@ -9,6 +9,7 @@ import Page from "./bases/Page";
 
 import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS } from "ractf";
 
+import Graph from "../../components/charts/Graph";
 import Pie from "../../components/charts/Pie";
 
 import admin from "../../static/img/admin.png";
@@ -18,7 +19,6 @@ import colours from "../../Colours.scss";
 
 import "./Profile.scss";
 import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
-import Graph from "../../components/charts/Graph";
 
 
 const UserSpecial = ({ children, col, ico }) => (
@@ -136,11 +136,11 @@ export default () => {
                 {(!userData.solves || userData.solves.length === 0) ? <div className={"noSolves"}>
                     {t("profile.no_solves", {name: userData.username})}
                 </div> : <TabbedView>
-                    <Tab label="Solves">
+                    <Tab label={"Solves"}>
                         {userData.solves && userData.solves.map((i, n) => <UserSolve key={n} {...i} />)}
                         
                     </Tab>
-                    <Tab label="Stats">
+                    <Tab label={"Stats"}>
                         <div className={"ppwRow"}>
                             <div className={"profilePieWrap"}>
                                 <div className={"ppwHead"}>Solve attempts</div>

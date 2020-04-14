@@ -8,7 +8,7 @@ import Modal from "../../components/Modal";
 import Page from "./bases/Page";
 
 import {
-    plugins, Button, ButtonRow, apiContext, apiEndpoints, Input, Form,
+    plugins, Button, FlexRow, apiContext, apiEndpoints, Input, Form,
     FormError, SBTSection, Section, appContext, Link
 } from "ractf";
 
@@ -74,12 +74,12 @@ const ANC = ({ hide, anc, modal }) => {
         <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
             placeholder={t("challenge.cat_type")} />
         {error && <FormError>{error}</FormError>}
-        <ButtonRow>
+        <FlexRow>
             {anc.id &&
                 <Button warning click={removeCategory}>{t("challenge.remove_cat")}</Button>
             }
             <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
-        </ButtonRow>
+        </FlexRow>
     </Form>;
 
     if (modal)

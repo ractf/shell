@@ -28,17 +28,13 @@ export default class SwitchButton extends Component {
         this.props.options.map((val) =>
             buttons.push(<Button
                 key={val[1]}
-                className={this.state.active === buttons.length ? "active" : ""}
-                click={this.makeActive(buttons.length)}
-                medium
+                click={this.makeActive(buttons.length)} large
+                lesser={this.state.active !== buttons.length}
             >{val[0]}</Button>)
         );
 
-        return <div>
-            <div className={"switchCaption"}>{this.props.children}</div>
-            <div className={"switchButtonWrap"}>
-                {buttons}
-            </div>
+        return <div className={"switchButtonWrap"}>
+            {buttons}
         </div>;
     }
 }

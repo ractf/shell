@@ -1,12 +1,16 @@
 @import "../Colours.scss";
 
 
+$textblock_back: $back_700;
+$hr_color: $back_600;
+
+
 .hr {
-    width: 400px;
+    width: 800px;
     max-width: 80%;
     margin: 1rem auto;
     height: 1px;
-    background-color: $bg_l2;
+    background-color: $hr_color;
 }
 
 .sectionTitle {
@@ -24,27 +28,10 @@
     margin-bottom: .5em;
 }
 
-.sectionH2 {
-    font-family: $titleStack;
-    font-size: 1.5rem;
-    margin-bottom: .5em;
-    margin-top: 1em;
-}
-
-.sectionSub {
-    margin-bottom: 2rem;
-}
-
-.ctfContainer {
-    max-width: 1000px;
-    width: 100%;
-    height: auto;
-}
-
 .textBlock {
     margin: 1.5em .5em;
     font-size: 1rem;
-    background-color: $bg_l1;
+    background-color: $textblock_back;
     padding: 1em 2em;
     border-radius: 2px;
     white-space: pre-wrap;
@@ -69,14 +56,24 @@
     margin-top: 1em;
 }
 
-.sectionBlurb {
-    margin: auto;    
-    margin-bottom: 24px;
-    width: 100%;
-    max-width: calc(100% - 72px);
-    line-height: 1.25;
+.flexRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    
+    &.frRight {
+        justify-content: flex-end;
+    }
+    &.frLeft {
+        justify-content: flex-start;
+    }
 
-    &>br {
-        line-height: 1.8;
+    &>* {
+        margin-left: 0;
+        margin-right: 16px;
+    }
+    &>:last-child {
+        margin-right: 0;
     }
 }

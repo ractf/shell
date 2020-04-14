@@ -1,28 +1,39 @@
 @import "../Colours.scss";
 
 
+$body_background: $back_750;
+$tab_background: transparent;
+$tab_selected: $back_750;
+$tab_hover: rgba($back_750, .5);
+
+$tab_text: $back_50;
+$tab_active_text: $white_100;
+$tab_hover_text: $white_100;
+
+
 .tabButtonRow {
     justify-content: flex-start;
-        &.centre {
+
+    &.centre {
         justify-content: center;
     }
     & > button {
+        flex-grow: 1;
+        max-width: none;
+
         border-radius: 0;
         margin: 0;
         min-width: 100px;
         transition: none;
 
-        margin-right: 8px;
-
         font-size: 1.1em;
-        background-color: $bg_d0;
-        color: #aaa;
-        border: none;
+        background-color: $tab_background;
+        color: $tab_text;
         min-height: 42px;
     
         &:hover, &:focus {
-            background-color: $bg_l0;
-            color: #ddd;
+            background-color: $tab_hover !important;
+            color: $tab_hover_text !important;
             outline: none;
         }
         &:active {
@@ -30,14 +41,9 @@
         }
 
         &.active {
-            background-color: $bg_l0;
-            border: none;
-            color: $fg;
+            background-color: $tab_selected !important;
+            color: $tab_active_text;
         }
-    }
-
-    & > .tabSpacer {
-        flex-grow: 1;
     }
 }
 
@@ -45,10 +51,9 @@
     padding: 32px;
     width: 100%;
 
-    background-color: $bg_l0;
+    background-color: $body_background;
     padding: 1em 2em;
     border-radius: 1px;
-    min-height: 300px;
 }
 
 @media (max-width: 800px) {

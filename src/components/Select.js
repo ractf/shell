@@ -34,8 +34,10 @@ export default forwardRef(({ name, options, initial }, ref) => {
             {options.map(i => <option key={i.key} value={i.key}>{i.value}</option>)}
         </select>
         {itemsStyle.display === "block" && <div onClick={doOpen} className={"blanker"} />}
-        <div ref={head} onClick={doOpen} className={"head"}>{selected.value}</div>
-        <div className={"items"} style={itemsStyle}>
+        <div ref={head} onClick={doOpen} className={"head" + (itemsStyle.display === "block" ? " sOpen" : "")}>
+            {selected.value}
+        </div>
+        <div className={"items"} onClick={doOpen} style={itemsStyle}>
             {options.map(i => <div onClick={() => select(i)} key={i.key}>{i.value}</div>)}
         </div>
     </div>;

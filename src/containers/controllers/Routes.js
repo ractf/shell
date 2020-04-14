@@ -16,6 +16,7 @@ import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
 import Debug from "../pages/Debug";
 import TwoFA from "../pages/TwoFA";
+import UI from "../pages/UI";
 
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
@@ -125,6 +126,10 @@ export default () => {
 
         <Route exact path={"/leaderboard"}>
             <Page title={"Leaderboard"} C={Leaderboard} />
+        </Route>
+        
+        <Route exact path={"/ui"}>
+            <Page title={"UI"} C={UI} />
         </Route>
 
         <Redirect path={"/team"} to={"/team/me"} exact />

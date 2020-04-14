@@ -1,16 +1,20 @@
 @import "../Colours.scss";
 
+$pb_background: $back_600;
+$pb_fill: $back_300;
+$pb_done: desaturate($bgreen, 20%);
+
 .progressBar {
     height: 8px;
     border-radius: 4px;
-    background-color: $bg_l2;
+    background-color: $pb_background;
     width: 100%;
     position: relative;
-    margin: 16px auto 0;
+    margin: 16px 12px 0;
     width: 200px;
 
     >.pbInner {
-        background-color: $bg_l4;
+        background-color: $pb_fill;
         height: 100%;
         position: absolute;
         top: 0;
@@ -19,10 +23,7 @@
         border-radius: 4px;
     }
 
-    &.pbDone {
-        background-color: desaturate($green, 10%);
-        >.pbInner {
-            background-color: desaturate($bgreen, 20%);
-        }
+    &.pbDone>.pbInner {
+        background-color: $pb_done;
     }
 }

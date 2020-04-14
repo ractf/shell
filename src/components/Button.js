@@ -6,10 +6,6 @@ import "./Button.scss";
 import { fastClick } from "ractf";
 
 
-export const ButtonRow = ({ children, right }) => (
-    <div className={"buttonRow" + (right ? " brRight" : "")}>{children}</div>
-);
-
 const Button = (props, ref) => {
     const { history } = useReactRouter();
 
@@ -22,8 +18,7 @@ const Button = (props, ref) => {
             history.push(props.to);
     };
     let className = props.className || "";
-    if (props.main) className += " main";
-    if (props.medium) className += " medium";
+    if (props.large) className += " large";
     if (props.lesser) className += " lesser";
     if (props.warning) className += " warning";
     if (props.disabled) className += " disabled";

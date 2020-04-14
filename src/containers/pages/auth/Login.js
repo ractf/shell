@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, ButtonRow,
+    Form, FormError, Page, SectionTitle2, Input, Button, FlexRow,
     apiEndpoints, appContext
 } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
@@ -69,10 +69,10 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <ButtonRow right>
-                    <Button medium lesser to={"/register"}>{t("register")}</Button>
-                    <Button medium submit>{t("login")}</Button>
-                </ButtonRow>
+                <FlexRow right>
+                    <Button large lesser to={"/register"}>{t("register")}</Button>
+                    <Button large submit>{t("login")}</Button>
+                </FlexRow>
             </Form>
         </Wrap>
     </Page>;

@@ -440,7 +440,6 @@ const App = React.memo(() => {
             <SiteNav>
                 {<Routes />}
             </SiteNav>
-            {/*<Footer />*/}
 
             {currentPrompt ? <ModalPrompt
                 body={currentPrompt.body}

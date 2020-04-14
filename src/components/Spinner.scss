@@ -1,5 +1,7 @@
 @import "../Colours.scss";
 
+$spinner_color: $back_400;
+
 
 .loadingSpinner {
     &, &:before, &:after {
@@ -10,7 +12,7 @@
         animation: load7 1.8s infinite ease-in-out;
     }
     & {
-        color: $bg_l3;
+        color: $spinner_color;
         font-size: 10px;
         margin: 0 auto 2.5em !important;
         position: relative;

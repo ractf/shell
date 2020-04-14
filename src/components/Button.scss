@@ -1,12 +1,25 @@
 @import "../Colours.scss";
 
+
+$button_color: $back_600;
+$button_hover: $back_500;
+
+$button_lesser: $back_700;
+$button_lesser_hover: $back_600;
+
+$foreground: $white_50;
+$foreground_lesser: $white_100;
+
+$disabled_text: $back_100;
+
+
 button {
-    background-color: $bg_l1;
+    background-color: $button_color;
+    color: $foreground;
     border-radius: 2px;
     border: none;
     display: block;
     cursor: pointer;
-    color: $fg;
     font-size: 18px;
     padding: 9px 12px;
     text-decoration: none;
@@ -14,35 +27,31 @@ button {
     margin: 1rem auto 0;
     min-width: 100px;
 
-    &.main {
-        padding: .6rem 2rem;
-    }
-    &.medium {
+    &.large {
         padding: 9px 24px;
         min-width: 140px;
         min-height: 46px;
     }
     &.lesser {
-        background-color: $bg_l0;
-        color: $bg_l5;
+        background-color: $button_lesser;
+        color: foreground_lesser;
     }
     &.warning {
         background-color: rgba($red, .5);
     }
 
     &:not(.disabled):hover, &:not(.disabled):focus {
-        background-color: $bg_l2;
+        background-color: $button_hover;
 
         &.lesser {
-            background-color: $bg_l1;
-            color: $fg;
+            background-color: $button_lesser_hover;
         }
         &.warning {
             background-color: rgba($red, .8);
         }
     }
     &.disabled {
-        color: #999;
+        color: $disabled_text;
         cursor: not-allowed;
 
         &.warning {
@@ -52,24 +61,5 @@ button {
 
     &:hover {
         text-decoration: none !important;
-    }
-}
-
-.buttonRow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    
-    &.brRight {
-        justify-content: flex-end;
-    }
-
-    &>* {
-        margin-left: 0;
-        margin-right: 16px;
-    }
-    &>:last-child {
-        margin-right: 0;
     }
 }

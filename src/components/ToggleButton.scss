@@ -1,29 +1,23 @@
 .switchButtonWrap {
-    font-size: 0;
-
-    &>button {
-        border-radius: 0;
+    button {
         display: inline-block;
-        margin: 0;
+        margin-left: 0;
+        margin-right: 0;
         min-width: 100px;
-        opacity: .5;
         transition: none;
     }
 
-    &>button:first-child {
-        border-radius: 2px 0 0 2px;
+    button:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
-    &>button:last-child {
-        border-radius: 0 2px 2px 0;
+    button:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 
-    &>button.active {
-        opacity: 1;
+    button:not(:last-child):not(:first-child) {
+        border-radius: 0;
     }
-}
-
-.switchCaption {
-    font-size: 1.2em;
-    margin-bottom: 8px;
 }

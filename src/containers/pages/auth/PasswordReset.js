@@ -55,7 +55,7 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <Button medium submit>{t("auth.reset")}</Button>
+                <Button large submit>{t("auth.reset")}</Button>
             </Form>
         </Wrap>
     </Page>;

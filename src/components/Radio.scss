@@ -1,5 +1,8 @@
 @import "../Colours.scss";
 
+$radio_color: $back_200;
+$radio_text: $back_100;
+$radio_select: desaturate($bgreen, 10%);
 
 .radioWrap {
     display: flex;
@@ -12,13 +15,13 @@
         display: flex;
         align-items: center;
         cursor: pointer;
-        color: $bg_l5;
+        color: $radio_text;
 
         &>.radioButton {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            border: 2px solid $bg_l5;
+            border: 2px solid $radio_color;
             margin-right: 8px;
             position: relative;
         }
@@ -36,8 +39,8 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: $bgreen;
+            background-color: $radio_select;
         }
-        color: $bgreen;
+        color: $radio_select;
     }
 }

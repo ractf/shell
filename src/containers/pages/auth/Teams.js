@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 
 import {
     apiContext, apiEndpoints, Form, FormError, Page, SectionTitle2, HR, Input,
-    Button, ButtonRow, SubtleText, Link
+    Button, FlexRow, SubtleText, Link
 } from "ractf";
 import { Wrap } from "./Parts";
 
@@ -41,10 +41,10 @@ export const JoinTeam = () => {
                 <HR />
                 <div>{t("team_wiz.next")}</div>
 
-                <ButtonRow>
-                    <Button medium to={"/campaign"}>{t("challenge_plural")}</Button>
-                    <Button medium lesser to={"/settings"}>{t("setting_plural")}</Button>
-                </ButtonRow>
+                <FlexRow>
+                    <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
+                    <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
+                </FlexRow>
             </> : <>
                 <SectionTitle2>{t("join_a_team")}</SectionTitle2>
                 <SubtleText>
@@ -60,7 +60,7 @@ export const JoinTeam = () => {
 
                     {message && <FormError>{message}</FormError>}
 
-                    <Button medium submit>{t("team_wiz.join")}</Button>
+                    <Button large submit>{t("team_wiz.join")}</Button>
                 </Form>
             </>}
 
@@ -104,10 +104,10 @@ export const CreateTeam = () => {
                 <HR />
                 <div>{t("team_wiz.next")}</div>
 
-                <ButtonRow>
-                    <Button medium to={"/campaign"}>{t("challenge_plural")}</Button>
-                    <Button medium lesser to={"/settings"}>{t("setting_plural")}</Button>
-                </ButtonRow>
+                <FlexRow>
+                    <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
+                    <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
+                </FlexRow>
             </> : <>
                 <SectionTitle2>{t("create_a_team")}</SectionTitle2>
                 <SubtleText>
@@ -126,7 +126,7 @@ export const CreateTeam = () => {
 
                     {message && <FormError>{message}</FormError>}
 
-                    <Button medium submit>{t("team_wiz.create")}</Button>
+                    <Button large submit>{t("team_wiz.create")}</Button>
                 </Form>
             </>}
         </Wrap>

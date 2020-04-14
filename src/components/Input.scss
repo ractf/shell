@@ -1,5 +1,20 @@
 @import "../Colours.scss";
 
+
+$input_color: $back_600;
+$input_focus: $back_500;
+
+$disabled_color: $back_700;
+$disabled_text: $back_400;
+
+$foreground: $white_50;
+$placeholder: $back_100;
+$placeholder_focus: $white_200;
+
+$error_color: #3f2637;
+$error_focus: #522836;
+
+
 input,
 textarea {
     background: none;
@@ -27,6 +42,11 @@ textarea {
 }
 
 .inputWrapper, .react-datepicker__input-container {
+    ::-ms-reveal,
+    ::-ms-clear {
+        display: none;
+    }
+
     position: relative;
 
     min-height: 46px;
@@ -34,26 +54,19 @@ textarea {
     font-size: 18px;
     border-radius: 2px;
 
-    color: $fg;
+    color: $foreground;
     outline: none;
 
-    background-color: $bg_l2;
+    background-color: $input_color;
     &:focus-within {
-        background-color: $bg_l3;
+        background-color: $input_focus;
 
         .placeholder {
-            color: $bg_l5;
+            color: $placeholder_focus;
         }
 
         > div:nth-of-type(1) {
             opacity: 0.8;
-        }
-    }
-    &.light:not(:focus-within) {
-        background-color: $bg_l1;
-        color: #eee;
-        &::before {
-            background-color: $bg-l2;
         }
     }
     
@@ -61,25 +74,23 @@ textarea {
         text-align: center;
     }
     &.invalid {
-        background-color: #3f2637;
-        &::before {
-            background-color: #802d34;
-        }
+        background-color: $error_color;
 
         &:focus-within {
-            background-color: #522836;
-            &::before {
-                background-color: #ac3232;
-            }
+            background-color:$error_focus;
         }
     }
     &.password {
         padding-left: 50px;
     }
     &.disabled {
-        background-color: $bg_l1;
-        &::before {
-            background-color: $bg_l2;
+        background-color: $disabled_color;
+        cursor: not-allowed;
+        input {
+            cursor: not-allowed;
+        }
+        .placeholder {
+            color: $disabled_text;
         }
     }
     &.hidden {
@@ -122,7 +133,7 @@ textarea {
         padding: inherit;
         text-align: left;
         font-size: 1em;
-        color: $bg_l4;
+        color: $placeholder;
 
         user-select: none;
         pointer-events: none;

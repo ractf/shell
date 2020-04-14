@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints, Link, apiContext, Select, plugins, HR
+    apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow
 } from "ractf";
 
 import File from "./File";
@@ -12,7 +12,6 @@ import Hint from "./Hint";
 import IDE from "./IDEGood";
 
 import "./Challenge.scss";
-import { ButtonRow } from "../../../components/Button";
 
 
 export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, category }) => {
@@ -128,10 +127,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 )}
             </div>
 
-            <ButtonRow>
+            <FlexRow>
                 <Button click={addFile}>Add File</Button>
                 <Button click={() => setEditFiles(false)}>Close</Button>
-            </ButtonRow>
+            </FlexRow>
         </>;
     }
 
@@ -145,10 +144,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 )}
             </div>
 
-            <ButtonRow>
+            <FlexRow>
                 <Button click={addHint}>Add Hint</Button>
                 <Button click={() => setEditHints(false)}>Close</Button>
-            </ButtonRow>
+            </FlexRow>
         </>;
     }
 
@@ -205,10 +204,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
         return <div style={{ width: "100%" }}><Form handle={saveEdit}>
             {fields}
-            <ButtonRow>
+            <FlexRow>
                 <Button click={() => setEditRaw(false)}>Cancel</Button>
                 <Button submit>Save Edit</Button>
-            </ButtonRow>
+            </FlexRow>
         </Form></div>;
     }
 
@@ -230,7 +229,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     center width={"80%"} />;
                 break;
             default:
-                flagInput = <Input placeholder="Flag format: ractf{...}"
+                flagInput = <Input disabled placeholder="Flag format: ractf{...}"
                     format={partial} name={"flag"}
                     callback={changeFlag} light monospace
                     center width={"80%"} />;
@@ -277,11 +276,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 val={JSON.stringify(challenge.flag_metadata)} />
 
             {!isCreator &&
-                <ButtonRow>
+                <FlexRow>
                     <Button click={() => setEditFiles(true)}>{t("editor.files")}</Button>
                     <Button click={() => setEditHints(true)}>{t("editor.hints")}</Button>
                     <Button click={() => setEditRaw(true)}>{t("editor.metadata")}</Button>
-                </ButtonRow>
+                </FlexRow>
             }
 
             <div>
@@ -290,10 +289,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
             </div>
 
-            <ButtonRow>
+            <FlexRow>
                 {!isCreator && <Button click={removeChallenge} warning>{t("editor.remove")}</Button>}
                 <Button submit>{isCreator ? t("editor.create") : t("editor.save")}</Button>
-            </ButtonRow>
+            </FlexRow>
         </Form></div> : <>
                 {challengeMods}
                 <TextBlock className={"challengeBrief"}>
@@ -328,10 +327,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
                 </Form> : <div className={"noTeamWarning"}>
                     {t("challenge.no_team")}
-                    <ButtonRow>
+                    <FlexRow>
                         <Button to={"/team/new"}>{t("join_a_team")}</Button>
                         <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                    </ButtonRow>
+                    </FlexRow>
                 </div>}
             </>}
     </>;

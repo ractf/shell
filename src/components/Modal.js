@@ -1,12 +1,7 @@
 import React from "react";
 import { useTranslation } from 'react-i18next';
 
-import Button, { ButtonRow } from "./Button";
-import Form from "./Form";
-import Input from "./Input";
-import Select from "./Select";
-
-import Scrollbar from "./Scrollbar";
+import { Button, Form, Input, Select, FlexRow, Scrollbar } from "ractf";
 
 import "./Modal.scss";
 
@@ -62,7 +57,7 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
                 return parts;
             })}
 
-            <ButtonRow>
+            <FlexRow>
                 <Button submit>{body.okay || t("okay")}</Button>
                 {!body.noCancel &&
                     <Button click={() => { promise.reject(); onHide && onHide(); }}>
@@ -74,7 +69,7 @@ export const ModalPrompt = ({ body, promise, onHide, inputs }) => {
                             promise.reject(); onHide && onHide();
                         });
                     }}>Remove</Button>}
-            </ButtonRow>
+            </FlexRow>
         </Form>
     </Modal>;
 };

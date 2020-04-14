@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from "qrcode.react";
 
 import {
-    Page, ButtonRow, Button, Spinner, SectionTitle2, TextBlock, FormError,
+    Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError,
     apiContext, apiEndpoints, appContext
 } from "ractf";
 
@@ -70,10 +70,10 @@ export default () => {
                 <br /><br />
                 <b>{t("2fa.no_remove_warning")}</b>
 
-                <ButtonRow>
+                <FlexRow>
                     <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
                     <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
-                </ButtonRow>
+                </FlexRow>
             </> : page === 1 ? <>
                 {t("2fa.enabling")}
                 <Spinner />

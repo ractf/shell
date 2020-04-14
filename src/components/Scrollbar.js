@@ -8,7 +8,8 @@ export default ({ children, className, primary }) => {
 
     const [dragStart, setDragStart] = useState(null);
 
-    const [style, setStyle] = useState({ height: 0, top: 0, opacity: primary ? 1 : 0 });
+    const [style, setStyle] = useState({ height: 0, top: 0 });
+    const [trackStyle, setTrackStyle] = useState({ opacity: primary ? 1 : 0 });
 
     const rafRef = useRef();
     const lastScrollHeight = useRef();
@@ -33,11 +34,8 @@ export default ({ children, className, primary }) => {
         if (!inner.current || !track.current) return;
         let [top, barHeight, scrollDist] = barMetrics();
 
-        setStyle({
-            top: top,
-            height: barHeight,
-            opacity: scrollDist === 0 ? 0 : 1
-        });
+        setStyle({ top: top, height: barHeight });
+        setTrackStyle({ opacity: scrollDist === 0 ? 0 : 1 });
     }, [inner, track]);
 
     const onMouseDown = e => {
@@ -63,14 +61,14 @@ export default ({ children, className, primary }) => {
     const onMouseOver = useCallback(() => {
         mouseOver.current = true;
         if (barMetrics()[2] === 0) return;
-        setStyle(style => ({ ...style, opacity: 1 }));
+        setTrackStyle(trackStyle => ({ ...trackStyle, opacity: 1 }));
         if (fadeOut.current) clearTimeout(fadeOut.current);
     }, []);
     const onMouseLeave = useCallback((force) => {
         mouseOver.current = false;
         if (!force && dragStart) return;
         fadeOut.current = setTimeout(() => {
-            setStyle(style => ({ ...style, opacity: 0 }));
+            setTrackStyle(trackStyle => ({ ...trackStyle, opacity: 0 }));
         }, 1500);
     }, [dragStart]);
     const onMouseUp = useCallback(() => {
@@ -116,7 +114,7 @@ export default ({ children, className, primary }) => {
         <div ref={inner} className={"scrollInner"}>
             {children}
         </div>
-        <div ref={track} className={"scrollTrack" + (dragStart ? " trackActive" : "")}>
+        <div ref={track} style={trackStyle} className={"scrollTrack" + (dragStart ? " trackActive" : "")}>
             <div style={style} onMouseDown={onMouseDown} className={"scrollbar"} />
         </div>
     </div>;

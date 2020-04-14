@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
-import { Page, SectionTitle2, Button, ButtonRow, apiContext } from "ractf";
+import { Page, SectionTitle2, Button, FlexRow, apiContext } from "ractf";
 import { Wrap } from "./Parts";
 
 
@@ -17,10 +17,10 @@ export default () => {
             <SectionTitle2>{t("auth.welcome")}</SectionTitle2>
             <br />
             <div>{t("auth.next")}</div>
-            <ButtonRow>
+            <FlexRow>
                 <Button to={"/team/new"}>{t("create_a_team")}</Button>
                 <Button to={"/team/join"}>{t("join_a_team")}</Button>
-            </ButtonRow>
+            </FlexRow>
         </Wrap>
     </Page>;
 };

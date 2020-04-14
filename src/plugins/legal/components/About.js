@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Page, Table, SectionH2, HR } from "ractf";
+import { Page, Table, SectionTitle2, HR } from "ractf";
 
 
 const data = [
@@ -17,6 +17,6 @@ export default () => <Page title={"About RACTF"}>
 
     <HR />
 
-    <SectionH2>Staff</SectionH2>
+    <SectionTitle2>Staff</SectionTitle2>
     <Table headings={["Member", "Contribution"]} data={data} noSort></Table>
 </Page>;

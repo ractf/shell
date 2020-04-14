@@ -3,7 +3,7 @@ import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Page, HR, ButtonRow, TabbedView, Tab, Button, Form, FormError, Input,
+    Page, HR, FlexRow, TabbedView, Tab, Button, Form, FormError, Input,
     apiContext, appContext, apiEndpoints, zxcvbn
 } from "ractf";
 
@@ -177,10 +177,10 @@ export default () => {
                     <br /><br />
                     {t("settings.team_prompt")}
                     <HR />
-                        <ButtonRow>
+                        <FlexRow>
                             <Button to={"/team/join"}>{t("join_a_team")}</Button>
                             <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                        </ButtonRow>
+                        </FlexRow>
                     </div>}
             </Tab>
             {api.team &&
