@@ -91,36 +91,6 @@ export const SiteNav = ({ children }) => {
                 <div className={"sbtHead"}>
                     <Wordmark />
                 </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-
                 <SBMenu key={"ractf"} name={t("sidebar.brand")} initial>
                     <Link onClick={close} to={"/home"} className={"sbtSubitem"}>{t("sidebar.home")}</Link>
                     <Link onClick={close} to={"/users"} className={"sbtSubitem"}>{t("user_plural")}</Link>
@@ -190,9 +160,11 @@ export const SiteNav = ({ children }) => {
                         <img alt={""} src={"https://ractf.co.uk/static/img/spine.png"} />
                     &copy; Really Awesome Technology Ltd 2020
                 </div>
-                    <a href="/">{t("footer.home")}</a> -
-                    <a href="/privacy">{t("footer.privacy")}</a> -
-                    <a href="/terms">{t("footer.terms")}</a>
+                    <Link to="/">{t("footer.home")}</Link> - <
+                    Link to="/privacy">{t("footer.privacy")}</Link> - <
+                    Link to="/terms">{t("footer.terms")}</Link><br />
+                    <Link to="/debug">Debug</Link> - <
+                    Link to="/ui">UI Framework</Link>
                 </div>
             </div>
         </Scrollbar>
