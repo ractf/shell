@@ -55,10 +55,14 @@ const Page = ({ title, auth, admin, noAuth, C }) => {
     return <C />;
 };
 
+const URIHandler = () => {
+    return <Redirect to={decodeURIComponent(window.location.search).split(":", 2)[1]} />;
+};
 
 export default () => {
     return <Switch>
         <Route exact path={"/debug"} component={Debug} />
+        <Route exact path={"/uri"} component={URIHandler} />
 
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />

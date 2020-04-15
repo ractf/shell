@@ -508,6 +508,16 @@ class APIClass extends Component {
         return new Promise((resolve, reject) => {
             this.post(ENDPOINTS.LOGIN, { username, password, otp }
             ).then(data => {
+                // Encourage the user to register the URI handler
+                if (navigator.registerProtocolHandler) {
+                    try {
+                        navigator.registerProtocolHandler(
+                            "web+ractf", window.location.origin + "/uri?%s", "Really Awesome CTF"
+                        );
+                    } catch(e) {
+                        console.error("Failed to register web+ractf:", e);
+                    }
+                }
                 this._postLogin(data.d.token);
                 resolve();
             }).catch(reject);
