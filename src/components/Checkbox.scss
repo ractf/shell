@@ -1,0 +1,45 @@
+@import "../Colours.scss";
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    margin: .2em 0 .2em .4em;
+    cursor: pointer;
+
+    .box {
+        width: 1.1em;
+        height: 1.1em;
+        background-color: $back_600;
+        border-radius: 2px;
+        flex-shrink: 0;
+        margin-right: .4em;
+        position: relative;
+    }
+    .cbLabel {
+        flex-grow: 1;
+        font-size: .9em;
+        color: $back_100;
+    }
+
+    &:hover .box {
+        background-color: $back_500;
+    }
+    &.checked {
+        .box {
+            &::after {
+                display: block;
+                content: "";
+                position: absolute;
+                top: 43%;
+                left: 50%;
+                width: 25%;
+                height: 55%;
+                border: 2px solid $back_50;
+                border-top: 0;
+                border-left: 0;
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+        }
+    }
+}

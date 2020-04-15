@@ -3,7 +3,7 @@ import React from "react";
 import {
     Page, SectionTitle, HR, SectionHeading, SectionTitle2, FlexRow, Button, Input,
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
-    Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue
+    Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue, Checkbox
 } from "ractf";
 
 
@@ -55,6 +55,10 @@ export default () => <Page>
     <Radio options={
         [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
     } value={2} />
+    <HR />
+    <SectionTitle2>Checkbox</SectionTitle2>
+    <Checkbox>Checkbox</Checkbox>
+    <Checkbox checked>Checkbox checked</Checkbox>
     <HR />
     <SectionTitle2>Scrollbar</SectionTitle2>
     <TextBlock style={{ height: 100, overflowY: "auto" }}>
