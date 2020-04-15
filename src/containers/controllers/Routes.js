@@ -59,7 +59,7 @@ const Page = ({ title, auth, admin, noAuth, C }) => {
 export default () => {
     return <Switch>
         <Route exact path={"/debug"} >
-            <Page title={"Debug"} noAuth C={Debug} />
+            <Page title={"Debug"} C={Debug} />
         </Route>
 
         <Redirect exact path={"/"} to={"/home"} />
