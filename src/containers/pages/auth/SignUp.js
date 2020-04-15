@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Form, FormError, Page, SectionTitle2, Input, Button, FlexRow,
-    apiEndpoints, zxcvbn
+    apiEndpoints, zxcvbn, Checkbox, Link
 } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
@@ -14,7 +14,9 @@ export default () => {
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
 
-    const doRegister = ({ username, passwd1, passwd2, email }) => {
+    const doRegister = ({ accept, username, passwd1, passwd2, email }) => {
+        if (!accept)
+            return setMessage("You must accept the terms of use and privacy policy to register.");
         if (passwd1 !== passwd2)
             return setMessage(t("auth.pass_match"));
         if (!username)
@@ -49,6 +51,12 @@ export default () => {
                 <Input format={EMAIL_RE} name={"email"} placeholder={t("email")} />
                 <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("password")} password />
                 <Input name={"passwd2"} placeholder={t("password_repeat")} password />
+
+                <Checkbox name={"accept"}>
+                    I accept the <Link to={"/conduct"}>terms of use</Link> and <Link to={"/privacy"}>
+                        privacy policy
+                    </Link>.
+                </Checkbox>
 
                 {message && <FormError>{message}</FormError>}
 
