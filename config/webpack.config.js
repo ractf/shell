@@ -22,6 +22,7 @@ const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
+const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin')
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -343,6 +344,12 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
+      new HtmlReplaceWebpackPlugin([
+        {
+          pattern: '{{__DISABLE_DEVTOOLS__}}',
+          replacement: isEnvProduction ? "window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject=function(){}" : ""
+        },
+      ]),
       isEnvProduction &&
         shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
