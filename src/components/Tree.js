@@ -13,8 +13,8 @@ export const TreeWrap = ({ children }) => {
 };
 
 
-export const Tree = ({ name, children }) => {
-    const [open, setOpen] = useState(false);
+export const Tree = ({ name, children, startOpen }) => {
+    const [open, setOpen] = useState(!!startOpen);
 
     return <li>
         <i />

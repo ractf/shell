@@ -1,5 +1,10 @@
 @import "../Colours.scss";
 
+$baseColor: $back_400;
+$valueColor: $back_200;
+$hoverColor: $back_50;
+$lineColor: $back_600;
+
 .tree {
     & > ul > li {
         margin-left: 0;
@@ -36,7 +41,7 @@
                 height: 1px;
                 top: 12px;
                 left: 13px;
-                border-top: 1px dashed $bg_l2;
+                border-top: 1px dashed $lineColor;
             }
         }
     }
@@ -53,10 +58,10 @@
         display: inline-block;
         line-height: 24px;
         height: 24px;
-        color: $bg_l3;
+        color: $baseColor;
         &:hover {
             text-decoration: none;
-            color: $bg_l5;
+            color: $hoverColor;
         }
     }
 
@@ -78,7 +83,7 @@
             height: 100%;
             top: 0;
             left: 12px;
-            border-left: 1px dashed $bg_l2;
+            border-left: 1px dashed $lineColor;
         }
         &:last-child::after {
             height: 12px;
@@ -87,7 +92,7 @@
 
     span.value {
         font-size: 90%;
-        color: $bg_l4;
+        color: $valueColor;
         &::before {
             content: " - ";
         }

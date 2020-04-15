@@ -3,8 +3,8 @@ import React from "react";
 import {
     Page, SectionTitle, HR, SectionHeading, SectionTitle2, FlexRow, Button, Input,
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
-    Table, ToggleButton, FlashText
- } from "ractf";
+    Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue
+} from "ractf";
 
 
 export default () => <Page>
@@ -35,12 +35,12 @@ export default () => <Page>
     <Input placeholder={"Multi-line"} rows={3} /><br />
     <Input placeholder={"Password"} password /><br />
     <Select options={[
-        {key: 0, value: "Example Select"},
-        {key: 1, value: "This"},
-        {key: 2, value: "is"},
-        {key: 3, value: "a"},
-        {key: 4, value: "dropdown"},
-    ]}/>
+        { key: 0, value: "Example Select" },
+        { key: 1, value: "This" },
+        { key: 2, value: "is" },
+        { key: 3, value: "a" },
+        { key: 4, value: "dropdown" },
+    ]} />
     <HR />
     <SectionTitle2>Progress Bar</SectionTitle2>
     <FlexRow>
@@ -54,10 +54,10 @@ export default () => <Page>
     <SectionTitle2>Radio</SectionTitle2>
     <Radio options={
         [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
-    } value={2}/>
+    } value={2} />
     <HR />
     <SectionTitle2>Scrollbar</SectionTitle2>
-    <TextBlock style={{height: 100, overflowY: "auto"}}>
+    <TextBlock style={{ height: 100, overflowY: "auto" }}>
         <Scrollbar>
             This is a text block<br />
             The size has been limited to 100 pixels<br />
@@ -67,7 +67,7 @@ export default () => <Page>
             Hello from below the fold!
         </Scrollbar>
     </TextBlock>
-    <TextBlock style={{height: 100, overflowY: "auto"}}>
+    <TextBlock style={{ height: 100, overflowY: "auto" }}>
         <Scrollbar primary>
             This is the same demo as before<br />
             But this is a primary scrollbar now<br />
@@ -96,7 +96,22 @@ export default () => <Page>
         ["Row 1, cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
         ["Row 2, cell 1", "Row 2, Cell 2", "Row 2, Cell 3"],
         ["Row 3, cell 1", "Row 3, Cell 2", "Row 3, Cell 3"],
-    ]}/>
+    ]} />
+    <HR />
+    <SectionTitle2>Trees</SectionTitle2>
+    <br />
+    <TreeWrap>
+        <Tree name="Folder">
+            <TreeValue name="Read-only" value="yes" />
+            <Tree name="Nested folder">
+                <TreeValue name="Deeper value" value="value" />
+            </Tree>
+        </Tree>
+        <Tree name="Open folder" startOpen>
+            <TreeValue setValue={()=>0} name="Editable value" value="Edits won't actually occur" />
+        </Tree>
+    </TreeWrap>
+    <br />
     <HR />
     <SectionTitle2>Misc</SectionTitle2>
     <TextBlock>Text block</TextBlock>
