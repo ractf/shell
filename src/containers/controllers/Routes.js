@@ -58,7 +58,9 @@ const Page = ({ title, auth, admin, noAuth, C }) => {
 
 export default () => {
     return <Switch>
-        <Route exact path={"/debug"} component={Debug} />
+        <Route exact path={"/debug"} >
+            <Page title={"Debug"} noAuth C={Debug} />
+        </Route>
 
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />
