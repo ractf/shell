@@ -1,8 +1,7 @@
-@import "../../Colours.scss";
+@import "../Colours.scss";
 
-
-.adminTree {
-    &>ul>li {
+.tree {
+    & > ul > li {
         margin-left: 0;
     }
 

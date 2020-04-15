@@ -3,15 +3,14 @@ import { useTranslation } from 'react-i18next';
 import useReactRouter from "../../useReactRouter";
 import DatePicker from "react-datepicker";
 
-import { FaFolder, FaFolderOpen, FaRegFolder, FaPencilAlt, FaReceipt } from "react-icons/fa";
 
 import {
     Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
-    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, FlexRow
+    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, FlexRow,
+    Tree, TreeWrap, TreeValue
 } from "ractf";
 
 import "react-datepicker/dist/react-datepicker.css";
-import "./AdminPage.scss";
 
 
 const AdminCardSection = ({ children, name }) => {
@@ -21,62 +20,6 @@ const AdminCardSection = ({ children, name }) => {
     </div>;
 };
 
-
-const TreeWrap = ({ children }) => {
-    return <div className={"adminTree"}>
-        <ul>{children}</ul>
-    </div>;
-};
-
-
-const AdminTree = ({ name, children }) => {
-    const [open, setOpen] = useState(false);
-
-    return <li>
-        <i />
-        <span className={"parent"} onClick={() => setOpen(!open)}>
-            <i className={"treeItem"}>{
-                children.length === 0 ? <FaRegFolder /> : open ? <FaFolderOpen /> : <FaFolder />
-            }</i>
-            {name}
-        </span>
-        {children && open && <ul>{children}</ul>}
-    </li>;
-};
-
-
-const AdminTreeValue = ({ name, value, setValue }) => {
-    const app = useContext(appContext);
-    const openEdit = () => {
-        app.promptConfirm(
-            { message: name, small: true },
-            [{ name: "val", val: JSON.stringify(value) }]
-        ).then(({ val }) => {
-            try {
-                val = JSON.parse(val);
-            } catch (e) {
-                return app.alert("Failed to parse value");
-            }
-            if ((typeof val) !== (typeof value))
-                return app.alert("Cannot change data type");
-            if ((typeof setValue) !== "function")
-                return app.alert("setValue is not a function");
-
-            setValue(val);
-        });
-    };
-
-    return <li onClick={setValue && openEdit}>
-        <i />
-        <span className={"parent"}>
-            <i className={"treeItem"}>{setValue ? <FaPencilAlt /> : <FaReceipt />}</i>
-            {name}
-        </span>
-        <span className={"value"}>{
-            ((typeof value === "boolean") || (typeof value === "number")) ? value.toString() : value
-        }</span>
-    </li>;
-};
 
 
 const MemberCard = ({ data }) => {
@@ -98,29 +41,29 @@ const MemberCard = ({ data }) => {
     };
     const set = key => value => configSet(key, value);
 
-    return <AdminTree name={data.username}>
-        <AdminTreeValue name={"id"} value={data.id} />
-        <AdminTreeValue name={"enabled"} value={data.is_active} setValue={!data.is_staff && set("is_active")} />
-        <AdminTreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
-        <AdminTreeValue name={"is_staff"} value={data.is_staff} setValue={data.id !== api.user.id && set("is_staff")} />
-        <AdminTreeValue name={"points"} value={data.points} setValue={set("points")} />
-        <AdminTree name={"metadata"}>
-            <AdminTreeValue name={"email"} value={data.email} setValue={set("email")} />
-            <AdminTreeValue name={"email_verified"} value={data.email_verified} setValue={set("email_verified")} />
-            <AdminTreeValue name={"bio"} value={data.bio} setValue={set("bio")} />
-            <AdminTreeValue name={"discord"} value={data.discord} setValue={set("discord")} />
-            <AdminTreeValue name={"discord_id"} value={data.discordid} setValue={set("discordid")} />
-            <AdminTreeValue name={"twitter"} value={data.twitter} setValue={set("twitter")} />
-            <AdminTreeValue name={"reddit"} value={data.reddit} setValue={set("reddit")} />
-        </AdminTree>
-        <AdminTree name={"solves"}>
-            {data.solves.map(i => <AdminTree name={i.challenge_name}>
-                <AdminTreeValue name={"points"} value={i.points} />
-                <AdminTreeValue name={"first_blood"} value={i.first_blood} />
-                <AdminTreeValue name={"timestamp"} value={i.timestamp} />
-            </AdminTree>)}
-        </AdminTree>
-    </AdminTree>;
+    return <Tree name={data.username}>
+        <TreeValue name={"id"} value={data.id} />
+        <TreeValue name={"enabled"} value={data.is_active} setValue={!data.is_staff && set("is_active")} />
+        <TreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
+        <TreeValue name={"is_staff"} value={data.is_staff} setValue={data.id !== api.user.id && set("is_staff")} />
+        <TreeValue name={"points"} value={data.points} setValue={set("points")} />
+        <Tree name={"metadata"}>
+            <TreeValue name={"email"} value={data.email} setValue={set("email")} />
+            <TreeValue name={"email_verified"} value={data.email_verified} setValue={set("email_verified")} />
+            <TreeValue name={"bio"} value={data.bio} setValue={set("bio")} />
+            <TreeValue name={"discord"} value={data.discord} setValue={set("discord")} />
+            <TreeValue name={"discord_id"} value={data.discordid} setValue={set("discordid")} />
+            <TreeValue name={"twitter"} value={data.twitter} setValue={set("twitter")} />
+            <TreeValue name={"reddit"} value={data.reddit} setValue={set("reddit")} />
+        </Tree>
+        <Tree name={"solves"}>
+            {data.solves.map(i => <Tree key={i.challenge_name} name={i.challenge_name}>
+                <TreeValue name={"points"} value={i.points} />
+                <TreeValue name={"first_blood"} value={i.first_blood} />
+                <TreeValue name={"timestamp"} value={i.timestamp} />
+            </Tree>)}
+        </Tree>
+    </Tree>;
 };
 
 
@@ -144,30 +87,30 @@ const TeamCard = ({ data }) => {
     let points = 0;
     data.members.forEach(i => points += i.points);
 
-    return <AdminTree name={data.name}>
-        <AdminTreeValue name={"id"} value={data.id} />
-        <AdminTreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
-        <AdminTreeValue name={"points"} value={points} />
-        <AdminTreeValue name={"owner_id"} value={data.owner} setValue={set("owner")} />
-        <AdminTree name={"metadata"}>
-            <AdminTreeValue name={"password"} value={data.password} setValue={set("password")} />
-            <AdminTreeValue name={"description"} value={data.description} setValue={set("description")} />
-        </AdminTree>
-        <AdminTree name={"members"}>
-            {data.members.map(i => <AdminTree name={i.username}>
-                <AdminTreeValue name={"id"} value={i.id} />
-                <AdminTreeValue name={"points"} value={i.points} />
-            </AdminTree>)}
-        </AdminTree>
-        <AdminTree name={"solves"}>
-            {data.solves.map(i => <AdminTree name={i.challenge_name}>
-                <AdminTreeValue name={"solved_by"} value={i.solved_by_name} />
-                <AdminTreeValue name={"points"} value={i.points} />
-                <AdminTreeValue name={"first_blood"} value={i.first_blood} />
-                <AdminTreeValue name={"timestamp"} value={i.timestamp} />
-            </AdminTree>)}
-        </AdminTree>
-    </AdminTree>;
+    return <Tree name={data.name}>
+        <TreeValue name={"id"} value={data.id} />
+        <TreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
+        <TreeValue name={"points"} value={points} />
+        <TreeValue name={"owner_id"} value={data.owner} setValue={set("owner")} />
+        <Tree name={"metadata"}>
+            <TreeValue name={"password"} value={data.password} setValue={set("password")} />
+            <TreeValue name={"description"} value={data.description} setValue={set("description")} />
+        </Tree>
+        <Tree name={"members"}>
+            {data.members.map(i => <Tree name={i.username}>
+                <TreeValue name={"id"} value={i.id} />
+                <TreeValue name={"points"} value={i.points} />
+            </Tree>)}
+        </Tree>
+        <Tree name={"solves"}>
+            {data.solves.map(i => <Tree name={i.challenge_name}>
+                <TreeValue name={"solved_by"} value={i.solved_by_name} />
+                <TreeValue name={"points"} value={i.points} />
+                <TreeValue name={"first_blood"} value={i.first_blood} />
+                <TreeValue name={"timestamp"} value={i.timestamp} />
+            </Tree>)}
+        </Tree>
+    </Tree>;
 };
 
 
