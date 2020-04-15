@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Page, SectionTitle2, HR, Button, useApi, TextBlock, Table, ENDPOINTS } from "ractf";
+import { Page, SectionTitle2, HR, Button, useApi, TextBlock, Table, ENDPOINTS, FlexRow } from "ractf";
 
 export default () => {
     const [backendVersion] = useApi(ENDPOINTS.VERSION);
@@ -35,6 +35,41 @@ export default () => {
         countdown = "";
     }
 
+    const download = (data, filename) => {
+        let blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8;" });
+        if (navigator.msSaveBlob)
+            return navigator.msSaveBlob(blob, filename);
+    
+        let elem = document.createElement("a");
+        elem.style = "display: none";
+        elem.href = URL.createObjectURL(blob);
+        elem.target = "_blank";
+        elem.setAttribute("download", filename);
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    };
+
+    const exportData = () => {
+        const debugExport = {
+            "versions": {
+                "shell": __COMMIT_HASH__,
+                "backend": backendVersion && backendVersion.commit_hash
+            },
+            "cache": {
+                "size": {
+                    "bytes": cacheLen,
+                    "items": cacheDataLen
+                },
+                "items": cacheData
+            },
+            "config": JSON.parse(config),
+            "countdown": JSON.parse(countdown),
+            "challenges": JSON.parse(challenges)
+        };
+        download(debugExport, "debug.json");
+    };
+
     return <Page>
         <SectionTitle2>RACTF Debug Page:</SectionTitle2>
         <HR />
@@ -44,7 +79,10 @@ export default () => {
         <div>Cache size:
             <code>{cacheLen.toString()} bytes</code> / <code>{cacheDataLen} items</code>
         </div>
-        <Button click={clearCache}>Clear API cache</Button>
+        <FlexRow>
+            <Button click={clearCache}>Clear API cache</Button>
+            <Button click={exportData}>Export debug data</Button>
+        </FlexRow>
         <div>
             <br />
             <Table headings={["Endpoint", "Data"]}
