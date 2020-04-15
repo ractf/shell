@@ -346,7 +346,7 @@ module.exports = function(webpackEnv) {
       ),
       new HtmlReplaceWebpackPlugin([
         {
-          pattern: '{{__DISABLE_DEVTOOLS__}}',
+          pattern: '__DISABLE_DEVTOOLS__',
           replacement: isEnvProduction ? "window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject=function(){}" : ""
         },
       ]),
