@@ -7,7 +7,11 @@ export default () => {
 
     const forceUpdate = useState(null)[1];
     useEffect(() => {
-        context.history.listen(() => forceUpdate());
+        let isMounted = true;
+        context.history.listen(() => {
+            if (isMounted) forceUpdate();
+        });
+        return () => { isMounted = false; };
     }, [context, forceUpdate]);
     return context;
 };

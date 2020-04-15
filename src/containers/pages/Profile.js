@@ -137,8 +137,7 @@ export default () => {
                     {t("profile.no_solves", {name: userData.username})}
                 </div> : <TabbedView>
                     <Tab label={"Solves"}>
-                        {userData.solves && userData.solves.map((i, n) => <UserSolve key={n} {...i} />)}
-                        
+                        {userData.solves && userData.solves.map((i, n) => <UserSolve key={i.timestamp} {...i} />)}
                     </Tab>
                     <Tab label={"Stats"}>
                         <div className={"ppwRow"}>

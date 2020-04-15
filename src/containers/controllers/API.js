@@ -146,6 +146,7 @@ class APIClass extends Component {
             _reloadCache: this._reloadCache,
             getCache: this.getCache,
             cachedGet: this.cachedGet,
+            abortableGet: this.abortableGet,
             get: this.get,
         };
         this.state = {
@@ -253,6 +254,29 @@ class APIClass extends Component {
         }
         // TITSUP!
         return "Unknown error occurred.";
+    };
+
+    abortableGet = (url) => {
+        let request = new XMLHttpRequest();
+        request.responseType = "json";
+
+        return [() => {
+            let promise = new Promise((resolve, reject) => {
+                request.addEventListener('load', () => {
+                    resolve(request.response.d);
+                });
+
+                request.addEventListener('error', () => {
+                    console.log("error:");
+                    reject("test");
+                });
+            });
+            let headers = this._getHeaders();
+            request.open('GET', this.appendSlash(BASE_URL + url));
+            Object.entries(headers).forEach(([key, value]) => request.setRequestHeader(key, value));
+            request.send();
+            return promise;
+        }, () => request.abort()];
     };
 
     get = url => {
@@ -419,11 +443,11 @@ class APIClass extends Component {
     });
     _getConfig = () => this.get(ENDPOINTS.CONFIG).then(({ d }) => {
         let config = {};
-        d.forEach(({ key, value}) => config[key] = value.value);
+        d.forEach(({ key, value }) => config[key] = value.value);
         return config;
     });
     _getChallenges = () => this.get(ENDPOINTS.CATEGORIES);
-    setConfigValue = (key, value) => this.patch(ENDPOINTS.CONFIG + key, { value: {value: value} });
+    setConfigValue = (key, value) => this.patch(ENDPOINTS.CONFIG + key, { value: { value: value } });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);
@@ -496,7 +520,7 @@ class APIClass extends Component {
     verify = (uid, token) => {
         try {
             uid = parseInt(uid, 10);
-        } catch(e) {};
+        } catch (e) { };
         return this.post(ENDPOINTS.VERIFY, { uid, token }).then(data => {
             this._postLogin(data.d.token);
         });
@@ -517,28 +541,28 @@ class APIClass extends Component {
         id, name, score, description, flag_type, flag_metadata, autoUnlock,
         challenge_metadata, author, challenge_type, unlocks, files
     }) => (
-        this.patch(ENDPOINTS.CHALLENGES + id, {
-            name, score, description,
-            flag_type, flag_metadata,
-            challenge_metadata,
-            author, unlocks, files,
-            challenge_type: challenge_type || "default",
-            auto_unlock: autoUnlock,
-        })
-    );
+            this.patch(ENDPOINTS.CHALLENGES + id, {
+                name, score, description,
+                flag_type, flag_metadata,
+                challenge_metadata,
+                author, unlocks, files,
+                challenge_type: challenge_type || "default",
+                auto_unlock: autoUnlock,
+            })
+        );
     createChallenge = ({
         id, name, score, description, flag_type, flag_metadata, autoUnlock,
         challenge_metadata, author, challenge_type, unlocks, files
     }) => (
-        this.post(ENDPOINTS.CHALLENGES, {
-            category: id, name, score, description,
-            flag_type, flag_metadata,
-            challenge_metadata,
-            author, unlocks, files,
-            challenge_type: challenge_type || "default",
-            auto_unlock: autoUnlock,
-        })
-    );
+            this.post(ENDPOINTS.CHALLENGES, {
+                category: id, name, score, description,
+                flag_type, flag_metadata,
+                challenge_metadata,
+                author, unlocks, files,
+                challenge_type: challenge_type || "default",
+                auto_unlock: autoUnlock,
+            })
+        );
     removeChallenge = async (challenge, dumbRemove) => {
         if (!dumbRemove) {
             // Unlink all challenges
@@ -577,7 +601,7 @@ class APIClass extends Component {
     completePasswordReset = (id, secret, password) => {
         try {
             id = parseInt(id, 10);
-        } catch(e) {}
+        } catch (e) { }
         return new Promise((resolve, reject) => {
             this.post(ENDPOINTS.COMPLETE_RESET,
                 { uid: id, token: secret, password: password }

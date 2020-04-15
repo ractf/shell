@@ -57,7 +57,7 @@ const MemberCard = ({ data }) => {
             <TreeValue name={"reddit"} value={data.reddit} setValue={set("reddit")} />
         </Tree>
         <Tree name={"solves"}>
-            {data.solves.map(i => <Tree key={i.challenge_name} name={i.challenge_name}>
+            {data.solves.map(i => <Tree key={i.id} name={i.challenge_name}>
                 <TreeValue name={"points"} value={i.points} />
                 <TreeValue name={"first_blood"} value={i.first_blood} />
                 <TreeValue name={"timestamp"} value={i.timestamp} />
@@ -97,13 +97,13 @@ const TeamCard = ({ data }) => {
             <TreeValue name={"description"} value={data.description} setValue={set("description")} />
         </Tree>
         <Tree name={"members"}>
-            {data.members.map(i => <Tree name={i.username}>
+            {data.members.map(i => <Tree key={i.id} name={i.username}>
                 <TreeValue name={"id"} value={i.id} />
                 <TreeValue name={"points"} value={i.points} />
             </Tree>)}
         </Tree>
         <Tree name={"solves"}>
-            {data.solves.map(i => <Tree name={i.challenge_name}>
+            {data.solves.map(i => <Tree key={i.id} name={i.challenge_name}>
                 <TreeValue name={"solved_by"} value={i.solved_by_name} />
                 <TreeValue name={"points"} value={i.points} />
                 <TreeValue name={"first_blood"} value={i.first_blood} />
@@ -407,14 +407,14 @@ const ImportExport = () => {
     const importCategory = () => {
         askOpenJSON().then(data => {
             if (!validate_category(data))
-            return app.alert("Invalid category data");
+                return app.alert("Invalid category data");
             app.showProgress("Creating category...", .5);
             endpoints.createGroup(data.name, data.description, data.contained_type)
                 .then(({ d }) => d)
                 .then(async ({ id }) => {
                     let challenge_map = {};
                     let progress = 0;
-                    
+
                     await Promise.all(data.challenges.map(chal => (importChallengeData(id, chal).then(cdat => {
                         challenge_map[chal.id] = cdat;
                         progress += 1 / data.challenges.length;
@@ -473,8 +473,8 @@ export default () => {
     const [adminConfig, setAdminConfig] = useState(null);
     const { t } = useTranslation();
 
-    const [allUsersAdmin] = useFullyPaginated(ENDPOINTS.USER);
-    const [allTeamsAdmin] = useFullyPaginated(ENDPOINTS.TEAM);
+    const { data: allUsersAdmin } = useFullyPaginated(ENDPOINTS.USER);
+    const { data: allTeamsAdmin } = useFullyPaginated(ENDPOINTS.TEAM);
     const [adminConfig_] = useApi(ENDPOINTS.CONFIG);
 
     const { match } = useReactRouter();
@@ -515,32 +515,26 @@ export default () => {
 
                     </Section>
                     <Section title={t("admin.auto_time")}>
-                        <Form>
+                        <div className={"formWrapper"}>
                             <div className={"absfg"}>
-                                <Form>
-                                    <label htmlFor={"regStartTime"}>{t("admin.reg_start_time")}</label>
-                                    <DatePick initial={adminConfig.register_start_time}
-                                        configSet={configSet} name={"regStartTime"}
-                                        configKey={"register_start_time"} />
-                                </Form>
+                                <label htmlFor={"regStartTime"}>{t("admin.reg_start_time")}</label>
+                                <DatePick initial={adminConfig.register_start_time}
+                                    configSet={configSet} name={"regStartTime"}
+                                    configKey={"register_start_time"} />
                             </div>
                             <div className={"absfg"}>
-                                <Form>
-                                    <label htmlFor={"eventStartTime"}>{t("admin.start_time")}</label>
-                                    <DatePick initial={adminConfig.start_time}
-                                        configSet={configSet} name={"eventStartTime"}
-                                        configKey={"start_time"} />
-                                </Form>
+                                <label htmlFor={"eventStartTime"}>{t("admin.start_time")}</label>
+                                <DatePick initial={adminConfig.start_time}
+                                    configSet={configSet} name={"eventStartTime"}
+                                    configKey={"start_time"} />
                             </div>
                             <div className={"absfg"}>
-                                <Form>
-                                    <label htmlFor={"eventEndTime"}>{t("admin.stop_time")}</label>
-                                    <DatePick initial={adminConfig.end_time}
-                                        configSet={configSet} name={"eventEndTime"}
-                                        configKey={"end_time"} />
-                                </Form>
+                                <label htmlFor={"eventEndTime"}>{t("admin.stop_time")}</label>
+                                <DatePick initial={adminConfig.end_time}
+                                    configSet={configSet} name={"eventEndTime"}
+                                    configKey={"end_time"} />
                             </div>
-                        </Form>
+                        </div>
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;
@@ -549,32 +543,26 @@ export default () => {
             content = <SBTSection title={t("admin.configuration")}>
                 {adminConfig ? <>
                     <Section title={t("admin.login")}>
-                        <Form>
-                            <AdminCardSection name={t("admin.enable_login")}>
-                                <Radio onChange={v => configSet("login", v)} value={adminConfig.login}
-                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                            </AdminCardSection>
-                        </Form>
+                        <AdminCardSection name={t("admin.enable_login")}>
+                            <Radio onChange={v => configSet("login", v)} value={adminConfig.login}
+                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
+                        </AdminCardSection>
                     </Section>
                     <Section title={t("admin.reg")}>
-                        <Form>
-                            <AdminCardSection name={t("admin.enable_reg")}>
-                                <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
-                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                            </AdminCardSection>
-                        </Form>
+                        <AdminCardSection name={t("admin.enable_reg")}>
+                            <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
+                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
+                        </AdminCardSection>
                     </Section>
                     <Section title={t("admin.main_game")}>
-                        <Form>
-                            <AdminCardSection name={t("admin.scoring")}>
-                                <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
-                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                            </AdminCardSection>
-                            <AdminCardSection name={t("admin.flags")}>
-                                <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
-                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                            </AdminCardSection>
-                        </Form>
+                        <AdminCardSection name={t("admin.scoring")}>
+                            <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
+                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
+                        </AdminCardSection>
+                        <AdminCardSection name={t("admin.flags")}>
+                            <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
+                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
+                        </AdminCardSection>
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;

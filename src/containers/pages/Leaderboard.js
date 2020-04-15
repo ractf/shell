@@ -16,8 +16,9 @@ export default () => {
     const { t } = useTranslation();
 
     const [graph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
-    const [uResults, uNext, uLoading] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
-    const [tResults, tNext, tLoading] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
+    const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER); 
+    const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM); 
+
 
     const api = useContext(apiContext);
 
@@ -86,14 +87,14 @@ export default () => {
         <TabbedView center initial={1}>
             <Tab label={t("user_plural")}>
                 <Graph data={userGraphData} />
-                <Table headings={[t("user"), t("point_plural")]} data={userData(uResults.results)} />
-                {uResults.hasMore && <Button disabled={uLoading} click={uNext}>Load More</Button>}
+                <Table headings={[t("user"), t("point_plural")]} data={userData(uState.data)} />
+                {uState.hasMore && <Button disabled={uState.loading} click={uNext}>Load More</Button>}
             </Tab>
 
             <Tab label={t("team_plural")}>
                 <Graph data={teamGraphData} />
-                <Table headings={[t("team"), t("point_plural")]} data={teamData(tResults.results)} />
-                {tResults.hasMore && <Button disabled={tLoading} click={tNext}>Load More</Button>}
+                <Table headings={[t("team"), t("point_plural")]} data={teamData(tState.data)} />
+                {tState.hasMore && <Button disabled={tState.loading} click={tNext}>Load More</Button>}
             </Tab>
         </TabbedView>
     </Page>;
