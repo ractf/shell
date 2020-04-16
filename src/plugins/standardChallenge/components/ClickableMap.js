@@ -13,6 +13,22 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const [selectedLongLat, setSelectedLongLat] = useState(null);
     const app = useContext(appContext);
 
+    const fillTemplate = function(templateString, templateVars){
+        // eslint-disable-next-line no-new-func
+        return new Function("return `"+templateString +"`;").call(templateVars);
+    }
+
+    const provider = (x, y, z, dpr) => {
+        let providerUrl = process.env.REACT_MAP_PROVIDER;
+        // Fallback to a free provider
+        if (!providerUrl)
+            return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? '@2x' : ''}.png`
+        // This performs an eval. REACT_MAP_PROVIDER should be safe, though.
+        return fillTemplate(providerUrl, {
+            x: x, y: y, z: z, dpr: dpr
+        });
+    };
+
     const click = (e) => {
         if (hasValidZoom) {
             setSelectedLongLat(e.latLng);
@@ -52,7 +68,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             </>}
         </FlashText>
         <div className={"mapWrap"}>
-            <Map className={"clickableMapMap"} center={[45.04, -4.04]}
+            <Map className={"clickableMapMap"} center={[45.04, -4.04]} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>
                 {selectedLongLat && <Marker paylod={1} anchor={selectedLongLat} />}
             </Map>
