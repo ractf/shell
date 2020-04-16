@@ -7,16 +7,14 @@ import {
     apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText
 } from "ractf";
 
-import ClickableMap from "./ClickableMap";
 import Split from "./Split";
 import File from "./File";
 import Hint from "./Hint";
-import IDE from "./IDE";
 
 import "./Challenge.scss";
 
 
-export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, category }) => {
+export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, category, rightComponent }) => {
     const [isEditFiles, setEditFiles] = useState(false);
     const [isEditHints, setEditHints] = useState(false);
     const [isEditRaw, setEditRaw] = useState(false);
@@ -257,13 +255,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
     });
 
     let rightSide = null;
-    if (!isEditor) {
-        if (challenge.challenge_type === "code")
-            rightSide = <IDE challenge={challenge} />;
-
-        if (challenge.challenge_type === "map")
-            rightSide = <ClickableMap challenge={challenge} />;
-    }
+    if (!isEditor && rightComponent)
+        rightSide = React.createElement(rightComponent, { challenge: challenge });
 
     let chalContent = <>
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>

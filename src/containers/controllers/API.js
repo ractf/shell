@@ -257,26 +257,19 @@ class APIClass extends Component {
     };
 
     abortableGet = (url) => {
-        let request = new XMLHttpRequest();
-        request.responseType = "json";
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
 
-        return [() => {
-            let promise = new Promise((resolve, reject) => {
-                request.addEventListener('load', () => {
-                    resolve(request.response.d);
-                });
-
-                request.addEventListener('error', () => {
-                    console.log("error:");
-                    reject("test");
-                });
-            });
-            let headers = this._getHeaders();
-            request.open('GET', this.appendSlash(BASE_URL + url));
-            Object.entries(headers).forEach(([key, value]) => request.setRequestHeader(key, value));
-            request.send();
-            return promise;
-        }, () => request.abort()];
+        return [new Promise((resolve, reject) => {
+            axios({
+                url: this.appendSlash(BASE_URL + url),
+                cancelToken: source.token,
+                method: "get",
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data.d);
+            }).catch(reject);
+        }), source.cancel];
     };
 
     get = url => {

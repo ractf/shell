@@ -34,23 +34,40 @@ export default () => {
         return <Redirect to={"/404"} />;
     }
 
-    handler = plugins.categoryType[tab.type];
     if (challenge) {
-        if (challenge.type)
-            handler = plugins.challengeType[challenge.type];
+        if (challenge.challenge_type)
+            handler = plugins.challengeType[challenge.challenge_type];
         else
             handler = plugins.challengeType["default"];
 
         if (!handler)
             chalEl = <>
-                {t("challenge.renderer_missing", {type: challenge.type})}<br /><br />
+                {t("challenge.renderer_missing", {type: challenge.challenge_type})}<br /><br />
                 {t("challenge.forgot_plugin")}
             </>;
         else {
-            chalEl = React.createElement(
-                handler.component, {
-                challenge: challenge,
-            });
+            if (handler.rightOf) {
+                let parentHandler = plugins.challengeType[handler.rightOf];
+                if (!parentHandler) {
+                    chalEl = <>
+                        {t("challenge.renderer_missing", {type: handler.rightOf})}<br /><br />
+                        {t("challenge.forgot_plugin")}
+                    </>;
+                } else {
+                    chalEl = React.createElement(
+                        parentHandler.component, {
+                            rightComponent: handler.component,
+                            challenge: challenge,
+                        }
+                    );
+                }
+            } else {
+                chalEl = React.createElement(
+                    handler.component, {
+                        challenge: challenge,
+                    }
+                );
+            }
         }
     }
 

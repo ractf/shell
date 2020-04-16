@@ -10,10 +10,9 @@ export const useApi = route => {
     const abortRequest = useRef();
 
     useEffect(() => {
-        const [makeRequest, ar] = api.abortableGet(route);
+        const [request, ar] = api.abortableGet(route);
         abortRequest.current = ar;
-
-        makeRequest().then(data => {
+        request.then(data => {
             setData(data);
         }).catch(e => setError(api.getError(e)));
     }, [route, api]);
@@ -43,10 +42,10 @@ export const usePaginated = route => {
     const next = () => {
         const path = (page.current === 0) ? route : (route + "?page=" + page.current);
 
-        const [makeRequest, ar] = api.abortableGet(path);
+        const [request, ar] = api.abortableGet(path);
         abortRequest.current = ar;
 
-        makeRequest().then(data => {
+        request.then(data => {
             if (!data) return;
             setState(prevState => ({
                 ...prevState, loading: false,
@@ -89,10 +88,10 @@ export const useFullyPaginated = route => {
     const more = () => {
         let path = (page.current === 0) ? route : (route + "?page=" + page.current);
 
-        const [makeRequest, ar] = api.abortableGet(path);
+        const [request, ar] = api.abortableGet(path);
         abortRequest.current = ar;
 
-        makeRequest().then(data => {
+        request.then(data => {
             if (!data) return;
             setState(prevState => ({
                 ...prevState, data: [...prevState.data, ...data.results]
