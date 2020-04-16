@@ -7,7 +7,7 @@ import { FlashText, Button, FlexRow, appContext } from "ractf";
 import "./ClickableMap.scss";
 
 
-export const PROVIDER_URL = process.env.REACT_APP_API_DOMAIN;
+export const PROVIDER_URL = process.env.REACT_APP_MAP_PROVIDER;
 
 export default ({ challenge, submitFlag, onFlagResponse }) => {
     const minZoomLevel = challenge.challenge_metadata.minimum_zoom_level || 10;
@@ -15,19 +15,18 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const [selectedLongLat, setSelectedLongLat] = useState(null);
     const app = useContext(appContext);
 
-    const fillTemplate = function(templateString, templateVars){
-        // eslint-disable-next-line no-new-func
-        return new Function("return `"+templateString +"`;").call(templateVars);
+    const fillTemplate = (templateString, templateVars) => {
+        Object.entries(templateVars).forEach(([key, val]) => {
+            templateString = templateString.split("{{" + key + "}}").join(val);
+        });
+        return templateString;
     };
 
     const provider = (x, y, z, dpr) => {
         // Fallback to a free provider
         if (!PROVIDER_URL)
             return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? '@2x' : ''}.png`;
-        // This performs an eval. REACT_MAP_PROVIDER should be safe, though.
-        return fillTemplate(PROVIDER_URL, {
-            x: x, y: y, z: z, dpr: dpr
-        });
+        return fillTemplate(PROVIDER_URL, {x: x, y: y, z: z, dpr: dpr});
     };
 
     const click = (e) => {
