@@ -19,7 +19,7 @@ const Console = () => {
     return <div className={"ide-console"}>{content}</div>;
 };
 
-export default ({ challenge, children, showLeft, setLeft }) => {
+export default ({ challenge, showLeft, setLeft }) => {
     const [console, setConsole] = useState(false);
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);

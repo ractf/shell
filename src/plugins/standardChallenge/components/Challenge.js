@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +23,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
     const [flagValid, setFlagValid] = useState(false);
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
+    const onFlagResponse = useRef();
 
     const regex = /^ractf{.+}$/;
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
@@ -62,6 +63,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             endpoints.attemptFlag(flag, challenge).then(resp => {
                 if (resp.d.correct) {
                     app.alert("Flag correct!");
+                    if (onFlagResponse.current)
+                        onFlagResponse.current(true);
                     challenge.solved = true;
 
                     // NOTE: This is potentially very slow. If there are performance issues in production, this is
@@ -80,6 +83,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 setLocked(false);
             }).catch(e => {
                 setMessage(endpoints.getError(e));
+                if (onFlagResponse.current)
+                    onFlagResponse.current(false, endpoints.getError(e));
                 setLocked(false);
             });
         };
@@ -357,7 +362,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
         if (challenge.challenge_type === "map")
             rightSide = <ClickableMap challenge={challenge} />;
     }
-    return <Split>
+    return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
         <>{chalContent}</>
         {rightSide}
     </Split>;
