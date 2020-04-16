@@ -7,7 +7,8 @@ import { FlashText, Button, FlexRow, appContext, Form, Input } from "ractf";
 import "./ClickableMap.scss";
 
 
-export const PROVIDER_URL = process.env.REACT_APP_MAP_PROVIDER;
+const PROVIDER_URL = process.env.REACT_APP_MAP_PROVIDER;
+const LAT_LON_RE = /(-?\d+(?:\.\d+)?),\s*?(-?\d+(?:\.\d+)?)/;
 
 export default ({ challenge, submitFlag, onFlagResponse }) => {
     const minZoomLevel = challenge.challenge_metadata.minimum_zoom_level || 10;
@@ -15,8 +16,13 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const [selectedLongLat, setSelectedLongLat] = useState(null);
     const [currentMapCenter, setCurrentMapCenter] = useState([45.04, -4.04]);
     const app = useContext(appContext);
-    const invalidJmpMsg = "Please enter a valid input in the form longitude, latitude, for example " + 
-                          "48.0, -32.8. Alternatively, enter a URL from Google Maps.";
+
+    const INVALID_JUMP_MESSAGE = <>
+        Please enter a valid input in the form <code>longitude,latitude</code>.
+        For example, <code>48.0,-32.8</code>.
+        <br />
+        Alternatively, enter a URL from Google Maps.
+    </>;
 
     const fillTemplate = (templateString, templateVars) => {
         Object.entries(templateVars).forEach(([key, val]) => {
@@ -41,30 +47,24 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     };
 
     const onMapMove = (e) => {
-        if (e["zoom"] > minZoomLevel) {
-            setHasValidZoom(true);
-        } else {
-            setHasValidZoom(false);
-        }
+        setCurrentMapCenter(e.center);
+        setHasValidZoom(e.zoom > minZoomLevel);
     };
 
     const round = (num) => {
         return Math.round(num * 1000000) / 1000000;
     };
 
-    const jmpToLongLat = ({jmpTo}) => {
-        if (!jmpTo) {
-            return app.alert(invalidJmpMsg);
-        }
+    const jumpToLongLat = ({ jumpTo }) => {
+        console.log("sub", currentMapCenter);
+        if (!jumpTo)
+            return app.alert(INVALID_JUMP_MESSAGE);
 
-        const regex = /[0-9]{1,2}\.[0-9]+/g;
-        const longLat = jmpTo.match(regex);
+        let latLon = LAT_LON_RE.exec(jumpTo);
+        if (!latLon)
+            return app.alert(INVALID_JUMP_MESSAGE);
 
-        if (!longLat || (longLat.length < 2)) {
-            return app.alert(invalidJmpMsg);
-        }
-
-        setCurrentMapCenter([longLat[0], longLat[1]]);
+        setCurrentMapCenter([parseFloat(latLon[1]), parseFloat(latLon[2])]);
     };
 
     onFlagResponse.current = (success, message) => {
@@ -103,11 +103,12 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                 </div>
             }
         </div>
-        <FlexRow style={{bottom: "0px"}}>
-            <Form handle={jmpToLongLat}>
-                <Input name={"jmpTo"} placeholder={"Jump to Long,Lat or enter G.Maps URL"}></Input>
-                <Button submit>Jmp!</Button>
-            </Form>
-        </FlexRow>
+        <Form handle={jumpToLongLat}>
+            <FlexRow className={"jumpRow"} left>
+                <Input format={LAT_LON_RE} className={"jumpTo"} name={"jumpTo"}
+                    placeholder={"Jump to Long,Lat or enter G.Maps URL"} />
+                <Button large submit>Jump</Button>
+            </FlexRow>
+        </Form>
     </div>;
 };

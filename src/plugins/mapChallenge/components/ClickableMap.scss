@@ -38,4 +38,15 @@
             padding: 1em;
         }
     }
+
+    .jumpRow {
+        margin: .5em .25em !important;
+        button {
+            margin: 0;
+        }
+        .inputMetaWrap {
+            flex-grow: 1;
+            margin-right: .5em;
+        }
+    }
 }
