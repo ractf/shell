@@ -38,6 +38,7 @@
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pigeon-maps": "^0.15.0",
+    "pigeon-marker": "^0.3.4",
     "pnp-webpack-plugin": "1.2.1",
     "polished": "^3.5.1",
     "postcss-flexbugs-fixes": "4.1.0",

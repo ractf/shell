@@ -13,7 +13,11 @@
         position: relative;
 
         & > div {
-            position: absolute;
+            position: absolute !important;
         }
+
+    }
+    .flashText {
+        margin-bottom: 8px;
     }
 }
