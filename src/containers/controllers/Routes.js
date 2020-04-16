@@ -61,8 +61,10 @@ const URIHandler = () => {
 
 export default () => {
     return <Switch>
-        <Route exact path={"/debug"} component={Debug} />
         <Route exact path={"/uri"} component={URIHandler} />
+        <Route exact path={"/debug"} >
+            <Page title={"Debug"} C={Debug} />
+        </Route>
 
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />

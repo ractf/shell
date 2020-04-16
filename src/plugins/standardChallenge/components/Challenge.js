@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +7,8 @@ import {
     apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText
 } from "ractf";
 
+import ClickableMap from "./ClickableMap";
+import Split from "./Split";
 import File from "./File";
 import Hint from "./Hint";
 import IDE from "./IDE";
@@ -21,6 +23,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
     const [flagValid, setFlagValid] = useState(false);
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
+    const onFlagResponse = useRef();
 
     const regex = /^ractf{.+}$/;
     const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
@@ -60,6 +63,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             endpoints.attemptFlag(flag, challenge).then(resp => {
                 if (resp.d.correct) {
                     app.alert("Flag correct!");
+                    if (onFlagResponse.current)
+                        onFlagResponse.current(true);
                     challenge.solved = true;
 
                     // NOTE: This is potentially very slow. If there are performance issues in production, this is
@@ -78,6 +83,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 setLocked(false);
             }).catch(e => {
                 setMessage(endpoints.getError(e));
+                if (onFlagResponse.current)
+                    onFlagResponse.current(false, endpoints.getError(e));
                 setLocked(false);
             });
         };
@@ -216,6 +223,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
         switch (challenge.challenge_type) {
             case "code":
                 break;
+            case "map":
+                break;
             case "freeform":
                 flagInput = <Input placeholder="Flag"
                     name={"flag"} callback={changeFlag}
@@ -246,6 +255,15 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             }));
         }
     });
+
+    let rightSide = null;
+    if (!isEditor) {
+        if (challenge.challenge_type === "code")
+            rightSide = <IDE challenge={challenge} />;
+
+        if (challenge.challenge_type === "map")
+            rightSide = <ClickableMap challenge={challenge} />;
+    }
 
     let chalContent = <>
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
@@ -322,9 +340,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 {challenge.solved ? <>
                     {t("challenge.already_solved")}
                 </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
-                    {flagInput}
-                    {message && <FormError>{message}</FormError>}
-                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                    {flagInput && <>
+                        {flagInput}
+                        {message && <FormError>{message}</FormError>}
+                        <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                    </>}
                 </Form> : <FlashText warning bold>
                     {t("challenge.no_team")}
                     <FlexRow>
@@ -345,11 +365,9 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             <Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>
             {chalContent}
         </SBTSection>;
-
-        if (challenge.challenge_type === "code")
-            chalContent = <IDE challenge={challenge}>
-                {chalContent}
-            </IDE>;
     }
-    return chalContent;
+    return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
+        <>{chalContent}</>
+        {rightSide}
+    </Split>;
 };

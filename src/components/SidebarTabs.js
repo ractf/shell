@@ -121,7 +121,7 @@ export const SiteNav = ({ children }) => {
                 </div>
                     <Link to="/">{t("footer.home")}</Link> - <
                     Link to="/privacy">{t("footer.privacy")}</Link> - <
-                    Link to="/terms">{t("footer.terms")}</Link><br />
+                    Link to="/conduct">{t("footer.terms")}</Link><br />
                     <Link to="/ui">UI Framework</Link> - <
                     Link to="/debug">Debug</Link>
                 </div>

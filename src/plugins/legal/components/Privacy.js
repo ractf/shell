@@ -9,7 +9,8 @@ export default () => <Page>
     <p>Effective date: August 31, 2019</p>
 
 
-    <p>Really Awesome CTF ("us", "we", or "our") operates the https://ractf.co.uk website (the "Service").</p>
+    <p>Really Awesome Technology Ltd ("us", "we", or "our") 
+        operates the https://ractf.co.uk website (the "Service").</p>
 
     <p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use
         our Service and the choices you have associated with that data.</p>
@@ -45,7 +46,7 @@ export default () => <Page>
 
     <h2>Use of Data</h2>
 
-    <p>Really Awesome CTF uses the collected data for various purposes:</p>
+    <p>Really Awesome Technology Ltd uses the collected data for various purposes:</p>
     <ul>
         <li>To provide and maintain the Service</li>
         <li>To notify you about changes to our Service</li>
@@ -64,18 +65,19 @@ export default () => <Page>
         transfer the data, including Personal Data, to the United Kingdom and process it there.</p>
     <p>Your consent to this Privacy Policy followed by your submission of such information represents your agreement to
         that transfer.</p>
-    <p>Really Awesome CTF will take all steps reasonably necessary to ensure that your data is treated securely and in
-        accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or
-        a country unless there are adequate controls in place including the security of your data and other personal
-        information.</p>
+    <p>Really Awesome Technology Ltd will take all steps reasonably necessary 
+        to ensure that your data is treated securely and in accordance with this Privacy Policy and 
+        no transfer of your Personal Data will take place to an organization or a country unless there 
+        are adequate controls in place including the security of your data and other personal information.</p>
 
     <h2>Disclosure Of Data</h2>
 
     <h3>Legal Requirements</h3>
-    <p>Really Awesome CTF may disclose your Personal Data in the good faith belief that such action is necessary to:</p>
+    <p>Really Awesome Technology Ltd may disclose your Personal Data 
+        in the good faith belief that such action is necessary to:</p>
     <ul>
         <li>To comply with a legal obligation</li>
-        <li>To protect and defend the rights or property of Really Awesome CTF</li>
+        <li>To protect and defend the rights or property of Really Awesome Technology Ltd</li>
         <li>To prevent or investigate possible wrongdoing in connection with the Service</li>
         <li>To protect the personal safety of users of the Service or the public</li>
         <li>To protect against legal liability</li>
