@@ -7,10 +7,11 @@ import {
     apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText
 } from "ractf";
 
+import ClickableMap from "./ClickableMap";
+import Split from "./Split";
 import File from "./File";
 import Hint from "./Hint";
 import IDE from "./IDE";
-import ClickableMap from "./ClickableMap.js";
 
 import "./Challenge.scss";
 
@@ -337,6 +338,7 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 </FlashText>}
             </>}
     </>;
+    let rightSide = null;
 
     if (!isEditor) {
         let solveMsg = (challenge.first_blood_name
@@ -350,14 +352,13 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
         </SBTSection>;
 
         if (challenge.challenge_type === "code")
-            chalContent = <IDE challenge={challenge}>
-                {chalContent}
-            </IDE>;
+            rightSide = <IDE challenge={challenge} />;
 
         if (challenge.challenge_type === "map")
-            chalContent = <ClickableMap challenge={challenge}>
-                {chalContent}
-            </ClickableMap>;
+            rightSide = <ClickableMap challenge={challenge} />;
     }
-    return chalContent;
+    return <Split>
+        <>{chalContent}</>
+        {rightSide}
+    </Split>;
 };

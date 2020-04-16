@@ -39,17 +39,16 @@ export default ({ challenge, children }) => {
         }
     };
 
-    return <div className={"clickableMapParent"}>
-        <div className={"clickableMapBrief"}><div>{children}</div></div>
-        <div className={"clickableMapMapParent"}>
-            <FlashText>
-                <div className={"selectedParent"}>
-                    <div className="highlight">{highlight}</div>
-                    <div className="selectedLocation">{selectedLocation}</div>
-                </div>
-            </FlashText>
-            <Map className={"clickableMapMap"} center={[45.04, -4.04]} 
-            defaultZoom={4} onClick={click} onBoundsChanged={onMapMove} nick="mybitch"/>
+    return <div className={"mapPartWrap"}>
+        <FlashText>
+            <div className={"selectedParent"}>
+                <div className="highlight">{highlight}</div>
+                <div className="selectedLocation">{selectedLocation}</div>
+            </div>
+        </FlashText>
+        <div className={"mapWrap"}>
+            <Map className={"clickableMapMap"} center={[45.04, -4.04]}
+                defaultZoom={4} onClick={click} onBoundsChanged={onMapMove} />
         </div>
     </div>;
 };

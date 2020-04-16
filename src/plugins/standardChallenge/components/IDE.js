@@ -19,9 +19,8 @@ const Console = () => {
     return <div className={"ide-console"}>{content}</div>;
 };
 
-export default ({ challenge, children }) => {
+export default ({ challenge, children, showLeft, setLeft }) => {
     const [console, setConsole] = useState(false);
-    const [brief, setBrief] = useState(true);
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const [content, setContent] = useState(challenge.challenge_metadata.code_default || "");
@@ -35,29 +34,24 @@ export default ({ challenge, children }) => {
         endpoints.abortRunCode();
     };
 
-    return <div className={"ide-split"}>
-        {brief &&
-            <div className={"ide-brief"}><div>{children}</div></div>
-        }
-        <div className={"ide-editor" + (brief ? "" : " ie-row")}>
-            <div className={"editor-top"}>
-                <CodeInput val={content} onChange={setContent} lang={lang} />
-                <div className={"editor-toolbar"}>
-                    {api.codeRunState.running ?
-                        <div className={"etb-button"} onClick={stop}>Stop</div>
-                        : <div className={"etb-button run"} onClick={run}>Run</div>
-                    }
-                    <div className={"etb-button"} onClick={() => setBrief(!brief)}>
-                        {brief ? "Hide" : "Show"} Briefing
-                    </div>
-                    <div style={{ flexGrow: 1 }} />
-                    <div className={"etb-button"} onClick={() => setConsole(!console)}>
-                        {console ? "Hide" : "Show"} Output
-                    </div>
-                    <div className={"etb-button warn"}>Reset</div>
+    return <div className={"ide-editor" + (showLeft ? "" : " ie-row")}>
+        <div className={"editor-top"}>
+            <CodeInput val={content} onChange={setContent} lang={lang} />
+            <div className={"editor-toolbar"}>
+                {api.codeRunState.running ?
+                    <div className={"etb-button"} onClick={stop}>Stop</div>
+                    : <div className={"etb-button run"} onClick={run}>Run</div>
+                }
+                <div className={"etb-button"} onClick={() => setLeft(left => !left)}>
+                    {showLeft ? "Hide" : "Show"} Briefing
                 </div>
+                <div style={{ flexGrow: 1 }} />
+                <div className={"etb-button"} onClick={() => setConsole(!console)}>
+                    {console ? "Hide" : "Show"} Output
+                </div>
+                <div className={"etb-button warn"}>Reset</div>
             </div>
-            {console && <Console />}
         </div>
+        {console && <Console />}
     </div>;
 };
