@@ -256,6 +256,15 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
         }
     });
 
+    let rightSide = null;
+    if (!isEditor) {
+        if (challenge.challenge_type === "code")
+            rightSide = <IDE challenge={challenge} />;
+
+        if (challenge.challenge_type === "map")
+            rightSide = <ClickableMap challenge={challenge} />;
+    }
+
     let chalContent = <>
         {isEditor ? <div style={{ width: "100%" }}><Form handle={saveEdit(challenge)}>
             <label htmlFor={"name"}>{t("editor.chal_name")}</label>
@@ -331,9 +340,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 {challenge.solved ? <>
                     {t("challenge.already_solved")}
                 </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
-                    {flagInput}
-                    {message && <FormError>{message}</FormError>}
-                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                    {flagInput && <>
+                        {flagInput}
+                        {message && <FormError>{message}</FormError>}
+                        <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                    </>}
                 </Form> : <FlashText warning bold>
                     {t("challenge.no_team")}
                     <FlexRow>
@@ -343,7 +354,6 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                 </FlashText>}
             </>}
     </>;
-    let rightSide = null;
 
     if (!isEditor) {
         let solveMsg = (challenge.first_blood_name
@@ -355,12 +365,6 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             <Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>
             {chalContent}
         </SBTSection>;
-
-        if (challenge.challenge_type === "code")
-            rightSide = <IDE challenge={challenge} />;
-
-        if (challenge.challenge_type === "map")
-            rightSide = <ClickableMap challenge={challenge} />;
     }
     return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
         <>{chalContent}</>
