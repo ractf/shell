@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
-import { FlashText, Button, FlexRow, appContext } from "ractf";
+import { FlashText, Button, FlexRow, appContext, Form, Input } from "ractf";
 
 import "./ClickableMap.scss";
 
@@ -13,7 +13,10 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const minZoomLevel = challenge.challenge_metadata.minimum_zoom_level || 10;
     const [hasValidZoom, setHasValidZoom] = useState(false);
     const [selectedLongLat, setSelectedLongLat] = useState(null);
+    const [currentMapCenter, setCurrentMapCenter] = useState([45.04, -4.04]);
     const app = useContext(appContext);
+    const invalidJmpMsg = "Please enter a valid input in the form longitude, latitude, for example " + 
+                          "48.0, -32.8. Alternatively, enter a URL from Google Maps.";
 
     const fillTemplate = (templateString, templateVars) => {
         Object.entries(templateVars).forEach(([key, val]) => {
@@ -49,6 +52,21 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
         return Math.round(num * 1000000) / 1000000;
     };
 
+    const jmpToLongLat = ({jmpTo}) => {
+        if (!jmpTo) {
+            return app.alert(invalidJmpMsg);
+        }
+
+        const regex = /[0-9]{1,2}\.[0-9]+/g;
+        const longLat = jmpTo.match(regex);
+
+        if (!longLat || (longLat.length < 2)) {
+            return app.alert(invalidJmpMsg);
+        }
+
+        setCurrentMapCenter([longLat[0], longLat[1]]);
+    };
+
     onFlagResponse.current = (success, message) => {
         setSelectedLongLat(null);
         if (!success)
@@ -68,7 +86,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             </>}
         </FlashText>
         <div className={"mapWrap"}>
-            <Map className={"clickableMapMap"} center={[45.04, -4.04]} provider={provider}
+            <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>
                 {selectedLongLat && <Marker paylod={1} anchor={selectedLongLat} />}
             </Map>
@@ -85,5 +103,11 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                 </div>
             }
         </div>
+        <FlexRow style={{bottom: "0px"}}>
+            <Form handle={jmpToLongLat}>
+                <Input name={"jmpTo"} placeholder={"Jump to Long,Lat or enter G.Maps URL"}></Input>
+                <Button submit>Jmp!</Button>
+            </Form>
+        </FlexRow>
     </div>;
 };
