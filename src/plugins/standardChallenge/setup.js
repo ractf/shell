@@ -32,4 +32,5 @@ export default () => {
     registerPlugin("challengeType", "freeform", { component: chal });
     registerPlugin("challengeType", "longText", { component: chal });
     registerPlugin("challengeType", "code", { component: chal });
+    registerPlugin("challengeType", "map", { component: chal });
 };

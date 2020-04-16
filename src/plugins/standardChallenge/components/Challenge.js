@@ -10,6 +10,7 @@ import {
 import File from "./File";
 import Hint from "./Hint";
 import IDE from "./IDE";
+import ClickableMap from "./ClickableMap.js";
 
 import "./Challenge.scss";
 
@@ -216,6 +217,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
         switch (challenge.challenge_type) {
             case "code":
                 break;
+            case "map":
+                break;
             case "freeform":
                 flagInput = <Input placeholder="Flag"
                     name={"flag"} callback={changeFlag}
@@ -350,6 +353,11 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             chalContent = <IDE challenge={challenge}>
                 {chalContent}
             </IDE>;
+
+        if (challenge.challenge_type === "map")
+            chalContent = <ClickableMap challenge={challenge}>
+                {chalContent}
+            </ClickableMap>;
     }
     return chalContent;
 };
