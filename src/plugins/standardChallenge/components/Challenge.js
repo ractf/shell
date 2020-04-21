@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import {
     appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
-    apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText
+    apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText,
+    Checkbox
 } from "ractf";
 
 import Split from "./Split";
@@ -270,6 +271,8 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
 
             <label htmlFor={"description"}>{t("editor.chal_brief")}</label>
             <Input rows={5} val={challenge.description} name={"description"} placeholder={t("editor.chal_brief")} />
+
+            <Checkbox name={"hidden"}>Hide challenge</Checkbox>
 
             <label htmlFor={"challenge_type"}>{t("editor.chal_type")}</label>
             <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}

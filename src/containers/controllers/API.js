@@ -553,12 +553,12 @@ class APIClass extends Component {
 
     editChallenge = ({
         id, name, score, description, flag_type, flag_metadata, autoUnlock,
-        challenge_metadata, author, challenge_type, unlocks, files
+        challenge_metadata, author, challenge_type, unlocks, files, hidden
     }) => (
             this.patch(ENDPOINTS.CHALLENGES + id, {
                 name, score, description,
                 flag_type, flag_metadata,
-                challenge_metadata,
+                challenge_metadata, hidden,
                 author, unlocks, files,
                 challenge_type: challenge_type || "default",
                 auto_unlock: autoUnlock,
@@ -566,12 +566,12 @@ class APIClass extends Component {
         );
     createChallenge = ({
         id, name, score, description, flag_type, flag_metadata, autoUnlock,
-        challenge_metadata, author, challenge_type, unlocks, files
+        challenge_metadata, author, challenge_type, unlocks, files, hidden
     }) => (
             this.post(ENDPOINTS.CHALLENGES, {
                 category: id, name, score, description,
                 flag_type, flag_metadata,
-                challenge_metadata,
+                challenge_metadata, hidden,
                 author, unlocks, files,
                 challenge_type: challenge_type || "default",
                 auto_unlock: autoUnlock,
