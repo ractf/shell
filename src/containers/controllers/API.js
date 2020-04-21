@@ -297,6 +297,19 @@ class APIClass extends Component {
         });
     };
 
+    put = (url, data) => {
+        return new Promise((resolve, reject) => {
+            axios({
+                url: this.appendSlash(BASE_URL + url),
+                method: "put",
+                data: data,
+                headers: this._getHeaders(),
+            }).then(response => {
+                resolve(response.data);
+            }).catch(reject);
+        });
+    };
+
     patch = (url, data) => {
         return new Promise((resolve, reject) => {
             axios({
@@ -359,10 +372,9 @@ class APIClass extends Component {
 
         try {
             challenges = (await this._getChallenges()).d;
-            //this._createChallengeLinks(challenges);
         } catch (e) {
-            if (e.response && e.response.data)
-                return this.logout(true);
+            //if (e.response && e.response.data)
+            //    return this.logout(true);
             ready = false;
         }
 
@@ -379,7 +391,6 @@ class APIClass extends Component {
                 newState.team = teamData;
             }
             newState.challenges = challenges;
-            newState.siteOpen = true;
         }
         this.setState(newState);
     };
@@ -427,7 +438,7 @@ class APIClass extends Component {
             let st = new Date(data.d.server_timestamp);
             let now = new Date();
 
-            let countdown = { time: data.d.countdown_timestamp * 1000, offset: st - now };
+            let countdown = { time: ct, offset: st - now };
             localStorage.setItem("countdown", JSON.stringify(countdown));
 
             if (ct - st < 0) this.setState({ countdown: countdown, siteOpen: true });
@@ -440,7 +451,7 @@ class APIClass extends Component {
         return config;
     });
     _getChallenges = () => this.get(ENDPOINTS.CATEGORIES);
-    setConfigValue = (key, value) => this.patch(ENDPOINTS.CONFIG + key, { value: { value: value } });
+    setConfigValue = (key, value) => this.put(ENDPOINTS.CONFIG, { key: key, value: { value: value } });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);

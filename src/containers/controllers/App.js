@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { BrowserRouter } from "react-router-dom";
+import { MdWarning } from 'react-icons/md';
 
 import { ModalPrompt } from "../../components/Modal";
 import Announcement from "../../components/Announcement";
@@ -13,10 +14,9 @@ import { AppContext } from "./Contexts";
 import Routes from "./Routes";
 import { API } from "./API";
 
-import { plugins, apiContext, apiEndpoints, wsContext, Spinner, SectionTitle, Button } from "ractf";
+import { plugins, apiContext, apiEndpoints, wsContext } from "ractf";
 
 import lockImg from "./spine.png";
-import bgm from "./synthwave.mp3";
 import "./App.scss";
 
 
@@ -85,215 +85,6 @@ Keyboard interrupt received, exiting.
     </div>;
 };
 
-function useInterval(callback, delay) {
-    const savedCallback = useRef();
-
-    useEffect(() => {
-        savedCallback.current = callback;
-    }, [callback]);
-
-    useEffect(() => {
-        function tick() {
-            savedCallback.current();
-        }
-        if (delay !== null) {
-            let id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        }
-    }, [delay]);
-}
-
-const wave = { on: false, audio: null };
-
-const SiteLocked = ({ setLoaded, setHasCode }) => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
-    const [countdownText, setCountdownText] = useState("");
-    const [swc, setWave] = useState(0);
-    const cRef = useRef();
-    const iRef = useRef();
-    const shardData = useRef();
-    const lastTime = useRef();
-    const scan = useRef();
-    if (!scan.current) scan.current = 0;
-    if (!shardData.current) shardData.current = [];
-    window._wave = wave;
-    if (wave.on && !wave.audio) {
-        wave.audio = (new AudioContext()).createBufferSource();
-
-        let request = new XMLHttpRequest();
-        request.open('GET', bgm, true);
-        request.responseType = 'arraybuffer';
-        request.onload = function () {
-            wave.audio.context.decodeAudioData(request.response, function (response) {
-                wave.audio.buffer = response;
-                wave.audio.loop = true;
-                wave.audio.start(0);
-                if (wave.on) wave.audio.connect(wave.audio.context.destination);
-            }, function () { console.error('The request failed.'); });
-        };
-        request.send();
-    }
-
-    const pad = n => {
-        if (n < 10) return "0" + n;
-        return "" + n;
-    };
-
-    useInterval(() => {
-        const delta = ((new Date(api.countdown.time)) - (new Date()) - api.countdown.offset) / 1000;
-        const days = Math.floor(delta / 86400);
-        const hours = Math.floor((delta % 86400) / 3600);
-        const minutes = Math.floor((delta % 3600) / 60);
-        const seconds = Math.floor((delta % 60));
-
-        setCountdownText(("" + days) + " day" + (days === 1 ? "" : "s") + ", "
-            + pad(hours) + " hour" + (hours === 1 ? "" : "s") + ", "
-            + pad(minutes) + " minute" + (minutes === 1 ? "" : "s") + ", "
-            + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
-
-        if (delta < 0) {
-            setLoaded(false);
-            endpoints.openSite();
-            setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
-        }
-    }, 100);
-
-    const animate = time => {
-        let dt = lastTime.current ? time - lastTime.current : 0;
-        lastTime.current = time;
-        requestAnimationFrame(animate);
-
-        const canvas = cRef.current;
-        const image = iRef.current;
-        if (!canvas || !image) return;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const ctx = canvas.getContext("2d");
-
-        let shards = (canvas.width * canvas.height) / 25000;
-        let grd;
-
-        const drawShards = () => {
-            const drawShard = (x, y, scale, angle) => {
-                ctx.translate(x, y);
-                ctx.rotate(angle);
-                ctx.drawImage(image, -image.width * scale, -image.height * scale,
-                    image.width * scale, image.height * scale);
-                ctx.rotate(-angle);
-                ctx.translate(-x, -y);
-            };
-
-            while (shardData.current.length < shards) {
-                shardData.current.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * 2 * -canvas.height,
-                    scale: (Math.random() ** 4) / 2 + 0.5,
-                    angle: 0,
-                    rotate: (Math.random() - 0.5) / 4,
-                });
-            }
-
-            let shard;
-            for (let i = 0; i < shardData.current.length; i++) {
-                shard = shardData.current[i];
-
-                ctx.globalAlpha = (shard.scale - 0.5);
-                drawShard(shard.x, shard.y, shard.scale, shard.angle);
-
-                shard.y += shard.scale * 0.5 * dt;
-                shard.angle += shard.scale * shard.rotate * dt / 1000;
-                if (shard.y > canvas.height + image.height) {
-                    shardData.current.splice(i, 1);
-                    i--;
-                }
-            }
-
-            ctx.globalAlpha = 1;
-        };
-
-        if (wave.on) {
-            // Background
-            ctx.fillStyle = "#7f1a7aff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Sun
-            grd = ctx.createLinearGradient(0, canvas.height / 4, 0, canvas.height / 4 * 3);
-            grd.addColorStop(0, "#ff2f87ff");
-            grd.addColorStop(1, "#291888ff");
-            ctx.fillStyle = grd;
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 4, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        // Shards
-        drawShards();
-
-        if (wave.on) {
-            // Shards fade
-            grd = ctx.createLinearGradient(0, canvas.height / 2 - 50, 0, canvas.height / 2);
-            grd.addColorStop(0, "#7f1a7a00");
-            grd.addColorStop(1, "#7f1a7aff");
-            ctx.fillStyle = grd;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Ground
-            ctx.fillStyle = "#291888ff";
-            ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, canvas.height);
-
-            ctx.strokeStyle = "#752fb6ff";
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 11; i++) {
-                //let prog = (i / 20) + (scan.current / 500);
-
-                let prog = (((i + (scan.current / 50)) / 10) ** 3);
-
-                ctx.beginPath();
-                ctx.moveTo(0, canvas.height / 2 + (canvas.height / 2 * prog));
-                ctx.lineTo(canvas.width, canvas.height / 2 + (canvas.height / 2 * prog));
-                ctx.stroke();
-            }
-            scan.current = (scan.current + 0.1 * dt) % 50;
-            for (let i = -400; i <= 400; i++) {
-                ctx.beginPath();
-                ctx.moveTo(canvas.width / 2 + i * canvas.width / 1000, canvas.height / 2);
-                ctx.lineTo(canvas.width / 2 + i * canvas.width / 5, canvas.height);
-                ctx.stroke();
-            }
-        }
-    };
-    useEffect(animate, []);
-
-    const hasCode = () => {
-        let uname = prompt("c1");
-        let passwd = prompt("c2");
-        let otp = prompt("c3");
-        endpoints.login(uname, passwd, otp);
-    };
-
-    if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
-    return <div className={"lockWrap"}>
-        <canvas ref={cRef} />
-        <img alt={""} src={lockImg} style={{ display: "none" }} ref={iRef} />
-        <SectionTitle>Site Locked!</SectionTitle>
-        <div className={"siteCountdown"}>Unlock in {countdownText}</div>
-
-        <div className={"slide" + (wave.on ? " on" : "")} onClick={() => {
-            wave.on = !wave.on;
-            setWave(swc + 1);
-            if (wave.audio) {
-                wave.audio.loop = true;
-                if (wave.on) wave.audio.connect(wave.audio.context.destination);
-                else wave.audio.disconnect(wave.audio.context.destination);
-            }
-        }} />
-        {!wave.on &&
-            <Button lesser click={hasCode}>I have a code</Button>}
-    </div>;
-};
-
-
 const PopupMessage = ({ data }) => {
     const endpoints = useContext(apiEndpoints);
 
@@ -311,12 +102,22 @@ const WSSpine = () => {
         text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
 };
 
+const LockWarn = () => {
+    const api = useContext(apiContext);
+    if (api.siteOpen) return;
+    if (api.config && (api.config.register_start_time * 1000) - (new Date()) > 0)
+        return <div className={"lockWarning"}>
+            <MdWarning /> Registration locked!
+        </div>;
+    return <div className={"lockWarning less"}>
+        <MdWarning /> Challenges locked!
+    </div>;
+};
+
 const App = React.memo(() => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     window.__api = api;
-
-    const [hasCode, setHasCode] = useState(false);
 
     const [consoleMode, setConsole] = useState(false);
     const [currentPrompt, setCurrentPrompt] = useState(null);
@@ -394,9 +195,6 @@ const App = React.memo(() => {
         setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
     }, []);
 
-    if (!process.env.REACT_APP_NO_SITE_LOCK)
-        if (!api.siteOpen && !hasCode) return <SiteLocked setHasCode={setHasCode} setLoaded={setLoaded} />;
-
     if (consoleMode) return <VimDiv />;
 
     const removePopup = (n) => {
@@ -420,9 +218,12 @@ const App = React.memo(() => {
         return <Announcement {...notif} key={n} hide={hide} />;
     }).reverse();
 
+    let isAdmin = (api.user && api.user.is_staff);
     window.__ractf_alert = showAlert;
     return <Scrollbar primary><div className={"bodyScroll"}>
-        <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert, showProgress: showProgress }}>
+        {isAdmin && <LockWarn />}
+        <AppContext.Provider value={{ promptConfirm: promptConfirm, alert: showAlert,
+                showProgress: showProgress, setLoaded: setLoaded }}>
             {!api.ready && loaded ? <div className={"siteWarning"}>
                 Site operating in offline mode:
                     Failed to connect to the CTF servers!<br />

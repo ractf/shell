@@ -9,6 +9,7 @@ import SettingsPage from "../pages/SettingsPage";
 import { NotFound } from "../pages/ErrorPages";
 import Leaderboard from "../pages/Leaderboard";
 import AdminPage from "../pages/AdminPage";
+import Countdown from "../pages/Countdown";
 import PostLogin from "../pages/auth/PostLogin";
 import HomePage from "../pages/HomePage";
 import TeamPage from "../pages/TeamPage";
@@ -43,8 +44,12 @@ const Logout = () => {
 };
 
 
-const Page = ({ title, auth, admin, noAuth, C }) => {
+const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
     const api = useContext(APIContext);
+    if (!process.env.REACT_APP_NO_SITE_LOCK)
+        if (lockout && !(api.user && api.user.is_staff))
+            if (!api.siteOpen) return <Countdown />;
+
     if (title !== null)
         document.title = title || "RACTF";
 
@@ -109,13 +114,13 @@ export default () => {
         </Route>
 
         <Route exact path={"/campaign/:tabId/challenge/:chalId"}>
-            <Page title={"Challenges"} auth C={ChallengePage} />
+            <Page lockout title={"Challenges"} auth C={ChallengePage} />
         </Route>
         <Route exact path={"/campaign"}>
-            <Page title={"Challenges"} auth C={Campaign} />
+            <Page lockout title={"Challenges"} auth C={Campaign} />
         </Route>
         <Route exact path={"/campaign/:tabId"}>
-            <Page title={"Challenges"} auth C={Campaign} />
+            <Page lockout title={"Challenges"} auth C={Campaign} />
         </Route>
 
         <Redirect path={"/profile"} to={"/profile/me"} exact />
