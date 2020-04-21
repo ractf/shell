@@ -98,7 +98,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
 
-            let unlocked = isEdit || chal.unlocked;
+            let unlocked = isEdit || (chal.unlocked && !chal.hidden);
             // Admins are a special edge-case for unlocked challenges
             /*if (!isEdit && unlocked && api.user.is_staff && !chal.solved) {
                 if (!((linksU && above.solved) || (linksD && below.solved)
