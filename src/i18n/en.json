@@ -111,7 +111,8 @@
         "auto_unlock": "Always unlock",
         "remove": "Remove Challenge",
         "save": "Save Challenge",
-        "create": "Create Challenge"
+        "create": "Create Challenge",
+        "hide_challenge": "Hide challenge"
     },
     "admin": {
         "import_export": "Import/Export",

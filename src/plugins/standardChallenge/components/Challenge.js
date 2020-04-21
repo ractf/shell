@@ -272,7 +272,10 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
             <label htmlFor={"description"}>{t("editor.chal_brief")}</label>
             <Input rows={5} val={challenge.description} name={"description"} placeholder={t("editor.chal_brief")} />
 
-            <Checkbox name={"hidden"}>Hide challenge</Checkbox>
+            <FlexRow>
+                <Checkbox checked={challenge.hidden} name={"hidden"}>{t("editor.hide_challenge")}</Checkbox>
+                <Checkbox checked={challenge.auto_unlock} name={"autoUnlock"}>{t("editor.auto_unlock")}</Checkbox>
+            </FlexRow>
 
             <label htmlFor={"challenge_type"}>{t("editor.chal_type")}</label>
             <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
@@ -296,13 +299,6 @@ export default ({ challenge, isEditor, isCreator, saveEdit, removeChallenge, cat
                     <Button click={() => setEditRaw(true)}>{t("editor.metadata")}</Button>
                 </FlexRow>
             }
-
-            <div>
-                {t("editor.auto_unlock")}
-                <Radio name={"autoUnlock"} value={!!challenge.auto_unlock}
-                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-            </div>
-
             <FlexRow>
                 {!isCreator && <Button click={removeChallenge} warning>{t("editor.remove")}</Button>}
                 <Button submit>{isCreator ? t("editor.create") : t("editor.save")}</Button>
