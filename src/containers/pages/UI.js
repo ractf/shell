@@ -53,6 +53,14 @@ export default () => <Page>
         <ProgressBar progress={.75} />
         <ProgressBar progress={1} />
     </FlexRow>
+    <br />
+    <FlexRow>
+        <ProgressBar thick />
+        <ProgressBar thick progress={.25} />
+        <ProgressBar thick progress={.50} />
+        <ProgressBar thick progress={.75} />
+        <ProgressBar thick progress={1} />
+    </FlexRow>
     <HR />
     <SectionTitle2>Radio</SectionTitle2>
     <Radio options={
@@ -115,7 +123,7 @@ export default () => <Page>
             </Tree>
         </Tree>
         <Tree name="Open folder" startOpen>
-            <TreeValue setValue={()=>0} name="Editable value" value="Edits won't actually occur" />
+            <TreeValue setValue={() => 0} name="Editable value" value="Edits won't actually occur" />
         </Tree>
     </TreeWrap>
     <br />

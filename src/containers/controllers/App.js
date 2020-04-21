@@ -104,7 +104,7 @@ const WSSpine = () => {
 
 const LockWarn = () => {
     const api = useContext(apiContext);
-    if (api.siteOpen) return;
+    if (api.siteOpen) return null;
     if (api.config && (api.config.register_start_time * 1000) - (new Date()) > 0)
         return <div className={"lockWarning"}>
             <MdWarning /> Registration locked!

@@ -6,7 +6,7 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS } from "ractf";
+import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS, ProgressBar } from "ractf";
 import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
 import colours from "../../Colours.scss";
 import Graph from "../../components/charts/Graph";
@@ -41,13 +41,13 @@ export default () => {
 
     const UserSolve = ({ solved_by_name, challenge_name, points }) => <div className={"userSolve"}>
         <div>{challenge_name}</div>
-        <div>{t("teams.solve", {count: parseInt(points, 10), solved_by_name})}</div>
+        <div>{t("teams.solve", { count: parseInt(points, 10), solved_by_name })}</div>
     </div>;
 
     let categoryValues = {};
     let userValues = {};
     let tData = teamData.solves.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    let scorePlotData = {x: [], y: [], name: "score", fill: "tozeroy"};
+    let scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.x.push(api.config.start_time);
     // scorePlotData.y.push(0);
@@ -68,6 +68,22 @@ export default () => {
         let score = (scorePlotData.y[scorePlotData.y.length - 1] || 0) + solve.points;
         scorePlotData.x.push(new Date(solve.timestamp));
         scorePlotData.y.push(score);
+    });
+
+    let catProgress = [];
+    api.challenges && api.challenges.forEach(cat => {
+        let tot = 0, got = 0;
+        cat.challenges.forEach(chal => {
+            tot += chal.score;
+        });
+        tData.forEach(solve => {
+            cat.challenges.forEach(chal => {
+                if (chal.id === solve.challenge) {
+                    got += solve.points;
+                }
+            });
+        });
+        catProgress.push([cat.name, got, tot]);
     });
 
     return <Page title={teamData.name}>
@@ -108,48 +124,59 @@ export default () => {
             </div>
             <div className={"userSolves"}>
                 {(!teamData.solves || teamData.solves.length === 0) ? <div className={"noSolves"}>
-                    {t("teams.no_solves", {name: teamData.name})}
+                    {t("teams.no_solves", { name: teamData.name })}
                 </div> : <TabbedView>
-                    <Tab label={"Solves"}>
-                        {teamData.solves && teamData.solves.map(i => <UserSolve key={i.timestamp} {...i} />)}
-                    </Tab>
-                    <Tab label={"Stats"}>
-                        <div className={"ppwRow"}>
-                        <div className={"profilePieWrap"}>
-                            <div className={"ppwHead"}>Solve attempts</div>
-                            <Pie data={[{
-                            values: [420, 69],
-                            labels: ['Correct', 'Incorrect'],
-                            marker: {
-                                colors: [
-                                colours.bgreen,
-                                colours.red
-                                ]
-                            }
-                        }]} height={300} />
-                        </div>
-                        <div className={"profilePieWrap"}>
-                            <div className={"ppwHead"}>Category Breakdown</div>
-                            <Pie data={[{
-                                values: Object.values(categoryValues),
-                                labels: Object.keys(categoryValues),
-                            }]} height={281 + 19 * Object.keys(categoryValues).length} />
-                        </div>
-                        <div className={"profilePieWrap"}>
-                            <div className={"ppwHead"}>User Breakdown</div>
-                            <Pie data={[{
-                                values: Object.values(userValues),
-                                labels: Object.keys(userValues),
-                            }]} height={281 + 19 * Object.keys(userValues).length} />
-                        </div>
-                    </div>
-                    <HR />
-                    <div>
-                        <div className={"ppwHead"}>Score Over Time</div>
-                        <Graph data={[scorePlotData]} />
-                    </div>
-                    </Tab>
-                </TabbedView>}
+                        <Tab label={"Solves"}>
+                            {teamData.solves && teamData.solves.map(i => <UserSolve key={i.timestamp} {...i} />)}
+                        </Tab>
+                        <Tab label={"Stats"}>
+                            <div className={"ppwRow"}>
+                                <div className={"profilePieWrap"}>
+                                    <div className={"ppwHead"}>Solve attempts</div>
+                                    <Pie data={[{
+                                        values: [420, 69],
+                                        labels: ['Correct', 'Incorrect'],
+                                        marker: {
+                                            colors: [
+                                                colours.bgreen,
+                                                colours.red
+                                            ]
+                                        }
+                                    }]} height={300} />
+                                </div>
+                                <div className={"profilePieWrap"}>
+                                    <div className={"ppwHead"}>Category Breakdown</div>
+                                    <Pie data={[{
+                                        values: Object.values(categoryValues),
+                                        labels: Object.keys(categoryValues),
+                                    }]} height={281 + 19 * Object.keys(categoryValues).length} />
+                                </div>
+                                <div className={"profilePieWrap"}>
+                                    <div className={"ppwHead"}>User Breakdown</div>
+                                    <Pie data={[{
+                                        values: Object.values(userValues),
+                                        labels: Object.keys(userValues),
+                                    }]} height={281 + 19 * Object.keys(userValues).length} />
+                                </div>
+                            </div>
+                            <HR />
+                            <div>
+                                <div className={"ppwHead"}>Category Progress</div>
+                                {catProgress.map(([name, got, tot]) => <>
+                                    <span style={{ fontWeight: 700 }}>{name}</span>
+                                    <span style={{ fontSize: ".8em", marginLeft: 8 }}>
+                                        got}/{tot} ({Math.round(got / tot * 100) / 100}%)
+                                    </span>
+                                    <ProgressBar thick progress={got / tot} width={"auto"} />
+                                </>)}
+                            </div>
+                            <HR />
+                            <div>
+                                <div className={"ppwHead"}>Score Over Time</div>
+                                <Graph data={[scorePlotData]} />
+                            </div>
+                        </Tab>
+                    </TabbedView>}
             </div>
         </div>
     </Page>;
