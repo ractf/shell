@@ -41,8 +41,8 @@ export default class Input extends Component {
         if (this.props.rows)
             rows = Math.max(this.props.rows, value.split("\n").length);
         this.setState({ val: value, rows: rows });
-        if (this.props.callback)
-            this.props.callback(value, valid);
+        if (this.props.onChange)
+            this.props.onChange(value, valid);
     }
 
     togglePwd = () => {
@@ -50,9 +50,12 @@ export default class Input extends Component {
     }
 
     keyDown = (e) => {
-        if (e.keyCode === 13 && this.props.next) {
+        if (e.keyCode === 13) {
             e.preventDefault();
-            this.props.next.current.click();
+            if (this.props.onSubmit)
+               this.props.onSubmit(this.state.val);
+            if (this.props.next && this.props.next.current)
+                this.props.next.current.click();
         }
     }
 
@@ -101,7 +104,7 @@ export default class Input extends Component {
                          data-val={this.state.val.length ? this.props.zxcvbn(this.state.val).score + 1 : 0} />}
                 {this.props.placeholder && this.state.val.length === 0 &&
                     <div className={"placeholder" + (this.props.monospace ? " monospaced" : "")}>
-                        {this.props.placeholder}</div>}
+                        <span>{this.props.placeholder}</span></div>}
             </div>
         </div>;
     }

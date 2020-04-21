@@ -3,7 +3,8 @@ import React from "react";
 import {
     Page, SectionTitle, HR, SectionHeading, SectionTitle2, FlexRow, Button, Input,
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
-    Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue, Checkbox
+    Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue, Checkbox,
+    InputButton
 } from "ractf";
 
 
@@ -40,7 +41,9 @@ export default () => <Page>
         { key: 2, value: "is" },
         { key: 3, value: "a" },
         { key: 4, value: "dropdown" },
-    ]} />
+    ]} /><br />
+    <InputButton placeholder={"Inline Submit"} /><br />
+    <InputButton placeholder={"Disbaled Inline Submit"} disabled />
     <HR />
     <SectionTitle2>Progress Bar</SectionTitle2>
     <FlexRow>

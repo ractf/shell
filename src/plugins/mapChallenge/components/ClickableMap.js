@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
-import { FlashText, Button, FlexRow, appContext, Form, Input } from "ractf";
+import { FlashText, Button, FlexRow, appContext, Form, Input, InputButton } from "ractf";
 
 import "./ClickableMap.scss";
 
@@ -35,7 +35,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
         // Fallback to a free provider
         if (!PROVIDER_URL)
             return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? '@2x' : ''}.png`;
-        return fillTemplate(PROVIDER_URL, {x: x, y: y, z: z, dpr: dpr});
+        return fillTemplate(PROVIDER_URL, { x: x, y: y, z: z, dpr: dpr });
     };
 
     const click = (e) => {
@@ -56,7 +56,6 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     };
 
     const jumpToLongLat = ({ jumpTo }) => {
-        console.log("sub", currentMapCenter);
         if (!jumpTo)
             return app.alert(INVALID_JUMP_MESSAGE);
 
@@ -82,8 +81,8 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             </> : hasValidZoom ? <>
                 <div className="highlight">Click on the map to select a location</div>
             </> : <>
-                <div className="highlight">Zoom in closer to make a selection!</div>
-            </>}
+                        <div className="highlight">Zoom in closer to make a selection!</div>
+                    </>}
         </FlashText>
         <div className={"mapWrap"}>
             <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
@@ -91,24 +90,21 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                 {selectedLongLat && <Marker paylod={1} anchor={selectedLongLat} />}
             </Map>
 
-            {selectedLongLat && 
+            {selectedLongLat &&
                 <div className={"submitOverlay"}>
                     <div className={"soInner"}>
                         <div className={"soText"}>Location selected. Submit as flag?</div>
                         <FlexRow>
                             <Button click={() => setSelectedLongLat(null)} lesser>Cancel</Button>
-                            <Button click={() => submitFlag({flag: selectedLongLat})}>Submit</Button>
+                            <Button click={() => submitFlag({ flag: selectedLongLat })}>Submit</Button>
                         </FlexRow>
                     </div>
                 </div>
             }
         </div>
         <Form handle={jumpToLongLat}>
-            <FlexRow className={"jumpRow"} left>
-                <Input format={LAT_LON_RE} className={"jumpTo"} name={"jumpTo"}
-                    placeholder={"Jump to Long,Lat or enter G.Maps URL"} />
-                <Button large submit>Jump</Button>
-            </FlexRow>
+            <InputButton format={LAT_LON_RE} name={"jumpTo"} button={"Jump"}
+                placeholder={"Jump to Long,Lat or enter G.Maps URL"} submit />
         </Form>
     </div>;
 };

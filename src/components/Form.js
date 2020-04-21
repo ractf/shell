@@ -48,9 +48,8 @@ export default ({ children, submit, button, handle, locked }) => {
                     click: submitFunc
                 });
                 button = ref;
-            }
-
-            if (i.props.name) {
+                if (i.props.name) refs.push(ref);
+            } else if (i.props.name) {
                 let ref = createRef();
                 changed = true;
                 newArray[n] = cloneElement(i, {
