@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { FaLock, FaEyeSlash } from "react-icons/fa";
 
 import { apiEndpoints, registerPlugin } from "ractf";
 
@@ -121,7 +122,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
 
                 url={unlocked ? "/campaign/" + challenges.id + "/challenge/" + chal.id : null}
 
-                name={!unlocked ? "???" : chal.name}
+                name={chal.hidden ? <FaEyeSlash /> : !unlocked ? <FaLock /> : chal.name}
             />;
         })}</Row>
     );
