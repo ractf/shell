@@ -108,7 +108,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
 
             return <Node
                 key={chal.id} unlocked={unlocked}
-                done={isEdit ? false : chal.solved}
+                done={isEdit ? false : (chal.solved && !chal.hidden)}
 
                 linksR={linksR} linksL={linksL}
                 linksU={linksU} linksD={linksD}

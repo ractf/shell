@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import { useTranslation } from 'react-i18next';
 
 import {
-    appContext, Button, Input, TextBlock, Form, FormError, Radio, SBTSection,
+    appContext, Button, Input, TextBlock, Form, FormError, SBTSection,
     apiEndpoints, Link, apiContext, Select, plugins, HR, FlexRow, FlashText,
     Checkbox
 } from "ractf";
