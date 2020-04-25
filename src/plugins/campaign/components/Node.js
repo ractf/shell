@@ -56,22 +56,22 @@ export default ({
             {lockDoneD ? <FaCheck /> : lockUnlockedD ? <FaLockOpen /> : <FaLock />}
         </div>}
 
-        <NodeLink {...fastClick}
+        <NodeLink
             onClick={toggle('left')} isEdit={isEdit} show={linksL} left
             done={done} unlocked={unlocked} />
-        <NodeLink {...fastClick}
+        <NodeLink
             onClick={toggle('right')} isEdit={isEdit} show={linksR} right
             done={done} unlocked={unlocked} />
-        <NodeLink {...fastClick}
+        <NodeLink
             onClick={toggle('up')} isEdit={isEdit} show={linksU} up
             done={done} unlocked={unlocked} />
-        <NodeLink {...fastClick}
+        <NodeLink
             onClick={toggle('down')} isEdit={isEdit} show={linksD} down
             done={done} unlocked={unlocked} />
     </>;
 
     if (isEdit || !url)
-        return <div tabIndex={unlocked || done ? "0" : ""} {...fastClick}
+        return <div tabIndex={unlocked || done ? "0" : ""}
             onClick={(done || unlocked) ? click : null} className={nodeClass}>
             {inner}
         </div>;
