@@ -35,7 +35,7 @@ export default ({ name, url, size, id, isEdit }) => {
             ).catch(e =>
                 app.alert("Error editing file:\n" + endpoints.getError(e))
             );
-        });
+        }).catch(() => {});
     };
 
     if (isEdit) {

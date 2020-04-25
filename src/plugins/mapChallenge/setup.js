@@ -19,4 +19,5 @@ export default () => {
     });
 
     registerPlugin("challengeType", "map", { rightOf: "default", component: chal });
+    registerPlugin("challengeEditor", "map", { uses: "default" });
 };

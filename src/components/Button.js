@@ -3,8 +3,6 @@ import useReactRouter from "../useReactRouter";
 
 import "./Button.scss";
 
-import { fastClick } from "ractf";
-
 
 const Button = (props, ref) => {
     const { history } = useReactRouter();
@@ -24,7 +22,7 @@ const Button = (props, ref) => {
     if (props.disabled) className += " disabled";
 
     return <button className={className} disabled={props.disabled} ref={ref}
-                   onClick={onClick} {...(props.to ? fastClick : {})}>
+                   onClick={onClick}>
         {props.children}
     </button>;
 };

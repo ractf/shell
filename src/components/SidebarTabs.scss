@@ -251,6 +251,7 @@ $sidebar_heading: $white_100;
 
 .sbtBurgerUnderlay {
     width: 220px;
+    flex-shrink: 0;
 }
 
 .sbtBurger {

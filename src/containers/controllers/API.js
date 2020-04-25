@@ -671,7 +671,7 @@ class APIClass extends Component {
         this.delete(ENDPOINTS.FILE + id).then(resp => resp.d).then(body => {
             this.state.challenges.forEach(group =>
                 group.challenges.forEach(chal =>
-                    chal.files = chal.files.filter(i => i.id.toString() !== id.toString())
+                    chal.files = chal.files.filter(i => i && (i.id.toString() !== id.toString()))
                 )
             );
             this.setState({ challenges: this.state.challenges });
@@ -723,7 +723,7 @@ class APIClass extends Component {
         this.delete(ENDPOINTS.HINT + id).then(resp => resp.d).then(body => {
             this.state.challenges.forEach(group =>
                 group.challenges.forEach(chal =>
-                    chal.hints = chal.hints.filter(i => i.id.toString() !== id.toString())
+                    chal.hints = chal.hints.filter(i => i && (i.id.toString() !== id.toString()))
                 )
             );
             this.setState({ challenges: this.state.challenges });

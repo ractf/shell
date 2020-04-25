@@ -25,7 +25,7 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
             ).catch(e =>
                 app.alert("Error editing hint:\n" + endpoints.getError(e))
             );
-        });
+        }).catch(() => {});
     };
 
     return <div className={"challengeLink clickable" + (hintUsed ? " hintUsed" : "")}

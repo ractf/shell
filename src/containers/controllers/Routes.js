@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Loadable from "react-loadable";
 
+import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
 import PasswordReset from "../pages/auth/PasswordReset";
 import ChallengePage from "../pages/ChallengePage";
 import SettingsPage from "../pages/SettingsPage";
-import { NotFound } from "../pages/ErrorPages";
 import Leaderboard from "../pages/Leaderboard";
 import AdminPage from "../pages/AdminPage";
 import Countdown from "../pages/Countdown";
@@ -24,7 +24,7 @@ import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
 
 import { APIContext, APIEndpoints } from "./Contexts";
 
-import { plugins } from "ractf";
+import { plugins, TextBlock, SectionHeading, SectionTitle2 } from "ractf";
 
 const Loading = () => "Loading";
 const asyncRoute = (loader) => (
@@ -44,6 +44,34 @@ const Logout = () => {
 };
 
 
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { error: null };
+    }
+
+    static getDerivedStateFromError(error) {
+        return { error: error };
+    }
+
+    componentDidCatch(error, errorInfo) {
+    }
+
+    render() {
+        if (this.state.error) {
+            return <div className="sbtBody"><div className={"pageContent vCentre"}>
+                <BrokenShards />
+                <SectionHeading>This page failed to load.</SectionHeading>
+                <SectionTitle2>Please report this!</SectionTitle2>
+                <TextBlock style={{textAlign: "left"}}>{this.state.error.stack}</TextBlock>
+            </div></div>;
+        }
+
+        return this.props.children;
+    }
+}
+
+
 const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
     const api = useContext(APIContext);
     if (!process.env.REACT_APP_NO_SITE_LOCK)
@@ -57,7 +85,7 @@ const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
     if (noAuth && api.authenticated) return <Redirect to={"/home"} />;
     if (admin && (!api.user || !api.user.is_staff)) return <Redirect to={"/home"} />;
 
-    return <C />;
+    return <ErrorBoundary><C /></ErrorBoundary>;
 };
 
 const URIHandler = () => {
@@ -138,7 +166,7 @@ export default () => {
         <Route exact path={"/leaderboard"}>
             <Page title={"Leaderboard"} C={Leaderboard} />
         </Route>
-        
+
         <Route exact path={"/ui"}>
             <Page title={"UI"} C={UI} />
         </Route>

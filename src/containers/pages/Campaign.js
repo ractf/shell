@@ -114,20 +114,15 @@ const CategoryList = () => {
 
 
 export default () => {
-    const [challenge, setChallenge] = useState(null);
-    const [edit, setEdit] = useState(false);
-    const [isEditor, setIsEditor] = useState(false);
-    const [isCreator, setIsCreator] = useState(false);
-    const [lState, setLState] = useState({});
     const [anc, setAnc] = useState(false);
 
     const { t } = useTranslation();
-    const { match } = useReactRouter();
+    const { history, location, match } = useReactRouter();
     const tabId = match.params.tabId;
-
-    const endpoints = useContext(apiEndpoints);
-    const app = useContext(appContext);
+    
     const api = useContext(apiContext);
+
+    const edit = location.hash === "#edit" && api.user && api.user.is_staff;
 
     if (tabId === "new" && api.user.is_staff)
         return <Page><SBTSection key={"anc"} title={t("challenge.new_cat")} noHead>
@@ -139,58 +134,9 @@ export default () => {
         return <CategoryList />;
     }
 
-    const showEditor = (challenge, saveTo, isNew) => {
+    const showEditor = (challenge) => {
         return () => {
-            setChallenge(challenge || {});
-            setLState({
-                saveTo: saveTo
-            });
-            setIsEditor(true);
-            setIsCreator(!!isNew);
-        };
-    };
-
-    const hideChal = () => {
-        setChallenge(null);
-        setIsEditor(false);
-    };
-
-    const saveEdit = (original) => {
-        return changes => {
-            let flag;
-            try {
-                flag = JSON.parse(changes.flag_metadata);
-            } catch (e) {
-                if (!changes.flag_metadata.length) flag = "";
-                else return app.alert(t("challenge.invalid_flag_json"));
-            }
-
-            (isCreator ? endpoints.createChallenge : endpoints.editChallenge)({
-                ...original, ...changes, id: (isCreator ? tabId : original.id), flag_metadata: flag
-            }).then(async () => {
-                for (let i in changes)
-                    original[i] = changes[i];
-                if (lState.saveTo)
-                    lState.saveTo.push(original);
-
-                await endpoints.setup();
-                setIsEditor(false);
-                setChallenge(null);
-            }).catch(e => app.alert(endpoints.getError(e)));
-        };
-    };
-
-    const removeChallenge = (challenge) => {
-        return () => {
-            app.promptConfirm({message: "Remove challenge:\n" + challenge.name, small: true}).then(() => {
-                endpoints.removeChallenge(challenge).then(() => {
-                    app.alert("Challenge removed");
-                    setIsEditor(false);
-                    setChallenge(null);
-                }).catch(e => {
-                    app.alert("Error removing challenge:\n" + endpoints.getError(e));
-                });
-            }).catch(() => { });
+            history.push("/campaign/" + tabId + "/challenge/new#" + encodeURIComponent(JSON.stringify(challenge)));
         };
     };
 
@@ -219,42 +165,15 @@ export default () => {
         );
     }
 
-    if (challenge || isEditor) {
-        if (challenge.type)
-            handler = plugins.challengeType[challenge.type];
-        else
-            handler = plugins.challengeType["default"];
-
-        if (!handler)
-            chalEl = <>
-                {t("challenge.renderer_missing", {type: challenge.type})}<br /><br />
-                {t("challenge.forgot_plugin")}
-            </>;
-        else {
-            chalEl = React.createElement(
-                handler.component, {
-                challenge: challenge, doHide: hideChal,
-                isEditor: isEditor, saveEdit: saveEdit,
-                removeChallenge: removeChallenge(challenge),
-                isCreator: isCreator,
-                category: tab,
-            });
-        }
-
-        chalEl = <Modal onHide={hideChal}>
-            {chalEl}
-        </Modal>;
-    }
-
     return <Page title={t("challenge_plural")}>
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
         <SBTSection key={tab.id} subTitle={tab.description} title={tab.name}>
             {api.user.is_staff ? edit ?
-                <Button className={"campEditButton"} click={() => { setEdit(false); endpoints.setup(true); }} warning>
+                <Button className={"campEditButton"} to={"#"} warning>
                     {t("edit_stop")}
-                </Button> : <Button className={"campEditButton"} click={() => { setEdit(true); }} warning>
+                </Button> : <Button className={"campEditButton"} to={"#edit"} warning>
                     {t("edit")}
                 </Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_details")}</Button>}

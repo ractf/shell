@@ -84,7 +84,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
             if (!chal) {
                 if (isEdit)
                     return <AddNode click={showEditor(emptyChallenge(x, y), chals, true)} key={"add_" + x + "," + y} />;
-                 return <div className={"campaignSpacer"} key={"spacer_" + x + "," + y} />;
+                return <div className={"campaignSpacer"} key={"spacer_" + x + "," + y} />;
             }
 
             // ( ... || []) ensures we have a list to lookup with [x].
@@ -92,7 +92,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 left = rows[y][x - 1],
                 above = (rows[y - 1] || [])[x],
                 below = (rows[y + 1] || [])[x];
-            
+
             let linksR = (right && chal.unlocks.indexOf(right.id) !== -1),
                 linksL = (left && chal.unlocks.indexOf(left.id) !== -1),
                 linksU = (above && chal.unlocks.indexOf(above.id) !== -1),
@@ -100,12 +100,6 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
 
 
             let unlocked = isEdit || (chal.unlocked && !chal.hidden);
-            // Admins are a special edge-case for unlocked challenges
-            /*if (!isEdit && unlocked && api.user.is_staff && !chal.solved) {
-                if (!((linksU && above.solved) || (linksD && below.solved)
-                    || (linksR && right.solved) || (linksL && left.solved)))
-                    unlocked = false;
-            }*/
 
             return <Node
                 key={chal.id} unlocked={unlocked}
@@ -116,11 +110,11 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
 
                 right={right} below={below}
 
-                click={isEdit ? showEditor(chal) : ""}
                 isEdit={isEdit} toggleLink={toggleLink(chal)}
                 points={chal.score}
 
-                url={unlocked ? "/campaign/" + challenges.id + "/challenge/" + chal.id : null}
+                url={(isEdit || unlocked) ? "/campaign/" + challenges.id + "/challenge/" + chal.id
+                    + (isEdit ? "#edit" : "") : null}
 
                 name={chal.hidden ? <FaEyeSlash /> : !unlocked ? <FaLock /> : chal.name}
             />;
@@ -136,10 +130,10 @@ export default () => {
     registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
     registerPlugin("challengeMetadata", "campaign", {
         fields: [
-            {label: "Campaign settings:", type: "label"},
-            {name: "x", label: "X Position", type: "number"},
-            {name: "y", label: "Y Position", type: "number"},
-            {type: "hr"},
+            { label: "Campaign settings:", type: "label" },
+            { name: "x", label: "X Position", type: "number" },
+            { name: "y", label: "Y Position", type: "number" },
+            { type: "hr" },
         ],
         check: (challenge, category) => {
             return category.contained_type === "campaign";

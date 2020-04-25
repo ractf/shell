@@ -29,4 +29,5 @@ export default () => {
     });
 
     registerPlugin("challengeType", "code", { rightOf: "default", component: chal });
+    registerPlugin("challengeEditor", "code", { uses: "default" });
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
 
-import { Link, fastClick } from "ractf";
+import { Link } from "ractf";
 
 import NodeLink from "./NodeLink";
 
@@ -70,7 +70,7 @@ export default ({
             done={done} unlocked={unlocked} />
     </>;
 
-    if (isEdit || !url)
+    if (!url)
         return <div tabIndex={unlocked || done ? "0" : ""}
             onClick={(done || unlocked) ? click : null} className={nodeClass}>
             {inner}

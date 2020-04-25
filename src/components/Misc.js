@@ -15,8 +15,8 @@ export const SectionTitle2 = ({ children }) => (
 export const SectionHeading = ({ children }) => (
     <div className={"sectionHeading"}>{children}</div>
 );
-export const TextBlock = ({ children, ...props }) => (
-    <div {...props} className={"textBlock " + props.className}>{children}</div>
+export const TextBlock = ({ children, className, ...props }) => (
+    <div {...props} className={"textBlock" + (className ? " "+  className : "")}>{children}</div>
 );
 export const SubtleText = ({ children }) => (
     <div className={"subtleText"}>{children}</div>
