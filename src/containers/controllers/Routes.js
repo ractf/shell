@@ -19,6 +19,8 @@ import Debug from "../pages/Debug";
 import TwoFA from "../pages/TwoFA";
 import UI from "../pages/UI";
 
+import WSTester from "../pages/WSTester";
+
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
 
@@ -97,6 +99,9 @@ export default () => {
         <Route exact path={"/uri"} component={URIHandler} />
         <Route exact path={"/debug"} >
             <Page title={"Debug"} C={Debug} />
+        </Route>
+        <Route exact path={"/debug/ws"} >
+            <Page title={"WebSockets"} C={WSTester} />
         </Route>
 
         <Redirect exact path={"/"} to={"/home"} />
