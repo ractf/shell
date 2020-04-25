@@ -5,9 +5,8 @@ I needed to pick a name when making the project. This is probably going to take
 ages to get properly working, so it's probably best not to touch stuff here
 until the first builds are working.
 
-## // TODO:
+## // TODO
 
-- Get a proper CI running with azure
 - Get storybook setup for testing of react components
 - Get feature partity with the MPA
 
