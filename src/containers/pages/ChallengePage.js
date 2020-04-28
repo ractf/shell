@@ -31,47 +31,45 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
         </>;
     
 
-    const saveEdit = (original) => {
-        return changes => {
-            let flag;
-            try {
-                flag = JSON.parse(changes.flag_metadata);
-            } catch (e) {
-                if (!changes.flag_metadata.length) flag = "";
-                else return app.alert(t("challenge.invalid_flag_json"));
-            }
+    const saveEdit = changes => {
+        let original = challenge;
 
-            (isCreator ? endpoints.createChallenge : endpoints.editChallenge)({
-                ...original, ...changes, id: (isCreator ? category.id : original.id), flag_metadata: flag
-            }).then(async (data) => {
-                for (let i in changes)
-                    original[i] = changes[i];
-                if (isCreator) category.challenges.push(original);
-                    //if (lState.saveTo)
-                //    lState.saveTo.push(original);
-                
-                let id = original.id || data.id;
-                if (id && isCreator)
-                    history.push("/campaign/" + category.id + "/challenge/" + id + "#edit");
-                else
-                    history.push("/campaign/" + category.id + "#edit");
+        let flag;
+        try {
+            flag = JSON.parse(changes.flag_metadata);
+        } catch (e) {
+            if (!changes.flag_metadata.length) flag = "";
+            else return app.alert(t("challenge.invalid_flag_json"));
+        }
 
-                await endpoints.setup();
-            }).catch(e => app.alert(endpoints.getError(e)));
-        };
+        (isCreator ? endpoints.createChallenge : endpoints.editChallenge)({
+            ...original, ...changes, id: (isCreator ? category.id : original.id), flag_metadata: flag
+        }).then(async (data) => {
+            for (let i in changes)
+                original[i] = changes[i];
+            if (isCreator) category.challenges.push(original);
+                //if (lState.saveTo)
+            //    lState.saveTo.push(original);
+            
+            let id = original.id || data.id;
+            if (id && isCreator)
+                history.push("/campaign/" + category.id + "/challenge/" + id + "#edit");
+            else
+                history.push("/campaign/" + category.id + "#edit");
+
+            await endpoints.setup();
+        }).catch(e => app.alert(endpoints.getError(e)));
     };
 
-    const removeChallenge = (challenge) => {
-        return () => {
-            app.promptConfirm({message: "Remove challenge:\n" + challenge.name, small: true}).then(() => {
-                endpoints.removeChallenge(challenge).then(() => {
-                    app.alert("Challenge removed");
-                    history.push("/campaign/" + category.id);
-                }).catch(e => {
-                    app.alert("Error removing challenge:\n" + endpoints.getError(e));
-                });
-            }).catch(() => { });
-        };
+    const removeChallenge = () => {
+        app.promptConfirm({message: "Remove challenge:\n" + challenge.name, small: true}).then(() => {
+            endpoints.removeChallenge(challenge).then(() => {
+                app.alert("Challenge removed");
+                history.push("/campaign/" + category.id);
+            }).catch(e => {
+                app.alert("Error removing challenge:\n" + endpoints.getError(e));
+            });
+        }).catch(() => { });
     };
 
     return React.createElement(handler.component, {

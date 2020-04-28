@@ -60,8 +60,8 @@ export default ({ children, submit, button, handle, locked }) => {
                 });
                 refs.push(ref);
             }
-            if (i.props.children instanceof Array) {
-                let [nc, ch] = recursor(i.props.children);
+            if (i.props.children) {
+                let [nc, ch] = recursor(React.Children.toArray(i.props.children));
                 if (!ch)
                     return i;
                 changed = true;
@@ -74,7 +74,7 @@ export default ({ children, submit, button, handle, locked }) => {
         newArray.reverse();
         return [newArray, changed];
     };
-    let [components] = recursor(children instanceof Array ? children : [children]);
+    let [components] = recursor(React.Children.toArray(children));
 
     return <div className={"formWrapper"}>
         {components}

@@ -10,7 +10,7 @@ import File from "./File";
 import Hint from "./Hint";
 
 
-const MetadataEditor = ({ challenge, category }) => {
+const MetadataEditor = ({ challenge, category, save }) => {
     let fields = [<HR key={-1} />];
     Object.keys(plugins.challengeMetadata).forEach(key => {
         let i = plugins.challengeMetadata[key];
@@ -54,10 +54,10 @@ const MetadataEditor = ({ challenge, category }) => {
         }
     });
     const saveEdit = (changes) => {
-        challenge.challenge_metadata = {
+        save({...challenge, challenge_metadata: {
             ...challenge.challenge_metadata,
             ...changes
-        };
+        }});
     };
 
     return <div style={{ width: "100%" }}><Form handle={saveEdit}>
@@ -151,7 +151,7 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
         <br />
         <TabbedView>
             <Tab label={t("editor.challenge")}>
-                <Form handle={saveEdit(challenge)}>
+                <Form handle={saveEdit}>
                     <label htmlFor={"name"}>{t("editor.chal_name")}</label>
                     <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} />
                     <label htmlFor={"score"}>{t("editor.chal_points")}</label>
@@ -205,7 +205,7 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                     : <HintEditor challenge={challenge} />}
             </Tab>
             <Tab label={t("editor.metadata")}>
-                <MetadataEditor category={category} challenge={challenge} />
+                <MetadataEditor category={category} challenge={challenge} save={saveEdit} />
             </Tab>
         </TabbedView>
     </SBTSection>;
