@@ -98,12 +98,11 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 linksU = (above && chal.unlocks.indexOf(above.id) !== -1),
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
-
             let unlocked = isEdit || (chal.unlocked && !chal.hidden);
 
             return <Node
-                key={chal.id} unlocked={unlocked}
-                done={isEdit ? false : (chal.solved && !chal.hidden)}
+                key={chal.id} unlocked={unlocked} hidden={!isEdit && chal.hidden}
+                done={!isEdit && chal.solved}
 
                 linksR={linksR} linksL={linksL}
                 linksU={linksU} linksD={linksD}
@@ -116,7 +115,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 url={(isEdit || unlocked) ? "/campaign/" + challenges.id + "/challenge/" + chal.id
                     + (isEdit ? "#edit" : "") : null}
 
-                name={chal.hidden ? <FaEyeSlash /> : !unlocked ? <FaLock /> : chal.name}
+                name={(chal.hidden && !isEdit) ? <FaEyeSlash /> : !unlocked ? <FaLock /> : chal.name}
             />;
         })}</Row>
     );

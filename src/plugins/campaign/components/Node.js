@@ -10,7 +10,7 @@ import "./Node.scss";
 
 export default ({
     name, unlocked, done, right, below, linksU, linksD, linksR, linksL, isEdit,
-    click, toggleLink, largeName, orange, url, points
+    click, toggleLink, largeName, orange, url, points, hidden
 }) => {
     const toggle = side => {
         return e => {
@@ -24,8 +24,8 @@ export default ({
 
     let nodeClass = "chalNode";
     if (largeName) nodeClass += " largeName";
-    if (done) nodeClass += " done";
-    if (unlocked) nodeClass += " unlocked";
+    if (done && !hidden) nodeClass += " done";
+    if (unlocked && !hidden) nodeClass += " unlocked";
     if (orange) nodeClass += " orange";
 
     let lockDoneR = done && right && right.solved;
