@@ -129,7 +129,7 @@ const App = React.memo(() => {
         { type: 0, title: 'Challenge solved', body: 'solved a thing' },*/
     ]);
     const [announcements, setAnnouncements] = useState([
-        {title: "Hi there", body: "Ractf is go", time: new Date()}
+        //{title: "Hi there", body: "Ractf is go", time: new Date()}
     ]);
     const typedText = useRef();
     if (!typedText.current) typedText.current = [];

@@ -77,7 +77,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
     });
 };
 
-const ChallengeWrap = ({ challenge }) => {
+const ChallengeWrap = ({ challenge, category }) => {
     const { t } = useTranslation();
     let handler;
 
@@ -102,12 +102,10 @@ const ChallengeWrap = ({ challenge }) => {
         }
         return React.createElement(parentHandler.component, {
             rightComponent: handler.component,
-            challenge: challenge,
+            challenge, category
         });
     }
-    return React.createElement(handler.component, {
-        challenge: challenge,
-    });
+    return React.createElement(handler.component, {challenge, category});
 };
 
 export default () => {
@@ -149,7 +147,7 @@ export default () => {
         if (isEditor || isCreator)
             chalEl = <EditorWrap {...{challenge, category, isCreator}} />;
         else
-            chalEl = <ChallengeWrap {...{challenge}} />;
+            chalEl = <ChallengeWrap {...{challenge, category}} />;
     }
 
     return <Page title={challenge ? challenge.name : "Challenges"}>

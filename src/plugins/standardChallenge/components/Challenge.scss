@@ -6,6 +6,10 @@ $challengeLink: (
     background: $back_750,
     text: $white_100
 );
+$tag: (
+    background: $back_700,
+    text: $back_100
+);
 
 
 .challengeBrief {
@@ -90,4 +94,28 @@ $challengeLink: (
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+}
+
+.challengeTags {
+    > span:first-child {
+        margin-right: 16px;
+    }
+    > * {
+        margin-right: 8px;
+    }
+}
+.challengeTag {
+    display: inline-block;
+    vertical-align: middle;
+
+    background-color: map-get($tag, "background");
+    color: map-get($tag, "text");
+    padding: 0 11px;
+    line-height: 22px;
+    border-radius: 11px;
+    height: 22px;
+    font-size: .6em;
+    font-weight: 400;
+    font-family: $fontStack;
+    user-select: none;
 }

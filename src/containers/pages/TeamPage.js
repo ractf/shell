@@ -165,7 +165,7 @@ export default () => {
                                 {catProgress.map(([name, got, tot]) => <>
                                     <span style={{ fontWeight: 700 }}>{name}</span>
                                     <span style={{ fontSize: ".8em", marginLeft: 8 }}>
-                                        got}/{tot} ({Math.round(got / tot * 100) / 100}%)
+                                        {got}/{tot} ({Math.round(got / tot * 100) / 100}%)
                                     </span>
                                     <ProgressBar thick progress={got / tot} width={"auto"} />
                                 </>)}

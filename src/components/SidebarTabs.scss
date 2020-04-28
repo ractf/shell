@@ -153,7 +153,7 @@ $sidebar_heading: $white_100;
     border-bottom: 2px solid $ab_rule;
     word-wrap: break-word;
 
-    div {
+    > div {
         font-size: 0.6em;
         margin-top: 0.3em;
         font-weight: initial;
