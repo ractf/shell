@@ -67,6 +67,7 @@ $hr_color: $back_600;
     }
 
     & > * {
+        margin: 0.5rem 0;
         margin-left: 0;
         margin-right: 16px;
     }
@@ -74,6 +75,19 @@ $hr_color: $back_600;
         margin-right: 0;
     }
 }
+
+.formGroup {
+    margin: 0.5rem 1rem 1rem 0;
+
+    > label {
+        display: block;
+    }
+
+    > *:not(:last-child) {
+        margin-bottom: .5rem;
+    }
+}
+
 .flashText {
     background-color: $back_600;
     padding: 16px 24px;

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     plugins, Form, Input, FlexRow, Checkbox, Button, Select, HR, appContext,
-    apiEndpoints, SBTSection, Link, TabbedView, Tab, FlashText
+    apiEndpoints, SBTSection, Link, TabbedView, Tab, FlashText, FormGroup
 } from "ractf";
 
 import File from "./File";
@@ -22,23 +22,21 @@ const MetadataEditor = ({ challenge, category, save }) => {
                     case "code":
                     case "text":
                     case "number":
-                        fields.push(<label key={key + (n++)} htmlFor={field.name}>{field.label}</label>);
                         let val = challenge.challenge_metadata[field.name];
                         let format = field.type === "number" ? /\d+/ : /.+/;
-                        fields.push(
+                        fields.push(<FormGroup htmlFor={field.name} label={field.label}>
                             <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
                                 placeholder={field.label} format={format} key={key + (n++)}
                                 rows={field.type === "multiline" || field.type === "code" ? 5 : ""}
                                 monospace={field.type === "code"} />
-                        );
+                        </FormGroup>);
                         break;
                     case "select":
-                        fields.push(<label key={key + (n++)} htmlFor={field.name}>{field.label}</label>);
                         let idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
-                        fields.push(
+                        fields.push(<FormGroup key={key + (n++)} htmlFor={field.name} label={field.label}>
                             <Select name={field.name} options={field.options}
                                 key={key + (n++)} initial={idx !== -1 ? idx : 0} />
-                        );
+                        </FormGroup>);
                         break;
                     case "label":
                         fields.push(<div key={key + (n++)}>{field.label}</div>);
@@ -152,17 +150,20 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
         <TabbedView>
             <Tab label={t("editor.challenge")}>
                 <Form handle={saveEdit}>
-                    <label htmlFor={"name"}>{t("editor.chal_name")}</label>
-                    <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} />
-                    <label htmlFor={"score"}>{t("editor.chal_points")}</label>
-                    <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined} name={"score"}
-                        placeholder={t("editor.chal_points")} format={/\d+/} />
-                    <label htmlFor={"author"}>{t("editor.chal_author")}</label>
-                    <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")} />
-
-                    <label htmlFor={"description"}>{t("editor.chal_brief")}</label>
-                    <Input rows={5} val={challenge.description} name={"description"}
-                        placeholder={t("editor.chal_brief")} />
+                    <FormGroup htmlFor={"name"} label={t("editor.chal_name")}>
+                        <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"score"} label={t("editor.chal_points")}>
+                        <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined}
+                            name={"score"} placeholder={t("editor.chal_points")} format={/\d+/} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"author"} label={t("editor.chal_author")}>
+                        <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"description"} label={t("editor.chal_brief")}>
+                        <Input rows={5} val={challenge.description} name={"description"}
+                            placeholder={t("editor.chal_brief")} />
+                    </FormGroup>
 
                     <FlexRow>
                         <Checkbox checked={challenge.hidden} name={"hidden"}>
@@ -173,20 +174,23 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                         </Checkbox>
                     </FlexRow>
 
-                    <label htmlFor={"challenge_type"}>{t("editor.chal_type")}</label>
-                    <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
-                        initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
-                        name={"challenge_type"} />
+                    <FormGroup htmlFor={"challenge_type"} label={t("editor.chal_type")}>
+                        <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
+                            initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
+                            name={"challenge_type"} />
+                    </FormGroup>
 
-                    <label htmlFor={"flag_type"}>{t("editor.chal_flag_type")}</label>
-                    <Input placeholder={t("editor.chal_flag_type")} name={"flag_type"} monospace
-                        val={challenge.flag_type} />
-                    <label htmlFor={"flag_metadata"}>{t("editor.chal_flag")}</label>
+                    <FormGroup htmlFor={"flag_type"} label={t("editor.chal_flag_type")}>
+                        <Input placeholder={t("editor.chal_flag_type")} name={"flag_type"} monospace
+                            val={challenge.flag_type} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"flag_metadata"} label={t("editor.chal_flag")}>
                     <Input placeholder={t("editor.chal_flag")}
                         name={"flag_metadata"} monospace format={{
                             test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
                         }}
                         val={JSON.stringify(challenge.flag_metadata)} />
+                    </FormGroup>
 
                     <FlexRow>
                         {!isCreator && <Button click={removeChallenge} warning>{t("editor.remove")}</Button>}

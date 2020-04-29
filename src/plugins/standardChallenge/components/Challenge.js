@@ -157,7 +157,9 @@ export default ({ challenge, saveEdit, removeChallenge, category, rightComponent
             {flagInput && <>
                 {flagInput}
                 {message && <FormError>{message}</FormError>}
-                <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                <FlexRow>
+                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                </FlexRow>
             </>}
         </Form> : <FlashText warning bold>
             {t("challenge.no_team")}

@@ -3,6 +3,7 @@
 $pb_background: $back_600;
 $pb_fill: $back_300;
 $pb_done: desaturate($bgreen, 20%);
+$pb_over: desaturate($red_600, 20%);
 
 .progressBar {
     height: 8px;
@@ -10,16 +11,14 @@ $pb_done: desaturate($bgreen, 20%);
     background-color: $pb_background;
     width: 100%;
     position: relative;
-    margin: 16px 12px 0;
     width: 200px;
+    flex-grow: 1;
 
     &.thick {
         height: 20px;
-        margin-top: 8px;
-        margin-bottom: 8px;
     }
 
-    >.pbInner {
+    > .pbInner {
         background-color: $pb_fill;
         height: 100%;
         position: absolute;
@@ -29,7 +28,10 @@ $pb_done: desaturate($bgreen, 20%);
         border-radius: 4px;
     }
 
-    &.pbDone>.pbInner {
+    &.pbDone > .pbInner {
         background-color: $pb_done;
+    }
+    &.pbOver > .pbInner {
+        background-color: $pb_over;
     }
 }

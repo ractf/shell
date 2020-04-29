@@ -33,3 +33,9 @@ export const FlashText = ({ children, warning, bold }) => (
         {children}
     </div>
 );
+export const FormGroup = ({ children, label, htmlFor }) => (
+    <div className={"formGroup"}>
+        <label htmlFor={htmlFor}>{label}</label>
+        {children}
+    </div>
+);

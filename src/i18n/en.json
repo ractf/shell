@@ -27,7 +27,7 @@
         "no_solves": "{{name}} haven't solved any challenges yet",
         "no_bio": "No bio set",
         "solve": "{{count}} point - Scored by {{user_name}}",
-        "solve_plural": "{{count}} point - Scored by {{user_name}}"
+        "solve_plural": "{{count}} points - Scored by {{user_name}}"
     },
     "profile": {
         "no_bio": "No bio set",

@@ -6,7 +6,7 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS, ProgressBar } from "ractf";
+import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS, ProgressBar, FlexRow } from "ractf";
 import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
 import colours from "../../Colours.scss";
 import Graph from "../../components/charts/Graph";
@@ -29,6 +29,8 @@ export default () => {
     const api = useContext(apiContext);
     const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
 
+    window.td = teamData;
+
     if (api.user.team === null && team === "me") return <Redirect to={"/noteam"} />;
 
     const { t } = useTranslation();
@@ -41,7 +43,7 @@ export default () => {
 
     const UserSolve = ({ solved_by_name, challenge_name, points }) => <div className={"userSolve"}>
         <div>{challenge_name}</div>
-        <div>{t("teams.solve", { count: parseInt(points, 10), solved_by_name })}</div>
+        <div>{t("teams.solve", { count: parseInt(points, 10), user_name: solved_by_name })}</div>
     </div>;
 
     let categoryValues = {};
@@ -165,9 +167,11 @@ export default () => {
                                 {catProgress.map(([name, got, tot]) => <>
                                     <span style={{ fontWeight: 700 }}>{name}</span>
                                     <span style={{ fontSize: ".8em", marginLeft: 8 }}>
-                                        {got}/{tot} ({Math.round(got / tot * 100) / 100}%)
+                                        {got}/{tot} ({Math.round(got / tot * 10000) / 100}%)
                                     </span>
-                                    <ProgressBar thick progress={got / tot} width={"auto"} />
+                                    <FlexRow>
+                                        <ProgressBar thick progress={got / tot} width={"auto"} />
+                                    </FlexRow>
                                 </>)}
                             </div>
                             <HR />

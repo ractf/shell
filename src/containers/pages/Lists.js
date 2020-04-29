@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { BrokenShards } from "./ErrorPages";
 import Page from "./bases/Page";
 
-import { Table, FormError, SectionTitle2, usePaginated, Button, ENDPOINTS } from "ractf";
+import {
+    Table, FormError, SectionTitle2, usePaginated, Button, ENDPOINTS, FlexRow
+} from "ractf";
 
 
 export const TeamsList = () => {
@@ -28,7 +30,9 @@ export const TeamsList = () => {
             <Table headings={[t("team"), t("website"), t("members")]} data={
                 state.data.map(x => [x.name, x.website, x.members.length, "/team/" + x.id])
             } />
-            {state.hasMore && <Button disabled={state.loading} click={next}>Load More</Button>}
+            {state.hasMore && <FlexRow>
+                <Button disabled={state.loading} click={next}>Load More</Button>
+            </FlexRow>}
         </>}
     </Page>;
 };
@@ -54,7 +58,9 @@ export const UsersList = () => {
             <Table headings={[t("name"), t("team")]} data={
                 state.data.map(x => [x.username, x.team_name, "/profile/" + x.id])
             } />
-            {state.hasMore && <Button disabled={state.loading} click={next}>Load More</Button>}
+            {state.hasMore && <FlexRow>
+                <Button disabled={state.loading} click={next}>Load More</Button>
+            </FlexRow>}
         </>}
     </Page>;
 };

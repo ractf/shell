@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Page, HR, FlexRow, TabbedView, Tab, Button, Form, FormError, Input,
-    apiContext, appContext, apiEndpoints, zxcvbn, Checkbox, localConfig
+    apiContext, appContext, apiEndpoints, zxcvbn, Checkbox, localConfig,
+    FormGroup
 } from "ractf";
 
 import "./SettingsPage.scss";
@@ -14,7 +15,7 @@ const makeOwner = (api, endpoints, app, member, t) => {
     return () => {
         app.promptConfirm({
             message: (<>
-                {t("settings.owner_confirm", {name: member.username})}<br /><br />
+                {t("settings.owner_confirm", { name: member.username })}<br /><br />
                 {t("settings.stop_own_team")}
             </>), small: true
         }).then(() => {
@@ -37,7 +38,7 @@ const TeamMember = ({ api, endpoints, app, member, isOwner, isCaptain }) => {
     return <div className={"memberTheme"}>
         <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")}
             onClick={isOwner && !isCaptain ? makeOwner(api, endpoints, app, member, t) : null}>
-                <GiCaptainHatProfile />
+            <GiCaptainHatProfile />
         </div>
         <div>
             {member.username}
@@ -123,71 +124,97 @@ export default () => {
     const teamOwner = (api.team ? api.team.owner === api.user.id : null);
 
     const notificationGroups = [
-        {"name": "all_solves", "description": "A team scores a flag"}
+        { "name": "all_solves", "description": "A team scores a flag" },
     ];
 
-    return <Page title={t("settings.for", {name: api.user.username})}>
+    return <Page title={t("settings.for", { name: api.user.username })}>
         <TabbedView>
             <Tab label={t("user")}>
                 {
                     api.user.totp_status !== 2 && <>
-                        <FormError>{t("settings.2fa_disabled")}</FormError>
-                        <Button to={"/settings/2fa"}>{t("settings.enable_2fa")}</Button>
+                        <FlexRow>
+                            <FormError>{t("settings.2fa_disabled")}</FormError>
+                        </FlexRow>
+                        <FlexRow>
+                            <Button to={"/settings/2fa"}>{t("settings.enable_2fa")}</Button>
+                        </FlexRow>
                         <HR />
                     </>
                 }
 
                 <Form handle={changeUsername}>
-                    <label htmlFor={"name"}>{t("username")}</label>
-                    <Input name={"name"} val={api.user.username} limit={36} placeholder={t("username")} />
+                    <FormGroup htmlFor={"name"} label={t("username")}>
+                        <Input name={"name"} val={api.user.username} limit={36}
+                            placeholder={t("username")} />
+                    </FormGroup>
 
                     {unError && <FormError>{unError}</FormError>}
-                    <Button submit>{t("save")}</Button>
+                    <FlexRow>
+                        <Button submit>{t("save")}</Button>
+                    </FlexRow>
                 </Form>
                 <HR />
                 <Form handle={changePassword}>
-                    <Input password name={"old"} placeholder={t("curr_pass")} />
-                    <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={t("new_pass")} />
-                    <Input password name={"new2"} placeholder={t("new_pass")} />
+                    <FormGroup>
+                        <Input password name={"old"} placeholder={t("curr_pass")} />
+                        <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={t("new_pass")} />
+                        <Input password name={"new2"} placeholder={t("new_pass")} />
+                    </FormGroup>
 
                     {pwError && <FormError>{pwError}</FormError>}
-                    <Button submit>{t("change_pass")}</Button>
+                    <FlexRow>
+                        <Button submit>{t("change_pass")}</Button>
+                    </FlexRow>
                 </Form>
             </Tab>
             <Tab label={t("settings.profile")}>
                 <Form handle={updateDetails}>
-                    <label htmlFor={"discord"}>{t("settings.discord")}</label>
-                    <Input name={"discord"} val={api.user.discord} limit={36} placeholder={t("settings.discord")} />
-                    <Input name={"discordid"} val={api.user.discordid} format={/\d+/} limit={18}
-                        placeholder={t("settings.discord_id")} />
-                    <label htmlFor={"twitter"}>{t("settings.twitter")}</label>
-                    <Input name={"twitter"} val={api.user.twitter} limit={36} placeholder={t("settings.twitter")} />
-                    <label htmlFor={"reddit"}>{t("settings.reddit")}</label>
-                    <Input name={"reddit"} val={api.user.reddit} limit={36} placeholder={t("settings.reddit")} />
+                    <FormGroup htmlFor={"discord"} label={t("settings.discord")}>
+                        <Input name={"discord"} val={api.user.discord} limit={36} placeholder={t("settings.discord")} />
+                        <Input name={"discordid"} val={api.user.discordid} format={/\d+/} limit={18}
+                            placeholder={t("settings.discord_id")} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"twitter"} label={t("settings.twitter")}>
+                        <Input name={"twitter"} val={api.user.twitter} limit={36} placeholder={t("settings.twitter")} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"reddit"} label={t("settings.reddit")}>
+                        <Input name={"reddit"} val={api.user.reddit} limit={36} placeholder={t("settings.reddit")} />
+                    </FormGroup>
 
-                    <label htmlFor={"bio"}>{t("bio")}</label>
-                    <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={t("bio")} />
+                    <FormGroup htmlFor={"bio"} label={t("bio")}>
+                        <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={t("bio")} />
+                    </FormGroup>
 
                     {pfError && <FormError>{pfError}</FormError>}
-                    <Button submit>{t("save")}</Button>
+                    <FlexRow>
+                        <Button submit>{t("save")}</Button>
+                    </FlexRow>
                 </Form>
             </Tab>
             <Tab label={t("team")}>
                 {api.team ? <>
                     <Form handle={alterTeam} locked={!teamOwner}>
-                        <Input val={api.team.name} name={"name"} limit={36} placeholder={t("team_name")} />
-                        <Input val={api.team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
-                        <Input val={api.team.password} name={"pass"} password placeholder={t("team_secret")} />
-                        <div style={{ opacity: .5 }}>{t("team_secret_warn")}</div>
+                        <FormGroup htmlFor={"name"} label={t("team_name")}>
+                            <Input val={api.team.name} name={"name"} limit={36} placeholder={t("team_name")} />
+                        </FormGroup>
+                        <FormGroup htmlFor={"desc"} label={t("team_desc")}>
+                            <Input val={api.team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
+                        </FormGroup>
+                        <FormGroup htmlFor={"pass"} label={t("team_secret")}>
+                            <Input val={api.team.password} name={"pass"} password placeholder={t("team_secret")} />
+                            <div style={{ opacity: .5 }}>{t("team_secret_warn")}</div>
+                        </FormGroup>
 
                         {teamError && <FormError>{teamError}</FormError>}
-                        {teamOwner && <Button submit>{t("settings.modify_team")}</Button>}
+                        {teamOwner && <FlexRow>
+                            <Button submit>{t("settings.modify_team")}</Button>
+                        </FlexRow>}
                     </Form>
                 </> : <div>
-                    {t("settings.not_in_team")}
-                    <br /><br />
-                    {t("settings.team_prompt")}
-                    <HR />
+                        {t("settings.not_in_team")}
+                        <br /><br />
+                        {t("settings.team_prompt")}
+                        <HR />
                         <FlexRow>
                             <Button to={"/team/join"}>{t("join_a_team")}</Button>
                             <Button to={"/team/new"}>{t("create_a_team")}</Button>
@@ -204,16 +231,19 @@ export default () => {
                 </Tab>
             }
             <Tab label={t("settings.notifications.title")}>
-                    <div style={{ opacity: .75 }}>{t("settings.notifications.send_options")}</div><br />
-                    <Form handle={saveNotificationPrefs}>
-                        {notificationGroups.map((group) => 
-                            <Checkbox key={group.name} name={group.name} 
-                            checked={localConfig("notifs." + group.name, undefined, true)}>
+                <Form handle={saveNotificationPrefs}>
+                    <FormGroup label={t("settings.notifications.send_options")}>
+                        {notificationGroups.map((group) =>
+                            <Checkbox key={group.name} name={group.name}
+                                checked={localConfig("notifs." + group.name, undefined, true)}>
                                 {group.description}
                             </Checkbox>
                         )}
+                    </FormGroup>
+                    <FlexRow>
                         <Button submit>{t("save")}</Button>
-                    </Form>
+                    </FlexRow>
+                </Form>
             </Tab>
         </TabbedView>
     </Page>;
