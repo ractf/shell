@@ -2,14 +2,12 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 
 import { apiEndpoints, apiContext, Spinner, appContext } from "ractf";
 
-import lockImg from "../../assets/spine.png";
+import lockImg from "../../static/spine.png";
 
 import "./Countdown.scss";
 
-const bgm = import("../../assets/synthwave.mp3");
-
 const LOADED_TIMEOUT = 8000;
-
+const BGM = "/synthwave.mp3";
 
 const wave = { on: false, audio: null };
 
@@ -49,7 +47,7 @@ export default () => {
         wave.audio = (new AudioContext()).createBufferSource();
 
         let request = new XMLHttpRequest();
-        request.open('GET', bgm, true);
+        request.open('GET', BGM, true);
         request.responseType = 'arraybuffer';
         request.onload = function () {
             wave.audio.context.decodeAudioData(request.response, function (response) {

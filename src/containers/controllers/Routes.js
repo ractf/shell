@@ -5,19 +5,12 @@ import Loadable from "react-loadable";
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
 import PasswordReset from "../pages/auth/PasswordReset";
-import ChallengePage from "../pages/ChallengePage";
-import SettingsPage from "../pages/SettingsPage";
-import Leaderboard from "../pages/Leaderboard";
-import AdminPage from "../pages/AdminPage";
 import Countdown from "../pages/Countdown";
 import PostLogin from "../pages/auth/PostLogin";
 import HomePage from "../pages/HomePage";
 import TeamPage from "../pages/TeamPage";
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
-import Debug from "../pages/Debug";
-import TwoFA from "../pages/TwoFA";
-import UI from "../pages/UI";
 
 import WSTester from "../pages/WSTester";
 
@@ -36,8 +29,15 @@ const asyncRoute = (loader) => (
     })
 );
 
+const ChallengePage = asyncRoute(() => import("../pages/ChallengePage"));
+const SettingsPage = asyncRoute(() => import("../pages/SettingsPage"));
+const Leaderboard = asyncRoute(() => import("../pages/Leaderboard"));
+const AdminPage = asyncRoute(() => import("../pages/AdminPage"));
 const Campaign = asyncRoute(() => import("../pages/Campaign"));
 const Profile = asyncRoute(() => import("../pages/Profile"));
+const TwoFA = asyncRoute(() => import("../pages/TwoFA"));
+const Debug = asyncRoute(() => import("../pages/Debug"));
+const UI = asyncRoute(() => import("../pages/UI"));
 
 
 const Logout = () => {
@@ -76,6 +76,7 @@ class ErrorBoundary extends React.Component {
 
 const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
     const api = useContext(APIContext);
+    //return <Countdown />;
     if (!process.env.REACT_APP_NO_SITE_LOCK)
         if (lockout && !(api.user && api.user.is_staff))
             if (!api.siteOpen) return <Countdown />;

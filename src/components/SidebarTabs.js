@@ -6,7 +6,7 @@ import { apiContext, apiEndpoints, Link, fastClick } from "ractf";
 import Scrollbar from "./Scrollbar";
 import Wordmark from "./Wordmark";
 
-import footerLogo from "../assets/spine.svg";
+import footerLogo from "../static/spine.svg";
 
 import "./SidebarTabs.scss";
 
