@@ -58,7 +58,8 @@
         "reddit": "Reddit",
         "notifications": {
             "title": "Notifications",
-            "send_options": "Send me notifications when:"
+            "send_options": "Send me notifications when:",
+            "success": "Updated notification preferences successfully!"
         }
         
     },

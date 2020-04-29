@@ -117,6 +117,7 @@ export default () => {
         Object.keys(args).map((key) => {
             return localConfig("notifs." + key, args[key]);
         });
+        app.alert(t("settings.notifications.success"));
     };
 
     const teamOwner = (api.team ? api.team.owner === api.user.id : null);
