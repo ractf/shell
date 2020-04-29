@@ -153,12 +153,22 @@ $sidebar_heading: $white_100;
     border-bottom: 2px solid $ab_rule;
     word-wrap: break-word;
 
-    > div {
+    > .abBack, > .abSub {
         font-size: 0.6em;
         margin-top: 0.3em;
         font-weight: initial;
         white-space: pre-line;
         font-family: $fontStack;
+    }
+    > .abBack {
+        margin-top: .5em;
+        > a {
+            margin-top: 0;
+        }
+
+        ~.abSub {
+            margin-top: .5em;
+        }
     }
 }
 

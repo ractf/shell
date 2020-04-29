@@ -9,7 +9,7 @@ import Page from "./bases/Page";
 
 import {
     plugins, Button, FlexRow, apiContext, apiEndpoints, Input, Form,
-    FormError, SBTSection, Section, appContext, Link
+    FormError, SBTSection, Section, appContext, Link, FlashText
 } from "ractf";
 
 import "./Campaign.scss";
@@ -99,12 +99,12 @@ const CategoryList = () => {
             {api.challenges.map(i => {
                 let solved = i.challenges.filter(j => j.solved).length;
                 return <Link key={i.id} to={"/campaign/" + i.id}
-                             className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
+                    className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
                     <div className={"catName"}>{i.name}</div>
                     <div className={"catStat"}>{
                         solved === i.challenges.length ? t("categories.finished") :
-                        solved === 0 ? t("categories.none") :
-                        t("categories.some", {count: i.challenges.length, total: solved})
+                            solved === 0 ? t("categories.none") :
+                                t("categories.some", { count: i.challenges.length, total: solved })
                     }</div>
                 </Link>;
             })}
@@ -119,7 +119,7 @@ export default () => {
     const { t } = useTranslation();
     const { history, location, match } = useReactRouter();
     const tabId = match.params.tabId;
-    
+
     const api = useContext(apiContext);
 
     const edit = location.hash === "#edit" && api.user && api.user.is_staff;
@@ -156,7 +156,7 @@ export default () => {
     handler = plugins.categoryType[tab.contained_type];
     if (!handler) {
         challengeTab = <>
-            {t("challenge.cat_renderer_missing", {type: tab.contained_type})}<br /><br />
+            {t("challenge.cat_renderer_missing", { type: tab.contained_type })}<br /><br />
             {t("challenge.forgot_plugin")}
         </>;
     } else {
@@ -169,7 +169,9 @@ export default () => {
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
-        <SBTSection key={tab.id} subTitle={tab.description} title={tab.name}>
+        <SBTSection key={tab.id} subTitle={tab.description} back={<>
+            <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
+        </>} title={tab.name}>
             {api.user.is_staff ? edit ?
                 <Button className={"campEditButton"} to={"#"} warning>
                     {t("edit_stop")}
@@ -177,7 +179,7 @@ export default () => {
                     {t("edit")}
                 </Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_details")}</Button>}
-            <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
+            <FlashText warning>{t("campaign.no_team")}</FlashText>
             <div className={"campInner"}>{challengeTab}</div>
         </SBTSection>
     </Page>;

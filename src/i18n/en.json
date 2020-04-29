@@ -219,6 +219,9 @@
         "more": "...and so much more!",
         "para_7": "We are a small team of students, with a shared interest in cyber-security. We have all worked on the platform in our free time, and are confident in its ability to give you an amazing experience."
     },
+    "campaign": {
+        "no_team": "You are not in a team. You will be unable to submit flags until you join a team."
+    },
     "setting_plural": "Settings",
     "leaderboard": "Leaderboard",
     "point": "Point",

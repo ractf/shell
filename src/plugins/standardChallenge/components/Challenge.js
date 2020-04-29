@@ -179,8 +179,9 @@ export default ({ challenge, saveEdit, removeChallenge, category, rightComponent
 
     return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
         <SBTSection subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
-            title={<span className={"challengeTags"}><span>{challenge.name}</span>{tags}</span>}>
-            <Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>
+            back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
+            title={<span className={"challengeTags"}><span>{challenge.name}</span>{tags}</span>}
+        >
             {chalContent}
         </SBTSection>
         {rightSide}

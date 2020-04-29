@@ -135,9 +135,11 @@ export const SiteNav = ({ children }) => {
 };
 
 
-export const SBTSection = ({ title, children, subTitle, noHead }) => {
+export const SBTSection = ({ title, children, subTitle, back, noHead }) => {
     return <>
-        {!noHead && <div className={"abTitle"}>{title}{subTitle && <div>
+        {!noHead && <div className={"abTitle"}>{title}{back && <div className={"abBack"}>
+            {back}
+        </div>}{subTitle && <div className={"abSub"}>
             {subTitle}
         </div>}</div>}
         {children}
