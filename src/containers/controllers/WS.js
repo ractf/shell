@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { localConfig } from "ractf";
+
 import { WSContext } from "./Contexts";
 
 
@@ -79,15 +81,17 @@ export default class WS extends Component {
                 break;
             case this.CHALLENGE_SCORE:
                 this.log(data);
-                this.api.addPopup(
-                    "Challenge solved",
-                    <>
-                        <b>{data.challenge_name}</b> was solved by <b>
-                            {data.username}</b> for <b>
-                            {data.team_name}</b> scoring <b>
-                            {data.challenge_score}</b> points
-                    </>
-                );
+                if (localConfig("notifs.all_solves", undefined, true)) {
+                    this.api.addPopup(
+                        "Challenge solved",
+                        <>
+                            <b>{data.challenge_name}</b> was solved by <b>
+                                {data.username}</b> for <b>
+                                {data.team_name}</b> scoring <b>
+                                {data.challenge_score}</b> points
+                        </>
+                    );
+                }
                 break;
             default:
                 break;

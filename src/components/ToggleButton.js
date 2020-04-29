@@ -8,8 +8,16 @@ export default class SwitchButton extends Component {
     constructor(props) {
         super(props);
 
+        let initial = 0;
+        if (typeof this.props.default !== "undefined") {
+            this.props.options.forEach(([opt, val], n) => {
+                if (val === this.props.default) {
+                    initial = n;
+                }
+            });
+        }
         this.state = {
-            active: this.props.default || 0
+            active: initial,
         };
     }
 

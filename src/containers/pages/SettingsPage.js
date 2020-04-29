@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Page, HR, FlexRow, TabbedView, Tab, Button, Form, FormError, Input,
-    apiContext, appContext, apiEndpoints, zxcvbn
+    apiContext, appContext, apiEndpoints, zxcvbn, ToggleButton,
+    localConfig
 } from "ractf";
 
 import "./SettingsPage.scss";
@@ -113,6 +114,12 @@ export default () => {
         });
     };
 
+    const changeConfig = (key) => {
+        return (value) => {
+            localConfig(key, value);
+        };
+    };
+
     const teamOwner = (api.team ? api.team.owner === api.user.id : null);
 
     return <Page title={t("settings.for", {name: api.user.username})}>
@@ -192,6 +199,12 @@ export default () => {
                     ))}
                 </Tab>
             }
+            <Tab label={"Notifications"}>
+                <label>Solve Notifications</label>
+                <ToggleButton options={[["Enabled", true], ["Disbaled", false]]}
+                    default={localConfig("notifs.all_solves", undefined, true)}
+                    onChange={changeConfig("notifs.all_solves")} />
+            </Tab>
         </TabbedView>
     </Page>;
 };
