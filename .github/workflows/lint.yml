@@ -39,5 +39,3 @@ jobs:
 
     - name: Run Build
       run: npm run build
-      env:
-        CI: "false"
