@@ -55,7 +55,12 @@
         "discord": "Discord",
         "discord_id": "Discord User ID",
         "twitter": "Twitter",
-        "reddit": "Reddit"
+        "reddit": "Reddit",
+        "notifications": {
+            "title": "Notifications",
+            "send_options": "Send me notifications when:"
+        }
+        
     },
     "lists": {
         "all_teams": "All Teams",

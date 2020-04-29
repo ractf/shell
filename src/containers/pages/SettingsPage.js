@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Page, HR, FlexRow, TabbedView, Tab, Button, Form, FormError, Input,
-    apiContext, appContext, apiEndpoints, zxcvbn, ToggleButton,
-    localConfig
+    apiContext, appContext, apiEndpoints, zxcvbn, Checkbox, localConfig
 } from "ractf";
 
 import "./SettingsPage.scss";
@@ -114,13 +113,17 @@ export default () => {
         });
     };
 
-    const changeConfig = (key) => {
-        return (value) => {
-            localConfig(key, value);
-        };
+    const saveNotificationPrefs = (args) => {
+        Object.keys(args).map((key) => {
+            return localConfig("notifs." + key, args[key]);
+        });
     };
 
     const teamOwner = (api.team ? api.team.owner === api.user.id : null);
+
+    const notificationGroups = [
+        {"name": "all_solves", "description": "A team scores a flag"}
+    ];
 
     return <Page title={t("settings.for", {name: api.user.username})}>
         <TabbedView>
@@ -199,11 +202,17 @@ export default () => {
                     ))}
                 </Tab>
             }
-            <Tab label={"Notifications"}>
-                <label>Solve Notifications</label>
-                <ToggleButton options={[["Enabled", true], ["Disbaled", false]]}
-                    default={localConfig("notifs.all_solves", undefined, true)}
-                    onChange={changeConfig("notifs.all_solves")} />
+            <Tab label={t("settings.notifications.title")}>
+                    <div style={{ opacity: .75 }}>{t("settings.notifications.send_options")}</div><br />
+                    <Form handle={saveNotificationPrefs}>
+                        {notificationGroups.map((group) => 
+                            <Checkbox key={group.name} name={group.name} 
+                            checked={localConfig("notifs." + group.name, undefined, true)}>
+                                {group.description}
+                            </Checkbox>
+                        )}
+                        <Button submit>{t("save")}</Button>
+                    </Form>
             </Tab>
         </TabbedView>
     </Page>;
