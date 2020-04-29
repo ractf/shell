@@ -179,7 +179,7 @@ export default () => {
                     {t("edit")}
                 </Button> : null}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_details")}</Button>}
-            <FlashText warning>{t("campaign.no_team")}</FlashText>
+            {!api.user.team && <FlashText warning>{t("campaign.no_team")}</FlashText>}
             <div className={"campInner"}>{challengeTab}</div>
         </SBTSection>
     </Page>;
