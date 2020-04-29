@@ -2,14 +2,13 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 
 import { apiEndpoints, apiContext, Spinner, appContext } from "ractf";
 
-import bgm from "../controllers/synthwave.mp3";
-import lockImg from "../controllers/spine.png";
+import lockImg from "../../assets/spine.png";
 
 import "./Countdown.scss";
 
+const bgm = import("../../assets/synthwave.mp3");
 
 const LOADED_TIMEOUT = 8000;
-
 
 
 const wave = { on: false, audio: null };

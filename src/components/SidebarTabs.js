@@ -6,6 +6,8 @@ import { apiContext, apiEndpoints, Link, fastClick } from "ractf";
 import Scrollbar from "./Scrollbar";
 import Wordmark from "./Wordmark";
 
+import footerLogo from "../assets/spine.svg";
+
 import "./SidebarTabs.scss";
 
 
@@ -116,7 +118,7 @@ export const SiteNav = ({ children }) => {
                 <div className="sbtSkip" />
                 <div className="sbtFoot">
                     <div className="sbtfCopy">
-                        <img alt={""} src={"https://ractf.co.uk/static/img/spine.png"} />
+                        <img alt={""} src={footerLogo} />
                     &copy; Really Awesome Technology Ltd 2020
                 </div>
                     <Link to="/">{t("footer.home")}</Link> - <

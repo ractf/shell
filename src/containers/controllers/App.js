@@ -16,7 +16,7 @@ import { API } from "./API";
 
 import { plugins, apiContext, apiEndpoints, wsContext } from "ractf";
 
-import lockImg from "./spine.png";
+import lockImg from "../../assets/spine.png";
 import "./App.scss";
 
 
