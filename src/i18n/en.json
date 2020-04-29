@@ -27,7 +27,7 @@
         "no_solves": "{{name}} haven't solved any challenges yet",
         "no_bio": "No bio set",
         "solve": "{{count}} point - Scored by {{user_name}}",
-        "solve_plural": "{{count}} point - Scored by {{user_name}}"
+        "solve_plural": "{{count}} points - Scored by {{user_name}}"
     },
     "profile": {
         "no_bio": "No bio set",
@@ -55,7 +55,13 @@
         "discord": "Discord",
         "discord_id": "Discord User ID",
         "twitter": "Twitter",
-        "reddit": "Reddit"
+        "reddit": "Reddit",
+        "notifications": {
+            "title": "Notifications",
+            "send_options": "Send me notifications when:",
+            "success": "Updated notification preferences successfully!"
+        }
+        
     },
     "lists": {
         "all_teams": "All Teams",

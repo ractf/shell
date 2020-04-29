@@ -1,4 +1,5 @@
 @import "../Colours.scss";
+@import "./Input.scss";
 
 
 $select_back: $back_700;
@@ -12,6 +13,7 @@ $select_open: $back_600;
     user-select: none;
     text-align: left;
     z-index: 10;
+    min-height: $min_height;
 
     .blanker {
         position: fixed;
@@ -46,6 +48,8 @@ $select_open: $back_600;
     .items div,
     .head {
         min-width: 100px;
+        min-height: $min_height;
+        padding: $padding;
 
         cursor: pointer;
 
@@ -56,12 +60,7 @@ $select_open: $back_600;
         }
     }
     .items div {
-        padding: 11px 24px;
         border-top: 1px solid $select_gap;
-
-    }
-    .head {
-        padding: 11px 34px 11px 24px;
     }
 
     .items {

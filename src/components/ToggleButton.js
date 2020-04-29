@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import Button from "./Button";
+
+import { Button, FlexRow } from "ractf";
 
 import "./ToggleButton.scss";
 
@@ -41,8 +42,8 @@ export default class SwitchButton extends Component {
             >{val[0]}</Button>)
         );
 
-        return <div className={"switchButtonWrap"}>
+        return <FlexRow left className={"switchButtonWrap"}>
             {buttons}
-        </div>;
+        </FlexRow>;
     }
 }

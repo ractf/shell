@@ -172,12 +172,18 @@ export default () => {
         <SBTSection key={tab.id} subTitle={tab.description} back={<>
             <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
         </>} title={tab.name}>
-            {api.user.is_staff ? edit ?
-                <Button className={"campEditButton"} to={"#"} warning>
-                    {t("edit_stop")}
-                </Button> : <Button className={"campEditButton"} to={"#edit"} warning>
-                    {t("edit")}
-                </Button> : null}
+            {api.user.is_staff && <FlexRow className={"campEdit"}>
+                {edit ? <>
+                    <Button key={"edD"} className={"campUnderEditButton"} click={() => setAnc(tab)}>
+                        {t("edit_details")}
+                    </Button>
+                    <Button key={"edS"} className={"campEditButton"} to={"#"} warning>
+                        {t("edit_stop")}
+                    </Button>
+                </> : <Button key={"edE"} className={"campEditButton"} to={"#edit"} warning>
+                        {t("edit")}
+                    </Button>}
+            </FlexRow>}
             {edit && <Button className={"campUnderEditButton"} click={() => setAnc(tab)}>{t("edit_details")}</Button>}
             {!api.user.team && <FlashText warning>{t("campaign.no_team")}</FlashText>}
             <div className={"campInner"}>{challengeTab}</div>

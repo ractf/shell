@@ -4,7 +4,8 @@ import {
     Page, SectionTitle, HR, SectionHeading, SectionTitle2, FlexRow, Button, Input,
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
     Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue, Checkbox,
-    InputButton
+    InputButton,
+    FormGroup
 } from "ractf";
 
 
@@ -27,23 +28,39 @@ export default () => <Page>
     <FlexRow left>
         <Button large>Large</Button>
     </FlexRow>
-    <ToggleButton options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]} default={1} />
+    <ToggleButton options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]} default={2} />
     <HR />
-    <SectionTitle2>Inputs</SectionTitle2><br />
-    <Input placeholder={"Default"} /><br />
-    <Input placeholder={"Limited"} limit={15} /><br />
-    <Input placeholder={"Disabled"} disabled /><br />
-    <Input placeholder={"Multi-line"} rows={3} /><br />
-    <Input placeholder={"Password"} password /><br />
-    <Select options={[
-        { key: 0, value: "Example Select" },
-        { key: 1, value: "This" },
-        { key: 2, value: "is" },
-        { key: 3, value: "a" },
-        { key: 4, value: "dropdown" },
-    ]} /><br />
-    <InputButton placeholder={"Inline Submit"} /><br />
-    <InputButton placeholder={"Disbaled Inline Submit"} disabled />
+    <SectionTitle2>Inputs</SectionTitle2>
+    <FormGroup label={"Default"}>
+        <Input placeholder={"Default"} />
+    </FormGroup>
+    <FormGroup label={"Limited"}>
+        <Input placeholder={"Limited"} limit={15} />
+    </FormGroup>
+    <FormGroup label={"Disabled"}>
+        <Input placeholder={"Disabled"} disabled />
+    </FormGroup>
+    <FormGroup label={"Multi-line"}>
+        <Input placeholder={"Multi-line"} rows={3} />
+    </FormGroup>
+    <FormGroup label={"Password"}>
+        <Input placeholder={"Password"} password />
+    </FormGroup>
+    <FormGroup label={"Select"}>
+        <Select options={[
+            { key: 0, value: "Example Select" },
+            { key: 1, value: "This" },
+            { key: 2, value: "is" },
+            { key: 3, value: "a" },
+            { key: 4, value: "dropdown" },
+        ]} />
+    </FormGroup>
+    <FormGroup label={"Inline Submit"}>
+        <InputButton placeholder={"Inline Submit"} />
+    </FormGroup>
+    <FormGroup label={"Disbaled Inline Submit"}>
+        <InputButton placeholder={"Disbaled Inline Submit"} disabled />
+    </FormGroup>
     <HR />
     <SectionTitle2>Progress Bar</SectionTitle2>
     <FlexRow>
@@ -53,7 +70,6 @@ export default () => <Page>
         <ProgressBar progress={.75} />
         <ProgressBar progress={1} />
     </FlexRow>
-    <br />
     <FlexRow>
         <ProgressBar thick />
         <ProgressBar thick progress={.25} />
@@ -93,8 +109,7 @@ export default () => <Page>
         </Scrollbar>
     </TextBlock>
     <HR />
-    <SectionTitle2>Tabbed notebook</SectionTitle2>
-    <HR />
+    <SectionTitle2>Tabbed notebook</SectionTitle2><br/>
     <TabbedView>
         <Tab label={"Tab 1"}>
             Welcome to my tabbed notebook<br />

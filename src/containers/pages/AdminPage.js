@@ -7,19 +7,10 @@ import DatePicker from "react-datepicker";
 import {
     Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
     apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, FlexRow,
-    Tree, TreeWrap, TreeValue
+    Tree, TreeWrap, TreeValue, FormGroup
 } from "ractf";
 
 import "react-datepicker/dist/react-datepicker.css";
-
-
-const AdminCardSection = ({ children, name }) => {
-    return <div className={"absfg"}>
-        <div>{name}</div>
-        {children}
-    </div>;
-};
-
 
 
 const MemberCard = ({ data }) => {
@@ -506,35 +497,31 @@ export default () => {
             content = <SBTSection title={t("admin.event")}>
                 {adminConfig ? <>
                     <Section title={t("admin.start_stop")}>
-                        <AdminCardSection name={t("admin.start_desc")}>
+                        <FormGroup label={t("admin.start_desc")}>
                             <Button>{t("admin.start")}</Button>
-                        </AdminCardSection>
-                        <AdminCardSection name={t("admin.stop_desc")}>
+                        </FormGroup>
+                        <FormGroup label={t("admin.stop_desc")}>
                             <Button>{t("admin.stop")}</Button>
-                        </AdminCardSection>
-
+                        </FormGroup>
                     </Section>
                     <Section title={t("admin.auto_time")}>
-                        <div className={"formWrapper"}>
-                            <div className={"absfg"}>
-                                <label htmlFor={"regStartTime"}>{t("admin.reg_start_time")}</label>
+                        <FlexRow left>
+                            <FormGroup htmlFor={"regStartTime"} label={t("admin.reg_start_time")}>
                                 <DatePick initial={adminConfig.register_start_time}
                                     configSet={configSet} name={"regStartTime"}
                                     configKey={"register_start_time"} />
-                            </div>
-                            <div className={"absfg"}>
-                                <label htmlFor={"eventStartTime"}>{t("admin.start_time")}</label>
+                            </FormGroup>
+                            <FormGroup htmlFor={"eventStartTime"} label={t("admin.start_time")}>
                                 <DatePick initial={adminConfig.start_time}
                                     configSet={configSet} name={"eventStartTime"}
                                     configKey={"start_time"} />
-                            </div>
-                            <div className={"absfg"}>
-                                <label htmlFor={"eventEndTime"}>{t("admin.stop_time")}</label>
+                            </FormGroup>
+                            <FormGroup htmlFor={"eventEndTime"} label={t("admin.stop_time")}>
                                 <DatePick initial={adminConfig.end_time}
                                     configSet={configSet} name={"eventEndTime"}
                                     configKey={"end_time"} />
-                            </div>
-                        </div>
+                            </FormGroup>
+                        </FlexRow>
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;
@@ -543,26 +530,28 @@ export default () => {
             content = <SBTSection title={t("admin.configuration")}>
                 {adminConfig ? <>
                     <Section title={t("admin.login")}>
-                        <AdminCardSection name={t("admin.enable_login")}>
+                        <FormGroup label={t("admin.enable_login")}>
                             <Radio onChange={v => configSet("login", v)} value={adminConfig.login}
                                 options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                        </AdminCardSection>
+                        </FormGroup>
                     </Section>
                     <Section title={t("admin.reg")}>
-                        <AdminCardSection name={t("admin.enable_reg")}>
+                        <FormGroup label={t("admin.enable_reg")}>
                             <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
                                 options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                        </AdminCardSection>
+                        </FormGroup>
                     </Section>
                     <Section title={t("admin.main_game")}>
-                        <AdminCardSection name={t("admin.scoring")}>
-                            <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
-                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                        </AdminCardSection>
-                        <AdminCardSection name={t("admin.flags")}>
-                            <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
-                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                        </AdminCardSection>
+                        <FlexRow left>
+                            <FormGroup label={t("admin.scoring")}>
+                                <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
+                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
+                            </FormGroup>
+                            <FormGroup label={t("admin.flags")}>
+                                <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
+                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
+                            </FormGroup>
+                        </FlexRow>
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;
@@ -595,11 +584,15 @@ export default () => {
                 </Section>
                 <Section title={t("admin.announce.add")}>
                     <Form>
-                        <label htmlFor={"annTitle"}>{t("admin.announce.title")}</label>
-                        <Input name={"annTitle"} />
-                        <label htmlFor={"annBody"}>{t("admin.announce.body")}</label>
-                        <Input name={"annBody"} rows={4} />
-                        <Button>{t("admin.announce.add")}</Button>
+                        <FormGroup htmlFor={"annTitle"} label={t("admin.announce.title")}>
+                            <Input name={"annTitle"} />
+                        </FormGroup>
+                        <FormGroup htmlFor={"annBody"} label={t("admin.announce.body")}>
+                            <Input name={"annBody"} rows={4} />
+                        </FormGroup>
+                        <FlexRow>
+                            <Button>{t("admin.announce.add")}</Button>
+                        </FlexRow>
                     </Form>
                 </Section>
             </SBTSection>;

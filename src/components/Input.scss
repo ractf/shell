@@ -14,6 +14,10 @@ $placeholder_focus: $white_200;
 $error_color: #3f2637;
 $error_focus: #522836;
 
+$padding: .7rem 24px;
+$font_size: 18px;
+$min_height: 46px;
+
 
 input,
 textarea {
@@ -21,6 +25,9 @@ textarea {
     border: 0;
     width: 100%;
     color: inherit;
+    padding: $padding;
+    font-size: $font_size;
+    min-height: $min_height;
 
     &:focus {
         border: none;
@@ -49,9 +56,7 @@ textarea {
 
     position: relative;
 
-    min-height: 46px;
-    padding: 11px 24px;
-    font-size: 18px;
+    font-size: 0;
     border-radius: 2px;
 
     color: $foreground;
@@ -81,7 +86,12 @@ textarea {
         }
     }
     &.password {
-        padding-left: 50px;
+        input {
+            padding-left: 50px;
+        }
+        .placeholder {
+            padding-left: 50px;
+        }
     }
     &.disabled {
         background-color: $disabled_color;
@@ -129,11 +139,12 @@ textarea {
         left: 0;
         top: 0;
         width: 100%;
-        height: 100%;
+        height: $min_height;
         padding: inherit;
         text-align: left;
-        font-size: 1em;
         color: $placeholder;
+        padding: $padding;
+        font-size: $font_size;
 
         user-select: none;
         pointer-events: none;
