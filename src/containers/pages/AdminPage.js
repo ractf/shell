@@ -461,7 +461,9 @@ const ImportExport = () => {
 };
 
 const MembersList = () => {
+    const app = useContext(appContext);
     const endpoints = useContext(apiEndpoints);
+
     const [state, setState] = useState({
         loading: false, error: null, results: null, member: null
     });
@@ -487,6 +489,22 @@ const MembersList = () => {
             });
         };
     };
+    const saveMember = (member) => {
+        return (changes) => {
+            setState(prevState => ({ ...prevState, loading: true }));
+            endpoints.modifyUser(member.id, changes).then(() => {
+                app.alert("Modified user");
+                setState(prevState => ({ ...prevState, member: null, loading: false }));
+            }).catch(e => {
+                setState(prevState => ({ ...prevState, loading: false }));
+                app.alert(endpoints.getError(e));
+            });
+        };
+    };
+
+    const close = () => {
+        setState(prevState => ({ ...prevState, member: null }));
+    };
 
     return <>
         <Form handle={doSearch} locked={state.loading}>
@@ -505,8 +523,8 @@ const MembersList = () => {
                 No results found
             </FlexRow>}
         </>}
-        {state.member && <Modal>
-            <Form>
+        {state.member && <Modal onHide={close}>
+            <Form handle={saveMember(state.member)} locked={state.loading}>
                 <FormGroup label={"Username"} htmlFor={"username"}>
                     <Input val={state.member.username} name={"username"} />
                 </FormGroup>
@@ -518,7 +536,7 @@ const MembersList = () => {
                     </FlexRow>
                 </FormGroup>
                 <FormGroup label={"Bio"} htmlFor={"bio"}>
-                    <Input val={state.member.bio} name={"bio"} />
+                    <Input val={state.member.bio} name={"bio"} rows={2} />
                 </FormGroup>
                 <FormGroup label={"Discord"} htmlFor={"discord"}>
                     <Input val={state.member.discord} name={"discord"} />
@@ -536,6 +554,9 @@ const MembersList = () => {
                         Email verified
                     </Checkbox>
                 </FormGroup>
+                <FlexRow>
+                    <Button submit>Save</Button>
+                </FlexRow>
             </Form>
         </Modal>}
     </>;
@@ -592,7 +613,7 @@ const Config = () => {
                     if (fields.length)
                         fields.push(<HR key={fields.length} />);
                     if (name)
-                        fields.push(<label key={fields.length}>{name}</label>);
+                        fields.push(<div key={fields.length}>{name}</div>);
                     return;
                 }
                 switch (type) {
@@ -635,7 +656,6 @@ export default () => {
     const { t } = useTranslation();
 
     //const { data: allUsersAdmin } = useFullyPaginated(ENDPOINTS.USER);
-    const allUsersAdmin = [];
     //const { data: allTeamsAdmin } = useFullyPaginated(ENDPOINTS.TEAM);
     const allTeamsAdmin = [];
 
@@ -693,24 +713,7 @@ export default () => {
             break;
         case "members":
             content = <SBTSection title={t("admin.members")}>
-                {allUsersAdmin ? <>
-                    <Section title={t("admin.admins")}>
-                        <TreeWrap>
-                            {allUsersAdmin.filter(i => i.is_staff).map(i =>
-                                <MemberCard key={i.id} data={i} />
-                            )}
-                        </TreeWrap>
-                    </Section>
-                    <Section title={t("admin.users")}>
-                        {/*<TreeWrap>
-                            {allUsersAdmin.filter(i => !i.is_staff).map(i =>
-                                <MemberCard key={i.id} data={i} />
-                            )}
-                        </TreeWrap>*/}
-
-                        <MembersList />
-                    </Section>
-                </> : <Spinner />}
+                <MembersList />
             </SBTSection>;
             break;
         case "teams":

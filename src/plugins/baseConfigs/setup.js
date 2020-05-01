@@ -34,6 +34,5 @@ export default () => {
 
         ["", "Integratiosn"],
         ["enable_ctftime", "Enable CTFTime", "boolean"],
-        ["key", "Key? Wtf dave.", "boolean"],
     ]);
 };
