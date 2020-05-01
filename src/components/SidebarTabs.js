@@ -77,13 +77,15 @@ export const SiteNav = ({ children }) => {
                         <Link onClick={close} to={"/settings"} className={"sbtSubitem"}>{t("setting_plural")}</Link>
                         <Link onClick={close} to={"/logout"} className={"sbtSubitem"}>{t("sidebar.logout")}</Link>
                     </SBMenu>
-                </> : (endpoints.configGet("login", true) || endpoints.configGet("register", true)) ? <>
+                </> : (
+                    endpoints.configGet("enable_login", true) || endpoints.configGet("enable_registration", true)
+                ) ? <>
                     <SBMenu key={"login"} name={t("login")} initial>
-                        {endpoints.configGet("login", true) &&
+                        {endpoints.configGet("enable_login", true) &&
                             <Link onClick={close} key={"login"} to={"/login"} className={"sbtSubitem"}>
                                 {t("login")}
                             </Link>}
-                        {endpoints.configGet("register", true) &&
+                        {endpoints.configGet("enable_registration", true) &&
                             <Link onClick={close} key={"register"} to={"/register"} className={"sbtSubitem"}>
                                 {t("register")}
                             </Link>}
@@ -91,9 +93,6 @@ export const SiteNav = ({ children }) => {
                 </> : null}
                 {api.user && api.user.is_staff && <>
                     <SBMenu key={"admin"} name={t("sidebar.admin")}>
-                        <Link onClick={close} to={"/admin/ctf"} className={"sbtSubitem"}>
-                            {t("admin.event")}
-                        </Link>
                         <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>
                             {t("admin.configuration")}
                         </Link>

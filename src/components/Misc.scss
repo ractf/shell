@@ -13,16 +13,19 @@ $hr_color: $back_600;
 .sectionTitle {
     font-family: $titleStack;
     font-size: 3rem;
+    font-weight: 600;
 }
 .sectionTitle2 {
     font-family: $titleStack;
     font-size: 2rem;
+    font-weight: 600;
 }
 
 .sectionHeading {
     font-family: $titleStack;
     font-size: 2.3rem;
     margin-bottom: 0.5em;
+    font-weight: 600;
 }
 
 .textBlock {
@@ -66,6 +69,10 @@ $hr_color: $back_600;
         justify-content: flex-start;
     }
 
+    & > .formGroup {
+        flex-grow: 1;
+    }
+
     & > * {
         margin: 0.5rem 0;
         margin-left: 0;
@@ -84,7 +91,7 @@ $hr_color: $back_600;
     }
 
     > *:not(:last-child) {
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
     }
 }
 

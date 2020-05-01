@@ -6,7 +6,10 @@ import { BrokenShards } from "./ErrorPages";
 import useReactRouter from "../../useReactRouter";
 import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS, ProgressBar, FlexRow } from "ractf";
+import {
+    Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR,
+    ENDPOINTS, ProgressBar, FlexRow
+} from "ractf";
 import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
 import colours from "../../Colours.scss";
 import Graph from "../../components/charts/Graph";

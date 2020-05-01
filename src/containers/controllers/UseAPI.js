@@ -29,8 +29,8 @@ export const useApi = route => {
 export const usePaginated = route => {
     const api = useContext(APIEndpoints);
     const abortRequest = useRef();
-    const page = useRef();
-    page.current = page.current || 1;
+    const inFlight = useRef();
+    const nextPage = useRef();
     const [state, setState] = useState({
         loading: true,
         data: [],
@@ -40,13 +40,17 @@ export const usePaginated = route => {
     });
 
     const next = () => {
-        const path = (page.current === 0) ? route : (route + "?page=" + page.current);
+        if (inFlight.current) return;
+        const path = nextPage.current || route;
 
         const [request, ar] = api.abortableGet(path);
+        inFlight.current = true;
         abortRequest.current = ar;
 
         request.then(data => {
+            inFlight.current = false;
             if (!data) return;
+            nextPage.current = data.next;
             setState(prevState => ({
                 ...prevState, loading: false,
                 data: [...prevState.data, ...data.results],
@@ -54,12 +58,14 @@ export const usePaginated = route => {
                 hasMore: !!data.next
             }));
         }).catch(e => {
+            inFlight.current = false;
             setState(prevState => ({
                 ...prevState,
                 loading: false,
                 error: api.getError(e)
             }));
         });
+        setState(prevState => ({ ...prevState, loading: true }));
     };
     
     useEffect(() => {
@@ -78,25 +84,24 @@ export const useFullyPaginated = route => {
     const api = useContext(APIEndpoints);
     const abortRequest = useRef();
 
-    const page = useRef();
-    page.current = page.current || 1;
+    const nextPage = useRef();
     const [state, setState] = useState({
         data: [],
         error: null
     });
 
     const more = () => {
-        let path = (page.current === 0) ? route : (route + "?page=" + page.current);
+        let path = nextPage.current || route;
 
         const [request, ar] = api.abortableGet(path);
         abortRequest.current = ar;
 
         request.then(data => {
             if (!data) return;
+            nextPage.current = data.next;
             setState(prevState => ({
                 ...prevState, data: [...prevState.data, ...data.results]
             }));
-            page.current++;
             if (data.next) more();
         }).catch(e => {
             setState(prevState => ({

@@ -196,6 +196,7 @@ b {
     overflow-y: hidden;
     width: auto !important;
     flex-direction: column;
+    z-index: 10000;
 
     &>div {
         background-color: $bg_d1;

@@ -9,11 +9,10 @@ import Page from "./bases/Page";
 
 import {
     plugins, Button, FlexRow, apiContext, apiEndpoints, Input, Form,
-    FormError, SBTSection, Section, appContext, Link, FlashText
+    FormError, SBTSection, Section, appContext, Link, FlashText, Leader
 } from "ractf";
 
 import "./Campaign.scss";
-
 
 const ANC = ({ hide, anc, modal }) => {
     const endpoints = useContext(apiEndpoints);
@@ -98,15 +97,13 @@ const CategoryList = () => {
         <SBTSection subTitle={t("categories.pick")} title={t("categories.all")}>
             {api.challenges.map(i => {
                 let solved = i.challenges.filter(j => j.solved).length;
-                return <Link key={i.id} to={"/campaign/" + i.id}
-                    className={"catList" + (solved === i.challenges.length ? " catDone" : "")}>
-                    <div className={"catName"}>{i.name}</div>
-                    <div className={"catStat"}>{
-                        solved === i.challenges.length ? t("categories.finished") :
-                            solved === 0 ? t("categories.none") :
-                                t("categories.some", { count: i.challenges.length, total: solved })
-                    }</div>
-                </Link>;
+
+                return <Leader key={i.id} link={"/campaign/" + i.id} green={solved === i.challenges.length}
+                    sub={solved === i.challenges.length ? t("categories.finished") :
+                        solved === 0 ? t("categories.none") :
+                            t("categories.some", { count: i.challenges.length, total: solved })}>
+                    {i.name}
+                </Leader>;
             })}
         </SBTSection>
     </Page>;

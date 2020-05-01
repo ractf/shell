@@ -4,8 +4,7 @@ import {
     Page, SectionTitle, HR, SectionHeading, SectionTitle2, FlexRow, Button, Input,
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
     Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue, Checkbox,
-    InputButton,
-    FormGroup
+    InputButton, Leader, FormGroup
 } from "ractf";
 
 
@@ -149,5 +148,7 @@ export default () => <Page>
     <FlashText>This is a message for the user</FlashText>
     <FlashText warning>This message is a warning</FlashText>
     <FlashText warning bold>This one's a serious warning</FlashText>
+    <Leader>This leads you on somewhere</Leader>
+    <Leader sub={"but this time with a subtitle!"}>This leads you on somewhere</Leader>
     This is text with <code>an inline snippet of code</code> inside it.
 </Page>;

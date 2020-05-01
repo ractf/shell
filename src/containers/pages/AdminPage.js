@@ -5,12 +5,13 @@ import DatePicker from "react-datepicker";
 
 
 import {
-    Page, Form, Input, Button, Radio, Spinner, SBTSection, Section, apiContext,
-    apiEndpoints, appContext, useApi, ENDPOINTS, useFullyPaginated, FlexRow,
-    Tree, TreeWrap, TreeValue, FormGroup
+    Page, Form, Input, Button, Spinner, SBTSection, Section, apiContext,
+    apiEndpoints, appContext, useApi, ENDPOINTS, FlexRow, Tree, TreeWrap, HR,
+    TreeValue, FormGroup, InputButton, FormError, Leader, Checkbox, plugins,
 } from "ractf";
 
 import "react-datepicker/dist/react-datepicker.css";
+import Modal from "../../components/Modal";
 
 
 const MemberCard = ({ data }) => {
@@ -32,6 +33,8 @@ const MemberCard = ({ data }) => {
     };
     const set = key => value => configSet(key, value);
 
+    if (!data) return <TreeValue name={"Failed to load member data!"} />;
+
     return <Tree name={data.username}>
         <TreeValue name={"id"} value={data.id} />
         <TreeValue name={"enabled"} value={data.is_active} setValue={!data.is_staff && set("is_active")} />
@@ -48,11 +51,11 @@ const MemberCard = ({ data }) => {
             <TreeValue name={"reddit"} value={data.reddit} setValue={set("reddit")} />
         </Tree>
         <Tree name={"solves"}>
-            {data.solves.map(i => <Tree key={i.id} name={i.challenge_name}>
+            {data.solves ? data.solves.map(i => <Tree key={i.id} name={i.challenge_name}>
                 <TreeValue name={"points"} value={i.points} />
                 <TreeValue name={"first_blood"} value={i.first_blood} />
                 <TreeValue name={"timestamp"} value={i.timestamp} />
-            </Tree>)}
+            </Tree>) : <TreeValue name={"Failed to load member solves!"} />}
         </Tree>
     </Tree>;
 };
@@ -457,103 +460,194 @@ const ImportExport = () => {
     </SBTSection>;
 };
 
-export default () => {
+const MembersList = () => {
+    const endpoints = useContext(apiEndpoints);
+    const [state, setState] = useState({
+        loading: false, error: null, results: null, member: null
+    });
+    const doSearch = ({ name }) => {
+        setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
+
+        endpoints.get(ENDPOINTS.USER + "?search=" + name).then(data => {
+            setState(prevState => ({
+                ...prevState, results: data.d.results, more: !!data.d.next, loading: false
+            }));
+        }).catch(e => {
+            setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+        });
+    };
+
+    const editMember = (member) => {
+        return () => {
+            setState(prevState => ({ ...prevState, loading: true }));
+            endpoints.get(ENDPOINTS.USER + member.id).then(data => {
+                setState(prevState => ({ ...prevState, loading: false, member: data.d }));
+            }).catch(e => {
+                setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+            });
+        };
+    };
+
+    return <>
+        <Form handle={doSearch} locked={state.loading}>
+            <InputButton submit name={"name"} placeholder={"Search for Username"} button={"Search"} />
+            {state.error && <FormError>{state.error}</FormError>}
+        </Form>
+        {state.loading && <Spinner />}
+        {state.results && <>
+            <br />
+            {state.results.length ? <>
+                {state.more && <><FlexRow>
+                    Additional results were omitted. Please refine your search.
+                </FlexRow><br /></>}
+                {state.results.map(i => <Leader click={editMember(i)} key={i.id}>{i.username}</Leader>)}
+            </> : <FlexRow><br />
+                No results found
+            </FlexRow>}
+        </>}
+        {state.member && <Modal>
+            <Form>
+                <FormGroup label={"Username"} htmlFor={"username"}>
+                    <Input val={state.member.username} name={"username"} />
+                </FormGroup>
+                <FormGroup label={"Rights"}>
+                    <FlexRow left>
+                        <Checkbox checked={state.member.is_active} name={"is_active"}>Active</Checkbox>
+                        <Checkbox checked={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
+                        <Checkbox checked={state.member.is_visible} name={"is_active"}>Visible</Checkbox>
+                    </FlexRow>
+                </FormGroup>
+                <FormGroup label={"Bio"} htmlFor={"bio"}>
+                    <Input val={state.member.bio} name={"bio"} />
+                </FormGroup>
+                <FormGroup label={"Discord"} htmlFor={"discord"}>
+                    <Input val={state.member.discord} name={"discord"} />
+                    <Input val={state.member.discordid} name={"discordid"} />
+                </FormGroup>
+                <FormGroup label={"Reddit"} htmlFor={"reddit"}>
+                    <Input val={state.member.reddit} name={"reddit"} />
+                </FormGroup>
+                <FormGroup label={"Twitter"} htmlFor={"twitter"}>
+                    <Input val={state.member.twitter} name={"twitte"} />
+                </FormGroup>
+                <FormGroup label={"Email"} htmlFor={"email"}>
+                    <Input val={state.member.email} name={"email"} />
+                    <Checkbox checked={state.member.email_verified} name={"email_verified"}>
+                        Email verified
+                    </Checkbox>
+                </FormGroup>
+            </Form>
+        </Modal>}
+    </>;
+};
+
+const Config = () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const app = useContext(appContext);
     const [adminConfig, setAdminConfig] = useState(null);
-    const { t } = useTranslation();
-
-    const { data: allUsersAdmin } = useFullyPaginated(ENDPOINTS.USER);
-    const { data: allTeamsAdmin } = useFullyPaginated(ENDPOINTS.TEAM);
     const [adminConfig_] = useApi(ENDPOINTS.CONFIG);
 
-    const { match } = useReactRouter();
-    if (!match) return null;
-    const page = match.params.page;
+    useEffect(() => {
+        if (adminConfig_) {
+            let config = {};
+            Object.entries(adminConfig_).forEach(([key, value]) => config[key] = value);
+            setAdminConfig(config);
+        }
+    }, [adminConfig_]);
 
     const configSet = (key, value) => {
         endpoints.setConfigValue(key, value).then(() => {
             if (api.config)
                 api.config[key] = value;
-            setAdminConfig({ ...adminConfig, key: value });
+            setAdminConfig(oldConf => ({ ...oldConf, key: value }));
         }).catch(e => {
             console.error(e);
             app.alert(endpoints.getError(e));
         });
     };
+    const updateConfig = (changes) => {
+        Object.entries(changes).forEach(([key, value]) => {
+            console.log(key, value, adminConfig[key]);
+            if (value !== adminConfig[key]) configSet(key, value);
+        });
+    };
 
-    useEffect(() => {
-        if (adminConfig_) {
-            let config = {};
-            adminConfig_.forEach(({ key, value }) => config[key] = value.value);
-            setAdminConfig(config);
+    let fields = [];
+    let stack = [];
+
+    const flushStack = () => {
+        if (stack.length) {
+            fields.push(<FlexRow left key={fields.length}>{stack.map(i => i[0])}</FlexRow>);
+            stack = [];
         }
-    }, [adminConfig_]);
+    };
+
+    if (adminConfig !== null) {
+        Object.values(plugins.config).forEach(i => {
+            i.forEach(([key, name, type, extra]) => {
+                if (key === "" || (stack.length && type !== stack[0][1]))
+                    flushStack();
+                if (key === "") {
+                    if (fields.length)
+                        fields.push(<HR key={fields.length} />);
+                    if (name)
+                        fields.push(<label key={fields.length}>{name}</label>);
+                    return;
+                }
+                switch (type) {
+                    case "string":
+                    case "int":
+                    case "float":
+                        if (type === "string") flushStack();
+                        let format = (type === "string") ? null : (type === "int") ? /\d+/ : /\d+(\.\d+)?/;
+                        stack.push([<FormGroup key={stack.length} label={name}>
+                            <Input placeholder={name} val={adminConfig[key]} format={format} name={key} />
+                        </FormGroup>, type]);
+                        break;
+                    case "date":
+                        stack.push([<FormGroup key={stack.length} label={name}>
+                            <DatePick initial={adminConfig[key]} configSet={configSet} configKey={key} />
+                        </FormGroup>, type]);
+                        break;
+                    case "boolean":
+                        stack.push([<Checkbox key={stack.length} name={key} checked={adminConfig[key]}>
+                            {name}
+                        </Checkbox>, type]);
+                        break;
+                    default:
+                        break;
+                }
+            });
+            flushStack();
+        });
+    }
+
+    return <Form handle={updateConfig}>
+        {fields}
+        <FlexRow>
+            <Button submit>Save</Button>
+        </FlexRow>
+    </Form>;
+};
+
+export default () => {
+    const { t } = useTranslation();
+
+    //const { data: allUsersAdmin } = useFullyPaginated(ENDPOINTS.USER);
+    const allUsersAdmin = [];
+    //const { data: allTeamsAdmin } = useFullyPaginated(ENDPOINTS.TEAM);
+    const allTeamsAdmin = [];
+
+    const { match } = useReactRouter();
+    if (!match) return null;
+    const page = match.params.page;
 
     let content;
     switch (page) {
-        case "ctf":
-            content = <SBTSection title={t("admin.event")}>
-                {adminConfig ? <>
-                    <Section title={t("admin.start_stop")}>
-                        <FormGroup label={t("admin.start_desc")}>
-                            <Button>{t("admin.start")}</Button>
-                        </FormGroup>
-                        <FormGroup label={t("admin.stop_desc")}>
-                            <Button>{t("admin.stop")}</Button>
-                        </FormGroup>
-                    </Section>
-                    <Section title={t("admin.auto_time")}>
-                        <FlexRow left>
-                            <FormGroup htmlFor={"regStartTime"} label={t("admin.reg_start_time")}>
-                                <DatePick initial={adminConfig.register_start_time}
-                                    configSet={configSet} name={"regStartTime"}
-                                    configKey={"register_start_time"} />
-                            </FormGroup>
-                            <FormGroup htmlFor={"eventStartTime"} label={t("admin.start_time")}>
-                                <DatePick initial={adminConfig.start_time}
-                                    configSet={configSet} name={"eventStartTime"}
-                                    configKey={"start_time"} />
-                            </FormGroup>
-                            <FormGroup htmlFor={"eventEndTime"} label={t("admin.stop_time")}>
-                                <DatePick initial={adminConfig.end_time}
-                                    configSet={configSet} name={"eventEndTime"}
-                                    configKey={"end_time"} />
-                            </FormGroup>
-                        </FlexRow>
-                    </Section>
-                </> : <Spinner />}
-            </SBTSection>;
-            break;
         case "config":
             content = <SBTSection title={t("admin.configuration")}>
-                {adminConfig ? <>
-                    <Section title={t("admin.login")}>
-                        <FormGroup label={t("admin.enable_login")}>
-                            <Radio onChange={v => configSet("login", v)} value={adminConfig.login}
-                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                        </FormGroup>
-                    </Section>
-                    <Section title={t("admin.reg")}>
-                        <FormGroup label={t("admin.enable_reg")}>
-                            <Radio onChange={v => configSet("register", v)} value={adminConfig.register}
-                                options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                        </FormGroup>
-                    </Section>
-                    <Section title={t("admin.main_game")}>
-                        <FlexRow left>
-                            <FormGroup label={t("admin.scoring")}>
-                                <Radio onChange={v => configSet("scoring", v)} value={adminConfig.scoring}
-                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                            </FormGroup>
-                            <FormGroup label={t("admin.flags")}>
-                                <Radio onChange={v => configSet("flags", v)} value={adminConfig.flags}
-                                    options={[[t("admin.enabled"), true], [t("admin.disabled"), false]]} />
-                            </FormGroup>
-                        </FlexRow>
-                    </Section>
-                </> : <Spinner />}
+                <Config />
             </SBTSection>;
             break;
         case "port":
@@ -608,11 +702,13 @@ export default () => {
                         </TreeWrap>
                     </Section>
                     <Section title={t("admin.users")}>
-                        <TreeWrap>
+                        {/*<TreeWrap>
                             {allUsersAdmin.filter(i => !i.is_staff).map(i =>
                                 <MemberCard key={i.id} data={i} />
                             )}
-                        </TreeWrap>
+                        </TreeWrap>*/}
+
+                        <MembersList />
                     </Section>
                 </> : <Spinner />}
             </SBTSection>;

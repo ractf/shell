@@ -47,7 +47,6 @@ export const ENDPOINTS = {
 
 
 class APIClass extends Component {
-
     constructor(props) {
         super(props);
 
@@ -447,11 +446,11 @@ class APIClass extends Component {
     });
     _getConfig = () => this.get(ENDPOINTS.CONFIG).then(({ d }) => {
         let config = {};
-        d.forEach(({ key, value }) => config[key] = value.value);
+        Object.entries(d).forEach(([ key, value ]) => config[key] = value);
         return config;
     });
     _getChallenges = () => this.get(ENDPOINTS.CATEGORIES);
-    setConfigValue = (key, value) => this.put(ENDPOINTS.CONFIG, { key: key, value: { value: value } });
+    setConfigValue = (key, value) => this.post(ENDPOINTS.CONFIG + key, { value });
 
     _postLogin = async token => {
         localStorage.setItem("token", token);
