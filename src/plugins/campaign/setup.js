@@ -98,7 +98,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 linksU = (above && chal.unlocks.indexOf(above.id) !== -1),
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
-            let unlocked = isEdit || (chal.unlocked && !chal.hidden);
+            let unlocked = isEdit || (chal.unlocked && !chal.hidden) || chal.solved;
 
             return <Node
                 key={chal.id} unlocked={unlocked} hidden={!isEdit && chal.hidden}

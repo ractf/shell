@@ -139,7 +139,7 @@ export default () => {
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Solve attempts</div>
                                     <Pie data={[{
-                                        values: [420, 69],
+                                        values: [teamData.solves.length, teamData.incorrect_solves],
                                         labels: ['Correct', 'Incorrect'],
                                         marker: {
                                             colors: [

@@ -5,7 +5,7 @@ import TabbedView, { Tab } from "../../components/TabbedView";
 import Table from "../../components/Table";
 import Page from "./bases/Page";
 
-import { useApi, usePaginated, Button, apiContext, ENDPOINTS } from "ractf";
+import { useApi, usePaginated, Button, apiContext, ENDPOINTS, FlexRow } from "ractf";
 
 import Graph from "../../components/charts/Graph";
 
@@ -88,13 +88,17 @@ export default () => {
             <Tab label={t("user_plural")}>
                 <Graph data={userGraphData} />
                 <Table headings={[t("user"), t("point_plural")]} data={userData(uState.data)} />
-                {uState.hasMore && <Button disabled={uState.loading} click={uNext}>Load More</Button>}
+                {uState.hasMore && <FlexRow>
+                    <Button disabled={uState.loading} click={uNext}>Load More</Button>
+                </FlexRow>}
             </Tab>
 
             <Tab label={t("team_plural")}>
                 <Graph data={teamGraphData} />
                 <Table headings={[t("team"), t("point_plural")]} data={teamData(tState.data)} />
-                {tState.hasMore && <Button disabled={tState.loading} click={tNext}>Load More</Button>}
+                {tState.hasMore && <FlexRow>
+                    <Button disabled={tState.loading} click={tNext}>Load More</Button>
+                </FlexRow>}
             </Tab>
         </TabbedView>
     </Page>;
