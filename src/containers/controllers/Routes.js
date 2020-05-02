@@ -3,21 +3,13 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
-import PasswordReset from "../pages/auth/PasswordReset";
 import Countdown from "../pages/Countdown";
-import PostLogin from "../pages/auth/PostLogin";
 import HomePage from "../pages/HomePage";
 import TeamPage from "../pages/TeamPage";
-import SignUp from "../pages/auth/SignUp";
-import Login from "../pages/auth/Login";
-
-import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
-import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
-
-import { APIContext, APIEndpoints } from "./Contexts";
 
 import {
-    plugins, TextBlock, SectionHeading, SectionTitle2, dynamicLoad
+    apiContext, apiEndpoints, plugins, TextBlock, SectionHeading,
+    SectionTitle2, dynamicLoad
 } from "ractf";
 
 
@@ -29,12 +21,6 @@ const Campaign = dynamicLoad(() => import("../pages/Campaign"));
 const Profile = dynamicLoad(() => import("../pages/Profile"));
 const TwoFA = dynamicLoad(() => import("../pages/TwoFA"));
 const UI = dynamicLoad(() => import("../pages/UI"));
-
-
-const Logout = () => {
-    useContext(APIEndpoints).logout();
-    return <Redirect to={"/home"} />;
-};
 
 
 class ErrorBoundary extends React.Component {
@@ -66,7 +52,7 @@ class ErrorBoundary extends React.Component {
 
 
 const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
-    const api = useContext(APIContext);
+    const api = useContext(apiContext);
     if (!process.env.REACT_APP_NO_SITE_LOCK)
         if (lockout && !(api.user && api.user.is_staff))
             if (!api.siteOpen) return <Countdown />;
@@ -85,6 +71,30 @@ const URIHandler = () => {
     return <Redirect to={decodeURIComponent(window.location.search).split(":", 2)[1]} />;
 };
 
+const Login = () => {
+    let api = useContext(apiContext);
+    let provider = api.config.login_provider || "basicAuth";
+    if (plugins.loginProvider[provider])
+        return React.createElement(plugins.loginProvider[provider].component);
+    return <Page vCentre>
+        Login provider plugin missing for <code>{provider}</code>.
+    </Page>;
+};
+const Register = () => {
+    let api = useContext(apiContext);
+    let provider = api.config.registration_provider || "basicAuth";
+    if (plugins.registrationProvider[provider])
+        return React.createElement(plugins.registrationProvider[provider].component);
+    return <Page vCentre>
+        Registration provider plugin missing for <code>{provider}</code>.
+    </Page>;
+};
+const Logout = () => {
+    useContext(apiEndpoints).logout();
+    return <Redirect to={"/home"} />;
+};
+
+
 export default () => {
     return <Switch>
         <Route exact path={"/uri"} component={URIHandler} />
@@ -95,31 +105,13 @@ export default () => {
             <Page title={"Login"} noAuth C={Login} />
         </Route>
         <Route exact path={"/register"}>
-            <Page title={"Register"} noAuth C={SignUp} />
-        </Route>
-        <Route exact path={"/register/email"}>
-            <Page title={"Register"} noAuth C={EmailMessage} />
-        </Route>
-        <Route exact path={"/verify"}>
-            <Page title={"Verify"} C={EmailVerif} />
-        </Route>
-
-        <Route exact path={"/password_reset"}>
-            <Page title={"Reset Password"} C={PasswordReset} />
-        </Route>
-
-        <Route exact path={"/team/join"}>
-            <Page title={"Join Team"} auth C={JoinTeam} />
-        </Route>
-        <Route exact path={"/team/new"}>
-            <Page title={"New Team"} auth C={CreateTeam} />
+            <Page title={"Register"} noAuth C={Register} />
         </Route>
 
         <Route exact path={"/home"}>
             <Page title={"Home"} C={HomePage} />
         </Route>
 
-        <Redirect from={"/admin"} to={"/admin/config"} exact />
         <Route exact path={"/admin/:page"}>
             <Page title={"Admin"} auth admin C={AdminPage} />
         </Route>
@@ -164,9 +156,6 @@ export default () => {
         <Redirect path={"/team"} to={"/team/me"} exact />
         <Route exact path={"/team/:team"}>
             <Page title={"Team"} auth C={TeamPage} />
-        </Route>
-        <Route exact path={"/noteam"}>
-            <Page title={"Where now?"} auth C={PostLogin} />
         </Route>
 
         {Object.entries(plugins.page).map(([url, page]) =>

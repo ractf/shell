@@ -7,6 +7,8 @@ import WS from "./WS";
 
 import { APIContext, APIEndpoints } from "./Contexts";
 
+import { plugins } from "ractf";
+
 
 export const DOMAIN = process.env.REACT_APP_API_DOMAIN;
 export const API_BASE = process.env.REACT_APP_API_BASE;
@@ -504,13 +506,12 @@ class APIClass extends Component {
         if (this._loginCallback) this._loginCallback(token);
         await this._reloadCache();
 
-        if (this.state.team)
-            if (this.state.challenges.length)
-                this.props.history.push("/campaign");
-            else
-                this.props.history.push("/");
-        else
-            this.props.history.push("/noteam");
+        let post = Object.values(plugins.postLogin);
+        for (let i = 0; i < post.length; i++) {
+            if (post[i]({
+                ...this.props, api: this.state
+            })) break;
+        }
     };
 
     modifyUser = (userId, data) => this.patch(BASE_URL + ENDPOINTS.USER + userId, data);

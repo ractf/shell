@@ -7,8 +7,6 @@ import {
     apiContext, apiEndpoints, appContext
 } from "ractf";
 
-import { Wrap } from "./auth/Parts";
-
 
 export default () => {
     const endpoints = useContext(apiEndpoints);
@@ -63,44 +61,42 @@ export default () => {
         );
     };
 
-    return <Page title={t("2fa.2fa")}>
-        <Wrap>
-            {page === 0 ? <>
-                {api.user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
-                <br /><br />
-                <b>{t("2fa.no_remove_warning")}</b>
+    return <Page title={t("2fa.2fa")} vCentre>
+        {page === 0 ? <>
+            {api.user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
+            <br /><br />
+            <b>{t("2fa.no_remove_warning")}</b>
 
-                <FlexRow>
-                    <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
-                    <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
-                </FlexRow>
-            </> : page === 1 ? <>
-                {t("2fa.enabling")}
-                <Spinner />
-            </> : page === 2 ? <>
-                <SectionTitle2>{t("2fa.finalise")}</SectionTitle2>
-                <br />
-                {t("2fa.please_scan_qr")}
-                <br /><br />
-                <QRCode renderAs={"svg"} size={128} fgColor={"#161422"} value={buildURI(secret)} includeMargin />
-                <br /><br />
-                {t("2fa.unable_to_qr")}
-                <TextBlock>
-                    {formatSecret(secret)}
-                </TextBlock>
+            <FlexRow>
+                <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
+                <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
+            </FlexRow>
+        </> : page === 1 ? <>
+            {t("2fa.enabling")}
+            <Spinner />
+        </> : page === 2 ? <>
+            <SectionTitle2>{t("2fa.finalise")}</SectionTitle2>
+            <br />
+            {t("2fa.please_scan_qr")}
+            <br /><br />
+            <QRCode renderAs={"svg"} size={128} fgColor={"#161422"} value={buildURI(secret)} includeMargin />
+            <br /><br />
+            {t("2fa.unable_to_qr")}
+            <TextBlock>
+                {formatSecret(secret)}
+            </TextBlock>
 
-                {message && <FormError>{message}</FormError>}
+            {message && <FormError>{message}</FormError>}
 
-                <Button click={faPrompt}>{t("2fa.got_it")}</Button>
-            </> : page === 3 ? <>
-                <SectionTitle2>{t("2fa.congratulations")}</SectionTitle2>
-                <br />
-                {t("2fa.setup")}
-                <Button to={"/"}>Yay!</Button>
-            </> : <>
-                {t("2fa.error")}
-                <Button click={() => setPage(0)}>{t("2fa.restart")}</Button>
-            </>}
-        </Wrap>
+            <Button click={faPrompt}>{t("2fa.got_it")}</Button>
+        </> : page === 3 ? <>
+            <SectionTitle2>{t("2fa.congratulations")}</SectionTitle2>
+            <br />
+            {t("2fa.setup")}
+            <Button to={"/"}>Yay!</Button>
+        </> : <>
+            {t("2fa.error")}
+            <Button click={() => setPage(0)}>{t("2fa.restart")}</Button>
+        </>}
     </Page>;
 };

@@ -46,5 +46,7 @@ export default () => {
 
         ["", "Integratiosn"],
         ["enable_ctftime", "Enable CTFTime", "boolean"],
+        ["login_provider", "Login provider", "string"],
+        ["registration_provider", "Registration provider", "string"],
     ]);
 };
