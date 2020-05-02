@@ -3,13 +3,14 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
+import { default as BasePage } from "../pages/bases/Page";
 import Countdown from "../pages/Countdown";
 import HomePage from "../pages/HomePage";
 import TeamPage from "../pages/TeamPage";
 
 import {
     apiContext, apiEndpoints, plugins, TextBlock, SectionHeading,
-    SectionTitle2, dynamicLoad
+    SectionTitle2, dynamicLoad, FlexRow
 } from "ractf";
 
 
@@ -76,18 +77,19 @@ const Login = () => {
     let provider = api.config.login_provider || "basicAuth";
     if (plugins.loginProvider[provider])
         return React.createElement(plugins.loginProvider[provider].component);
-    return <Page vCentre>
-        Login provider plugin missing for <code>{provider}</code>.
-    </Page>;
+    console.log(provider);
+    return <BasePage vCentre>
+        <FlexRow><p>Login provider plugin missing for <code>{provider}</code>.</p></FlexRow>
+    </BasePage>;
 };
 const Register = () => {
     let api = useContext(apiContext);
     let provider = api.config.registration_provider || "basicAuth";
     if (plugins.registrationProvider[provider])
         return React.createElement(plugins.registrationProvider[provider].component);
-    return <Page vCentre>
-        Registration provider plugin missing for <code>{provider}</code>.
-    </Page>;
+    return <BasePage vCentre>
+        <FlexRow><p>Registration provider plugin missing for <code>{provider}</code>.</p></FlexRow>
+    </BasePage>;
 };
 const Logout = () => {
     useContext(apiEndpoints).logout();

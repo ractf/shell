@@ -202,7 +202,7 @@ const App = React.memo(() => {
     let popupsEl = popups.map((popup, n) => {
         let handler = plugins.popup[popup.type];
         if (!handler) return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>
-            Plugin handler missing for '{popup.type}'!
+            Plugin handler missing for <code>{popup.type}</code>!
         </div>;
         return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>{React.createElement(
             handler.component, { popup: popup, key: n }
