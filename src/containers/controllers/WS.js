@@ -121,7 +121,7 @@ export default class WS extends Component {
             case this.TEAM_JOIN:
                 // TODO: Hookup settings
                 this.api.addPopup(
-                    "Hint used",
+                    "Team join",
                     <>
                         <b>{data.username}</b> joined your team!
                     </>
