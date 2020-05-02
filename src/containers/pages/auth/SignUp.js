@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Form, FormError, Page, SectionTitle2, Input, Button, FlexRow,
-    apiEndpoints, zxcvbn, Checkbox, Link
+    apiEndpoints, zxcvbn, Checkbox, Link, FormGroup
 } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
@@ -27,7 +27,7 @@ export default () => {
             return setMessage(t("auth.no_email"));
         if (!EMAIL_RE.test(email))
             return setMessage(t("auth.inv_email"));
-        
+
         const strength = zxcvbn()(passwd1);
         if (strength.score < 3) {
             return setMessage((strength.feedback.warning || t("auth.pass_weak")));
@@ -46,17 +46,19 @@ export default () => {
         <Wrap>
             <Form locked={locked} handle={doRegister}>
                 <SectionTitle2>{t("auth.register")}</SectionTitle2>
-    
-                <Input name={"username"} placeholder={t("username")} />
-                <Input format={EMAIL_RE} name={"email"} placeholder={t("email")} />
-                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("password")} password />
-                <Input name={"passwd2"} placeholder={t("password_repeat")} password />
 
-                <Checkbox name={"accept"}>
-                    I accept the <Link to={"/conduct"}>terms of use</Link> and <Link to={"/privacy"}>
-                        privacy policy
-                    </Link>.
-                </Checkbox>
+                <FormGroup>
+                    <Input name={"username"} placeholder={t("username")} />
+                    <Input format={EMAIL_RE} name={"email"} placeholder={t("email")} />
+                    <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("password")} password />
+                    <Input name={"passwd2"} placeholder={t("password_repeat")} password />
+
+                    <Checkbox name={"accept"}>
+                        I accept the <Link to={"/conduct"}>terms of use</Link> and <Link to={"/privacy"}>
+                            privacy policy
+                        </Link>.
+                    </Checkbox>
+                </FormGroup>
 
                 {message && <FormError>{message}</FormError>}
 

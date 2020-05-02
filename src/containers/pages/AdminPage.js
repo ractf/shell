@@ -516,7 +516,9 @@ const TeamsList = () => {
 
     const makeOwner = (team, member) => {
         return () => {
-            app.promptConfirm({ message: `Make ${member.username} the owner of ${team.name}?`, small: true }).then(() => {
+            app.promptConfirm({
+                message: `Make ${member.username} the owner of ${team.name}?`, small: true
+            }).then(() => {
                 endpoints.modifyTeam(team.id, { owner: member.id }).then(() => {
                     app.alert(`Transfered ownership to ${team.name}.`);
                     setState(prevState => {

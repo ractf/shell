@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Form, FormError, Page, SectionTitle2, Input, Button, FlexRow,
-    apiEndpoints, appContext
+    apiEndpoints, appContext, FormGroup
 } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
@@ -62,9 +62,10 @@ export default () => {
         <Wrap>
             <Form locked={locked} handle={doLogin}>
                 <SectionTitle2>{t("auth.login")}</SectionTitle2>
-
-                <Input name={"username"} placeholder={t("username")} />
-                <Input name={"password"} placeholder={t("password")} password />
+                <FormGroup>
+                    <Input name={"username"} placeholder={t("username")} />
+                    <Input name={"password"} placeholder={t("password")} password />
+                </FormGroup>
                 <div onClick={openForget} className={"fgtpsdpmt"}>{t("auth.pass_forgot")}</div>
 
                 {message && <FormError>{message}</FormError>}
