@@ -10,6 +10,9 @@ export default class WS extends Component {
 
     CONNECTION = 0;
     CHALLENGE_SCORE = 1;
+    TEAM_FLAG_REJECT = 2;
+    TEAM_HINT_USE = 3;
+    TEAM_JOIN = 4;
     ANNOUNCEMENT = 5;
 
     constructor(props) {
@@ -39,7 +42,7 @@ export default class WS extends Component {
     _loginCallback = (token) => {
         token = token || localStorage.getItem("token");
         if (token && this.ws.readyState === WebSocket.OPEN)
-            this.send({token: token});
+            this.send({ token: token });
     };
 
     send = (data) => {
@@ -51,7 +54,7 @@ export default class WS extends Component {
     _setupWS = () => {
         try {
             this.ws = new WebSocket(this.WSS_URL);
-        } catch(e) {
+        } catch (e) {
             this.ws = null;
             this.onclose();
             return;
@@ -88,11 +91,41 @@ export default class WS extends Component {
                         <>
                             <b>{data.challenge_name}</b> was solved by <b>
                                 {data.username}</b> for <b>
-                                {data.team_name}</b> scoring <b>
-                                {data.challenge_score}</b> points
+                                {data.team_name}</b>, scoring <b>
+                                {data.challenge_score}</b> points.
                         </>
                     );
                 }
+                break;
+            case this.TEAM_FLAG_REJECT:
+                // TODO: Hookup settings
+                this.api.addPopup(
+                    "Flag rejected",
+                    <>
+                        <b>{data.username}</b> had a flag rejected for <b>
+                            {data.challenge_name}</b>.
+                    </>
+                );
+                break;
+            case this.TEAM_HINT_USE:
+                // TODO: Hookup settings
+                this.api.addPopup(
+                    "Hint used",
+                    <>
+                        <b>{data.username}</b> used a hint for <b>
+                            {data.challenge}</b>. This cost <b>
+                            {data.hint_penalty}</b> points.
+                    </>
+                );
+                break;
+            case this.TEAM_JOIN:
+                // TODO: Hookup settings
+                this.api.addPopup(
+                    "Hint used",
+                    <>
+                        <b>{data.username}</b> joined your team!
+                    </>
+                );
                 break;
             case this.ANNOUNCEMENT:
                 this.api.showAnnouncement(data);
