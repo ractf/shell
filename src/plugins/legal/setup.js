@@ -6,7 +6,16 @@ import PrivacyPage from "./components/Privacy";
 
 
 export default () => {
-    registerPlugin("page", "/about", AboutPage);
-    registerPlugin("page", "/conduct", ConductPage);
-    registerPlugin("page", "/privacy", PrivacyPage);
+    registerPlugin("page", "/about", {
+        title: "About",
+        component: AboutPage,
+    });
+    registerPlugin("page", "/conduct", {
+        title: "Conduct",
+        component: ConductPage,
+    });
+    registerPlugin("page", "/privacy", {
+        title: "Privacy",
+        component: PrivacyPage,
+    });
 };

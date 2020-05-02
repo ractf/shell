@@ -12,8 +12,6 @@ import TeamPage from "../pages/TeamPage";
 import SignUp from "../pages/auth/SignUp";
 import Login from "../pages/auth/Login";
 
-import WSTester from "../pages/WSTester";
-
 import { EmailVerif, EmailMessage } from "../pages/auth/EmailVerif";
 import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
 
@@ -36,7 +34,6 @@ const AdminPage = asyncRoute(() => import("../pages/AdminPage"));
 const Campaign = asyncRoute(() => import("../pages/Campaign"));
 const Profile = asyncRoute(() => import("../pages/Profile"));
 const TwoFA = asyncRoute(() => import("../pages/TwoFA"));
-const Debug = asyncRoute(() => import("../pages/Debug"));
 const UI = asyncRoute(() => import("../pages/UI"));
 
 
@@ -97,12 +94,6 @@ const URIHandler = () => {
 export default () => {
     return <Switch>
         <Route exact path={"/uri"} component={URIHandler} />
-        <Route exact path={"/debug"} >
-            <Page title={"Debug"} C={Debug} />
-        </Route>
-        <Route exact path={"/debug/ws"} >
-            <Page title={"WebSockets"} C={WSTester} />
-        </Route>
 
         <Redirect exact path={"/"} to={"/home"} />
         <Route exact path={"/logout"} component={Logout} />
@@ -184,8 +175,11 @@ export default () => {
             <Page title={"Where now?"} auth C={PostLogin} />
         </Route>
 
-        {Object.keys(plugins.page).map(url =>
-            <Route exact path={url} key={url} component={plugins.page[url]} />
+        {Object.entries(plugins.page).map(([url, page]) =>
+            <Route exact path={url} key={url}>
+                <Page title={page.title} auth={page.auth} lockout={page.lockout}
+                    admin={page.admin} noAuth={page.noAuth} C={page.component} />
+            </Route>
         )}
 
         <Route>

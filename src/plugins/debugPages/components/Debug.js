@@ -1,6 +1,10 @@
 import React from "react";
 
-import { Page, SectionTitle2, HR, Button, useApi, TextBlock, Table, ENDPOINTS, FlexRow } from "ractf";
+import {
+    Page, SectionTitle2, HR, Button, useApi, TextBlock, Table, ENDPOINTS,
+    FlexRow
+} from "ractf";
+
 
 export default () => {
     const [backendVersion] = useApi(ENDPOINTS.VERSION);
