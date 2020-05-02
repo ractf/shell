@@ -76,7 +76,6 @@ class ErrorBoundary extends React.Component {
 
 const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
     const api = useContext(APIContext);
-    //return <Countdown />;
     if (!process.env.REACT_APP_NO_SITE_LOCK)
         if (lockout && !(api.user && api.user.is_staff))
             if (!api.siteOpen) return <Countdown />;

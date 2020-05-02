@@ -192,7 +192,7 @@ class APIClass extends Component {
         let token = localStorage.getItem('token');
         if (token) {
             this._reloadCache(minimal).then((newState) => {
-                if (newState.authenticated && newState.ready)
+                if (newState && newState.authenticated && newState.ready)
                     this._getAnnouncements();
             });
         } else {
@@ -242,6 +242,7 @@ class APIClass extends Component {
                         if (e.response.status === 400) error = "";
                         let extra = "";
                         Object.keys(e.response.data.d).forEach(i => {
+                            if (i === "reason") return;
                             if (extra.length !== 0) extra += "\n";
                             extra += e.response.data.d[i];
                         });
@@ -356,7 +357,7 @@ class APIClass extends Component {
                 userData = await this.cachedGet(ENDPOINTS.USER + "self");
             } catch (e) {
                 if (e.response && e.response.data)
-                    return this.logout(true);
+                    return this.logout(true, this.getError(e));
                 ready = false;
                 this.setState({ ready: false });
             }
@@ -369,7 +370,7 @@ class APIClass extends Component {
                         teamData = null;
                     } else {
                         if (e.response && e.response.data)
-                            return this.logout(true);
+                            return this.logout(true, this.getError(e));
                         ready = false;
                         this.setState({ ready: false });
                     }
@@ -380,9 +381,7 @@ class APIClass extends Component {
         try {
             challenges = (await this._getChallenges()).d;
         } catch (e) {
-            //if (e.response && e.response.data)
-            //    return this.logout(true);
-            ready = false;
+            challenges = [];
         }
 
         let newState = { ready: ready, authenticated: ready };
@@ -474,6 +473,10 @@ class APIClass extends Component {
             let ct = new Date(data.d.countdown_timestamp * 1000);
             let st = new Date(data.d.server_timestamp);
             let now = new Date();
+            console.log('Countdown:', ct);
+            console.log('Server time:', ct);
+            console.log('Local time:', now);
+            console.log('Site open:', ct - st < 0);
 
             let countdown = { time: ct, offset: st - now };
             localStorage.setItem("countdown", JSON.stringify(countdown));
@@ -502,7 +505,10 @@ class APIClass extends Component {
         await this._reloadCache();
 
         if (this.state.team)
-            this.props.history.push("/campaign");
+            if (this.state.challenges.length)
+                this.props.history.push("/campaign");
+            else
+                this.props.history.push("/home");
         else
             this.props.history.push("/noteam");
     };
@@ -535,7 +541,7 @@ class APIClass extends Component {
         });
     };
 
-    logout = (wasForced) => {
+    logout = (wasForced, details) => {
         console.log("%c[Logout]", "color: #d3d", "Logged out user");
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
@@ -546,9 +552,11 @@ class APIClass extends Component {
             ready: true,
             challenges: [],
         });
-        if (wasForced && window.__ractf_alert)
+        if (wasForced && window.__ractf_alert) {
+            details = details ? ("\n\nDetails: " + details) : "";
             window.__ractf_alert("Something went wrong loading the site. You have been logged out.\n" +
-                "If this persists, please contact an admin.");
+                "If this persists, please contact an admin." + details);
+        }
     };
 
     login = (username, password, otp = null) => {

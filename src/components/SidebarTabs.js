@@ -59,18 +59,20 @@ export const SiteNav = ({ children }) => {
                     <Link onClick={close} to={"/leaderboard"} className={"sbtSubitem"}>{t("leaderboard")}</Link>
                 </SBMenu>
                 {api.user ? <>
-                    <SBMenu key={"challenges"} name={t("challenge_plural")} initial>
-                        {api.challenges.map(i =>
-                            <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>
-                                {i.name}
-                            </Link>
-                        )}
-                        {api.user.is_staff &&
-                            <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>
-                                + {t("challenge.new_cat")}
-                            </Link>
-                        }
-                    </SBMenu>
+                    {(api.user.is_staff || api.challenges.length)
+                        ? <SBMenu key={"challenges"} name={t("challenge_plural")} initial>
+                            {api.challenges.map(i =>
+                                <Link onClick={close} to={"/campaign/" + i.id} key={i.id} className={"sbtSubitem"}>
+                                    {i.name}
+                                </Link>
+                            )}
+                            {api.user.is_staff &&
+                                <Link onClick={close} to={"/campaign/new"} key={"newcat"} className={"sbtSubitem"}>
+                                    + {t("challenge.new_cat")}
+                                </Link>
+                            }
+                        </SBMenu> : null
+                    }
                     <SBMenu key={"user"} name={api.user.username}>
                         <Link onClick={close} to={"/profile/me"} className={"sbtSubitem"}>{t("settings.profile")}</Link>
                         <Link onClick={close} to={"/team/me"} className={"sbtSubitem"}>{t("team")}</Link>
@@ -121,10 +123,10 @@ export const SiteNav = ({ children }) => {
                     &copy; Really Awesome Technology Ltd 2020
                 </div>
                     <Link to="/">{t("footer.home")}</Link> - <
-                    Link to="/privacy">{t("footer.privacy")}</Link> - <
-                    Link to="/conduct">{t("footer.terms")}</Link><br />
+                        Link to="/privacy">{t("footer.privacy")}</Link> - <
+                            Link to="/conduct">{t("footer.terms")}</Link><br />
                     <Link to="/ui">UI Framework</Link> - <
-                    Link to="/debug">Debug</Link>
+                        Link to="/debug">Debug</Link>
                 </div>
             </div>
         </Scrollbar>

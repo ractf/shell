@@ -24,6 +24,8 @@ export default () => {
         ["enable_flag_submission", "Enable Flag Submission", "boolean"],
         ["enable_login", "Enable Login", "boolean"],
         ["enable_registration", "Enable Registration", "boolean"],
+        ["enable_flag_submission_after_competition", "Enable flag submission after competition", "boolean"],
+        ["enable_view_challenges_after_competion", "Enable challenge viewing after competition", "boolean"],
 
         ["", "Site Functionality"],
         ["enable_scoreboard", "Enable Scoreboard", "boolean"],

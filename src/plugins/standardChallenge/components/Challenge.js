@@ -14,19 +14,34 @@ import Hint from "./Hint";
 import "./Challenge.scss";
 
 
-export default ({ challenge, saveEdit, removeChallenge, category, rightComponent }) => {
+export default ({ challenge, category, rightComponent }) => {
     const [flagValid, setFlagValid] = useState(false);
     const [message, setMessage] = useState(null);
     const [locked, setLocked] = useState(false);
     const onFlagResponse = useRef();
 
-    const regex = /^ractf{.+}$/;
-    const partial = /^(?:r|$)(?:a|$)(?:c|$)(?:t|$)(?:f|$)(?:{|$)(?:[^]+|$)(?:}|$)$/;
     const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const api = useContext(apiContext);
 
     const { t } = useTranslation();
+
+    const escape = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const flagRegex = () => {
+        let regex = challenge.challenge_metadata.flag_regex;
+        let partial = challenge.challenge_metadata.flag_partial_regex;
+        let prefix = api.config.flag_prefix || "flag";
+        if (!regex || !partial) {
+            regex = new RegExp("^" + escape(prefix) + "{.+}$");
+            partial = "";
+            for (let i = 0; i < prefix.length; i++) {
+                partial += "(?:" + escape(prefix[i]) + "|$)";
+            }
+            partial = new RegExp("^" + partial + "(?:{|$)(?:[^}]+|$)(?:}|$)$");
+        }
+        return [regex, partial];
+    };
+    const [regex, partial] = flagRegex();
     
     const changeFlag = (flag) => {
         if (challenge.challenge_type === "freeform" || challenge.challenge_type === "longText")
