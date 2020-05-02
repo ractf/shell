@@ -508,7 +508,7 @@ class APIClass extends Component {
             if (this.state.challenges.length)
                 this.props.history.push("/campaign");
             else
-                this.props.history.push("/home");
+                this.props.history.push("/");
         else
             this.props.history.push("/noteam");
     };

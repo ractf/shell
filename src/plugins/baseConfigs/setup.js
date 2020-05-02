@@ -1,7 +1,14 @@
 import { registerPlugin } from "ractf";
 
+import AdminConfig from "./components/AdminConfig";
+
 
 export default () => {
+    registerPlugin("adminPage", "config", {
+        component: AdminConfig,
+        sidebar: "Configuration",
+    });
+
     registerPlugin("config", "baseConfig", [
         ["", "Dates and Times"],
         ["register_start_time", "Register Start Time", "date"],

@@ -2,7 +2,7 @@ import React, { useState, useRef, useContext } from "react";
 import { MdKeyboardArrowLeft, MdMenu } from "react-icons/md";
 import { useTranslation } from 'react-i18next';
 
-import { apiContext, apiEndpoints, Link, fastClick } from "ractf";
+import { apiContext, apiEndpoints, Link, fastClick, plugins } from "ractf";
 import Scrollbar from "./Scrollbar";
 import Wordmark from "./Wordmark";
 
@@ -95,24 +95,11 @@ export const SiteNav = ({ children }) => {
                 </> : null}
                 {api.user && api.user.is_staff && <>
                     <SBMenu key={"admin"} name={t("sidebar.admin")}>
-                        <Link onClick={close} to={"/admin/config"} className={"sbtSubitem"}>
-                            {t("admin.configuration")}
-                        </Link>
-                        <Link onClick={close} to={"/admin/port"} className={"sbtSubitem"}>
-                            {t("admin.import_export")}
-                        </Link>
-                        <Link onClick={close} to={"/admin/service"} className={"sbtSubitem"}>
-                            {t("admin.status")}
-                        </Link>
-                        <Link onClick={close} to={"/admin/announcements"} className={"sbtSubitem"}>
-                            {t("admin.announce.head")}
-                        </Link>
-                        <Link onClick={close} to={"/admin/members"} className={"sbtSubitem"}>
-                            {t("admin.members")}
-                        </Link>
-                        <Link onClick={close} to={"/admin/teams"} className={"sbtSubitem"}>
-                            {t("admin.teams")}
-                        </Link>
+                        {Object.entries(plugins.adminPage).map(([key, value]) => (
+                            <Link onClick={close} to={"/admin/" + key} className={"sbtSubitem"}>
+                                {value.sidebar}
+                            </Link>
+                        ))}
                     </SBMenu>
                 </>}
 
