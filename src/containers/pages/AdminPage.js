@@ -676,8 +676,13 @@ const Announcements = () => {
     const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const [announcements] = useApi(ENDPOINTS.ANNOUNCEMENTS);
+    const [localA, setLocalA] = useState(null);
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
+
+    useEffect(() => {
+        setLocalA(announcements);
+    }, [announcements]);
 
     const addAnnouncement = ({ title, body }) => {
         setLocked(true);
@@ -693,6 +698,7 @@ const Announcements = () => {
         return () => {
             endpoints.removeAnnouncement(announcement).then(() => {
                 app.alert("Removed announcement");
+                setLocalA(la => la.filter(i => i.id !== announcement.id));
             }).catch(e => {
                 app.alert(endpoints.getError(e));
             });
@@ -701,9 +707,9 @@ const Announcements = () => {
 
     return <>
         <Section title={t("admin.announce.active")}>
-            <Form>{announcements ?
-                announcements.length ? (
-                    announcements.map(i => <Leader key={i.id} sub={i.body} x click={remove(i)}>
+            <Form>{localA ?
+                localA.length ? (
+                    localA.map(i => <Leader key={i.id} sub={i.body} x click={remove(i)}>
                         {i.title}
                     </Leader>
                 )) : <label>{t("admin.announce.none")}</label>
