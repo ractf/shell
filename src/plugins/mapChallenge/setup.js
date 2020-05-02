@@ -1,13 +1,8 @@
-import Loadable from "react-loadable";
-
-import { registerPlugin } from "ractf";
+import { registerPlugin, dynamicLoad } from "ractf";
 
 
 export default () => {
-    const chal = Loadable({
-        loader: () => import("./components/ClickableMap"),
-        loading: () => "Loading",
-    });
+    const chal = dynamicLoad(() => import("./components/ClickableMap"));
 
     registerPlugin("challengeMetadata", "mapData", {
         fields: [

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import Loadable from "react-loadable";
 
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
@@ -17,24 +16,19 @@ import { JoinTeam, CreateTeam } from "../pages/auth/Teams";
 
 import { APIContext, APIEndpoints } from "./Contexts";
 
-import { plugins, TextBlock, SectionHeading, SectionTitle2 } from "ractf";
+import {
+    plugins, TextBlock, SectionHeading, SectionTitle2, dynamicLoad
+} from "ractf";
 
-const Loading = () => "Loading";
-const asyncRoute = (loader) => (
-    Loadable({
-        loader: loader,
-        loading: Loading,
-    })
-);
 
-const ChallengePage = asyncRoute(() => import("../pages/ChallengePage"));
-const SettingsPage = asyncRoute(() => import("../pages/SettingsPage"));
-const Leaderboard = asyncRoute(() => import("../pages/Leaderboard"));
-const AdminPage = asyncRoute(() => import("../pages/AdminPage"));
-const Campaign = asyncRoute(() => import("../pages/Campaign"));
-const Profile = asyncRoute(() => import("../pages/Profile"));
-const TwoFA = asyncRoute(() => import("../pages/TwoFA"));
-const UI = asyncRoute(() => import("../pages/UI"));
+const ChallengePage = dynamicLoad(() => import("../pages/ChallengePage"));
+const SettingsPage = dynamicLoad(() => import("../pages/SettingsPage"));
+const Leaderboard = dynamicLoad(() => import("../pages/Leaderboard"));
+const AdminPage = dynamicLoad(() => import("../pages/AdminPage"));
+const Campaign = dynamicLoad(() => import("../pages/Campaign"));
+const Profile = dynamicLoad(() => import("../pages/Profile"));
+const TwoFA = dynamicLoad(() => import("../pages/TwoFA"));
+const UI = dynamicLoad(() => import("../pages/UI"));
 
 
 const Logout = () => {

@@ -1,17 +1,9 @@
-import Loadable from "react-loadable";
-
-import { registerPlugin } from "ractf";
+import { registerPlugin, dynamicLoad } from "ractf";
 
 
 export default () => {
-    const chal = Loadable({
-        loader: () => import("./components/Challenge"),
-        loading: () => "Loading",
-    });
-    const editor = Loadable({
-        loader: () => import("./components/Editor"),
-        loading: () => "Loading",
-    });
+    const chal = dynamicLoad(() => import("./components/Challenge"));
+    const editor = dynamicLoad(() => import("./components/Editor"));
 
     registerPlugin("challengeMetadata", "standardChallenge", {
         fields: [
