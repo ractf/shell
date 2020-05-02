@@ -99,6 +99,13 @@ const Logout = () => {
 
 export default () => {
     return <Switch>
+        {Object.entries(plugins.page).map(([url, page]) =>
+            <Route exact path={url} key={url}>
+                <Page title={page.title} auth={page.auth} lockout={page.lockout}
+                    admin={page.admin} noAuth={page.noAuth} C={page.component} />
+            </Route>
+        )}
+        
         <Route exact path={"/uri"} component={URIHandler} />
 
         <Redirect exact path={"/"} to={"/home"} />
@@ -159,13 +166,6 @@ export default () => {
         <Route exact path={"/team/:team"}>
             <Page title={"Team"} auth C={TeamPage} />
         </Route>
-
-        {Object.entries(plugins.page).map(([url, page]) =>
-            <Route exact path={url} key={url}>
-                <Page title={page.title} auth={page.auth} lockout={page.lockout}
-                    admin={page.admin} noAuth={page.noAuth} C={page.component} />
-            </Route>
-        )}
 
         <Route>
             <Page title={"Error"} C={NotFound} />
