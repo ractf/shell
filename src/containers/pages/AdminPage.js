@@ -6,106 +6,12 @@ import DatePicker from "react-datepicker";
 
 import {
     Page, Form, Input, Button, Spinner, SBTSection, Section, apiContext,
-    apiEndpoints, appContext, useApi, ENDPOINTS, FlexRow, Tree, TreeWrap, HR,
-    TreeValue, FormGroup, InputButton, FormError, Leader, Checkbox, plugins,
+    apiEndpoints, appContext, useApi, ENDPOINTS, FlexRow, HR, FormGroup,
+    InputButton, FormError, Leader, Checkbox, plugins,
 } from "ractf";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from "../../components/Modal";
-
-
-const MemberCard = ({ data }) => {
-    const endpoints = useContext(apiEndpoints);
-    const app = useContext(appContext);
-    const api = useContext(apiContext);
-    const [rerender, setRerender] = useState(0);
-
-    const configSet = (key, value) => {
-        let initial = data[key];
-        data[key] = value;
-        setRerender(rerender + 1);
-        endpoints.modifyUser(data.id, { [key]: value }).then(() => {
-        }).catch(e => {
-            data[key] = initial;
-            setRerender(rerender + 1);
-            app.alert(endpoints.getError(e));
-        });
-    };
-    const set = key => value => configSet(key, value);
-
-    if (!data) return <TreeValue name={"Failed to load member data!"} />;
-
-    return <Tree name={data.username}>
-        <TreeValue name={"id"} value={data.id} />
-        <TreeValue name={"enabled"} value={data.is_active} setValue={!data.is_staff && set("is_active")} />
-        <TreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
-        <TreeValue name={"is_staff"} value={data.is_staff} setValue={data.id !== api.user.id && set("is_staff")} />
-        <TreeValue name={"points"} value={data.points} setValue={set("points")} />
-        <Tree name={"metadata"}>
-            <TreeValue name={"email"} value={data.email} setValue={set("email")} />
-            <TreeValue name={"email_verified"} value={data.email_verified} setValue={set("email_verified")} />
-            <TreeValue name={"bio"} value={data.bio} setValue={set("bio")} />
-            <TreeValue name={"discord"} value={data.discord} setValue={set("discord")} />
-            <TreeValue name={"discord_id"} value={data.discordid} setValue={set("discordid")} />
-            <TreeValue name={"twitter"} value={data.twitter} setValue={set("twitter")} />
-            <TreeValue name={"reddit"} value={data.reddit} setValue={set("reddit")} />
-        </Tree>
-        <Tree name={"solves"}>
-            {data.solves ? data.solves.map(i => <Tree key={i.id} name={i.challenge_name}>
-                <TreeValue name={"points"} value={i.points} />
-                <TreeValue name={"first_blood"} value={i.first_blood} />
-                <TreeValue name={"timestamp"} value={i.timestamp} />
-            </Tree>) : <TreeValue name={"Failed to load member solves!"} />}
-        </Tree>
-    </Tree>;
-};
-
-
-const TeamCard = ({ data }) => {
-    const endpoints = useContext(apiEndpoints);
-    const app = useContext(appContext);
-    const [rerender, setRerender] = useState(0);
-
-    const configSet = (key, value) => {
-        let initial = data[key];
-        data[key] = value;
-        setRerender(rerender + 1);
-        endpoints.modifyTeam(data.id, { [key]: value }).then(() => {
-        }).catch(e => {
-            data[key] = initial;
-            setRerender(rerender + 1);
-            app.alert(endpoints.getError(e));
-        });
-    };
-    const set = key => value => configSet(key, value);
-    let points = 0;
-    data.members.forEach(i => points += i.points);
-
-    return <Tree name={data.name}>
-        <TreeValue name={"id"} value={data.id} />
-        <TreeValue name={"visible"} value={data.is_visible} setValue={set("is_visible")} />
-        <TreeValue name={"points"} value={points} />
-        <TreeValue name={"owner_id"} value={data.owner} setValue={set("owner")} />
-        <Tree name={"metadata"}>
-            <TreeValue name={"password"} value={data.password} setValue={set("password")} />
-            <TreeValue name={"description"} value={data.description} setValue={set("description")} />
-        </Tree>
-        <Tree name={"members"}>
-            {data.members.map(i => <Tree key={i.id} name={i.username}>
-                <TreeValue name={"id"} value={i.id} />
-                <TreeValue name={"points"} value={i.points} />
-            </Tree>)}
-        </Tree>
-        <Tree name={"solves"}>
-            {data.solves.map(i => <Tree key={i.id} name={i.challenge_name}>
-                <TreeValue name={"solved_by"} value={i.solved_by_name} />
-                <TreeValue name={"points"} value={i.points} />
-                <TreeValue name={"first_blood"} value={i.first_blood} />
-                <TreeValue name={"timestamp"} value={i.timestamp} />
-            </Tree>)}
-        </Tree>
-    </Tree>;
-};
 
 
 const DatePick = ({ initial, configSet, name, configKey }) => {
@@ -562,6 +468,118 @@ const MembersList = () => {
     </>;
 };
 
+const TeamsList = () => {
+    const app = useContext(appContext);
+    const endpoints = useContext(apiEndpoints);
+
+    const [state, setState] = useState({
+        loading: false, error: null, results: null, team: null
+    });
+    const doSearch = ({ name }) => {
+        setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
+
+        endpoints.get(ENDPOINTS.TEAM + "?search=" + name).then(data => {
+            setState(prevState => ({
+                ...prevState, results: data.d.results, more: !!data.d.next, loading: false
+            }));
+        }).catch(e => {
+            setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+        });
+    };
+
+    const editTeam = (team) => {
+        return () => {
+            setState(prevState => ({ ...prevState, loading: true }));
+            endpoints.get(ENDPOINTS.TEAM + team.id).then(data => {
+                setState(prevState => ({ ...prevState, loading: false, team: data.d }));
+            }).catch(e => {
+                setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+            });
+        };
+    };
+    const saveTeam = (team) => {
+        return (changes) => {
+            setState(prevState => ({ ...prevState, loading: true }));
+            endpoints.modifyTeam(team.id, changes).then(() => {
+                app.alert("Modified team");
+                setState(prevState => ({ ...prevState, team: null, loading: false }));
+            }).catch(e => {
+                setState(prevState => ({ ...prevState, loading: false }));
+                app.alert(endpoints.getError(e));
+            });
+        };
+    };
+
+    const close = () => {
+        setState(prevState => ({ ...prevState, team: null }));
+    };
+
+    const makeOwner = (team, member) => {
+        return () => {
+            app.promptConfirm({ message: `Make ${member.username} the owner of ${team.name}?`, small: true }).then(() => {
+                endpoints.modifyTeam(team.id, { owner: member.id }).then(() => {
+                    app.alert(`Transfered ownership to ${team.name}.`);
+                    setState(prevState => {
+                        if (!prevState.team) return prevState;
+                        return { ...prevState, team: { ...prevState.team, owner: member.id } };
+                    });
+                }).catch(e => {
+                    app.alert(endpoints.getError(e));
+                });
+            }).catch(() => { });
+        };
+    };
+
+    return <>
+        <Form handle={doSearch} locked={state.loading}>
+            <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
+            {state.error && <FormError>{state.error}</FormError>}
+        </Form>
+        {state.loading && <Spinner />}
+        {state.results && <>
+            <br />
+            {state.results.length ? <>
+                {state.more && <><FlexRow>
+                    Additional results were omitted. Please refine your search.
+                </FlexRow><br /></>}
+                {state.results.map(i => <Leader click={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+            </> : <FlexRow><br />
+                No results found
+            </FlexRow>}
+        </>}
+        {state.team && <Modal onHide={close}>
+            <Form handle={saveTeam(state.team)} locked={state.loading}>
+                <FormGroup label={"Team Name"} htmlFor={"name"}>
+                    <Input val={state.team.name} name={"name"} />
+                </FormGroup>
+                <FormGroup label={"Rights"}>
+                    <FlexRow left>
+                        <Checkbox checked={state.team.is_visible} name={"is_active"}>Visible</Checkbox>
+                    </FlexRow>
+                </FormGroup>
+                <FormGroup label={"Password"} htmlFor={"password"}>
+                    <Input val={state.team.password} name={"password"} />
+                </FormGroup>
+                <FormGroup label={"Owner ID"} htmlFor={"owner"}>
+                    <Input val={state.team.owner} name={"owner"} format={/\d+/} />
+                </FormGroup>
+                <FormGroup label={"Members"}>
+                    {state.team.members.map(i => {
+                        let owner = i.id === state.team.owner;
+                        return <Leader sub={owner ? "Owner" : ""} none={owner}
+                            click={!owner ? makeOwner(state.team, i) : null}>
+                            {i.username}
+                        </Leader>;
+                    })}
+                </FormGroup>
+                <FlexRow>
+                    <Button submit>Save</Button>
+                </FlexRow>
+            </Form>
+        </Modal>}
+    </>;
+};
+
 const Config = () => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
@@ -655,10 +673,6 @@ const Config = () => {
 export default () => {
     const { t } = useTranslation();
 
-    //const { data: allUsersAdmin } = useFullyPaginated(ENDPOINTS.USER);
-    //const { data: allTeamsAdmin } = useFullyPaginated(ENDPOINTS.TEAM);
-    const allTeamsAdmin = [];
-
     const { match } = useReactRouter();
     if (!match) return null;
     const page = match.params.page;
@@ -718,15 +732,7 @@ export default () => {
             break;
         case "teams":
             content = <SBTSection title={t("admin.teams")}>
-                {allTeamsAdmin ? <>
-                    <Section title={t("admin.all_teams")}>
-                        <TreeWrap>
-                            {allTeamsAdmin.map(i =>
-                                <TeamCard key={i.id} data={i} />
-                            )}
-                        </TreeWrap>
-                    </Section>
-                </> : <Spinner />}
+                <TeamsList />
             </SBTSection>;
             break;
         default:
