@@ -17,6 +17,10 @@ export default () => {
         fields: [
             { name: "attempt_limit", label: "Challenge attempt limit", type: "number" },
             { type: "hr" },
+            { label: "Flag RexExps (Both must be set).", type: "label" },
+            { name: "flag_regex", label: "Flag RegExp", type: "text" },
+            { name: "flag_partial_regex", label: "Flag partial RegExp", type: "text" },
+            { type: "hr" },
         ]
     });
 
