@@ -13,6 +13,13 @@ export default () => {
         loading: () => "Loading",
     });
 
+    registerPlugin("challengeMetadata", "standardChallenge", {
+        fields: [
+            { name: "attempt_limit", label: "Challenge attempt limit", type: "number" },
+            { type: "hr" },
+        ]
+    });
+
     registerPlugin("challengeType", "default", { component: chal });
     registerPlugin("challengeType", "freeform", { component: chal });
     registerPlugin("challengeType", "longText", { component: chal });

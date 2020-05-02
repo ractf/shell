@@ -24,9 +24,9 @@ const MetadataEditor = ({ challenge, category, save }) => {
                     case "number":
                         let val = challenge.challenge_metadata[field.name];
                         let format = field.type === "number" ? /\d+/ : /.+/;
-                        fields.push(<FormGroup htmlFor={field.name} label={field.label}>
+                        fields.push(<FormGroup htmlFor={field.name} label={field.label} key={key + (n++)}>
                             <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
-                                placeholder={field.label} format={format} key={key + (n++)}
+                                placeholder={field.label} format={format}
                                 rows={field.type === "multiline" || field.type === "code" ? 5 : ""}
                                 monospace={field.type === "code"} />
                         </FormGroup>);
@@ -35,7 +35,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
                         let idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
                         fields.push(<FormGroup key={key + (n++)} htmlFor={field.name} label={field.label}>
                             <Select name={field.name} options={field.options}
-                                key={key + (n++)} initial={idx !== -1 ? idx : 0} />
+                                initial={idx !== -1 ? idx : 0} />
                         </FormGroup>);
                         break;
                     case "label":

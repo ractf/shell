@@ -9,6 +9,10 @@ export default () => {
         ["start_time", "Event Start Time", "date"],
         ["end_time", "Event End Time", "date"],
 
+        ["", "Security"],
+        ["enable_force_admin_2fa ", "Force 2FA for admins", "boolean"],
+        ["enable_maintenance_mode", "Enable Maintanance Mode", "boolean"],
+        
         ["", "Event Configuration"],
         ["flag_prefix", "Flag Prefix", "string"],
         
@@ -19,7 +23,6 @@ export default () => {
         ["", "Limit Site Access"],
         ["enable_flag_submission", "Enable Flag Submission", "boolean"],
         ["enable_login", "Enable Login", "boolean"],
-        ["enable_maintenance_mode", "Enable Maintanance Mode", "boolean"],
         ["enable_registration", "Enable Registration", "boolean"],
 
         ["", "Site Functionality"],
