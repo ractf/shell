@@ -128,9 +128,6 @@ const App = React.memo(() => {
         { type: 'medal', medal: 'winner' },
         { type: 0, title: 'Challenge solved', body: 'solved a thing' },*/
     ]);
-    const [announcements, setAnnouncements] = useState([
-        //{title: "Hi there", body: "Ractf is go", time: new Date()}
-    ]);
     const typedText = useRef();
     if (!typedText.current) typedText.current = [];
 
@@ -211,9 +208,9 @@ const App = React.memo(() => {
             handler.component, { popup: popup, key: n }
         )}</div>;
     }).reverse();
-    let notifsEl = announcements.map((notif, n) => {
+    let notifsEl = api.announcements.map((notif, n) => {
         let hide = () => {
-            setAnnouncements(a => a.filter((i, m) => m !== n));
+            endpoints.hideAnnouncement(notif);
         };
         return <Announcement {...notif} key={n} hide={hide} />;
     }).reverse();

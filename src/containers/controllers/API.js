@@ -14,6 +14,7 @@ export const BASE_URL = DOMAIN + API_BASE;
 export const ENDPOINTS = {
     COUNTDOWN: "/stats/countdown/",
     CONFIG: "/config/",
+    ANNOUNCEMENTS: "/announcements/",
 
     REGISTER: "/auth/register/",
     LOGIN: "/auth/login/",
@@ -103,6 +104,9 @@ class APIClass extends Component {
             openSite: this.openSite,
 
             getCountdown: this.getCountdown,
+            addAnnouncement: this.addAnnouncement,
+            hideAnnouncement: this.hideAnnouncement,
+            removeAnnouncement: this.removeAnnouncement,
 
             createChallenge: this.createChallenge,
             removeChallenge: this.removeChallenge,
@@ -159,6 +163,7 @@ class APIClass extends Component {
             config: config,
 
             codeRunState: { running: false },
+            announcements: [],
 
             siteOpen: siteOpen,
             countdown: countdown,
@@ -186,7 +191,10 @@ class APIClass extends Component {
     async setup(minimal) {
         let token = localStorage.getItem('token');
         if (token) {
-            this._reloadCache(minimal);
+            this._reloadCache(minimal).then((newState) => {
+                if (newState.authenticated && newState.ready)
+                    this._getAnnouncements();
+            });
         } else {
             this.setState({
                 ready: true,
@@ -392,6 +400,7 @@ class APIClass extends Component {
             newState.challenges = challenges;
         }
         this.setState(newState);
+        return newState;
     };
 
     // Misc
@@ -414,6 +423,35 @@ class APIClass extends Component {
             this.hidePopup(id);
         }, 10000);
     };
+    showAnnouncement = (data) => {
+        let shown;
+        try {
+            shown = JSON.parse(localStorage.getItem("announce")) || [];
+        } catch (e) {
+            shown = [];
+        }
+        console.log(data, shown);
+        if (shown.indexOf(data.id) !== -1)
+            return;
+        this.setState(state => ({
+            announcements: [...state.announcements, data]
+        }));
+    };
+    hideAnnouncement = ({ id }) => {
+        let shown;
+        try {
+            shown = JSON.parse(localStorage.getItem("announce")) || [];
+        } catch (e) {
+            shown = [];
+        }
+        if (shown.indexOf(id) === -1)
+            shown.push(id);
+        localStorage.setItem("announce", JSON.stringify(shown));
+        this.setState(state => ({
+            announcements: state.announcements.filter(i => i.id !== id)
+        }));
+    };
+    removeAnnouncement = ({ id }) => this.delete(ENDPOINTS.ANNOUNCEMENTS + id);
 
     hidePopup = (id) => {
         this.setState({ popups: this.state.popups.filter(i => i.id !== id) });
@@ -444,9 +482,15 @@ class APIClass extends Component {
             else this.setState({ countdown: countdown, siteOpen: false, ready: true });
         }
     });
+    _getAnnouncements = () => {
+        this.get(ENDPOINTS.ANNOUNCEMENTS).then(({ d }) => {
+            d.forEach(i => this.showAnnouncement(i));
+        }).catch(() => { });
+    }
+    addAnnouncement = (title, body) => this.post(ENDPOINTS.ANNOUNCEMENTS, { title, body });
     _getConfig = () => this.get(ENDPOINTS.CONFIG).then(({ d }) => {
         let config = {};
-        Object.entries(d).forEach(([ key, value ]) => config[key] = value);
+        Object.entries(d).forEach(([key, value]) => config[key] = value);
         return config;
     });
     _getChallenges = () => this.get(ENDPOINTS.CATEGORIES);
@@ -517,7 +561,7 @@ class APIClass extends Component {
                         navigator.registerProtocolHandler(
                             "web+ractf", window.location.origin + "/uri?%s", "Really Awesome CTF"
                         );
-                    } catch(e) {
+                    } catch (e) {
                         console.error("Failed to register web+ractf:", e);
                     }
                 }

@@ -82,7 +82,7 @@ $sub: $back_50;
     &:focus {
         background-color: $hover;
         &::after {
-            border-color: $arrow_hover;
+            border-color: $arrow_hover !important;
         }
         &.leaderX {
             &::after, &::before {

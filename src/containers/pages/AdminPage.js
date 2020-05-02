@@ -672,6 +672,60 @@ const Config = () => {
     </Form>;
 };
 
+const Announcements = () => {
+    const endpoints = useContext(apiEndpoints);
+    const app = useContext(appContext);
+    const [announcements] = useApi(ENDPOINTS.ANNOUNCEMENTS);
+    const [locked, setLocked] = useState(false);
+    const { t } = useTranslation();
+
+    const addAnnouncement = ({ title, body }) => {
+        setLocked(true);
+        endpoints.addAnnouncement(title, body).then(() => {
+            setLocked(false);
+            app.alert("Announcement posted");
+        }).catch(e => {
+            setLocked(false);
+            app.alert(endpoints.getError(e));
+        });
+    };
+    const remove = (announcement) => {
+        return () => {
+            endpoints.removeAnnouncement(announcement).then(() => {
+                app.alert("Removed announcement");
+            }).catch(e => {
+                app.alert(endpoints.getError(e));
+            });
+        };
+    };
+
+    return <>
+        <Section title={t("admin.announce.active")}>
+            <Form>{announcements ?
+                announcements.length ? (
+                    announcements.map(i => <Leader key={i.id} sub={i.body} x click={remove(i)}>
+                        {i.title}
+                    </Leader>
+                )) : <label>{t("admin.announce.none")}</label>
+                : <Spinner />
+            }</Form>
+        </Section>
+        <Section title={t("admin.announce.add")}>
+            <Form handle={addAnnouncement} locked={locked}>
+                <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
+                    <Input name={"title"} />
+                </FormGroup>
+                <FormGroup htmlFor={"body"} label={t("admin.announce.body")}>
+                    <Input name={"body"} rows={4} />
+                </FormGroup>
+                <FlexRow>
+                    <Button submit>{t("admin.announce.add")}</Button>
+                </FlexRow>
+            </Form>
+        </Section>
+    </>;
+};
+
 export default () => {
     const { t } = useTranslation();
 
@@ -707,24 +761,7 @@ export default () => {
             break;
         case "announcements":
             content = <SBTSection title={t("admin.announce.head")}>
-                <Section title={t("admin.announce.active")}>
-                    <Form>
-                        <label>{t("admin.announce.none")}</label>
-                    </Form>
-                </Section>
-                <Section title={t("admin.announce.add")}>
-                    <Form>
-                        <FormGroup htmlFor={"annTitle"} label={t("admin.announce.title")}>
-                            <Input name={"annTitle"} />
-                        </FormGroup>
-                        <FormGroup htmlFor={"annBody"} label={t("admin.announce.body")}>
-                            <Input name={"annBody"} rows={4} />
-                        </FormGroup>
-                        <FlexRow>
-                            <Button>{t("admin.announce.add")}</Button>
-                        </FlexRow>
-                    </Form>
-                </Section>
+                <Announcements />
             </SBTSection>;
             break;
         case "members":

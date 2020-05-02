@@ -10,6 +10,7 @@ export default class WS extends Component {
 
     CONNECTION = 0;
     CHALLENGE_SCORE = 1;
+    ANNOUNCEMENT = 5;
 
     constructor(props) {
         super(props);
@@ -92,6 +93,9 @@ export default class WS extends Component {
                         </>
                     );
                 }
+                break;
+            case this.ANNOUNCEMENT:
+                this.api.showAnnouncement(data);
                 break;
             default:
                 break;
