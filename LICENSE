@@ -4,7 +4,7 @@ This software is provided "AS IS", without any form of warranty, express or impl
 
 Permission is granted to use and modify this software for personal or non-commercial
 use. All derivative works must use the most recent version of this document, accessible
-at https://gitlab.com/ractf/shell, as of the time of initial retrieval of this software,
+at https://github.com/ractf/shell, as of the time of initial retrieval of this software,
 and additionally updated at the time of any further retrievals of this software
 including, but not limited to, updating an existing copy to reflect modifications made
 to the original source, or made to other derivative works.
@@ -16,4 +16,4 @@ be effective as of the date of modification or removal.
 
 No works published under this license may be sublicensed in any form. All derivative
 works of this software must clearly link to the original software, by providing a link
-to https://gitlab.com/ractf/shell in a prominent place.
+to https://github.com/ractf/shell in a prominent place.
