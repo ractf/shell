@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Form, FormError, Page, SectionTitle2, Input, Button, FlexRow,
-    apiEndpoints, appContext, FormGroup
+    apiEndpoints, appContext, FormGroup, Link
 } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
@@ -65,13 +65,15 @@ export default () => {
                 <FormGroup>
                     <Input name={"username"} placeholder={t("username")} />
                     <Input name={"password"} placeholder={t("password")} password />
+                    <div className={"fgtpsdpmt"}>
+                        <span onClick={openForget}>{t("auth.pass_forgot")}
+                        </span> - <Link to={"/register"}>I need an account</Link>
+                    </div>
                 </FormGroup>
-                <div onClick={openForget} className={"fgtpsdpmt"}>{t("auth.pass_forgot")}</div>
 
                 {message && <FormError>{message}</FormError>}
 
                 <FlexRow right>
-                    <Button large lesser to={"/register"}>{t("register")}</Button>
                     <Button large submit>{t("login")}</Button>
                 </FlexRow>
             </Form>

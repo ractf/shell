@@ -32,14 +32,15 @@
 
 .fgtpsdpmt {
     text-align: left;
-    font-size: .9em;
-    opacity: .5;
-    margin-top: -8px;
-    margin-left: 8px;
-    cursor: pointer;
+    color: $back_200;
+    * {
+        font-size: .9em;
+        cursor: pointer;
+        color: inherit;
 
-    &:hover {
-        text-decoration: underline;
-        opacity: .7;
+        &:hover {
+            text-decoration: underline;
+            color: $back_100;
+        }
     }
 }

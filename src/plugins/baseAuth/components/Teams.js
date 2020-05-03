@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 
 import {
     apiContext, apiEndpoints, Form, FormError, Page, SectionTitle2, HR, Input,
-    Button, FlexRow, SubtleText, Link
+    Button, FlexRow, SubtleText, Link, FormGroup
 } from "ractf";
 import { Wrap } from "./Parts";
 
@@ -52,15 +52,18 @@ export const JoinTeam = () => {
                     <Link to={"/team/new"}>{t("team_wiz.create_a_team")}</Link>
                     {t("team_wiz.instead")}
                 </SubtleText>
-                <br />
 
                 <Form locked={locked} handle={doJoinTeam}>
-                    <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
-                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
+                    <FormGroup>
+                        <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
+                        <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
+                    </FormGroup>
 
                     {message && <FormError>{message}</FormError>}
 
-                    <Button large submit>{t("team_wiz.join")}</Button>
+                    <FlexRow right>
+                        <Button large submit>{t("team_wiz.join")}</Button>
+                    </FlexRow>
                 </Form>
             </>}
 
@@ -115,18 +118,19 @@ export const CreateTeam = () => {
                     <Link to={"/team/join"}>{t("team_wiz.join_a_team")}</Link>
                     {t("team_wiz.instead")}
                 </SubtleText>
-                <br />
 
                 <Form locked={locked} handle={doCreateTeam}>
-                    <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
-                    {/*<Input name={"affil"} placeholder={"Affiliation"} />
-                    <Input name={"web"} placeholder={"Website"} />*/}
-                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
-                    <div style={{opacity: .5}}>{t("team_secret_warn")}</div>
+                    <FormGroup>
+                        <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
+                        <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
+                        <div style={{opacity: .5}}>{t("team_secret_warn")}</div>
+                    </FormGroup>
 
                     {message && <FormError>{message}</FormError>}
 
-                    <Button large submit>{t("team_wiz.create")}</Button>
+                    <FlexRow right>
+                        <Button large submit>{t("team_wiz.create")}</Button>
+                    </FlexRow>
                 </Form>
             </>}
         </Wrap>

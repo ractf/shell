@@ -63,7 +63,6 @@ export default () => {
                 {message && <FormError>{message}</FormError>}
 
                 <FlexRow right>
-                    <Button large lesser to={"/login"}>{t("login")}</Button>
                     <Button large submit>{t("register")}</Button>
                 </FlexRow>
             </Form>
