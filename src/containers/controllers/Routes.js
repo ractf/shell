@@ -3,15 +3,14 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
-import { default as BasePage } from "../pages/bases/Page";
 import Countdown from "../pages/Countdown";
 import HomePage from "../pages/HomePage";
 import TeamPage from "../pages/TeamPage";
 
 import {
-    apiContext, apiEndpoints, plugins, TextBlock, SectionHeading,
-    SectionTitle2, dynamicLoad, FlexRow
-} from "ractf";
+    FlexRow, TextBlock, SectionHeading, SectionTitle2, Page as BasePage
+} from "@ractf/ui-kit";
+import { apiContext, apiEndpoints, plugins, dynamicLoad } from "ractf";
 
 
 const ChallengePage = dynamicLoad(() => import("../pages/ChallengePage"));

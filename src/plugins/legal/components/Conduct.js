@@ -1,5 +1,7 @@
 import React from "react";
-import { Page } from "ractf";
+
+import { Page } from "@ractf/ui-kit";
+
 
 export default () => <Page>
     <h1>Code of Conduct</h1>

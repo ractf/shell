@@ -2,13 +2,11 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { BrowserRouter } from "react-router-dom";
 import { MdWarning } from 'react-icons/md';
 
-import { ModalPrompt } from "../../components/Modal";
 import Announcement from "../../components/Announcement";
-import { SiteNav } from "../../components/SidebarTabs";
-import ProgressBar from "../../components/ProgressBar";
-import Scrollbar from "../../components/Scrollbar";
-import Header from "../../components/Header";
-import Modal from "../../components/Modal";
+
+import {
+    ModalPrompt, ProgressBar, Scrollbar, Modal, Header, SiteNav
+} from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
 import Routes from "./Routes";

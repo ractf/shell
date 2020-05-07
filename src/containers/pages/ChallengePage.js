@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
-import useReactRouter from "../../useReactRouter";
-import Page from "./bases/Page";
-
+import { useReactRouter } from "@ractf/util";
+import { Page } from "@ractf/ui-kit";
 import { plugins, apiContext, appContext, apiEndpoints } from "ractf";
 
 
@@ -15,7 +14,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
 
     const { t } = useTranslation();
     let handler;
-    
+
     if (challenge.challenge_type)
         handler = plugins.challengeEditor[challenge.challenge_type];
     else
@@ -29,7 +28,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
             {t("challenge.editor_missing", { type: challenge.challenge_type })}<br /><br />
             {t("challenge.forgot_plugin")}
         </>;
-    
+
 
     const saveEdit = changes => {
         let original = challenge;
@@ -48,9 +47,9 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
             for (let i in changes)
                 original[i] = changes[i];
             if (isCreator) category.challenges.push(original);
-                //if (lState.saveTo)
+            //if (lState.saveTo)
             //    lState.saveTo.push(original);
-            
+
             let id = original.id || data.id;
             if (id && isCreator)
                 history.push("/campaign/" + category.id + "/challenge/" + id + "#edit");
@@ -62,7 +61,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
     };
 
     const removeChallenge = () => {
-        app.promptConfirm({message: "Remove challenge:\n" + challenge.name, small: true}).then(() => {
+        app.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
             endpoints.removeChallenge(challenge).then(() => {
                 app.alert("Challenge removed");
                 history.push("/campaign/" + category.id);
@@ -105,7 +104,7 @@ const ChallengeWrap = ({ challenge, category }) => {
             challenge, category
         });
     }
-    return React.createElement(handler.component, {challenge, category});
+    return React.createElement(handler.component, { challenge, category });
 };
 
 export default () => {
@@ -132,7 +131,7 @@ export default () => {
     if (isCreator) {
         try {
             challenge = JSON.parse(decodeURIComponent(location.hash.substring(1)));
-        } catch(e) {
+        } catch (e) {
             challenge = null;
         }
     }
@@ -145,9 +144,9 @@ export default () => {
 
     if (challenge) {
         if (isEditor || isCreator)
-            chalEl = <EditorWrap {...{challenge, category, isCreator}} />;
+            chalEl = <EditorWrap {...{ challenge, category, isCreator }} />;
         else
-            chalEl = <ChallengeWrap {...{challenge, category}} />;
+            chalEl = <ChallengeWrap {...{ challenge, category }} />;
     }
 
     return <Page title={challenge ? challenge.name : "Challenges"}>

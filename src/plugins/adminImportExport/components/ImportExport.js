@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
-import {
-    Button, SBTSection, Section, apiContext, apiEndpoints, appContext,
-    ENDPOINTS, FlexRow
-} from "ractf";
+import { Button, SBTSection, Section, FlexRow } from "@ractf/ui-kit";
+import { apiContext, apiEndpoints, appContext, ENDPOINTS } from "ractf";
 
 
 export default () => {

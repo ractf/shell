@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-import { Form, Table, Page, InputButton, FlashText, HR } from "ractf";
+import { Form, Table, Page, InputButton, FlashText, HR } from "@ractf/ui-kit";
 
 
 export default () => {

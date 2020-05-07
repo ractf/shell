@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
-import { Page, SectionTitle2, Button, FlexRow, apiContext } from "ractf";
+import { Page, SectionTitle2, Button, FlexRow } from "@ractf/ui-kit";
+import { apiContext } from "ractf";
 import { Wrap } from "./Parts";
 
 

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { registerPlugin, FlashText, Spinner, useApi } from "ractf";
+import { FlashText, Spinner } from "@ractf/ui-kit";
+import { registerPlugin, useApi } from "ractf";
 
 
 const ChallengeServer = ({ challenge }) => {

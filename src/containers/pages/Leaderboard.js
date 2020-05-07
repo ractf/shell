@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
-import TabbedView, { Tab } from "../../components/TabbedView";
-import Table from "../../components/Table";
-import Page from "./bases/Page";
-
-import { useApi, usePaginated, Button, apiContext, ENDPOINTS, FlexRow } from "ractf";
-
-import Graph from "../../components/charts/Graph";
+import {
+    Button, FlexRow, Graph, TabbedView, Tab, Table, Page
+} from "@ractf/ui-kit";
+import { useApi, usePaginated, apiContext, ENDPOINTS } from "ractf";
 
 
 export default () => {

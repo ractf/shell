@@ -29,16 +29,22 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
 
     let chals = challenges.challenges || [];
 
+    console.log(chals);
+
     // Inflate the list of challenges into a 2d structure
     let rows = [], maxX = 0;
     chals.forEach(chal => {
+        console.log(chal);
         let { x, y } = chal[meta];
         while (rows.length <= y) rows.push([]);
         while (rows[y].length <= x) rows[y].push(null);
 
+        if (rows[y][x]) console.log(`[WARN] Challenge stacking at ${x}-${y}!`, rows[y][x], chal);
+        
         rows[y][x] = chal;
         if (x > maxX) maxX = x;
     });
+    console.log(rows);
 
     const toggleLink = chal => {
         let { x, y } = chal[meta];
@@ -99,6 +105,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
             let unlocked = isEdit || (chal.unlocked && !chal.hidden) || chal.solved;
+            console.log(chal.name, unlocked);
 
             return <Node
                 key={chal.id} unlocked={unlocked} hidden={!isEdit && chal.hidden}

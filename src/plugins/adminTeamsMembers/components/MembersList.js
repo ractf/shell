@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, Button, Spinner, apiEndpoints, appContext, ENDPOINTS, Modal,
-    FlexRow, FormGroup, InputButton, FormError, Leader, Checkbox, SBTSection
-} from "ractf";
+    Form, Input, Button, Spinner, Modal, FlexRow, FormGroup, InputButton,
+    FormError, Leader, Checkbox, SBTSection
+} from "@ractf/ui-kit";
+import { apiEndpoints, appContext, ENDPOINTS } from "ractf";
 
 
 export default () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from 'react-i18next';
 
-import {SBTSection, Section} from "ractf";
+import { SBTSection, Section } from "@ractf/ui-kit";
 
 
 export default () => {

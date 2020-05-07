@@ -3,9 +3,10 @@ import ReactMarkdown from "react-markdown";
 import { useTranslation } from 'react-i18next';
 
 import {
-    appContext, Button, Input, TextBlock, Form, FormError, SBTSection,
-    apiEndpoints, Link, apiContext, plugins, FlexRow, FlashText
-} from "ractf";
+    Button, Input, TextBlock, Form, FormError, SBTSection, Link, FlexRow,
+    FlashText
+} from "@ractf/ui-kit";
+import { appContext, apiEndpoints, apiContext, plugins } from "ractf";
 
 import Split from "./Split";
 import File from "./File";

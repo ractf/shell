@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Page, Table, SectionTitle2, HR } from "ractf";
+import { Page, Table, SectionTitle2, HR } from "@ractf/ui-kit";
 
 
 const data = [

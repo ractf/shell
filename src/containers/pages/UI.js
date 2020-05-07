@@ -5,7 +5,7 @@ import {
     TextBlock, ProgressBar, Radio, Scrollbar, Select, Spinner, TabbedView, Tab,
     Table, ToggleButton, FlashText, Tree, TreeWrap, TreeValue, Checkbox,
     InputButton, Leader, FormGroup
-} from "ractf";
+} from "@ractf/ui-kit";
 
 
 export default () => <Page>

@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FlexRow,
-    apiEndpoints, zxcvbn, Checkbox, Link, FormGroup
-} from "ractf";
+    Form, FormError, Page, SectionTitle2, Input, Button, FlexRow, Link,
+    Checkbox, FormGroup
+} from "@ractf/ui-kit";
+import { apiEndpoints, zxcvbn } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
 

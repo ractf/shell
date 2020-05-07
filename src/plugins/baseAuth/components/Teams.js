@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import {
-    apiContext, apiEndpoints, Form, FormError, Page, SectionTitle2, HR, Input,
-    Button, FlexRow, SubtleText, Link, FormGroup
-} from "ractf";
+    Form, FormError, Page, SectionTitle2, HR, Input, Button, FlexRow,
+    SubtleText, Link, FormGroup
+} from "@ractf/ui-kit";
+import { apiContext, apiEndpoints } from "ractf";
 import { Wrap } from "./Parts";
 
 

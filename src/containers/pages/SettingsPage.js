@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Page, HR, FlexRow, TabbedView, Tab, Button, Form, FormError, Input,
-    apiContext, appContext, apiEndpoints, zxcvbn, Checkbox, localConfig,
-    FormGroup
-} from "ractf";
+    Checkbox, FormGroup
+} from "@ractf/ui-kit";
+import { apiContext, appContext, apiEndpoints, zxcvbn, localConfig } from "ractf";
 
 import "./SettingsPage.scss";
 

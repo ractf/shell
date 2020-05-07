@@ -3,17 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import { BrokenShards } from "./ErrorPages";
-import useReactRouter from "../../useReactRouter";
-import Page from "./bases/Page";
 
+import { useReactRouter } from "@ractf/util";
 import {
-    Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR,
-    ENDPOINTS, ProgressBar, FlexRow
-} from "ractf";
+    Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, FlexRow, Graph,
+    Pie, Page
+} from "@ractf/ui-kit";
+import { useApi, apiContext, ENDPOINTS } from "ractf";
 import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
-import colours from "../../Colours.scss";
-import Graph from "../../components/charts/Graph";
-import Pie from "../../components/charts/Pie";
+import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
 

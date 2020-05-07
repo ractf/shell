@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import QRCode from "qrcode.react";
 
 import {
-    Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError,
-    apiContext, apiEndpoints, appContext
-} from "ractf";
+    Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError
+} from "@ractf/ui-kit";
+import { apiContext, apiEndpoints, appContext } from "ractf";
 
 
 export default () => {

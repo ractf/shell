@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from 'react-i18next';
 
-import { Link } from "ractf";
+import { Link } from "@ractf/ui-kit";
 
 import broken from "../../static/broken.png";
 import "./ErrorPages.scss";

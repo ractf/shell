@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
-import { apiEndpoints, Page, FormError, Spinner } from "ractf";
+import { useReactRouter } from "@ractf/util";
+import { Page, Spinner, FormError } from "@ractf/ui-kit";
+import { apiEndpoints } from "ractf";
 import { Wrap } from "./Parts";
-
-import useReactRouter from "../../../useReactRouter";
 
 
 export const EmailVerif = () => {
@@ -17,7 +17,7 @@ export const EmailVerif = () => {
     const props = qs.parse(location.search, { ignoreQueryPrefix: true });
     const id = props.id;
     const secret = props.secret;
-    
+
     useEffect(() => {
         endpoints.verify(id, secret).then(() => {
             setVerif(2);
@@ -27,7 +27,7 @@ export const EmailVerif = () => {
         });
     }, [endpoints, setVerif, setMessage, id, secret]);
     if (!(secret && id)) return <Redirect to={"/login"} />;
-    
+
     return <Page vCentre>
         <Wrap>
             {verif === 0 ? <>
@@ -38,7 +38,7 @@ export const EmailVerif = () => {
                 <br />
                 <FormError>{message}</FormError>
             </> : verif === 2 ? <>
-                <Redirect to={"/noteam"}/>
+                <Redirect to={"/noteam"} />
             </> : null}
         </Wrap>
     </Page>;

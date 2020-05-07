@@ -1,9 +1,9 @@
 import React from "react";
 
 import {
-    Page, SectionTitle2, HR, Button, useApi, TextBlock, Table, ENDPOINTS,
-    FlexRow
-} from "ractf";
+    Page, SectionTitle2, HR, Button, TextBlock, Table, FlexRow
+} from "@ractf/ui-kit";
+import { ENDPOINTS, useApi } from "ractf";
 
 
 export default () => {

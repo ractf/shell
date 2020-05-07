@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
-import Page from "./bases/Page";
-
-import { apiContext, Link } from "ractf";
+import { Link, Page } from "@ractf/ui-kit";
+import { apiContext } from "ractf";
 
 import "./HomePage.scss";
 

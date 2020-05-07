@@ -3,13 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
-import {
-    Form, FormError, Page, SectionTitle2, Input, Button, apiEndpoints,
-    appContext, zxcvbn
-} from "ractf";
+import { useReactRouter } from "@ractf/util";
+import { Form, FormError, Page, SectionTitle2, Input, Button } from "@ractf/ui-kit";
+import { apiEndpoints, appContext, zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
-
-import useReactRouter from "../../../useReactRouter";
 
 
 export default () => {
@@ -49,7 +46,7 @@ export default () => {
         <Wrap>
             <Form locked={locked} handle={doReset}>
                 <SectionTitle2>{t("auth.reset_password")}</SectionTitle2>
-    
+
                 <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
                 <Input name={"passwd2"} placeholder={t("password_repeat")} password />
 

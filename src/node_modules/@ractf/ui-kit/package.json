@@ -1,0 +1,14 @@
+{
+  "name": "@ractf/ui-kit",
+  "version": "0.1.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ractf/ui-kit.git"
+  },
+  "author": "Bottersnike",
+  "bugs": {
+    "url": "https://github.com/ractf/ui-kit/issues"
+  },
+  "homepage": "https://github.com/ractf/ui-kit#readme"
+}

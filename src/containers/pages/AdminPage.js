@@ -1,7 +1,8 @@
 import React from "react";
-import useReactRouter from "../../useReactRouter";
+import { useReactRouter } from "@ractf/util";
 
-import {Page, plugins,} from "ractf";
+import { Page } from "@ractf/ui-kit";
+import { plugins } from "ractf";
 
 
 export default () => {

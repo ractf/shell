@@ -2,11 +2,11 @@ import React from "react";
 import { useTranslation } from 'react-i18next';
 
 import { BrokenShards } from "./ErrorPages";
-import Page from "./bases/Page";
 
 import {
-    Table, FormError, SectionTitle2, usePaginated, Button, ENDPOINTS, FlexRow
-} from "ractf";
+    Page, Table, FormError, SectionTitle2, Button, FlexRow
+} from "@ractf/ui-kit";
+import { usePaginated, ENDPOINTS } from "ractf";
 
 
 export const TeamsList = () => {

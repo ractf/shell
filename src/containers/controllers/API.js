@@ -194,7 +194,7 @@ class APIClass extends Component {
         let token = localStorage.getItem('token');
         if (token) {
             this._reloadCache(minimal).then((newState) => {
-                if (newState && newState.authenticated && newState.ready)
+                if (newState && newState.authenticated && newState.ready && this._getAnnouncements)
                     this._getAnnouncements();
             });
         } else {

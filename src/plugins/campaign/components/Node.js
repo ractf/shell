@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
 
-import { Link } from "ractf";
+import { Link } from "@ractf/ui-kit";
 
 import NodeLink from "./NodeLink";
 

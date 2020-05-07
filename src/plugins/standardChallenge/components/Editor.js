@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    plugins, Form, Input, FlexRow, Checkbox, Button, Select, HR, appContext,
-    apiEndpoints, SBTSection, Link, TabbedView, Tab, FlashText, FormGroup
-} from "ractf";
+    Form, Input, FlexRow, Checkbox, Button, Select, HR, SBTSection, Link, Tab,
+    TabbedView, FlashText, FormGroup
+} from "@ractf/ui-kit";
+import { plugins, apiEndpoints, appContext } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";

@@ -5,7 +5,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 
-import colours from "../../../Colours.scss";
+import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Theme.scss";
 

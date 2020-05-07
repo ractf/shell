@@ -4,18 +4,17 @@ import { useTranslation } from 'react-i18next';
 
 import { transparentize } from "polished";
 import { BrokenShards } from "./ErrorPages";
-import useReactRouter from "../../useReactRouter";
-import Page from "./bases/Page";
 
-import { Spinner, FormError, useApi, Link, apiContext, TabbedView, Tab, HR, ENDPOINTS } from "ractf";
-
-import Graph from "../../components/charts/Graph";
-import Pie from "../../components/charts/Pie";
+import { useReactRouter } from "@ractf/util";
+import {
+    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page
+} from "@ractf/ui-kit";
+import { useApi, apiContext, ENDPOINTS } from "ractf";
 
 import admin from "../../static/img/admin.png";
 import donor from "../../static/img/donor_large.png";
 import beta from "../../static/img/beta.png";
-import colours from "../../Colours.scss";
+import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
 import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
@@ -34,7 +33,7 @@ const UserSolve = ({ challenge_name, points }) => {
     return (
         <div className={"userSolve"}>
             <div>{challenge_name}</div>
-            <div>{t("point_count", {count: points})}</div>
+            <div>{t("point_count", { count: points })}</div>
         </div>
     );
 };
@@ -54,7 +53,7 @@ export default () => {
 
     let categoryValues = {};
     let uData = userData.solves.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    let scorePlotData = {x: [], y: [], name: "score", fill: "tozeroy"};
+    let scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.x.push(api.config.start_time);
     // scorePlotData.y.push(0);
@@ -116,13 +115,13 @@ export default () => {
                             labels: ['Correct', 'Incorrect'],
                             marker: {
                                 colors: [
-                                colours.bgreen,
-                                colours.red
+                                    colours.bgreen,
+                                    colours.red
                                 ]
                             }
                         }]} width={200} height={200} />
                     </div>
-                    
+
                 </>}
             </div>
             <div className={"userSolves"}>
@@ -134,41 +133,41 @@ export default () => {
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
                 {(!userData.solves || userData.solves.length === 0) ? <div className={"noSolves"}>
-                    {t("profile.no_solves", {name: userData.username})}
+                    {t("profile.no_solves", { name: userData.username })}
                 </div> : <TabbedView>
-                    <Tab label={"Solves"}>
-                        {userData.solves && userData.solves.map((i, n) => <UserSolve key={i.timestamp} {...i} />)}
-                    </Tab>
-                    <Tab label={"Stats"}>
-                        <div className={"ppwRow"}>
-                            <div className={"profilePieWrap"}>
-                                <div className={"ppwHead"}>Solve attempts</div>
-                                <Pie data={[{
-                                values: [userData.solves.length, userData.incorrect_solves],
-                                labels: ['Correct', 'Incorrect'],
-                                marker: {
-                                    colors: [
-                                    colours.bgreen,
-                                    colours.red
-                                    ]
-                                }
-                            }]} height={300} />
+                        <Tab label={"Solves"}>
+                            {userData.solves && userData.solves.map((i, n) => <UserSolve key={i.timestamp} {...i} />)}
+                        </Tab>
+                        <Tab label={"Stats"}>
+                            <div className={"ppwRow"}>
+                                <div className={"profilePieWrap"}>
+                                    <div className={"ppwHead"}>Solve attempts</div>
+                                    <Pie data={[{
+                                        values: [userData.solves.length, userData.incorrect_solves],
+                                        labels: ['Correct', 'Incorrect'],
+                                        marker: {
+                                            colors: [
+                                                colours.bgreen,
+                                                colours.red
+                                            ]
+                                        }
+                                    }]} height={300} />
+                                </div>
+                                <div className={"profilePieWrap"}>
+                                    <div className={"ppwHead"}>Category Breakdown</div>
+                                    <Pie data={[{
+                                        values: Object.values(categoryValues),
+                                        labels: Object.keys(categoryValues),
+                                    }]} height={281 + 19 * Object.keys(categoryValues).length} />
+                                </div>
                             </div>
-                            <div className={"profilePieWrap"}>
-                                <div className={"ppwHead"}>Category Breakdown</div>
-                                <Pie data={[{
-                                    values: Object.values(categoryValues),
-                                    labels: Object.keys(categoryValues),
-                                }]} height={281 + 19 * Object.keys(categoryValues).length} />
+                            <HR />
+                            <div>
+                                <div className={"ppwHead"}>Score Over Time</div>
+                                <Graph data={[scorePlotData]} />
                             </div>
-                        </div>
-                        <HR />
-                        <div>
-                            <div className={"ppwHead"}>Score Over Time</div>
-                            <Graph data={[scorePlotData]} />
-                        </div>
-                    </Tab>
-                </TabbedView>}
+                        </Tab>
+                    </TabbedView>}
             </div>
         </div>
     </Page>;

@@ -2,7 +2,8 @@ import React, { useState, useContext } from "react";
 import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
-import { FlashText, Button, FlexRow, appContext, Form, InputButton } from "ractf";
+import { FlashText, Button, FlexRow, Form, InputButton } from "@ractf/ui-kit";
+import { appContext } from "ractf";
 
 import "./ClickableMap.scss";
 

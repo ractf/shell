@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner } from "ractf";
+import { Spinner } from "@ractf/ui-kit";
 
 import "./Parts.scss";
 
