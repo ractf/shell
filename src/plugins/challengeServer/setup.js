@@ -9,10 +9,12 @@ const ChallengeServer = ({ challenge }) => {
 
     return <FlashText warning={!!error}>
         {error ? <div>Failed to request instance: {error}</div>
-        : instance ? <div>IP:PORT! {JSON.stringify(instance)}</div> : <>
-            <div>Requesting challenge instance...</div>
-            <Spinner />
-        </>}
+            : instance ? <div>Challenge instance ready at <code>
+                {instance.ip}:{instance.port}
+            </code></div> : <>
+                    <div>Requesting challenge instance...</div>
+                    <Spinner />
+                </>}
     </FlashText>;
 };
 
@@ -20,9 +22,9 @@ const ChallengeServer = ({ challenge }) => {
 export default () => {
     registerPlugin("challengeMetadata", "challengeServer", {
         fields: [
-            {label: "Challenge server settings:", type: "label"},
-            {name: "cserv_name", label: "Challenge server name", type: "text"},
-            {type: "hr"},
+            { label: "Challenge server settings:", type: "label" },
+            { name: "cserv_name", label: "Challenge server name", type: "text" },
+            { type: "hr" },
         ]
     });
     registerPlugin("challengeMod", "challengeServer", {
