@@ -75,8 +75,8 @@ const URIHandler = () => {
 };
 
 const Login = () => {
-    let api = useContext(apiContext);
-    let provider = api.config.login_provider || "basicAuth";
+    let api = useContext(apiEndpoints);
+    let provider = api.configGet("login_provider") || "basicAuth";
     if (plugins.loginProvider[provider])
         return React.createElement(plugins.loginProvider[provider].component);
     console.log(provider);
@@ -85,8 +85,8 @@ const Login = () => {
     </BasePage>;
 };
 const Register = () => {
-    let api = useContext(apiContext);
-    let provider = api.config.registration_provider || "basicAuth";
+    let api = useContext(apiEndpoints);
+    let provider = api.configGet("registration_provider") || "basicAuth";
     if (plugins.registrationProvider[provider])
         return React.createElement(plugins.registrationProvider[provider].component);
     return <BasePage vCentre>

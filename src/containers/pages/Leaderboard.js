@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
     Button, FlexRow, Graph, TabbedView, Tab, Table, Page
 } from "@ractf/ui-kit";
-import { useApi, usePaginated, apiContext, ENDPOINTS } from "ractf";
+import { useApi, usePaginated, apiEndpoints, ENDPOINTS } from "ractf";
 
 
 export default () => {
@@ -17,7 +17,7 @@ export default () => {
     const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM); 
 
 
-    const api = useContext(apiContext);
+    const api = useContext(apiEndpoints);
 
     useEffect(() => {
         if (!graph) return;
@@ -34,8 +34,8 @@ export default () => {
             minTime = lbdata.user[0].timestamp;
         if (lbdata.team.length && (!minTime || lbdata.team[0].timestamp < minTime))
             minTime = lbdata.team[0].timestamp;
-        if (new Date(api.config.start_time * 1000) < new Date(minTime))
-            minTime = new Date(api.config.start_time * 1000);
+        if (new Date(api.configGet("start_time") * 1000) < new Date(minTime))
+            minTime = new Date(api.configGet("start_time") * 1000);
 
         lbdata.user.forEach(i => {
             let id = "user_" + i.user_name;
@@ -71,7 +71,7 @@ export default () => {
         setTeamGraphData(
             Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
         );
-    }, [graph, api.config.start_time]);
+    }, [graph, api]);
 
     const userData = (lbdata) => {
         return lbdata.map((i, n) => [i.username, i.leaderboard_points, "/profile/" + i.id]);
