@@ -3,9 +3,10 @@ import { BrowserRouter } from "react-router-dom";
 import { MdWarning } from 'react-icons/md';
 
 import Announcement from "../../components/Announcement";
+import SiteNav from "../../components/SiteNav";
 
 import {
-    ModalPrompt, ProgressBar, Scrollbar, Modal, Header, SiteNav
+    ModalPrompt, ProgressBar, Scrollbar, Modal, Header
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
