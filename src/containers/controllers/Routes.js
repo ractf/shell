@@ -34,6 +34,9 @@ class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, errorInfo) {
+        Object.values(plugins.errorHandler).forEach(i => {
+            if (typeof i === "function") i(error, errorInfo);
+        });
     }
 
     render() {
