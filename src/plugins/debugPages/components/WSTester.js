@@ -21,7 +21,6 @@ export default () => {
             setMsgs(msgs => [...msgs, ["error", e.toString()]]);
         };
         sock.current.onmessage = (msg) => {
-            console.log(msg);
             setMsgs(msgs => [...msgs, ["down", msg.data]]);
         };
     };

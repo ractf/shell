@@ -431,7 +431,6 @@ class APIClass extends Component {
         } catch (e) {
             shown = [];
         }
-        console.log(data, shown);
         if (shown.indexOf(data.id) !== -1)
             return;
         this.setState(state => ({
@@ -475,10 +474,6 @@ class APIClass extends Component {
             let ct = new Date(data.d.countdown_timestamp * 1000);
             let st = new Date(data.d.server_timestamp);
             let now = new Date();
-            console.log('Countdown:', ct);
-            console.log('Server time:', ct);
-            console.log('Local time:', now);
-            console.log('Site open:', ct - st < 0);
 
             let countdown = { time: ct, offset: st - now };
             localStorage.setItem("countdown", JSON.stringify(countdown));

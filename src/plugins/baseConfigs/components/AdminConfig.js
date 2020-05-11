@@ -35,7 +35,6 @@ export default () => {
     };
     const updateConfig = (changes) => {
         Object.entries(changes).forEach(([key, value]) => {
-            console.log(key, value, adminConfig[key]);
             if (value !== adminConfig[key]) configSet(key, value);
         });
     };

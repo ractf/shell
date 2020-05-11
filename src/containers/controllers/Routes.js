@@ -79,7 +79,6 @@ const Login = () => {
     let provider = api.configGet("login_provider") || "basicAuth";
     if (plugins.loginProvider[provider])
         return React.createElement(plugins.loginProvider[provider].component);
-    console.log(provider);
     return <BasePage vCentre>
         <FlexRow><p>Login provider plugin missing for <code>{provider}</code>.</p></FlexRow>
     </BasePage>;
