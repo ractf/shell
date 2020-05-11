@@ -62,7 +62,7 @@ export default ({ children }) => {
             startOpen: true
         });
     }
-    if (api.user.is_staff) {
+    if (api.user && api.user.is_staff) {
         menu.push({
             name: t("sidebar.admin"),
             submenu: Object.entries(plugins.adminPage).map(([key, value]) => [value.sidebar, "/admin/" + key])
