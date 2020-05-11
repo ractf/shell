@@ -32,6 +32,7 @@ export default ({ challenge, category, rightComponent }) => {
         let regex = challenge.challenge_metadata.flag_regex;
         let partial = challenge.challenge_metadata.flag_partial_regex;
         let prefix = endpoints.configGet("flag_prefix") || "flag";
+        let format_string;
         if (!regex || !partial) {
             regex = new RegExp("^" + escape(prefix) + "{.+}$");
             partial = "";
@@ -39,10 +40,13 @@ export default ({ challenge, category, rightComponent }) => {
                 partial += "(?:" + escape(prefix[i]) + "|$)";
             }
             partial = new RegExp("^" + partial + "(?:{|$)(?:[^}]+|$)(?:}|$)$");
+            format_string = prefix + "{...}";
+        } else {
+            format_string = regex.toString();
         }
-        return [regex, partial];
+        return [regex, partial, format_string];
     };
-    const [regex, partial] = flagRegex();
+    const [regex, partial, format_string] = flagRegex();
     
     const changeFlag = (flag) => {
         if (challenge.challenge_type === "freeform" || challenge.challenge_type === "longText")
@@ -120,7 +124,7 @@ export default ({ challenge, category, rightComponent }) => {
                 center width={"80%"} />;
             break;
         default:
-            flagInput = <Input placeholder="Flag format: ractf{...}"
+            flagInput = <Input placeholder={"Flag format: " + format_string}
                 format={partial} name={"flag"}
                 onChange={changeFlag} light monospace
                 center width={"80%"} />;
