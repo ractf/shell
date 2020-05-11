@@ -34,11 +34,15 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
         let original = challenge;
 
         let flag;
-        try {
-            flag = JSON.parse(changes.flag_metadata);
-        } catch (e) {
-            if (!changes.flag_metadata.length) flag = "";
-            else return app.alert(t("challenge.invalid_flag_json"));
+        if (typeof changes.flag_metadata === "object") {
+            flag = changes.flag_metadata;
+        } else {
+            try {
+                flag = JSON.parse(changes.flag_metadata);
+            } catch (e) {
+                if (!changes.flag_metadata.length) flag = "";
+                else return app.alert(t("challenge.invalid_flag_json"));
+            }
         }
 
         (isCreator ? endpoints.createChallenge : endpoints.editChallenge)({

@@ -31,7 +31,7 @@ export default ({ challenge, category, rightComponent }) => {
     const flagRegex = () => {
         let regex = challenge.challenge_metadata.flag_regex;
         let partial = challenge.challenge_metadata.flag_partial_regex;
-        let prefix = api.configGet("flag_prefix") || "flag";
+        let prefix = endpoints.configGet("flag_prefix") || "flag";
         if (!regex || !partial) {
             regex = new RegExp("^" + escape(prefix) + "{.+}$");
             partial = "";
