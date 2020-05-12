@@ -167,7 +167,7 @@ export default () => {
         <SBTSection key={tab.id} subTitle={tab.description} back={<>
             <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
         </>} title={tab.name}>
-            {api.user.is_staff && <FlexRow className={"campEdit"}>
+            {api.user.is_staff && <FlexRow className={"campEdit"} right>
                 {edit ? <>
                     <Button key={"edD"} className={"campUnderEditButton"} click={() => setAnc(tab)}>
                         {t("edit_details")}
