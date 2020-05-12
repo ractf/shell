@@ -47,7 +47,7 @@ export default ({ challenge, category, rightComponent }) => {
         return [regex, partial, format_string];
     };
     const [regex, partial, format_string] = flagRegex();
-    
+
     const changeFlag = (flag) => {
         if (challenge.challenge_type === "freeform" || challenge.challenge_type === "longText")
             return setFlagValid(!!flag);
@@ -147,17 +147,19 @@ export default ({ challenge, category, rightComponent }) => {
 
     let chalContent = <>
         {challengeMods}
-        <TextBlock className={"challengeBrief"}>
-            <ReactMarkdown
-                source={challenge.description}
-                renderers={{
-                    link: ({ href, children }) => (
-                        <a rel="noopener noreferrer" target="_blank" href={href}>{children}</a>
-                    ),
-                    delete: ({ children }) => <span className="redacted">{children}</span>
-                }}
-            />
-        </TextBlock>
+        <FlexRow>
+            <TextBlock className={"challengeBrief"}>
+                <ReactMarkdown
+                    source={challenge.description}
+                    renderers={{
+                        link: ({ href, children }) => (
+                            <a rel="noopener noreferrer" target="_blank" href={href}>{children}</a>
+                        ),
+                        delete: ({ children }) => <span className="redacted">{children}</span>
+                    }}
+                />
+            </TextBlock>
+        </FlexRow>
 
         {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
             {challenge.files.map(file =>
@@ -170,18 +172,20 @@ export default ({ challenge, category, rightComponent }) => {
                     points={hint.penalty} id={hint.id} key={hint.id} />;
             })}
         </div>}
-        
-        {challenge.solved ? <>
+
+        {challenge.solved ? <FlexRow>
             {t("challenge.already_solved")}
-        </> : api.user.team ? <Form handle={tryFlag(challenge)} locked={locked}>
-            {flagInput && <>
-                {flagInput}
-                {message && <FormError>{message}</FormError>}
-                <FlexRow>
-                    <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
-                </FlexRow>
-            </>}
-        </Form> : <FlashText warning bold>
+        </FlexRow> : api.user.team ? <FlexRow>
+            <Form handle={tryFlag(challenge)} locked={locked}>
+                {flagInput && <>
+                    {flagInput}
+                    {message && <FormError>{message}</FormError>}
+                    <FlexRow>
+                        <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                    </FlexRow>
+                </>}
+            </Form>
+        </FlexRow> : <FlashText warning bold>
             {t("challenge.no_team")}
             <FlexRow>
                 <Button to={"/team/new"}>{t("join_a_team")}</Button>

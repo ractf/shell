@@ -82,9 +82,11 @@ export default () => {
             <QRCode renderAs={"svg"} size={128} fgColor={"#161422"} value={buildURI(secret)} includeMargin />
             <br /><br />
             {t("2fa.unable_to_qr")}
-            <TextBlock>
-                {formatSecret(secret)}
-            </TextBlock>
+            <FlexRow>
+                <TextBlock>
+                    {formatSecret(secret)}
+                </TextBlock>
+            </FlexRow>
 
             {message && <FormError>{message}</FormError>}
 

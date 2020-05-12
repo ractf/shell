@@ -22,7 +22,7 @@ export const useApi = route => {
         };
     }, []);
 
-    return [data, error];
+    return [data, error, () => abortRequest.current()];
 };
 
 
@@ -67,7 +67,7 @@ export const usePaginated = route => {
         });
         setState(prevState => ({ ...prevState, loading: true }));
     };
-    
+
     useEffect(() => {
         next();
         return () => {
