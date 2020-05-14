@@ -1,6 +1,5 @@
 import { registerPlugin } from "ractf";
 
-import AboutPage from "./components/About";
 import ConductPage from "./components/Conduct";
 import PrivacyPage from "./components/Privacy";
 
