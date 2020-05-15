@@ -465,7 +465,7 @@ class APIClass extends Component {
         // If "+" is used, JS concatinates the int to the date as a string.
         let now = (new Date()) - (-countdown.offset);
         Object.entries(countdown.dates).forEach(([key, value]) => {
-            countdown.passed[key] = value - now < 0
+            countdown.passed[key] = value - now < 0;
         });
         if (old) return countdown;
         this.setState({ countdown: countdown });
@@ -484,7 +484,7 @@ class APIClass extends Component {
             Object.entries(data.d).forEach(([key, value]) => {
                 if (key === "server_timestamp") return;
                 countdown.dates[key] = new Date(value * 1000) - offset;
-                countdown.passed[key] = countdown.dates[key] - serverTime < 0
+                countdown.passed[key] = countdown.dates[key] - serverTime < 0;
             });
 
             //let ct = new Date(data.d.countdown_timestamp * 1000);

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 
 import { Spinner } from "@ractf/ui-kit";
-import { apiEndpoints, apiContext, appContext } from "ractf";
+import { apiContext, appContext } from "ractf";
 
 import lockImg from "../../static/spine.png";
 
