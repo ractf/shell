@@ -1,9 +1,8 @@
 name: Build (Production)
 
 on:
-  push:
-    branches:
-      - master
+  repository_dispatch:
+    types: [production_build_deploy]
 
 jobs:
   build:
