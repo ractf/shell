@@ -464,10 +464,14 @@ class APIClass extends Component {
         // This double negative is intentional.
         // If "+" is used, JS concatinates the int to the date as a string.
         let now = (new Date()) - (-countdown.offset);
+        let changed = false;
         Object.entries(countdown.dates).forEach(([key, value]) => {
             countdown.passed[key] = value - now < 0;
+            if (countdown.passed[key] !== this.state.countdown.passed[key])
+                changed = true;
         });
         if (old) return countdown;
+        if (changed) this._reloadCache();
         this.setState({ countdown: countdown });
     }
 
