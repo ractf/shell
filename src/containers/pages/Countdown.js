@@ -30,8 +30,7 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-export default () => {
-    const endpoints = useContext(apiEndpoints);
+export default ({ cdKey }) => {
     const api = useContext(apiContext);
     const app = useContext(appContext);
     const [countdownText, setCountdownText] = useState("");
@@ -67,7 +66,11 @@ export default () => {
     };
 
     useInterval(() => {
-        const delta = ((new Date(api.countdown.time)) - (new Date()) - api.countdown.offset) / 1000;
+        // This double negative is intentional.
+        // If "+" is used, JS concatinates the int to the date as a string.
+        const now = (new Date()) - (-api.countdown.offset);
+        let delta = ((new Date(api.countdown.dates[cdKey])) - now) / 1000;
+        delta = Math.max(0, delta);
         const days = Math.floor(delta / 86400);
         const hours = Math.floor((delta % 86400) / 3600);
         const minutes = Math.floor((delta % 3600) / 60);
@@ -78,9 +81,9 @@ export default () => {
             + pad(minutes) + " minute" + (minutes === 1 ? "" : "s") + ", "
             + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
 
-        if (delta < 0) {
+        if (delta === 0) {
             app.setLoaded(false);
-            endpoints.openSite();
+            api.recheckCountdowns();
             setTimeout(() => { app.setLoaded(true); }, LOADED_TIMEOUT);
         }
     }, 100);

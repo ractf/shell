@@ -58,7 +58,7 @@ class APIClass extends Component {
             this._cache = JSON.parse(localStorage.getItem("apiCache")) || {};
         } catch (e) { };
 
-        let userData, challenges, teamData, countdown, siteOpen, config;
+        let userData, challenges, teamData, countdown, config;
         try {
             userData = JSON.parse(localStorage.getItem("userData"));
         } catch (e) {
@@ -85,14 +85,9 @@ class APIClass extends Component {
 
         try {
             countdown = JSON.parse(localStorage.getItem("countdown"));
-
-            let ct = new Date(countdown.time);
-            let now = new Date();
-
-            siteOpen = (ct - now) - countdown.offset < 0;
+            countdown = this.recheckCountdowns(countdown);
         } catch (e) {
-            countdown = {};
-            siteOpen = false;
+            countdown = { dates: {}, passed: {} };
         }
 
         this._loginCallback = null;
@@ -103,7 +98,6 @@ class APIClass extends Component {
 
             configGet: this.configGet,
             setConfigValue: this.setConfigValue,
-            openSite: this.openSite,
 
             getCountdown: this.getCountdown,
             addAnnouncement: this.addAnnouncement,
@@ -167,8 +161,8 @@ class APIClass extends Component {
             codeRunState: { running: false },
             announcements: [],
 
-            siteOpen: siteOpen,
             countdown: countdown,
+            recheckCountdowns: this.recheckCountdowns,
         };
 
         window.__ractf_api = this;
@@ -202,8 +196,6 @@ class APIClass extends Component {
                 ready: true,
             });
         }
-
-        //if (!this.state.siteOpen) return;
     }
 
     // Helpers
@@ -464,22 +456,43 @@ class APIClass extends Component {
         return fallback;
     };
 
-    openSite = () => {
-        this.setState({ ready: false, siteOpen: true });
-        this.setup();
-    };
+    recheckCountdowns = (old) => {
+        let countdown = {
+            ...(old || this.state.countdown),
+            passed: {},
+        };
+        // This double negative is intentional.
+        // If "+" is used, JS concatinates the int to the date as a string.
+        let now = (new Date()) - (-countdown.offset);
+        Object.entries(countdown.dates).forEach(([key, value]) => {
+            countdown.passed[key] = value - now < 0
+        });
+        if (old) return countdown;
+        this.setState({ countdown: countdown });
+    }
 
     getCountdown = () => this.get(ENDPOINTS.COUNTDOWN).then(data => {
         if (data.s) {
-            let ct = new Date(data.d.countdown_timestamp * 1000);
-            let st = new Date(data.d.server_timestamp);
-            let now = new Date();
+            let serverTime = new Date(data.d.server_timestamp);
+            let offset = serverTime - (new Date());
 
-            let countdown = { time: ct, offset: st - now };
+            let countdown = {
+                offset: offset,
+                dates: {},
+                passed: {},
+            };
+            Object.entries(data.d).forEach(([key, value]) => {
+                if (key === "server_timestamp") return;
+                countdown.dates[key] = new Date(value * 1000) - offset;
+                countdown.passed[key] = countdown.dates[key] - serverTime < 0
+            });
+
+            //let ct = new Date(data.d.countdown_timestamp * 1000);
+
+            //let countdown = { time: ct, offset: st - now };
             localStorage.setItem("countdown", JSON.stringify(countdown));
 
-            if (ct - st < 0) this.setState({ countdown: countdown, siteOpen: true });
-            else this.setState({ countdown: countdown, siteOpen: false, ready: true });
+            this.setState({ countdown: countdown });
         }
     });
     _getAnnouncements = () => {

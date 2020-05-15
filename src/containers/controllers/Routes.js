@@ -54,11 +54,15 @@ class ErrorBoundary extends React.Component {
 }
 
 
-const Page = ({ title, auth, admin, noAuth, lockout, C }) => {
+const Page = ({ title, auth, admin, noAuth, countdown, C }) => {
     const api = useContext(apiContext);
-    if (!process.env.REACT_APP_NO_SITE_LOCK)
-        if (lockout && !(api.user && api.user.is_staff))
-            if (!api.siteOpen) return <Countdown />;
+    //if (!process.env.REACT_APP_NO_SITE_LOCK) {
+        if (!(api.user && api.user.is_staff)) {
+            if (countdown)
+                if (!api.countdown.passed[countdown])
+                    return <Countdown cdKey={countdown} />;
+        }
+    //}
 
     if (title !== null)
         document.title = title || "RACTF";
@@ -102,7 +106,7 @@ export default () => {
     return <Switch>
         {Object.entries(plugins.page).map(([url, page]) =>
             <Route exact path={url} key={url}>
-                <Page title={page.title} auth={page.auth} lockout={page.lockout}
+                <Page title={page.title} auth={page.auth} countdown={page.countdown}
                     admin={page.admin} noAuth={page.noAuth} C={page.component} />
             </Route>
         )}
@@ -115,7 +119,7 @@ export default () => {
             <Page title={"Login"} noAuth C={Login} />
         </Route>
         <Route exact path={"/register"}>
-            <Page title={"Register"} noAuth C={Register} />
+            <Page countdown={"registration_open"} title={"Register"} noAuth C={Register} />
         </Route>
 
         <Route exact path={"/home"}>
@@ -134,13 +138,13 @@ export default () => {
         </Route>
 
         <Route exact path={"/campaign/:tabId/challenge/:chalId"}>
-            <Page lockout title={"Challenges"} auth C={ChallengePage} />
+            <Page countdown={"countdown_timestamp"} title={"Challenges"} auth C={ChallengePage} />
         </Route>
         <Route exact path={"/campaign"}>
-            <Page lockout title={"Challenges"} auth C={Campaign} />
+            <Page countdown={"countdown_timestamp"} title={"Challenges"} auth C={Campaign} />
         </Route>
         <Route exact path={"/campaign/:tabId"}>
-            <Page lockout title={"Challenges"} auth C={Campaign} />
+            <Page countdown={"countdown_timestamp"} title={"Challenges"} auth C={Campaign} />
         </Route>
 
         <Redirect path={"/profile"} to={"/profile/me"} exact />

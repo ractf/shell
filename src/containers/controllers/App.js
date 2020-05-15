@@ -103,14 +103,15 @@ const WSSpine = () => {
 
 const LockWarn = () => {
     const api = useContext(apiContext);
-    if (api.siteOpen) return null;
-    if (api.config && (api.config.register_start_time * 1000) - (new Date()) > 0)
+    if (!api.countdown.passed.registration_open)
         return <div className={"lockWarning"}>
-            <MdWarning /> Registration locked!
+                <MdWarning /> Registration locked!
+            </div>;
+    if (!api.countdown.passed.countdown_timestamp)
+        return <div className={"lockWarning less"}>
+            <MdWarning /> Challenges locked!
         </div>;
-    return <div className={"lockWarning less"}>
-        <MdWarning /> Challenges locked!
-    </div>;
+    return null;
 };
 
 const App = React.memo(() => {
