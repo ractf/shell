@@ -15,6 +15,12 @@ export default () => {
     registerPlugin("registrationProvider", "basicAuth", {
         component: SignUp,
     });
+    registerPlugin("loginProvider", "basic_auth", {
+        component: Login,
+    });
+    registerPlugin("registrationProvider", "basic_auth", {
+        component: SignUp,
+    });
     registerPlugin("postLogin", "noteam", ({ api, history }) => {
         if (api.team)
             if (api.challenges.length)
