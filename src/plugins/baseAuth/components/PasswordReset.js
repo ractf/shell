@@ -4,7 +4,9 @@ import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
 import { useReactRouter } from "@ractf/util";
-import { Form, FormError, Page, SectionTitle2, Input, Button } from "@ractf/ui-kit";
+import {
+    Form, FormError, Page, SectionTitle2, Input, Button, FormGroup, FlexRow
+} from "@ractf/ui-kit";
 import { apiEndpoints, appContext, zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
 
@@ -47,12 +49,16 @@ export default () => {
             <Form locked={locked} handle={doReset}>
                 <SectionTitle2>{t("auth.reset_password")}</SectionTitle2>
 
-                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
-                <Input name={"passwd2"} placeholder={t("password_repeat")} password />
+                <FormGroup>
+                    <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
+                    <Input name={"passwd2"} placeholder={t("password_repeat")} password />
+                </FormGroup>
 
                 {message && <FormError>{message}</FormError>}
 
-                <Button large submit>{t("auth.reset")}</Button>
+                <FlexRow right>
+                    <Button large submit>{t("auth.reset")}</Button>
+                </FlexRow>
             </Form>
         </Wrap>
     </Page>;
