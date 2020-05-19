@@ -39,8 +39,8 @@ jobs:
       run: npm run build
       env:
         CI: "false"
-        REACT_APP_API_DOMAIN: ''
-        REACT_APP_API_BASE: '/api/v2'
+        REACT_APP_API_DOMAIN: ${{ secrets.REACT_APP_API_DOMAIN }}
+        REACT_APP_API_BASE: ${{ secrets.REACT_APP_API_BASE }}
         REACT_APP_WSS_URL: ${{ secrets.REACT_APP_WSS_URL }}
         REACT_APP_SENTRY_DSN: ${{ secrets.REACT_APP_SENTRY_DSN }}
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
