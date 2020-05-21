@@ -4,7 +4,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import { TeamsList, UsersList } from "../pages/Lists";
 import Countdown from "../pages/Countdown";
-import HomePage from "../pages/HomePage";
 import TeamPage from "../pages/TeamPage";
 
 import {
@@ -54,7 +53,7 @@ class ErrorBoundary extends React.Component {
 }
 
 
-const Page = ({ title, auth, admin, noAuth, countdown, C }) => {
+const Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     const api = useContext(apiContext);
     //if (!process.env.REACT_APP_NO_SITE_LOCK) {
         if (!(api.user && api.user.is_staff)) {
@@ -71,7 +70,9 @@ const Page = ({ title, auth, admin, noAuth, countdown, C }) => {
     if (noAuth && api.authenticated) return <Redirect to={"/home"} />;
     if (admin && (!api.user || !api.user.is_staff)) return <Redirect to={"/home"} />;
 
-    return <ErrorBoundary><C /></ErrorBoundary>;
+    return <ErrorBoundary>
+        {C ? <C /> : children}
+    </ErrorBoundary>;
 };
 
 const URIHandler = () => {
@@ -114,16 +115,17 @@ export default () => {
         <Route exact path={"/uri"} component={URIHandler} />
 
         <Redirect exact path={"/"} to={"/home"} />
+        <Route exact path={"/home"}>
+            <Page countdown={"registration_open"} auth>
+                <Redirect to={"/campaign"} />
+            </Page>
+        </Route>
         <Route exact path={"/logout"} component={Logout} />
         <Route exact path={"/login"}>
             <Page title={"Login"} noAuth C={Login} />
         </Route>
         <Route exact path={"/register"}>
             <Page countdown={"registration_open"} title={"Register"} noAuth C={Register} />
-        </Route>
-
-        <Route exact path={"/home"}>
-            <Page title={"Home"} C={HomePage} />
         </Route>
 
         <Route exact path={"/admin/:page"}>
