@@ -105,8 +105,10 @@ export default () => <Page>
 
     <h2>Requesting Your Data</h2>
     <p>Should you, at any time, request a collection of all related data to yourself, under GDPR this data will be
-        provided within 30 days. All such requests should be made to
-        <a href="mailto:support@ractf.co.uk">support@ractf.co.uk</a>.</p>
+        provided within 30 days. All such requests should be made to <a href="mailto:support@ractf.co.uk">
+            support@ractf.co.uk
+        </a>.
+    </p>
 
     <h2>Changes To This Privacy Policy</h2>
     <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy
