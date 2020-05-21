@@ -27,8 +27,8 @@ export const TeamsList = () => {
             </FormError>
             <BrokenShards />
         </> : <>
-            <Table headings={[t("team"), t("website"), t("members")]} data={
-                state.data.map(x => [x.name, x.website, x.members.length, "/team/" + x.id])
+            <Table headings={[t("team"), t("members")]} data={
+                state.data.map(x => [x.name, x.members, "/team/" + x.id])
             } />
             {state.hasMore && <FlexRow>
                 <Button disabled={state.loading} click={next}>Load More</Button>
