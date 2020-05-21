@@ -35,6 +35,7 @@ export default ({ cdKey }) => {
     const app = useContext(appContext);
     const [countdownText, setCountdownText] = useState("");
     const [swc, setWave] = useState(0);
+    const wrapRef = useRef();
     const cRef = useRef();
     const iRef = useRef();
     const shardData = useRef();
@@ -96,8 +97,8 @@ export default ({ cdKey }) => {
         const canvas = cRef.current;
         const image = iRef.current;
         if (!canvas || !image) return;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = wrapRef.current.getBoundingClientRect().width;
+        canvas.height = wrapRef.current.getBoundingClientRect().height;
         const ctx = canvas.getContext("2d");
 
         let shards = (canvas.width * canvas.height) / 25000;
@@ -195,7 +196,7 @@ export default ({ cdKey }) => {
     useEffect(animate, []);
 
     if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
-    return <div className={"lockWrap"}>
+    return <div className={"lockWrap"} ref={wrapRef}>
         <canvas ref={cRef} />
         <img alt={""} src={lockImg} style={{ display: "none" }} ref={iRef} />
         <div className={"lockTitle"}>Site Locked!</div>

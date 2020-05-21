@@ -10,6 +10,10 @@
     padding: 32px;
     text-align: center;
 
+    @media (max-width: 800px) {
+        height: calc(100vh - 60px);
+    }
+
     .lockTitle {
         font-family: $titleStack;
         font-size: 3em;
