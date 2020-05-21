@@ -5,6 +5,9 @@ import { registerPlugin } from "ractf";
 import { useReactRouter } from "@ractf/util";
 
 
+export const UA = process.env.REACT_APP_GA_UA;
+
+
 const GA = () => {
     const { history } = useReactRouter();
 
@@ -20,8 +23,10 @@ const GA = () => {
 
 
 export default () => {
-    ReactGA.initialize('UA-126641600-2');
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    if (UA) {
+        ReactGA.initialize(UA);
+        ReactGA.pageview(window.location.pathname + window.location.search);
 
-    registerPlugin("mountWithinApp", "googleAnalytics", { component: GA });
+        registerPlugin("mountWithinApp", "googleAnalytics", { component: GA });
+    }
 };
