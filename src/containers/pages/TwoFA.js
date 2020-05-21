@@ -39,11 +39,13 @@ export default () => {
                 if (pin.length !== 6) return faPrompt();
 
                 endpoints.verify_2fa(pin).then(async resp => {
-                    await endpoints._reloadCache();
-                    setPage(3);
+                    if (resp.d.valid) {
+                        await endpoints._reloadCache();
+                        setPage(3);
+                    } else {setMessage(t("2fa.validation_fail"));}
                 }).catch(e => {
                     console.error(e);
-                    setMessage(t("2fa.valudation_fail"));
+                    setMessage(t("2fa.validation_fail"));
                 });
             }).catch(() => {
                 setMessage(t("2fa.unable_to_active"));
