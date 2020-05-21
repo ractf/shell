@@ -261,6 +261,10 @@ const App = React.memo(() => {
             </Modal>}
 
             <WSSpine />
+
+            {Object.entries(plugins.mountWithinApp).map(([key, value]) => (
+                React.createElement(value.component, { key })
+            ))}
         </AppContext.Provider>
     </div></Scrollbar>;
 });
