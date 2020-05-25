@@ -6,6 +6,7 @@ import {
     Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError,
 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, appContext } from "ractf";
+import { downloadText } from "@ractf/util";
 
 
 export default () => {
@@ -63,21 +64,6 @@ export default () => {
             sec.substring(0, 4) + " " + sec.substring(4, 8) + " " +
             sec.substring(8, 12) + " " + sec.substring(12, 16)
         );
-    };
-
-    const downloadText = (string, filename) => {
-        let blob = new Blob([string], { type: "text/plain;charset=utf-8;" });
-        if (navigator.msSaveBlob)
-            return navigator.msSaveBlob(blob, filename);
-    
-        let elem = document.createElement("a");
-        elem.style = "display: none";
-        elem.href = URL.createObjectURL(blob);
-        elem.target = "_blank";
-        elem.setAttribute("download", filename);
-        document.body.appendChild(elem);
-        elem.click();
-        document.body.removeChild(elem);
     };
 
     const formatBackupCodes = codes => {

@@ -4,6 +4,7 @@ import {
     Page, SectionTitle2, HR, Button, TextBlock, Table, FlexRow
 } from "@ractf/ui-kit";
 import { ENDPOINTS, useApi } from "ractf";
+import { downloadJSON } from "@ractf/util";
 
 
 export default () => {
@@ -39,21 +40,6 @@ export default () => {
         countdown = "";
     }
 
-    const download = (data, filename) => {
-        let blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8;" });
-        if (navigator.msSaveBlob)
-            return navigator.msSaveBlob(blob, filename);
-    
-        let elem = document.createElement("a");
-        elem.style = "display: none";
-        elem.href = URL.createObjectURL(blob);
-        elem.target = "_blank";
-        elem.setAttribute("download", filename);
-        document.body.appendChild(elem);
-        elem.click();
-        document.body.removeChild(elem);
-    };
-
     const exportData = () => {
         const debugExport = {
             "versions": {
@@ -71,7 +57,7 @@ export default () => {
             "countdown": JSON.parse(countdown),
             "challenges": JSON.parse(challenges)
         };
-        download(debugExport, "debug.json");
+        downloadJSON(debugExport, "debug.json");
     };
 
     return <Page>
