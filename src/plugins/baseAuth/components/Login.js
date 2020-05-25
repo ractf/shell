@@ -16,23 +16,31 @@ export default () => {
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
 
-    const doLogin = ({ username, password, pin = null }) => {
+    const doLogin = ({ username, password, pin = null, backupCode = null }) => {
         if (!username)
             return setMessage(t("auth.no_uname"));
         if (!password)
             return setMessage(t("auth.no_pass"));
 
         setLocked(true);
-        endpoints.login(username, password, pin).catch(
+        endpoints.login(username, password, pin, backupCode).catch(
             message => {
                 if (message.response && message.response.data && message.response.data.d.reason === "2fa_required") {
                     // 2fa required
                     const faPrompt = () => {
                         app.promptConfirm({ message: t("2fa.required"), small: true },
-                            [{ name: 'pin', placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
+                            [{ name: 'pin', placeholder: t("2fa.code_or_backup_prompt"),
+                               format: /^(\d{6})|([A-Z0-9]{8})$/, limit: 8 }]
                         ).then(({ pin }) => {
-                            if (pin.length !== 6) return faPrompt();
-                            doLogin({ username: username, password: password, pin: pin });
+                            if (pin.length !== 6 && pin.length !== 8) return faPrompt();
+                
+                            let backupCode = '';
+                            if (pin.length === 8) {
+                                backupCode = pin;
+                                pin = '';
+                            }
+
+                            doLogin({ username: username, password: password, pin: pin, backupCode: backupCode });
                         }).catch(() => {
                             setMessage(t("2fa.canceled"));
                             setLocked(false);

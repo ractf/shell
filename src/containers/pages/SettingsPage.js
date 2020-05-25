@@ -121,6 +121,17 @@ export default () => {
         app.alert(t("settings.notifications.success"));
     };
 
+    const removeTwoFactor = () => {
+        app.promptConfirm({ message: t("settings.confirm_2fa_removal"), small: true }).then(() => {
+            endpoints.remove_2fa().then(() => {
+                endpoints._reloadCache();
+                app.alert(t("settings.2fa_removed"));
+            }).catch(e => {
+                app.alert(endpoints.getError(e));
+            });
+        });
+    };
+
     const teamOwner = (api.team ? api.team.owner === api.user.id : null);
 
     const notificationGroups = [
@@ -131,16 +142,23 @@ export default () => {
         <TabbedView>
             <Tab label={t("user")}>
                 {
-                    api.user.totp_status !== 2 && <>
+                    api.user.totp_status === 2 ? <> 
+                        <FlexRow>
+                            Your account is currently protected by two-factor authentication.
+                        </FlexRow>
+                        <FlexRow>
+                            <Button click={removeTwoFactor} warning>{t("settings.remove_2fa")}</Button>
+                        </FlexRow>
+                    </> : <>
                         <FlexRow>
                             <FormError>{t("settings.2fa_disabled")}</FormError>
                         </FlexRow>
                         <FlexRow>
                             <Button to={"/settings/2fa"}>{t("settings.enable_2fa")}</Button>
                         </FlexRow>
-                        <HR />
                     </>
                 }
+                <HR />
 
                 <Form handle={changeUsername}>
                     <FormGroup htmlFor={"name"} label={t("username")}>

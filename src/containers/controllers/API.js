@@ -22,6 +22,7 @@ export const ENDPOINTS = {
     LOGIN: "/auth/login/",
     ADD_2FA: "/auth/add_2fa/",
     VERIFY_2FA: "/auth/verify_2fa/",
+    REMOVE_2FA: "/auth/remove_2fa/",
     VERIFY: "/auth/verify_email/",
     REQUEST_RESET: "/auth/request_password_reset/",
     COMPLETE_RESET: "/auth/password_reset/",
@@ -118,6 +119,7 @@ class APIClass extends Component {
             add_2fa: this.add_2fa,
             register: this.register,
             verify_2fa: this.verify_2fa,
+            remove_2fa: this.remove_2fa,
             requestPasswordReset: this.requestPasswordReset,
             completePasswordReset: this.completePasswordReset,
 
@@ -572,9 +574,9 @@ class APIClass extends Component {
         }
     };
 
-    login = (username, password, otp = null) => {
+    login = (username, password, otp = null, backup_code = null) => {
         return new Promise((resolve, reject) => {
-            this.post(ENDPOINTS.LOGIN, { username, password, otp }
+            this.post(ENDPOINTS.LOGIN, { username, password, otp, backup_code }
             ).then(data => {
                 // Encourage the user to register the URI handler
                 if (navigator.registerProtocolHandler) {
@@ -594,6 +596,7 @@ class APIClass extends Component {
 
     add_2fa = () => this.post(ENDPOINTS.ADD_2FA);
     verify_2fa = (otp) => this.post(ENDPOINTS.VERIFY_2FA, { otp });
+    remove_2fa = (otp) => this.post(ENDPOINTS.REMOVE_2FA);
     requestPasswordReset = (email) => this.post(ENDPOINTS.REQUEST_RESET, { email });
     verify = (uid, token) => {
         try {

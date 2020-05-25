@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from "qrcode.react";
 
 import {
-    Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError
+    Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError,
 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, appContext } from "ractf";
 
@@ -15,6 +15,7 @@ export default () => {
     const [page, setPage] = useState(0);
     const [secret, setSecret] = useState('');
     const [message, setMessage] = useState(null);
+    const [backupCodes, setBackupCodes] = useState([]);
 
     const { t } = useTranslation();
 
@@ -23,6 +24,7 @@ export default () => {
 
         endpoints.add_2fa().then(resp => {
             setSecret(resp.d.totp_secret);
+            setBackupCodes(resp.d.backup_codes);
             setPage(2);
         }).catch(() => {
             setPage(-1);
@@ -41,7 +43,7 @@ export default () => {
                 endpoints.verify_2fa(pin).then(async resp => {
                     if (resp.d.valid) {
                         await endpoints._reloadCache();
-                        setPage(3);
+                        setPage(4);
                     } else {setMessage(t("2fa.validation_fail"));}
                 }).catch(e => {
                     console.error(e);
@@ -63,15 +65,36 @@ export default () => {
         );
     };
 
+    const downloadText = (string, filename) => {
+        let blob = new Blob([string], { type: "text/plain;charset=utf-8;" });
+        if (navigator.msSaveBlob)
+            return navigator.msSaveBlob(blob, filename);
+    
+        let elem = document.createElement("a");
+        elem.style = "display: none";
+        elem.href = URL.createObjectURL(blob);
+        elem.target = "_blank";
+        elem.setAttribute("download", filename);
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    };
+
+    const formatBackupCodes = codes => {
+        let res = "";
+        codes.forEach((code) => {
+            res += code + (code.used ? " [Used]\n" : "\n");
+        });
+        return res;
+    };
+
+    const downloadBackupCodes = codes => {
+        downloadText(formatBackupCodes(codes), "backup_codes_ractf.txt");
+    };
+
     return <Page title={t("2fa.2fa")} vCentre>
         {page === 0 ? <>
-            <FlexRow>
-                {api.user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
-            </FlexRow>
-            <FlexRow>
-                <b>{t("2fa.no_remove_warning")}</b>
-            </FlexRow>
-
+            <FlexRow>{t("2fa.add_prompt")}</FlexRow>
             <FlexRow>
                 <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
                 <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
@@ -101,9 +124,24 @@ export default () => {
             {message && <FlexRow><FormError>{message}</FormError></FlexRow>}
 
             <FlexRow>
-                <Button click={faPrompt}>{t("2fa.got_it")}</Button>
+                <Button click={() => {setPage(3);}}>{t("next")}</Button>
             </FlexRow>
         </> : page === 3 ? <>
+            <FlexRow>
+                <SectionTitle2>{t("2fa.backup_codes")}</SectionTitle2>
+            </FlexRow>
+            <FlexRow>
+                <Button click={() => downloadBackupCodes(backupCodes)}>{t("2fa.download_backup_codes")}</Button>
+            </FlexRow>
+            <FlexRow>
+                <TextBlock>
+                    {formatBackupCodes(backupCodes)}
+                </TextBlock>
+            </FlexRow>
+            <FlexRow>
+                <Button click={faPrompt}>{t("2fa.got_it")}</Button>
+            </FlexRow>
+        </> : page === 4 ? <>
             <FlexRow>
                 <SectionTitle2>{t("2fa.congratulations")}</SectionTitle2>
             </FlexRow>
