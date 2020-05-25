@@ -67,11 +67,10 @@ export default () => {
     };
 
     const formatBackupCodes = codes => {
-        res = ""
-        for (var i = 0; i < codes.length; i += 2) {
-            res += codes[i] + " " + codes[i+1] + "\n"
-        }
-        return res
+        let res = "";
+        for (var i = 0; i < codes.length; i += 2)
+            res += codes[i] + " " + codes[i+1] + "\n";
+        return res;
     };
 
     const downloadBackupCodes = codes => {
