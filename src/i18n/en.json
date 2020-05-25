@@ -17,7 +17,7 @@
         "congratulations": "Congratulations!",
         "restart": "Restart",
         "code_prompt": "6-digit code",
-        "code_or_backup_prompt": "6-digit code or backup",
+        "code_or_backup_prompt": "6 or 8 digit code",
         "required": "2-Factor Code Required",
         "canceled": "2-Factor Authentication Required!",
         "validation_fail": "Code validation failed.",
