@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
-import { FlashText, Button, FlexRow, Form, InputButton } from "@ractf/ui-kit";
+import { FlashText, Button, Row, Form, InputButton } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 
 import "./ClickableMap.scss";
@@ -74,17 +74,19 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     };
 
     return <div className={"mapPartWrap"}>
-        <FlashText warning={!hasValidZoom && !selectedLongLat}>
-            {selectedLongLat ? <>
-                <div className="highlight">
-                    Selected location: {round(selectedLongLat[0])}, {round(selectedLongLat[1])}
-                </div>
-            </> : hasValidZoom ? <>
-                <div className="highlight">Click on the map to select a location</div>
-            </> : <>
-                        <div className="highlight">Zoom in closer to make a selection!</div>
-                    </>}
-        </FlashText>
+        <Row>
+            <FlashText danger={!hasValidZoom && !selectedLongLat}>
+                {selectedLongLat ? <>
+                    <div className="highlight">
+                        Selected location: {round(selectedLongLat[0])}, {round(selectedLongLat[1])}
+                    </div>
+                </> : hasValidZoom ? <>
+                    <div className="highlight">Click on the map to select a location</div>
+                </> : <>
+                            <div className="highlight">Zoom in closer to make a selection!</div>
+                        </>}
+            </FlashText>
+        </Row>
         <div className={"mapWrap"}>
             <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>
@@ -95,10 +97,10 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                 <div className={"submitOverlay"}>
                     <div className={"soInner"}>
                         <div className={"soText"}>Location selected. Submit as flag?</div>
-                        <FlexRow>
+                        <Row>
                             <Button click={() => setSelectedLongLat(null)} lesser>Cancel</Button>
                             <Button click={() => submitFlag({ flag: selectedLongLat })}>Submit</Button>
-                        </FlexRow>
+                        </Row>
                     </div>
                 </div>
             }

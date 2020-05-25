@@ -3,7 +3,7 @@ import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Page, HR, FlexRow, TabbedView, Tab, Button, Form, FormError, Input,
+    Page, HR, Row, TabbedView, Tab, Button, Form, FormError, Input,
     Checkbox, FormGroup
 } from "@ractf/ui-kit";
 import { apiContext, appContext, apiEndpoints, zxcvbn, localConfig } from "ractf";
@@ -132,12 +132,12 @@ export default () => {
             <Tab label={t("user")}>
                 {
                     api.user.totp_status !== 2 && <>
-                        <FlexRow>
+                        <Row>
                             <FormError>{t("settings.2fa_disabled")}</FormError>
-                        </FlexRow>
-                        <FlexRow>
+                        </Row>
+                        <Row>
                             <Button to={"/settings/2fa"}>{t("settings.enable_2fa")}</Button>
-                        </FlexRow>
+                        </Row>
                         <HR />
                     </>
                 }
@@ -149,9 +149,9 @@ export default () => {
                     </FormGroup>
 
                     {unError && <FormError>{unError}</FormError>}
-                    <FlexRow>
+                    <Row>
                         <Button submit>{t("save")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
                 <HR />
                 <Form handle={changePassword}>
@@ -162,9 +162,9 @@ export default () => {
                     </FormGroup>
 
                     {pwError && <FormError>{pwError}</FormError>}
-                    <FlexRow>
+                    <Row>
                         <Button submit>{t("change_pass")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
             </Tab>
             <Tab label={t("settings.profile")}>
@@ -186,9 +186,9 @@ export default () => {
                     </FormGroup>
 
                     {pfError && <FormError>{pfError}</FormError>}
-                    <FlexRow>
+                    <Row>
                         <Button submit>{t("save")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
             </Tab>
             <Tab label={t("team")}>
@@ -206,19 +206,19 @@ export default () => {
                         </FormGroup>
 
                         {teamError && <FormError>{teamError}</FormError>}
-                        {teamOwner && <FlexRow>
+                        {teamOwner && <Row>
                             <Button submit>{t("settings.modify_team")}</Button>
-                        </FlexRow>}
+                        </Row>}
                     </Form>
                 </> : <div>
                         {t("settings.not_in_team")}
                         <br /><br />
                         {t("settings.team_prompt")}
                         <HR />
-                        <FlexRow>
+                        <Row>
                             <Button to={"/team/join"}>{t("join_a_team")}</Button>
                             <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                        </FlexRow>
+                        </Row>
                     </div>}
             </Tab>
             {api.team &&
@@ -240,9 +240,9 @@ export default () => {
                             </Checkbox>
                         )}
                     </FormGroup>
-                    <FlexRow>
+                    <Row>
                         <Button submit>{t("save")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
             </Tab>
         </TabbedView>

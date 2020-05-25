@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, Button, Spinner, Modal, FlexRow, FormGroup, InputButton,
-    FormError, Leader, Checkbox, SBTSection
+    Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
+    FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
 import { apiEndpoints, appContext, ENDPOINTS } from "ractf";
 
@@ -55,7 +55,8 @@ export default () => {
         setState(prevState => ({ ...prevState, member: null }));
     };
 
-    return <SBTSection title={t("admin.members")}>
+    return <>
+        <PageHead title={t("admin.members")} />
         <Form handle={doSearch} locked={state.loading}>
             <InputButton submit name={"name"} placeholder={"Search for Username"} button={"Search"} />
             {state.error && <FormError>{state.error}</FormError>}
@@ -64,13 +65,13 @@ export default () => {
         {state.results && <>
             <br />
             {state.results.length ? <>
-                {state.more && <><FlexRow>
+                {state.more && <><Row>
                     Additional results were omitted. Please refine your search.
-                </FlexRow><br /></>}
+                </Row><br /></>}
                 {state.results.map(i => <Leader click={editMember(i)} key={i.id}>{i.username}</Leader>)}
-            </> : <FlexRow><br />
+            </> : <Row><br />
                 No results found
-            </FlexRow>}
+            </Row>}
         </>}
         {state.member && <Modal onHide={close}>
             <Form handle={saveMember(state.member)} locked={state.loading}>
@@ -78,11 +79,11 @@ export default () => {
                     <Input val={state.member.username} name={"username"} />
                 </FormGroup>
                 <FormGroup label={"Rights"}>
-                    <FlexRow left>
+                    <Row left>
                         <Checkbox checked={state.member.is_active} name={"is_active"}>Active</Checkbox>
                         <Checkbox checked={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
                         <Checkbox checked={state.member.is_visible} name={"is_active"}>Visible</Checkbox>
-                    </FlexRow>
+                    </Row>
                 </FormGroup>
                 <FormGroup label={"Bio"} htmlFor={"bio"}>
                     <Input val={state.member.bio} name={"bio"} rows={2} />
@@ -103,10 +104,10 @@ export default () => {
                         Email verified
                     </Checkbox>
                 </FormGroup>
-                <FlexRow>
+                <Row>
                     <Button submit>Save</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Modal>}
-    </SBTSection>;
+    </>;
 };

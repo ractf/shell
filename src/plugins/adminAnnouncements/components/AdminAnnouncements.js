@@ -2,8 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, Button, Spinner, SBTSection, Section, FlexRow, FormGroup,
-    Leader
+    Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead
 } from "@ractf/ui-kit";
 import { apiEndpoints, appContext, useApi, ENDPOINTS } from "ractf";
 
@@ -41,29 +40,34 @@ export default () => {
         };
     };
 
-    return <SBTSection title={t("admin.announce.head")}>
-        <Section title={t("admin.announce.active")}>
-            <Form>{localA ?
-                localA.length ? (
-                    localA.map(i => <Leader key={i.id} sub={i.body} x click={remove(i)}>
-                        {i.title}
-                    </Leader>
-                )) : <label>{t("admin.announce.none")}</label>
-                : <Spinner />
-            }</Form>
-        </Section>
-        <Section title={t("admin.announce.add")}>
-            <Form handle={addAnnouncement} locked={locked}>
-                <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
-                    <Input name={"title"} />
-                </FormGroup>
-                <FormGroup htmlFor={"body"} label={t("admin.announce.body")}>
-                    <Input name={"body"} rows={4} />
-                </FormGroup>
-                <FlexRow>
-                    <Button submit>{t("admin.announce.add")}</Button>
-                </FlexRow>
-            </Form>
-        </Section>
-    </SBTSection>;
+    return <>
+        <PageHead title={t("admin.announce.head")} />
+        <Row>
+            <Card header={t("admin.announce.active")}>
+                <Form>{localA ?
+                    localA.length ? (
+                        localA.map(i => <Leader key={i.id} sub={i.body} x click={remove(i)}>
+                            {i.title}
+                        </Leader>
+                    )) : <label>{t("admin.announce.none")}</label>
+                    : <Spinner />
+                }</Form>
+            </Card>
+        </Row>
+        <Row>
+            <Card header={t("admin.announce.add")}>
+                <Form handle={addAnnouncement} locked={locked}>
+                    <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
+                        <Input name={"title"} />
+                    </FormGroup>
+                    <FormGroup htmlFor={"body"} label={t("admin.announce.body")}>
+                        <Input name={"body"} rows={4} />
+                    </FormGroup>
+                    <Row>
+                        <Button submit>{t("admin.announce.add")}</Button>
+                    </Row>
+                </Form>
+            </Card>
+        </Row>
+    </>;
 };

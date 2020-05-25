@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FlexRow, Link,
-    Checkbox, FormGroup
+    Form, FormError, Page, Input, Button, Row, Link,
+    Checkbox, FormGroup, H2
 } from "@ractf/ui-kit";
 import { apiEndpoints, zxcvbn } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
@@ -46,7 +46,7 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doRegister}>
-                <SectionTitle2>{t("auth.register")}</SectionTitle2>
+                <H2>{t("auth.register")}</H2>
 
                 <FormGroup>
                     <Input name={"username"} placeholder={t("username")} />
@@ -63,9 +63,9 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <FlexRow right>
+                <Row right>
                     <Button large submit>{t("register")}</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Wrap>
     </Page>;

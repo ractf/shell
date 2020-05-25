@@ -6,7 +6,7 @@ import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter } from "@ractf/util";
 import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, FlexRow, Graph,
+    Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page
 } from "@ractf/ui-kit";
 import { useApi, apiContext, ENDPOINTS } from "ractf";
@@ -170,9 +170,9 @@ export default () => {
                                     <span style={{ fontSize: ".8em", marginLeft: 8 }}>
                                         {got}/{tot} ({Math.round(got / tot * 10000) / 100}%)
                                     </span>
-                                    <FlexRow>
+                                    <Row>
                                         <ProgressBar thick progress={got / tot} width={"auto"} />
-                                    </FlexRow>
+                                    </Row>
                                 </>)}
                             </div>
                             <HR />

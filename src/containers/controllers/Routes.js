@@ -6,9 +6,7 @@ import { TeamsList, UsersList } from "../pages/Lists";
 import Countdown from "../pages/Countdown";
 import TeamPage from "../pages/TeamPage";
 
-import {
-    FlexRow, TextBlock, SectionHeading, SectionTitle2, Page as BasePage
-} from "@ractf/ui-kit";
+import { Row, TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, plugins, dynamicLoad } from "ractf";
 
 
@@ -40,12 +38,12 @@ class ErrorBoundary extends React.Component {
 
     render() {
         if (this.state.error) {
-            return <div className="sbtBody"><div className={"pageContent vCentre"}>
+            return <div className={"pageContent vCentre"}>
                 <BrokenShards />
-                <SectionHeading>This page failed to load.</SectionHeading>
-                <SectionTitle2>Please report this!</SectionTitle2>
+                <H1>This page failed to load.</H1>
+                <H2>Please report this!</H2>
                 <TextBlock style={{textAlign: "left"}}>{this.state.error.stack}</TextBlock>
-            </div></div>;
+            </div>;
         }
 
         return this.props.children;
@@ -85,7 +83,7 @@ const Login = () => {
     if (plugins.loginProvider[provider])
         return React.createElement(plugins.loginProvider[provider].component);
     return <BasePage vCentre>
-        <FlexRow><p>Login provider plugin missing for <code>{provider}</code>.</p></FlexRow>
+        <Row><p>Login provider plugin missing for <code>{provider}</code>.</p></Row>
     </BasePage>;
 };
 const Register = () => {
@@ -94,7 +92,7 @@ const Register = () => {
     if (plugins.registrationProvider[provider])
         return React.createElement(plugins.registrationProvider[provider].component);
     return <BasePage vCentre>
-        <FlexRow><p>Registration provider plugin missing for <code>{provider}</code>.</p></FlexRow>
+        <Row><p>Registration provider plugin missing for <code>{provider}</code>.</p></Row>
     </BasePage>;
 };
 const Logout = () => {

@@ -1,10 +1,9 @@
 import React, { useState, useContext, useRef } from "react";
-import ReactMarkdown from "react-markdown";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Button, Input, TextBlock, Form, FormError, SBTSection, Link, FlexRow,
-    FlashText
+    Button, Input, TextBlock, Form, FormError, PageHead, Link, Row, FlashText,
+    Markdown
 } from "@ractf/ui-kit";
 import { appContext, apiEndpoints, apiContext, plugins } from "ractf";
 
@@ -147,19 +146,11 @@ export default ({ challenge, category, rightComponent }) => {
 
     let chalContent = <>
         {challengeMods}
-        <FlexRow>
+        <Row>
             <TextBlock className={"challengeBrief"}>
-                <ReactMarkdown
-                    source={challenge.description}
-                    renderers={{
-                        link: ({ href, children }) => (
-                            <a rel="noopener noreferrer" target="_blank" href={href}>{children}</a>
-                        ),
-                        delete: ({ children }) => <span className="redacted">{children}</span>
-                    }}
-                />
+                <Markdown source={challenge.description} />
             </TextBlock>
-        </FlexRow>
+        </Row>
 
         {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
             {challenge.files.map(file =>
@@ -173,24 +164,23 @@ export default ({ challenge, category, rightComponent }) => {
             })}
         </div>}
 
-        {challenge.solved ? <FlexRow>
+        {challenge.solved ? <Row>
             {t("challenge.already_solved")}
-        </FlexRow> : api.user.team ? <FlexRow>
+        </Row> : api.user.team ? <Row>
             <Form handle={tryFlag(challenge)} locked={locked}>
                 {flagInput && <>
                     {flagInput}
                     {message && <FormError>{message}</FormError>}
-                    <FlexRow>
+                    <Row>
                         <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
-                    </FlexRow>
+                    </Row>
                 </>}
             </Form>
-        </FlexRow> : <FlashText warning bold>
-            {t("challenge.no_team")}
-            <FlexRow>
+        </Row> : <FlashText danger title={t("challenge.no_team")}>
+            <Row>
                 <Button to={"/team/new"}>{t("join_a_team")}</Button>
                 <Button to={"/team/new"}>{t("create_a_team")}</Button>
-            </FlexRow>
+            </Row>
         </FlashText>}
     </>;
 
@@ -204,12 +194,14 @@ export default ({ challenge, category, rightComponent }) => {
         : t("challenge.no_solve"));
 
     return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
-        <SBTSection subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
-            back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
-            title={<span className={"challengeTags"}><span>{challenge.name}</span>{tags}</span>}
-        >
+        <>
+            <PageHead
+                subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
+                back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
+                title={<span className={"challengeTags"}><span>{challenge.name}</span>{tags}</span>}
+            />
             {chalContent}
-        </SBTSection>
+        </>
         {rightSide}
     </Split>;
 };

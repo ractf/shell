@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
-import { Button, SBTSection, Section, FlexRow } from "@ractf/ui-kit";
+import { Button, PageHead, Card, Row } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, appContext, ENDPOINTS } from "ractf";
 
 
@@ -317,25 +317,30 @@ export default () => {
         });
     };
 
-    return <SBTSection title={t("admin.import_and_export")}>
-        <Section title={t("admin.import")}>
-            <FlexRow>
-                <Button disabled warning>{t("admin.import_ctf")}</Button>
-                <Button click={importCategory}>{t("admin.import_cat")}</Button>
-                <Button click={importChal}>{t("admin.import_chal")}</Button>
-            </FlexRow>
-        </Section>
-        <Section title={t("admin.export")}>
-            <FlexRow>
-                <Button click={exportCTF}>{t("admin.export_ctf")}</Button>
-                <Button click={exportCat}>{t("admin.export_cat")}</Button>
-                <Button click={exportChal}>{t("admin.export_chal")}</Button>
-            </FlexRow>
-            <FlexRow>
-                <Button click={exportLeaderboard}>{t("admin.export_sb")}</Button>
-                <Button click={exportPlayers}>{t("admin.export_players")}</Button>
-                <Button click={exportTeams}>{t("admin.export_teams")}</Button>
-            </FlexRow>
-        </Section>
-    </SBTSection>;
+    return <>
+        <PageHead title={t("admin.import_and_export")} />
+        <Row>
+            <Card header={t("admin.import")}>
+                <Row>
+                    <Button disabled danger>{t("admin.import_ctf")}</Button>
+                    <Button click={importCategory}>{t("admin.import_cat")}</Button>
+                    <Button click={importChal}>{t("admin.import_chal")}</Button>
+                </Row>
+            </Card>
+        </Row>
+        <Row>
+            <Card header={t("admin.export")}>
+                <Row>
+                    <Button click={exportCTF}>{t("admin.export_ctf")}</Button>
+                    <Button click={exportCat}>{t("admin.export_cat")}</Button>
+                    <Button click={exportChal}>{t("admin.export_chal")}</Button>
+                </Row>
+                <Row>
+                    <Button click={exportLeaderboard}>{t("admin.export_sb")}</Button>
+                    <Button click={exportPlayers}>{t("admin.export_players")}</Button>
+                    <Button click={exportTeams}>{t("admin.export_teams")}</Button>
+                </Row>
+            </Card>
+        </Row>
+    </>;
 };

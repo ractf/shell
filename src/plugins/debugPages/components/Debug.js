@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-    Page, SectionTitle2, HR, Button, TextBlock, Table, FlexRow
+    Page, HR, Button, TextBlock, Table, Row, H2
 } from "@ractf/ui-kit";
 import { ENDPOINTS, useApi } from "ractf";
 
@@ -75,7 +75,7 @@ export default () => {
     };
 
     return <Page>
-        <SectionTitle2>RACTF Debug Page:</SectionTitle2>
+        <H2>RACTF Debug Page:</H2>
         <HR />
         <div><code>ractf/shell</code> version: <code>{__COMMIT_HASH__}</code></div>
         <div><code>ractf/backend</code> version: <code>{backendVersion && backendVersion.commit_hash}</code></div>
@@ -83,10 +83,10 @@ export default () => {
         <div>Cache size:
             <code>{cacheLen.toString()} bytes</code> / <code>{cacheDataLen} items</code>
         </div>
-        <FlexRow>
+        <Row>
             <Button click={clearCache}>Clear API cache</Button>
             <Button click={exportData}>Export debug data</Button>
-        </FlexRow>
+        </Row>
         <div>
             <br />
             <Table headings={["Endpoint", "Data"]}

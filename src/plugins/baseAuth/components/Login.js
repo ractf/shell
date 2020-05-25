@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FlexRow, FormGroup,
-    Link
+    Form, FormError, Page, Input, Button, Row, FormGroup,
+    Link, H2
 } from "@ractf/ui-kit";
 import { apiEndpoints, appContext } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
@@ -62,7 +62,7 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doLogin}>
-                <SectionTitle2>{t("auth.login")}</SectionTitle2>
+                <H2>{t("auth.login")}</H2>
                 <FormGroup>
                     <Input name={"username"} placeholder={t("username")} />
                     <Input name={"password"} placeholder={t("password")} password />
@@ -74,9 +74,9 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <FlexRow right>
+                <Row right>
                     <Button large submit>{t("login")}</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Wrap>
     </Page>;

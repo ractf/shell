@@ -5,7 +5,7 @@ import qs from "query-string";
 
 import { useReactRouter } from "@ractf/util";
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FormGroup, FlexRow
+    Form, FormError, Page, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
 import { apiEndpoints, appContext, zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
@@ -47,7 +47,7 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doReset}>
-                <SectionTitle2>{t("auth.reset_password")}</SectionTitle2>
+                <H2>{t("auth.reset_password")}</H2>
 
                 <FormGroup>
                     <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
@@ -56,9 +56,9 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <FlexRow right>
+                <Row right>
                     <Button large submit>{t("auth.reset")}</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Wrap>
     </Page>;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Button, FlexRow, Graph, TabbedView, Tab, Table, Page
+    Button, Row, Graph, TabbedView, Tab, Table, Page
 } from "@ractf/ui-kit";
 import { useApi, usePaginated, apiEndpoints, ENDPOINTS } from "ractf";
 
@@ -13,15 +13,15 @@ export default () => {
     const { t } = useTranslation();
 
     const [graph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
-    const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER); 
-    const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM); 
+    const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
+    const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
 
 
     const api = useContext(apiEndpoints);
 
     useEffect(() => {
         if (!graph) return;
-        let lbdata = {user: [...graph.user], team: [...graph.team]};
+        let lbdata = { user: [...graph.user], team: [...graph.team] };
         let userPlots = {};
         let teamPlots = {};
         let points = {};
@@ -46,14 +46,14 @@ export default () => {
                 };
                 points[id] = 0;
             }
-            
+
             points[id] += i.points;
             userPlots[id].x.push(new Date(i.timestamp));
             userPlots[id].y.push(points[id]);
         });
         lbdata.team.forEach(i => {
             let id = "team_" + i.team_name;
-            
+
             if (!teamPlots.hasOwnProperty(id)) {
                 teamPlots[id] = {
                     x: [minTime], y: [0], name: i.team_name, id: id
@@ -74,10 +74,10 @@ export default () => {
     }, [graph, api]);
 
     const userData = (lbdata) => {
-        return lbdata.map((i, n) => [i.username, i.leaderboard_points, "/profile/" + i.id]);
+        return lbdata.map((i, n) => [i.username, i.leaderboard_points, { link: "/profile/" + i.id }]);
     };
     const teamData = (lbdata) => {
-        return lbdata.map((i, n) => [i.name, i.leaderboard_points, "/team/" + i.id]);
+        return lbdata.map((i, n) => [i.name, i.leaderboard_points, { link: "/team/" + i.id }]);
     };
 
     return <Page title={t("leaderboard")}>
@@ -85,17 +85,17 @@ export default () => {
             <Tab label={t("user_plural")}>
                 <Graph data={userGraphData} />
                 <Table headings={[t("user"), t("point_plural")]} data={userData(uState.data)} />
-                {uState.hasMore && <FlexRow>
+                {uState.hasMore && <Row>
                     <Button disabled={uState.loading} click={uNext}>Load More</Button>
-                </FlexRow>}
+                </Row>}
             </Tab>
 
             <Tab label={t("team_plural")}>
                 <Graph data={teamGraphData} />
                 <Table headings={[t("team"), t("point_plural")]} data={teamData(tState.data)} />
-                {tState.hasMore && <FlexRow>
+                {tState.hasMore && <Row>
                     <Button disabled={tState.loading} click={tNext}>Load More</Button>
-                </FlexRow>}
+                </Row>}
             </Tab>
         </TabbedView>
     </Page>;

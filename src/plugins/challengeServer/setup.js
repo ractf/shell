@@ -27,7 +27,7 @@ const ChallengeServer = ({ challenge }) => {
         Reset
     </Button>;
 
-    return <FlashText warning={!!state.error} button={button}>
+    return <FlashText danger={!!state.error} button={button}>
         {state.error ? <div>Failed to request instance: {state.error}</div>
             : state.instance ? <div>Challenge instance ready at <code>
                 {state.instance.ip}:{state.instance.port}

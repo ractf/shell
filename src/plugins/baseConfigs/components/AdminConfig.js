@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, Button, FlexRow, HR, FormGroup, Checkbox, DatePick, SBTSection
+    Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead
 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, appContext, useApi, plugins, ENDPOINTS } from "ractf";
 
@@ -44,7 +44,7 @@ export default () => {
 
     const flushStack = () => {
         if (stack.length) {
-            fields.push(<FlexRow left key={fields.length}>{stack.map(i => i[0])}</FlexRow>);
+            fields.push(<Row left key={fields.length}>{stack.map(i => i[0])}</Row>);
             stack = [];
         }
     };
@@ -89,12 +89,13 @@ export default () => {
         });
     }
 
-    return <SBTSection title={t("admin.configuration")}>
+    return <>
+        <PageHead title={t("admin.configuration")} />
         <Form handle={updateConfig}>
             {fields}
-            <FlexRow>
+            <Row>
                 <Button submit>Save</Button>
-            </FlexRow>
+            </Row>
         </Form>
-    </SBTSection>;
+    </>;
 };

@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, Button, Spinner, Modal, FlexRow, FormGroup, InputButton,
-    FormError, Leader, Checkbox, SBTSection
+    Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
+    FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
 import { apiEndpoints, appContext, ENDPOINTS } from "ractf";
 
@@ -73,7 +73,8 @@ export default () => {
         };
     };
 
-    return <SBTSection title={t("admin.teams")}>
+    return <>
+        <PageHead title={t("admin.teams")} />
         <Form handle={doSearch} locked={state.loading}>
             <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
             {state.error && <FormError>{state.error}</FormError>}
@@ -82,13 +83,13 @@ export default () => {
         {state.results && <>
             <br />
             {state.results.length ? <>
-                {state.more && <><FlexRow>
+                {state.more && <><Row>
                     Additional results were omitted. Please refine your search.
-                </FlexRow><br /></>}
+                </Row><br /></>}
                 {state.results.map(i => <Leader click={editTeam(i)} key={i.id}>{i.name}</Leader>)}
-            </> : <FlexRow><br />
+            </> : <Row><br />
                 No results found
-            </FlexRow>}
+            </Row>}
         </>}
         {state.team && <Modal onHide={close}>
             <Form handle={saveTeam(state.team)} locked={state.loading}>
@@ -96,9 +97,9 @@ export default () => {
                     <Input val={state.team.name} name={"name"} />
                 </FormGroup>
                 <FormGroup label={"Rights"}>
-                    <FlexRow left>
+                    <Row left>
                         <Checkbox checked={state.team.is_visible} name={"is_active"}>Visible</Checkbox>
-                    </FlexRow>
+                    </Row>
                 </FormGroup>
                 <FormGroup label={"Password"} htmlFor={"password"}>
                     <Input val={state.team.password} name={"password"} />
@@ -115,10 +116,10 @@ export default () => {
                         </Leader>;
                     })}
                 </FormGroup>
-                <FlexRow>
+                <Row>
                     <Button submit>Save</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Modal>}
-    </SBTSection>;
+    </>;
 };

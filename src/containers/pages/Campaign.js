@@ -5,8 +5,8 @@ import { Redirect } from "react-router-dom";
 import { useReactRouter } from "@ractf/util";
 
 import {
-    Button, FlexRow, Input, Form, FormError, SBTSection, Section, Link,
-    FlashText, Leader, SectionTitle2, Modal, Page
+    Button, Row, Input, Form, FormError, PageHead, Card, Link,
+    FlashText, Leader, Modal, Page, H2
 } from "@ractf/ui-kit";
 import { plugins, apiContext, apiEndpoints, appContext } from "ractf";
 
@@ -62,7 +62,7 @@ const ANC = ({ hide, anc, modal }) => {
     };
 
     let body = <Form locked={locked} handle={create}>
-        {modal && <SectionTitle2>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</SectionTitle2>}
+        {modal && <H2>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</H2>}
         <label htmlFor={"cname"}>{t("challenge.cat_name")}</label>
         <Input val={anc.name} name={"cname"} placeholder={t("challenge.cat_name")} />
         <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
@@ -71,12 +71,12 @@ const ANC = ({ hide, anc, modal }) => {
         <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
             placeholder={t("challenge.cat_type")} />
         {error && <FormError>{error}</FormError>}
-        <FlexRow>
+        <Row>
             {anc.id &&
-                <Button warning click={removeCategory}>{t("challenge.remove_cat")}</Button>
+                <Button danger click={removeCategory}>{t("challenge.remove_cat")}</Button>
             }
             <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
-        </FlexRow>
+        </Row>
     </Form>;
 
     if (modal)
@@ -92,18 +92,17 @@ const CategoryList = () => {
     const { t } = useTranslation();
 
     return <Page>
-        <SBTSection subTitle={t("categories.pick")} title={t("categories.all")}>
-            {api.challenges.map(i => {
-                let solved = i.challenges.filter(j => j.solved).length;
+        <PageHead subTitle={t("categories.pick")} title={t("categories.all")} />
+        {api.challenges.map(i => {
+            let solved = i.challenges.filter(j => j.solved).length;
 
-                return <Leader key={i.id} link={"/campaign/" + i.id} green={solved === i.challenges.length}
-                    sub={solved === i.challenges.length ? t("categories.finished") :
-                        solved === 0 ? t("categories.none") :
-                            t("categories.some", { count: i.challenges.length, total: solved })}>
-                    {i.name}
-                </Leader>;
-            })}
-        </SBTSection>
+            return <Leader key={i.id} link={"/campaign/" + i.id} green={solved === i.challenges.length}
+                sub={solved === i.challenges.length ? t("categories.finished") :
+                    solved === 0 ? t("categories.none") :
+                        t("categories.some", { count: i.challenges.length, total: solved })}>
+                {i.name}
+            </Leader>;
+        })}
     </Page>;
 };
 
@@ -120,11 +119,13 @@ export default () => {
     const edit = location.hash === "#edit" && api.user && api.user.is_staff;
 
     if (tabId === "new" && api.user.is_staff)
-        return <Page><SBTSection key={"anc"} title={t("challenge.new_cat")} noHead>
-            <Section title={t("challenge.new_cat")}>
-                <ANC anc={true} />
-            </Section>
-        </SBTSection></Page>;
+        return <Page>
+            <Row>
+                <Card header={t("challenge.new_cat")}>
+                    <ANC anc={true} />
+                </Card>
+            </Row>
+        </Page>;
     else if (!tabId) {
         return <CategoryList />;
     }
@@ -164,23 +165,22 @@ export default () => {
         {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
-        <SBTSection key={tab.id} subTitle={tab.description} back={<>
+        <PageHead subTitle={tab.description} back={<>
             <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
-        </>} title={tab.name}>
-            {api.user.is_staff && <FlexRow className={"campEdit"} right>
-                {edit ? <>
-                    <Button key={"edD"} className={"campUnderEditButton"} click={() => setAnc(tab)}>
-                        {t("edit_details")}
-                    </Button>
-                    <Button key={"edS"} className={"campEditButton"} to={"#"} warning>
-                        {t("edit_stop")}
-                    </Button>
-                </> : <Button key={"edE"} className={"campEditButton"} to={"#edit"} warning>
-                        {t("edit")}
-                    </Button>}
-            </FlexRow>}
-            {!api.user.team && <FlashText warning>{t("campaign.no_team")}</FlashText>}
-            <div className={"campInner"}>{challengeTab}</div>
-        </SBTSection>
+        </>} title={tab.name} />
+        {api.user.is_staff && <Row className={"campEdit"} right>
+            {edit ? <>
+                <Button key={"edD"} className={"campUnderEditButton"} click={() => setAnc(tab)}>
+                    {t("edit_details")}
+                </Button>
+                <Button key={"edS"} className={"campEditButton"} to={"#"} danger>
+                    {t("edit_stop")}
+                </Button>
+            </> : <Button key={"edE"} className={"campEditButton"} to={"#edit"} danger>
+                    {t("edit")}
+                </Button>}
+        </Row>}
+        {!api.user.team && <FlashText danger>{t("campaign.no_team")}</FlashText>}
+        <div className={"campInner"}>{challengeTab}</div>
     </Page>;
 };

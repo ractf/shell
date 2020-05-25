@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, FlexRow, Checkbox, Button, Select, HR, SBTSection, Link, Tab,
+    Form, Input, Row, Checkbox, Button, Select, HR, PageHead, Link, Tab,
     TabbedView, FlashText, FormGroup
 } from "@ractf/ui-kit";
 import { plugins, apiEndpoints, appContext } from "ractf";
@@ -61,9 +61,9 @@ const MetadataEditor = ({ challenge, category, save }) => {
 
     return <div style={{ width: "100%" }}><Form handle={saveEdit}>
         {fields}
-        <FlexRow>
+        <Row>
             <Button submit>Save Edit</Button>
-        </FlexRow>
+        </Row>
     </Form></div>;
 };
 
@@ -91,16 +91,16 @@ const HintEditor = ({ challenge }) => {
     return <>
         <div className={"challengeLinkGroup"}>
             {!challenge.hints || challenge.hints.length === 0
-                ? <FlashText warning>No hints added yet!</FlashText>
+                ? <FlashText danger>No hints added yet!</FlashText>
                 : challenge.hints.map(hint =>
                     <Hint key={hint.id} points={hint.penalty} name={hint.name} id={hint.id} body={hint.text} isEdit />
                 )
             }
         </div>
 
-        <FlexRow>
+        <Row>
             <Button click={addHint}>Add Hint</Button>
-        </FlexRow>
+        </Row>
     </>;
 };
 
@@ -128,16 +128,16 @@ const FileEditor = ({ challenge }) => {
     return <>
         <div className={"challengeLinkGroup"}>
             {!challenge.files || challenge.files.length === 0
-                ? <FlashText warning>No files added yet!</FlashText>
+                ? <FlashText danger>No files added yet!</FlashText>
                 : challenge.files.map(file =>
                     file && <File key={file.id} name={file.name} url={file.url} id={file.id} size={file.size} isEdit />
                 )
             }
         </div>
 
-        <FlexRow>
+        <Row>
             <Button click={addFile}>Add File</Button>
-        </FlexRow>
+        </Row>
     </>;
 };
 
@@ -145,8 +145,11 @@ const FileEditor = ({ challenge }) => {
 export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) => {
     const { t } = useTranslation();
 
-    return <SBTSection title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
-        subTitle={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}>
+    return <>
+        <PageHead
+            title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
+            back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
+        />
         <br />
         <TabbedView>
             <Tab label={t("editor.challenge")}>
@@ -166,14 +169,14 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                             placeholder={t("editor.chal_brief")} />
                     </FormGroup>
 
-                    <FlexRow>
+                    <Row>
                         <Checkbox checked={challenge.hidden} name={"hidden"}>
                             {t("editor.hide_challenge")}
                         </Checkbox>
                         <Checkbox checked={challenge.auto_unlock} name={"autoUnlock"}>
                             {t("editor.auto_unlock")}
                         </Checkbox>
-                    </FlexRow>
+                    </Row>
 
                     <FormGroup htmlFor={"challenge_type"} label={t("editor.chal_type")}>
                         <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
@@ -193,25 +196,25 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                         val={JSON.stringify(challenge.flag_metadata)} />
                     </FormGroup>
 
-                    <FlexRow>
-                        {!isCreator && <Button click={removeChallenge} warning>{t("editor.remove")}</Button>}
+                    <Row>
+                        {!isCreator && <Button click={removeChallenge} danger>{t("editor.remove")}</Button>}
                         <Button submit>{isCreator ? t("editor.create") : t("editor.save")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
             </Tab>
             <Tab label={t("editor.files")}>
                 {isCreator 
-                    ? <FlashText warning bold>Cannot add files to non-existant challenge.</FlashText>
+                    ? <FlashText danger>Cannot add files to non-existant challenge.</FlashText>
                     : <FileEditor challenge={challenge} />}
             </Tab>
             <Tab label={t("editor.hints")}>
                 {isCreator
-                    ? <FlashText warning bold>Cannot add hints to non-existant challenge.</FlashText>
+                    ? <FlashText danger>Cannot add hints to non-existant challenge.</FlashText>
                     : <HintEditor challenge={challenge} />}
             </Tab>
             <Tab label={t("editor.metadata")}>
                 <MetadataEditor category={category} challenge={challenge} save={saveEdit} />
             </Tab>
         </TabbedView>
-    </SBTSection>;
+    </>;
 };

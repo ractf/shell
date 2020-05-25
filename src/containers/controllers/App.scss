@@ -3,12 +3,12 @@
 
 
 $base: (
-    background: $back_800,
-    color: $white_100
+    background: map-get($colours, "white"),
+    color: map-get($colours, "black")
 );
 $link: (
-    color: $white_300,
-    hover: $white_400
+    color: #00f,
+    hover: #008
 );
 
 
@@ -32,8 +32,7 @@ body {
 
 code {
     text-align: left;
-    background-color: $back_700;
-    color: $white_200;
+    background-color: $back_lift;
     font-family: $monoStack;
     padding: .2em .4em;
     margin: 0 2px;
@@ -82,7 +81,7 @@ ul > li {
 }
 
 b {
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .redacted {
@@ -181,8 +180,8 @@ b {
 }
 
 .eventPopup {
-    background-color: $bg_d1;
-    border: 1px solid $bg_l1;
+    background-color: $back_850;
+    border: 1px solid $back_600;
     display: inline-block;
     width: 300px;
     margin-top: 16px;
@@ -199,7 +198,7 @@ b {
     z-index: 10000;
 
     &>div {
-        background-color: $bg_d1;
+        background-color: $back_850;
         display: inline-block;
         width: 300px;
         margin-top: 16px;

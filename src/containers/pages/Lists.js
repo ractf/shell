@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { BrokenShards } from "./ErrorPages";
 
 import {
-    Page, Table, FormError, SectionTitle2, Button, FlexRow
+    Page, Table, FormError, Button, Row, H2
 } from "@ractf/ui-kit";
 import { usePaginated, ENDPOINTS } from "ractf";
 
@@ -18,7 +18,7 @@ export const TeamsList = () => {
     return <Page
         title={t("team_plural")} vCentre={state.error}>
         <div style={{ textAlign: "center" }}>
-            <SectionTitle2>{t("lists.all_teams")}</SectionTitle2>
+            <H2>{t("lists.all_teams")}</H2>
             <br />
         </div>
         {state.error ? <>
@@ -28,11 +28,11 @@ export const TeamsList = () => {
             <BrokenShards />
         </> : <>
             <Table headings={[t("team"), t("members")]} data={
-                state.data.map(x => [x.name, x.members, "/team/" + x.id])
+                state.data.map(x => [x.name, x.members, { link: "/team/" + x.id }])
             } />
-            {state.hasMore && <FlexRow>
+            {state.hasMore && <Row>
                 <Button disabled={state.loading} click={next}>Load More</Button>
-            </FlexRow>}
+            </Row>}
         </>}
     </Page>;
 };
@@ -46,7 +46,7 @@ export const UsersList = () => {
     return <Page
         title={t("user_plural")} vCentre={!!state.error}>
         <div style={{ textAlign: "center" }}>
-            <SectionTitle2>{t("lists.all_users")}</SectionTitle2>
+            <H2>{t("lists.all_users")}</H2>
             <br />
         </div>
         {state.error ? <>
@@ -56,11 +56,11 @@ export const UsersList = () => {
             <BrokenShards />
         </> : <>
             <Table headings={[t("name"), t("team")]} data={
-                state.data.map(x => [x.username, x.team_name, "/profile/" + x.id])
+                state.data.map(x => [x.username, x.team_name, { link: "/profile/" + x.id }])
             } />
-            {state.hasMore && <FlexRow>
+            {state.hasMore && <Row>
                 <Button disabled={state.loading} click={next}>Load More</Button>
-            </FlexRow>}
+            </Row>}
         </>}
     </Page>;
 };

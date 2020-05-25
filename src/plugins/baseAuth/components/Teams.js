@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Redirect } from "react-router-dom";
 
 import {
-    Form, FormError, Page, SectionTitle2, HR, Input, Button, FlexRow,
-    SubtleText, Link, FormGroup
+    Form, FormError, Page, HR, Input, Button, Row,
+    SubtleText, Link, FormGroup, H2
 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints } from "ractf";
 import { Wrap } from "./Parts";
@@ -38,16 +38,16 @@ export const JoinTeam = () => {
     return <Page vCentre>
         <Wrap>{success ?
             <>
-                <SectionTitle2>{t("team_wiz.joined")}</SectionTitle2>
+                <H2>{t("team_wiz.joined")}</H2>
                 <HR />
                 <div>{t("team_wiz.next")}</div>
 
-                <FlexRow>
+                <Row>
                     <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
                     <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
-                </FlexRow>
+                </Row>
             </> : <>
-                <SectionTitle2>{t("join_a_team")}</SectionTitle2>
+                <H2>{t("join_a_team")}</H2>
                 <SubtleText>
                     {t("team_wiz.did_you_want_to")}
                     <Link to={"/team/new"}>{t("team_wiz.create_a_team")}</Link>
@@ -62,9 +62,9 @@ export const JoinTeam = () => {
 
                     {message && <FormError>{message}</FormError>}
 
-                    <FlexRow right>
+                    <Row right>
                         <Button large submit>{t("team_wiz.join")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
             </>}
 
@@ -104,16 +104,16 @@ export const CreateTeam = () => {
     return <Page vCentre>
         <Wrap>{success ?
             <>
-                <SectionTitle2>{t("team_wiz.created")}</SectionTitle2>
+                <H2>{t("team_wiz.created")}</H2>
                 <HR />
                 <div>{t("team_wiz.next")}</div>
 
-                <FlexRow>
+                <Row>
                     <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
                     <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
-                </FlexRow>
+                </Row>
             </> : <>
-                <SectionTitle2>{t("create_a_team")}</SectionTitle2>
+                <H2>{t("create_a_team")}</H2>
                 <SubtleText>
                     {t("team_wiz.did_you_want_to")}
                     <Link to={"/team/join"}>{t("team_wiz.join_a_team")}</Link>
@@ -129,9 +129,9 @@ export const CreateTeam = () => {
 
                     {message && <FormError>{message}</FormError>}
 
-                    <FlexRow right>
+                    <Row right>
                         <Button large submit>{t("team_wiz.create")}</Button>
-                    </FlexRow>
+                    </Row>
                 </Form>
             </>}
         </Wrap>

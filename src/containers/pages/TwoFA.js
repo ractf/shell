@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import QRCode from "qrcode.react";
 
 import {
-    Page, FlexRow, Button, Spinner, SectionTitle2, TextBlock, FormError
+    Page, Row, Button, Spinner, TextBlock, FormError, H2
 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, appContext } from "ractf";
 
@@ -65,61 +65,61 @@ export default () => {
 
     return <Page title={t("2fa.2fa")} vCentre>
         {page === 0 ? <>
-            <FlexRow>
+            <Row>
                 {api.user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
-            </FlexRow>
-            <FlexRow>
+            </Row>
+            <Row>
                 <b>{t("2fa.no_remove_warning")}</b>
-            </FlexRow>
+            </Row>
 
-            <FlexRow>
+            <Row>
                 <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
                 <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
-            </FlexRow>
+            </Row>
         </> : page === 1 ? <>
             {t("2fa.enabling")}
             <Spinner />
         </> : page === 2 ? <>
-            <FlexRow>
-                <SectionTitle2>{t("2fa.finalise")}</SectionTitle2>
-            </FlexRow>
-            <FlexRow>
+            <Row>
+                <H2>{t("2fa.finalise")}</H2>
+            </Row>
+            <Row>
                 {t("2fa.please_scan_qr")}
-            </FlexRow>
-            <FlexRow>
+            </Row>
+            <Row>
                 <QRCode renderAs={"svg"} size={128} fgColor={"#161422"} value={buildURI(secret)} includeMargin />
-            </FlexRow>
-            <FlexRow>
+            </Row>
+            <Row>
                 {t("2fa.unable_to_qr")}
-            </FlexRow>
-            <FlexRow>
+            </Row>
+            <Row>
                 <TextBlock>
                     {formatSecret(secret)}
                 </TextBlock>
-            </FlexRow>
+            </Row>
 
-            {message && <FlexRow><FormError>{message}</FormError></FlexRow>}
+            {message && <Row><FormError>{message}</FormError></Row>}
 
-            <FlexRow>
+            <Row>
                 <Button click={faPrompt}>{t("2fa.got_it")}</Button>
-            </FlexRow>
+            </Row>
         </> : page === 3 ? <>
-            <FlexRow>
-                <SectionTitle2>{t("2fa.congratulations")}</SectionTitle2>
-            </FlexRow>
-            <FlexRow>
+            <Row>
+                <H2>{t("2fa.congratulations")}</H2>
+            </Row>
+            <Row>
                 {t("2fa.setup")}
-            </FlexRow>
-            <FlexRow>
+            </Row>
+            <Row>
                 <Button to={"/"}>Yay!</Button>
-            </FlexRow>
+            </Row>
         </> : <>
-            <FlexRow>
+            <Row>
                 {t("2fa.error")}
-            </FlexRow>
-            <FlexRow>
+            </Row>
+            <Row>
                 <Button click={() => setPage(0)}>{t("2fa.restart")}</Button>
-            </FlexRow>
+            </Row>
         </>}
     </Page>;
 };
