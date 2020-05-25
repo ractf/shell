@@ -83,7 +83,7 @@ export default () => {
     const formatBackupCodes = codes => {
         let res = "";
         codes.forEach((code) => {
-            res += code + (code.used ? " [Used]\n" : "\n");
+            res += code;
         });
         return res;
     };
