@@ -81,15 +81,11 @@ export default () => {
     };
 
     const formatBackupCodes = codes => {
-        let res = "";
-        codes.forEach((code) => {
-            res += code;
-        });
-        return res;
+        return codes.join("\n");
     };
 
     const downloadBackupCodes = codes => {
-        downloadText(formatBackupCodes(codes), "backup_codes_ractf.txt");
+        downloadText(formatBackupCodes(codes), "ractf_backup_codes.txt");
     };
 
     return <Page title={t("2fa.2fa")} vCentre>
