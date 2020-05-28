@@ -526,8 +526,8 @@ class APIClass extends Component {
         }
     };
 
-    modifyUser = (userId, data) => this.patch(BASE_URL + ENDPOINTS.USER + userId, data);
-    modifyTeam = (teamId, data) => this.patch(BASE_URL + ENDPOINTS.TEAM + teamId, data);
+    modifyUser = (userId, data) => this.patch(ENDPOINTS.USER + userId, data);
+    modifyTeam = (teamId, data) => this.patch(ENDPOINTS.TEAM + teamId, data);
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
