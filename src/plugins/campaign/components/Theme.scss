@@ -8,22 +8,22 @@ $nodeMargin: 5%;
 $iconSize: 100%;
 
 $node: (
-    locked: $back_600,
-    unlocked: $back_300,
-    done: #6b6
+    locked: map-get($colours, "black"),
+    unlocked: map-get($colours, "black"),
+    done: map-get($colours, "green")
 );
 $node_hover: (
-    unlocked: $back_600,
-    completed: $back_700,
-    done: #66bb6633
+    unlocked: rgba(map-get($colours, "black"), .1),
+    completed: rgba(map-get($colours, "black"), .1),
+    done: rgba(map-get($colours, "green"), .1)
 );
 $node_text: (
-    locked: $back_600,
-    unlocked: $white_200,
-    done: $white_200
+    locked: map-get($colours, "black"),
+    unlocked: map-get($colours, "black"),
+    done: map-get($colours, "black")
 );
 $lock_color: (
     locked: $back_600,
     unlocked: $back_300,
-    done: #6b6
+    done: map-get($colours, "green")
 );

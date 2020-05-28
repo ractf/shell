@@ -69,7 +69,7 @@
 
         &:hover,
         &:focus {
-            background-color: rgba(map-get($node_hover, "unlocked"), 0.33);
+            background-color: map-get($node_hover, "unlocked");
         }
     }
 

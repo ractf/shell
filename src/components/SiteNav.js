@@ -71,10 +71,10 @@ export default ({ children }) => {
 
     const header = <Wordmark />;
     const footer = <>
-        <div className="sbtfCopy">
+        <footer>
             <img alt={""} src={footerLogo} />
             &copy; Really Awesome Technology Ltd 2020
-        </div>
+        </footer>
         <Link to="/">
             {t("footer.home")}
         </Link> - <Link to="/privacy">

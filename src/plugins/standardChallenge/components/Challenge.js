@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Button, Input, TextBlock, Form, FormError, PageHead, Link, Row, FlashText,
-    Markdown
+    Markdown, Badge
 } from "@ractf/ui-kit";
 import { appContext, apiEndpoints, apiContext, plugins } from "ractf";
 
@@ -185,8 +185,8 @@ export default ({ challenge, category, rightComponent }) => {
     </>;
 
     let tags = <>
-        <div className={"challengeTag"}>{category.name}</div>
-        <div className={"challengeTag"}>{challenge.author}</div>
+        <Badge primary>{category.name}</Badge>
+        <Badge primary>{challenge.author}</Badge>
     </>;
 
     let solveMsg = (challenge.first_blood_name
@@ -198,7 +198,7 @@ export default ({ challenge, category, rightComponent }) => {
             <PageHead
                 subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
                 back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
-                title={<span className={"challengeTags"}><span>{challenge.name}</span>{tags}</span>}
+                title={challenge.name} tags={tags}
             />
             {chalContent}
         </>

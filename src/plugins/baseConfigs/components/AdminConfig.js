@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 
 import {
-    Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead
+    Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead,
+    Column
 } from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, appContext, useApi, plugins, ENDPOINTS } from "ractf";
 
@@ -41,11 +42,18 @@ export default () => {
 
     let fields = [];
     let stack = [];
+    let stack2 = [];
 
     const flushStack = () => {
         if (stack.length) {
-            fields.push(<Row left key={fields.length}>{stack.map(i => i[0])}</Row>);
+            stack2.push(<Row left key={stack2.length}>{stack.map(i => i[0])}</Row>);
             stack = [];
+        }
+    };
+    const flushStack2 = () => {
+        if (stack2.length) {
+            fields.push(<Column key={fields.length} width={6}>{stack2}</Column>);
+            stack2 = [];
         }
     };
 
@@ -56,16 +64,16 @@ export default () => {
                     flushStack();
                 if (key === "") {
                     if (fields.length)
-                        fields.push(<HR key={fields.length} />);
+                        stack2.push(<HR key={stack2.length} />);
+                    flushStack2();
                     if (name)
-                        fields.push(<div key={fields.length}>{name}</div>);
+                        stack2.push(<div key={stack2.length}>{name}</div>);
                     return;
                 }
                 switch (type) {
                     case "string":
                     case "int":
                     case "float":
-                        if (type === "string") flushStack();
                         let format = (type === "string") ? null : (type === "int") ? /\d+/ : /\d+(\.\d+)?/;
                         stack.push([<FormGroup key={stack.length} label={name}>
                             <Input placeholder={name} val={adminConfig[key]} format={format} name={key} />
@@ -86,13 +94,16 @@ export default () => {
                 }
             });
             flushStack();
+            flushStack2();
         });
     }
 
     return <>
         <PageHead title={t("admin.configuration")} />
         <Form handle={updateConfig}>
+            <Row>
             {fields}
+            </Row>
             <Row>
                 <Button submit>Save</Button>
             </Row>

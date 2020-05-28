@@ -38,7 +38,7 @@
     }
     .teamMemberico {
         font-size: 0.9em;
-        color: $fg;
+        color: map-get($colours, "white");
 
         svg {
             margin-bottom: -0.125em;
@@ -154,7 +154,7 @@
 }
 .userSolve {
     padding: 12px 16px;
-    background-color: rgba($back_lift, 0.3);
+    background-color: $back_lift;
     margin-bottom: 4px;
     width: 100%;
     text-align: left;

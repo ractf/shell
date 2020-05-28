@@ -79,18 +79,16 @@ export default () => {
             <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
             {state.error && <FormError>{state.error}</FormError>}
         </Form>
-        {state.loading && <Spinner />}
-        {state.results && <>
-            <br />
+        <br />
+        {state.loading && <Row><Spinner /></Row>}
+        {state.results && <Row>
             {state.results.length ? <>
-                {state.more && <><Row>
+                {state.more && <p>
                     Additional results were omitted. Please refine your search.
-                </Row><br /></>}
-                {state.results.map(i => <Leader click={editTeam(i)} key={i.id}>{i.name}</Leader>)}
-            </> : <Row><br />
-                No results found
-            </Row>}
-        </>}
+                </p>}
+                    {state.results.map(i => <Leader click={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+            </> : <p>No results found</p>}
+        </Row>}
         {state.team && <Modal onHide={close}>
             <Form handle={saveTeam(state.team)} locked={state.loading}>
                 <FormGroup label={"Team Name"} htmlFor={"name"}>

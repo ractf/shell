@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import "./Split.scss";
+import { Row, Column } from "@ractf/ui-kit";
 
 
 export default ({ children, ...props }) => {
@@ -23,8 +24,16 @@ export default ({ children, ...props }) => {
             ...props
         });
     }
-    return <div className={(right ? "challengeSplit" : "")}>
-        {showLeft && left && <div className={"challengeLeft"}><div>{left}</div></div>}
-        {showRight && right && <div className={"challengeRight"}><div>{right}</div></div>}
-    </div>;
+
+    const double = (left && showLeft && right && showRight);
+    const wasDouble = (left && right);
+
+    return <Row className={wasDouble && "challengeSplit"}>
+        {showLeft && left && <Column lgWidth={double ? 6 : 12} className={"challengeLeft"}>
+            {left}
+        </Column>}
+        {showRight && right && <Column lgWidth={double ? 6 : 12} className={"challengeRight"}>
+            {right}
+        </Column>}
+    </Row>;
 };

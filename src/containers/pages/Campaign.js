@@ -93,16 +93,18 @@ const CategoryList = () => {
 
     return <Page>
         <PageHead subTitle={t("categories.pick")} title={t("categories.all")} />
-        {api.challenges.map(i => {
-            let solved = i.challenges.filter(j => j.solved).length;
+        <Row>
+            {api.challenges.map(i => {
+                let solved = i.challenges.filter(j => j.solved).length;
 
-            return <Leader key={i.id} link={"/campaign/" + i.id} green={solved === i.challenges.length}
-                sub={solved === i.challenges.length ? t("categories.finished") :
-                    solved === 0 ? t("categories.none") :
-                        t("categories.some", { count: i.challenges.length, total: solved })}>
-                {i.name}
-            </Leader>;
-        })}
+                return <Leader key={i.id} link={"/campaign/" + i.id} green={solved === i.challenges.length}
+                    sub={solved === i.challenges.length ? t("categories.finished") :
+                        solved === 0 ? t("categories.none") :
+                            t("categories.some", { count: i.challenges.length, total: solved })}>
+                    {i.name}
+                </Leader>;
+            })}
+        </Row>
     </Page>;
 };
 

@@ -46,9 +46,11 @@ export default () => {
             <Card header={t("admin.announce.active")}>
                 <Form>{localA ?
                     localA.length ? (
-                        localA.map(i => <Leader key={i.id} sub={i.body} x click={remove(i)}>
-                            {i.title}
-                        </Leader>
+                        localA.map(i => <Row>
+                            <Leader key={i.id} sub={i.body} x click={remove(i)}>
+                                {i.title}
+                            </Leader>
+                        </Row>
                     )) : <label>{t("admin.announce.none")}</label>
                     : <Spinner />
                 }</Form>

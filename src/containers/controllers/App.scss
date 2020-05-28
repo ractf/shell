@@ -18,6 +18,10 @@ $link: (
     font-size: 100%;
 }
 
+p {
+    margin: 0;
+}
+
 body {
     font-family: $fontStack;
     background-color: map-get($base, "background");
@@ -64,6 +68,7 @@ pre > code {
 a, .linkStyle {
     text-decoration: none;
     color: map-get($link, "color");
+    cursor: pointer;
     margin: 0;
     padding: 0;
 
@@ -261,9 +266,9 @@ b {
     border-radius: 2px;
     display: flex;
     align-items: center;
-    background-color: $red_200;
+    background-color: map-get($colours, "red");
     &.less {
-        background-color: #f5954c;
+        background-color: map-get($colours, "yellow");
     }
     color: $back_900;
     font-weight: 600;

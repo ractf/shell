@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import {
     Page, HR, Row, TabbedView, Tab, Button, Form, FormError, Input,
-    Checkbox, FormGroup
+    Checkbox, FormGroup, InputButton
 } from "@ractf/ui-kit";
 import { apiContext, appContext, apiEndpoints, zxcvbn, localConfig } from "ractf";
 
@@ -79,6 +79,7 @@ export default () => {
     };
 
     const changeUsername = ({ name }) => {
+        console.log(name);
         if (!name)
             return setUnError(t("settings.uname_required"));
         if (name === api.user.username)
@@ -144,14 +145,10 @@ export default () => {
 
                 <Form handle={changeUsername}>
                     <FormGroup htmlFor={"name"} label={t("username")}>
-                        <Input name={"name"} val={api.user.username} limit={36}
-                            placeholder={t("username")} />
+                        <InputButton name={"name"} label={t("username")} val={api.user.username}
+                            limit={36} placeholder={t("username")} button={t("save")} submit />
                     </FormGroup>
-
                     {unError && <FormError>{unError}</FormError>}
-                    <Row>
-                        <Button submit>{t("save")}</Button>
-                    </Row>
                 </Form>
                 <HR />
                 <Form handle={changePassword}>

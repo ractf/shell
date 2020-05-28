@@ -73,7 +73,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             app.alert(message);
     };
 
-    return <div className={"mapPartWrap"}>
+    return <>
         <Row>
             <FlashText danger={!hasValidZoom && !selectedLongLat}>
                 {selectedLongLat ? <>
@@ -87,7 +87,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                         </>}
             </FlashText>
         </Row>
-        <div className={"mapWrap"}>
+        <Row className={"mapWrap"}>
             <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>
                 {selectedLongLat && <Marker paylod={1} anchor={selectedLongLat} />}
@@ -104,10 +104,12 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                     </div>
                 </div>
             }
-        </div>
-        <Form handle={jumpToLongLat}>
-            <InputButton format={LAT_LON_RE} name={"jumpTo"} button={"Jump"}
-                placeholder={"Jump to Long,Lat or enter G.Maps URL"} submit />
-        </Form>
-    </div>;
+        </Row>
+        <Row>
+            <Form handle={jumpToLongLat}>
+                <InputButton format={LAT_LON_RE} name={"jumpTo"} button={"Jump"}
+                    placeholder={"Jump to Long,Lat or enter G.Maps URL"} submit />
+            </Form>
+        </Row>
+    </>;
 };
