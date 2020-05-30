@@ -25,6 +25,7 @@ export const ENDPOINTS = {
     VERIFY: "/auth/verify_email/",
     REQUEST_RESET: "/auth/request_password_reset/",
     COMPLETE_RESET: "/auth/password_reset/",
+    CHANGE_PASSWORD: "/auth/change_password/",
 
     CATEGORIES: "/challenges/categories/",
     CHALLENGES: "/challenges/",
@@ -118,6 +119,7 @@ class APIClass extends Component {
             add_2fa: this.add_2fa,
             register: this.register,
             verify_2fa: this.verify_2fa,
+            changePassword: this.changePassword,
             requestPasswordReset: this.requestPasswordReset,
             completePasswordReset: this.completePasswordReset,
 
@@ -594,6 +596,7 @@ class APIClass extends Component {
 
     add_2fa = () => this.post(ENDPOINTS.ADD_2FA);
     verify_2fa = (otp) => this.post(ENDPOINTS.VERIFY_2FA, { otp });
+    changePassword = (password, old_password) => this.post(ENDPOINTS.CHANGE_PASSWORD, { password, old_password });
     requestPasswordReset = (email) => this.post(ENDPOINTS.REQUEST_RESET, { email });
     verify = (uid, token) => {
         try {

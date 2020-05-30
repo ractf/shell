@@ -70,7 +70,7 @@ export default () => {
         if (strength.score < 3)
             return setPwError((strength.feedback.warning || t("auth.pass_weak")));
 
-        endpoints.modifyUser("self", { oPass: old, nPass: new1 }).then(() => {
+        endpoints.changePassword(new1, old).then(() => {
             app.alert(t("settings.pass_changed"));
             endpoints.logout();
         }).catch(e => {
