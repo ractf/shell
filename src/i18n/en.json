@@ -170,7 +170,7 @@
         "export_chal": "Export challenge",
         "export_sb": "Export scoreboards",
         "export_players": "Export players list",
-        "export_teams": "export teams list"
+        "export_teams": "Export teams list"
     },
     "team_wiz": {
         "name_missing": "Team name missing",
