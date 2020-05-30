@@ -72,7 +72,6 @@ export default () => {
 
         endpoints.changePassword(new1, old).then(() => {
             app.alert(t("settings.pass_changed"));
-            endpoints.logout();
         }).catch(e => {
             setPwError(endpoints.getError(e));
         });
@@ -86,7 +85,6 @@ export default () => {
 
         endpoints.modifyUser("self", { name: name }).then(() => {
             app.alert(t("settings.uname_changed"));
-            endpoints.logout();
         }).catch(e => {
             setUnError(endpoints.getError(e));
         });
