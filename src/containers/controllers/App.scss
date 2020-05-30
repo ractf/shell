@@ -2,10 +2,6 @@
 @import "@ractf/ui-kit/Fonts.scss";
 
 
-$base: (
-    background: map-get($colours, "white"),
-    color: map-get($colours, "black")
-);
 $link: (
     color: #00f,
     hover: #008
@@ -24,8 +20,8 @@ p {
 
 body {
     font-family: $fontStack;
-    background-color: map-get($base, "background");
-    color: map-get($base, "color");
+    background-color: $background-color;
+    color: $color;
     min-height: 100%;
     width: 100%;
     margin: 0;

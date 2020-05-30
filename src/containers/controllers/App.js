@@ -6,7 +6,7 @@ import Announcement from "../../components/Announcement";
 import SiteNav from "../../components/SiteNav";
 
 import {
-    ModalPrompt, ProgressBar, Scrollbar, Modal, Header
+    ModalPrompt, ProgressBar, Scrollbar, Modal
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
@@ -102,6 +102,7 @@ const WSSpine = () => {
 };
 
 const LockWarn = () => {
+    return null;
     const api = useContext(apiContext);
     if (!api.countdown.passed.registration_open)
         return <div className={"lockWarning"}>
@@ -231,7 +232,6 @@ const App = React.memo(() => {
                 Please visit settings to finish configuration!
                 </div> : null*/}
 
-            <Header />
             <SiteNav>
                 {<Routes />}
             </SiteNav>

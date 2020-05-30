@@ -1,14 +1,47 @@
 import React, { useContext } from "react";
 import { useTranslation } from 'react-i18next';
 
-import { Link, SideNav } from "@ractf/ui-kit";
+import {
+    Link, SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
+    FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
+    NavMenu
+} from "@ractf/ui-kit";
 import { apiContext, apiEndpoints, plugins } from "ractf";
 import Wordmark from "./Wordmark";
+import Header from "./Header";
 
 import footerLogo from "../static/spine.svg";
 
+const USE_HEAD_NAV = true;
 
-export default ({ children }) => {
+
+const HeaderNav = () => {
+    const api = useContext(apiContext);
+
+    return <NavBar danger>
+        <NavBrand><b>RACTF</b></NavBrand>
+        <NavCollapse>
+            <NavLink to={"/users"}>Users</NavLink>
+            <NavLink to={"/teams"}>Teams</NavLink>
+            <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
+            <NavLink to={"/campaign"}>Challenges</NavLink>
+            <NavGap />
+            {api.user && <>
+                <NavLink to={"/profile/me"}>Profile</NavLink>
+                <NavLink to={"/team/me"}>Team</NavLink>
+                <NavLink to={"/settings"}>Settings</NavLink>
+                <NavLink to={"/logout"}>Logout</NavLink>
+            </>}
+            {api.user && api.user.is_staff && <NavMenu name={"Admin"}>
+                {Object.entries(plugins.adminPage).map(([key, value]) => (
+                    <NavMenuLink key={key} to={"/admin/" + key}>{value.sidebar}</NavMenuLink>
+                ))}
+            </NavMenu>}
+        </NavCollapse>
+    </NavBar>;
+};
+
+const SideBarNav = ({ children }) => {
     const endpoints = useContext(apiEndpoints);
     const api = useContext(apiContext);
     const { t } = useTranslation();
@@ -88,7 +121,37 @@ export default ({ children }) => {
         </Link>
     </>;
 
-    return <SideNav header={header} footer={footer} items={menu}>
-        {children}
-    </SideNav>;
+    return <>
+        <Header />
+        <SideNav header={header} footer={footer} items={menu}>
+            {children}
+        </SideNav>
+    </>;
 };
+
+export default ({ children }) => {
+    if (USE_HEAD_NAV)
+        return <SiteWrap>
+            <HeaderNav />
+            <Container children={children} />
+            <Footer>
+                <FootRow main danger>
+                    <FootCol title={"RACTF"}>
+                        <FootLink to={"/home"}>Home</FootLink>
+                        <FootLink to={"/privacy"}>Privacy Policy</FootLink>
+                        <FootLink to={"/conduct"}>Terms of Use</FootLink>
+                    </FootCol>
+                    <FootCol title={"For Developers"}>
+                        <FootLink to={"/ui"}>UI Framework</FootLink>
+                        <FootLink to={"/debug"}>Debug</FootLink>
+                    </FootCol>
+                </FootRow>
+                <FootRow center slim darken>
+                    &copy; Really Awesome Technology Ltd 2020
+                </FootRow>
+            </Footer>
+        </SiteWrap>;
+    return <SideBarNav children={children} />;
+};
+
+

@@ -8,19 +8,19 @@ $nodeMargin: 5%;
 $iconSize: 100%;
 
 $node: (
-    locked: map-get($colours, "black"),
-    unlocked: map-get($colours, "black"),
+    locked: $color,
+    unlocked: $color,
     done: map-get($colours, "green")
 );
 $node_hover: (
-    unlocked: rgba(map-get($colours, "black"), .1),
-    completed: rgba(map-get($colours, "black"), .1),
+    unlocked: rgba($color, .1),
+    completed: rgba($color, .1),
     done: rgba(map-get($colours, "green"), .1)
 );
 $node_text: (
-    locked: map-get($colours, "black"),
-    unlocked: map-get($colours, "black"),
-    done: map-get($colours, "black")
+    locked: $color,
+    unlocked: $color,
+    done: $color
 );
 $lock_color: (
     locked: $back_600,
