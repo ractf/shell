@@ -260,8 +260,6 @@ const App = React.memo(() => {
                 <ProgressBar progress={progressBar.progress} />
             </Modal>}
 
-            <WSSpine />
-
             {Object.entries(plugins.mountWithinApp).map(([key, value]) => (
                 React.createElement(value.component, { key })
             ))}
