@@ -260,13 +260,19 @@ class APIClass extends Component {
         return "Unknown error occurred.";
     };
 
+    prefixBase = (url) => {
+        if (url.indexOf("https://") === 0 || url.indexOf("http://") === 0)
+            return url;
+        return BASE_URL + url;
+    }
+
     abortableGet = (url) => {
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
 
         return [new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 cancelToken: source.token,
                 method: "get",
                 headers: this._getHeaders(),
@@ -279,7 +285,7 @@ class APIClass extends Component {
     get = url => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "get",
                 headers: this._getHeaders(),
             }).then(response => {
@@ -291,7 +297,7 @@ class APIClass extends Component {
     post = (url, data) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "post",
                 data: data,
                 headers: this._getHeaders(),
@@ -304,7 +310,7 @@ class APIClass extends Component {
     put = (url, data) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "put",
                 data: data,
                 headers: this._getHeaders(),
@@ -317,7 +323,7 @@ class APIClass extends Component {
     patch = (url, data) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "patch",
                 data: data,
                 headers: this._getHeaders(),
@@ -330,7 +336,7 @@ class APIClass extends Component {
     delete = (url) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "delete",
                 headers: this._getHeaders(),
             }).then(response => {
