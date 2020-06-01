@@ -95,7 +95,7 @@ export default () => {
                     <Input val={state.member.reddit} name={"reddit"} />
                 </FormGroup>
                 <FormGroup label={"Twitter"} htmlFor={"twitter"}>
-                    <Input val={state.member.twitter} name={"twitte"} />
+                    <Input val={state.member.twitter} name={"twitter"} />
                 </FormGroup>
                 <FormGroup label={"Email"} htmlFor={"email"}>
                     <Input val={state.member.email} name={"email"} />
