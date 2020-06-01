@@ -282,71 +282,71 @@ class APIClass extends Component {
         }), source.cancel];
     };
 
-    get = url => {
+    get = (url, headers) => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.appendSlash(this.prefixBase(url)),
                 method: "get",
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    post = (url, data) => {
+    post = (url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.appendSlash(this.prefixBase(url)),
                 method: "post",
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    put = (url, data) => {
+    put = (url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.appendSlash(this.prefixBase(url)),
                 method: "put",
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    patch = (url, data) => {
+    patch = (url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.appendSlash(this.prefixBase(url)),
                 method: "patch",
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    delete = (url) => {
+    delete = (url, headers) => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.appendSlash(this.prefixBase(url)),
                 method: "delete",
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    _getHeaders = () => {
-        let headers = {};
+    _getHeaders = (extra) => {
+        let headers = extra ? {...extra} : {};
         if (localStorage.getItem("token"))
             headers.Authorization = 'Token ' + localStorage.getItem("token");
         return headers;

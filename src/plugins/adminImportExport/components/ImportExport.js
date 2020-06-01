@@ -100,7 +100,7 @@ export default () => {
         let data;
 
         do {
-            data = (await endpoints.get(route)).d;
+            data = (await endpoints.get(route, {"X-Exporting": "true"})).d;
             results = [...results, ...data.results];
             route = data.next;
         } while (route);
