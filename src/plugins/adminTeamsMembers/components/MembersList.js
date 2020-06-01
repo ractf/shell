@@ -81,7 +81,7 @@ export default () => {
                     <FlexRow left>
                         <Checkbox checked={state.member.is_active} name={"is_active"}>Active</Checkbox>
                         <Checkbox checked={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
-                        <Checkbox checked={state.member.is_visible} name={"is_active"}>Visible</Checkbox>
+                        <Checkbox checked={state.member.is_visible} name={"visible"}>Visible</Checkbox>
                     </FlexRow>
                 </FormGroup>
                 <FormGroup label={"Bio"} htmlFor={"bio"}>
