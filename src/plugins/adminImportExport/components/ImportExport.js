@@ -34,7 +34,7 @@ export default () => {
             let row = "";
             rowData.forEach(cellData => {
                 if (row) row += ",";
-                let cell = JSON.stringify(cellData.toString());
+                let cell = JSON.stringify(cellData ? cellData.toString() : "");
                 if (cell[1] === "=")
                     cell = `=${cell}`;
                 row += cell;
@@ -96,17 +96,14 @@ export default () => {
     };
 
     const fullyPaginate = async route => {
-        let page = 0;
         let results = [];
         let data;
 
         do {
-            let path = (page === 0) ? route : (route + "?page=" + page);
-
-            data = (await endpoints.get(path)).d;
+            data = (await endpoints.get(route)).d;
             results = [...results, ...data.results];
-            page++;
-        } while (data.next);
+            route = data.next;
+        } while (route);
 
         return results;
     };
@@ -119,7 +116,7 @@ export default () => {
                 i.team, i.points, i.leaderboard_points,
                 i.reddit, i.twitter, i.discord, i.discordid,
                 i.bio,
-                i.solves.map(j => j.id).join(",")
+                i.solves ? i.solves.map(j => j.id).join(",") : ""
             ]);
             downloadCSV([[
                 "id", "username", "email", "email verified", "date joined",
@@ -136,8 +133,8 @@ export default () => {
             data = data.map(i => [
                 i.id, i.name, i.is_visible,
                 i.owner, i.password,
-                i.members.map(j => j.id).join(","),
-                i.solves.map(j => j.id).join(",")
+                i.members ? i.members.map(j => j.id).join(",") : "",
+                i.solves ? i.solves.map(j => j.id).join(",") : ""
             ]);
             downloadCSV([[
                 "id", "name", "visible", "owner", "password", "members", "solves"

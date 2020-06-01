@@ -77,13 +77,13 @@ export default () => {
         });
     };
 
-    const changeUsername = ({ name }) => {
-        if (!name)
+    const changeUsername = ({ username }) => {
+        if (!username)
             return setUnError(t("settings.uname_required"));
-        if (name === api.user.username)
+        if (username === api.user.username)
             return setUnError(t("settings.uname_unchanged"));
 
-        endpoints.modifyUser("self", { name: name }).then(() => {
+        endpoints.modifyUser("self", { username: username }).then(() => {
             app.alert(t("settings.uname_changed"));
         }).catch(e => {
             setUnError(endpoints.getError(e));
@@ -141,8 +141,8 @@ export default () => {
                 }
 
                 <Form handle={changeUsername}>
-                    <FormGroup htmlFor={"name"} label={t("username")}>
-                        <Input name={"name"} val={api.user.username} limit={36}
+                    <FormGroup htmlFor={"username"} label={t("username")}>
+                        <Input name={"username"} val={api.user.username} limit={36}
                             placeholder={t("username")} />
                     </FormGroup>
 
