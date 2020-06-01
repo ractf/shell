@@ -32,7 +32,7 @@ export default () => {
 
     window.td = teamData;
 
-    if (api.user.team === null && team === "me") return <Redirect to={"/noteam"} />;
+    if (api.team === null && team === "me") return <Redirect to={"/noteam"} />;
 
     const { t } = useTranslation();
 
