@@ -20,7 +20,7 @@ const makeOwner = (api, endpoints, app, member, t) => {
             </>), small: true
         }).then(() => {
             // Kick 'em
-            endpoints.modifyTeam(api.team.id, { captain: member.id }).then(() => {
+            endpoints.modifyTeam("self", { captain: member.id }).then(() => {
                 app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 endpoints.setup();
             }).catch(e => {
