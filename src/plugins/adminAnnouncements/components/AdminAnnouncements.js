@@ -47,7 +47,7 @@ export default () => {
                 <Form>{localA ?
                     localA.length ? (
                         localA.map(i => <Row>
-                            <Leader key={i.id} sub={i.body} x click={remove(i)}>
+                            <Leader key={i.id} sub={i.body} x onClick={remove(i)}>
                                 {i.title}
                             </Leader>
                         </Row>

@@ -86,7 +86,7 @@ export default () => {
                 {state.more && <p>
                     Additional results were omitted. Please refine your search.
                 </p>}
-                    {state.results.map(i => <Leader click={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+                    {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
             </> : <p>No results found</p>}
         </Row>}
         {state.team && <Modal onHide={close}>
@@ -109,7 +109,7 @@ export default () => {
                     {state.team.members.map(i => {
                         let owner = i.id === state.team.owner;
                         return <Leader sub={owner ? "Owner" : ""} none={owner}
-                            click={!owner ? makeOwner(state.team, i) : null}>
+                            onClick={!owner ? makeOwner(state.team, i) : null}>
                             {i.username}
                         </Leader>;
                     })}

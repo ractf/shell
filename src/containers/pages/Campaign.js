@@ -73,7 +73,7 @@ const ANC = ({ hide, anc, modal }) => {
         {error && <FormError>{error}</FormError>}
         <Row>
             {anc.id &&
-                <Button danger click={removeCategory}>{t("challenge.remove_cat")}</Button>
+                <Button danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
             }
             <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
         </Row>
@@ -172,7 +172,7 @@ export default () => {
         </>} title={tab.name} />
         {api.user.is_staff && <Row className={"campEdit"} right>
             {edit ? <>
-                <Button key={"edD"} className={"campUnderEditButton"} click={() => setAnc(tab)}>
+                <Button key={"edD"} className={"campUnderEditButton"} onClick={() => setAnc(tab)}>
                     {t("edit_details")}
                 </Button>
                 <Button key={"edS"} className={"campEditButton"} to={"#"} danger>

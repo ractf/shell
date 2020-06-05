@@ -99,7 +99,7 @@ const HintEditor = ({ challenge }) => {
         </div>
 
         <Row>
-            <Button click={addHint}>Add Hint</Button>
+            <Button onClick={addHint}>Add Hint</Button>
         </Row>
     </>;
 };
@@ -136,7 +136,7 @@ const FileEditor = ({ challenge }) => {
         </div>
 
         <Row>
-            <Button click={addFile}>Add File</Button>
+            <Button onClick={addFile}>Add File</Button>
         </Row>
     </>;
 };
@@ -197,7 +197,7 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                     </FormGroup>
 
                     <Row>
-                        {!isCreator && <Button click={removeChallenge} danger>{t("editor.remove")}</Button>}
+                        {!isCreator && <Button onClick={removeChallenge} danger>{t("editor.remove")}</Button>}
                         <Button submit>{isCreator ? t("editor.create") : t("editor.save")}</Button>
                     </Row>
                 </Form>

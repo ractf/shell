@@ -74,7 +74,7 @@ export default () => {
 
             <Row>
                 <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
-                <Button click={startFlow}>{t("2fa.enable_2fa")}</Button>
+                <Button onClick={startFlow}>{t("2fa.enable_2fa")}</Button>
             </Row>
         </> : page === 1 ? <>
             {t("2fa.enabling")}
@@ -101,7 +101,7 @@ export default () => {
             {message && <Row><FormError>{message}</FormError></Row>}
 
             <Row>
-                <Button click={faPrompt}>{t("2fa.got_it")}</Button>
+                <Button onClick={faPrompt}>{t("2fa.got_it")}</Button>
             </Row>
         </> : page === 3 ? <>
             <Row>
@@ -118,7 +118,7 @@ export default () => {
                 {t("2fa.error")}
             </Row>
             <Row>
-                <Button click={() => setPage(0)}>{t("2fa.restart")}</Button>
+                <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
             </Row>
         </>}
     </Page>;

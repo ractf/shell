@@ -6,7 +6,7 @@ import {
     TreeWrap, TreeValue, Checkbox, InputButton, Leader, FormGroup, Card,
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavLink, NavMenu, NavMenuLink, NavItem, NavCollapse,
-    Footer, FootRow, FootCol, FootLink, Column,
+    Footer, FootRow, FootCol, FootLink, Column, Breadcrumbs, Crumb, Form,
 } from "@ractf/ui-kit";
 
 
@@ -45,6 +45,16 @@ const Inner = () => (<NavCollapse>
 </NavCollapse>);
 
 export default () => <Page><Row left>
+    <Form handle={console.log}>
+        <Input name="test" />
+        <Input name="test2" />
+        <Input name="test3" />
+        <Button submit>Submit</Button>
+    </Form>
+    <HR />
+    <HR />
+    <HR />
+    <HR />
     <H1>Really Awesome UI Framework</H1>
     <HR />
     <H2>Nav Bars</H2>
@@ -86,6 +96,12 @@ export default () => <Page><Row left>
         <NavBrand>Danger</NavBrand>
         <Inner />
     </NavBar>
+    <HR />
+    <Breadcrumbs>
+        <Crumb to={"#"}>You</Crumb>
+        <Crumb to={"#"}>Are</Crumb>
+        <Crumb>Here!</Crumb>
+    </Breadcrumbs>
     <HR />
     <H1>Heading 1</H1>
     <H2>Heading 2</H2>

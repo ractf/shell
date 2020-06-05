@@ -190,7 +190,7 @@ const App = React.memo(() => {
 
     // Warning banner
     useEffect(() => {
-        setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
+        //setTimeout(() => { setLoaded(true); }, LOADED_TIMEOUT);
     }, []);
 
     if (consoleMode) return <VimDiv />;

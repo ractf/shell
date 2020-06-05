@@ -323,22 +323,22 @@ export default () => {
             <Card header={t("admin.import")}>
                 <Row>
                     <Button disabled danger>{t("admin.import_ctf")}</Button>
-                    <Button click={importCategory}>{t("admin.import_cat")}</Button>
-                    <Button click={importChal}>{t("admin.import_chal")}</Button>
+                    <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
+                    <Button onClick={importChal}>{t("admin.import_chal")}</Button>
                 </Row>
             </Card>
         </Row>
         <Row>
             <Card header={t("admin.export")}>
                 <Row>
-                    <Button click={exportCTF}>{t("admin.export_ctf")}</Button>
-                    <Button click={exportCat}>{t("admin.export_cat")}</Button>
-                    <Button click={exportChal}>{t("admin.export_chal")}</Button>
+                    <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>
+                    <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
+                    <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
                 </Row>
                 <Row>
-                    <Button click={exportLeaderboard}>{t("admin.export_sb")}</Button>
-                    <Button click={exportPlayers}>{t("admin.export_players")}</Button>
-                    <Button click={exportTeams}>{t("admin.export_teams")}</Button>
+                    <Button onClick={exportLeaderboard}>{t("admin.export_sb")}</Button>
+                    <Button onClick={exportPlayers}>{t("admin.export_players")}</Button>
+                    <Button onClick={exportTeams}>{t("admin.export_teams")}</Button>
                 </Row>
             </Card>
         </Row>

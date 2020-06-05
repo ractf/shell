@@ -31,7 +31,7 @@ export const TeamsList = () => {
                 state.data.map(x => [x.name, x.members, { link: "/team/" + x.id }])
             } />
             {state.hasMore && <Row>
-                <Button disabled={state.loading} click={next}>Load More</Button>
+                <Button disabled={state.loading} onClick={next}>Load More</Button>
             </Row>}
         </>}
     </Page>;
@@ -59,7 +59,7 @@ export const UsersList = () => {
                 state.data.map(x => [x.username, x.team_name, { link: "/profile/" + x.id }])
             } />
             {state.hasMore && <Row>
-                <Button disabled={state.loading} click={next}>Load More</Button>
+                <Button disabled={state.loading} onClick={next}>Load More</Button>
             </Row>}
         </>}
     </Page>;

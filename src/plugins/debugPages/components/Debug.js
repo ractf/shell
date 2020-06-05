@@ -84,8 +84,8 @@ export default () => {
             <code>{cacheLen.toString()} bytes</code> / <code>{cacheDataLen} items</code>
         </div>
         <Row>
-            <Button click={clearCache}>Clear API cache</Button>
-            <Button click={exportData}>Export debug data</Button>
+            <Button onClick={clearCache}>Clear API cache</Button>
+            <Button onClick={exportData}>Export debug data</Button>
         </Row>
         <div>
             <br />

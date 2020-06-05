@@ -68,7 +68,7 @@ export default () => {
                 {state.more && <p>
                     Additional results were omitted. Please refine your search.
                 </p>}
-                    {state.results.map(i => <Leader click={editMember(i)} key={i.id}>{i.username}</Leader>)}
+                    {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
             </> : <p>No results found</p>}
         </Row>}
         {state.member && <Modal onHide={close}>

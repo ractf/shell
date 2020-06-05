@@ -86,7 +86,7 @@ export default () => {
                 <Graph data={userGraphData} />
                 <Table headings={[t("user"), t("point_plural")]} data={userData(uState.data)} />
                 {uState.hasMore && <Row>
-                    <Button disabled={uState.loading} click={uNext}>Load More</Button>
+                    <Button disabled={uState.loading} onClick={uNext}>Load More</Button>
                 </Row>}
             </Tab>
 
@@ -94,7 +94,7 @@ export default () => {
                 <Graph data={teamGraphData} />
                 <Table headings={[t("team"), t("point_plural")]} data={teamData(tState.data)} />
                 {tState.hasMore && <Row>
-                    <Button disabled={tState.loading} click={tNext}>Load More</Button>
+                    <Button disabled={tState.loading} onClick={tNext}>Load More</Button>
                 </Row>}
             </Tab>
         </TabbedView>

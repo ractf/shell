@@ -98,8 +98,8 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                     <div className={"soInner"}>
                         <div className={"soText"}>Location selected. Submit as flag?</div>
                         <Row>
-                            <Button click={() => setSelectedLongLat(null)} lesser>Cancel</Button>
-                            <Button click={() => submitFlag({ flag: selectedLongLat })}>Submit</Button>
+                            <Button onClick={() => setSelectedLongLat(null)} lesser>Cancel</Button>
+                            <Button onClick={() => submitFlag({ flag: selectedLongLat })}>Submit</Button>
                         </Row>
                     </div>
                 </div>

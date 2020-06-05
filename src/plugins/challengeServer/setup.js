@@ -23,7 +23,7 @@ const ChallengeServer = ({ challenge }) => {
         });
     };
 
-    const button = (state.error || !state.instance) ? null : <Button large lesser click={reset}>
+    const button = (state.error || !state.instance) ? null : <Button large lesser onClick={reset}>
         Reset
     </Button>;
 

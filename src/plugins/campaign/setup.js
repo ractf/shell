@@ -85,7 +85,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
         <Row key={y}>{row.map((chal, x) => {
             if (!chal) {
                 if (isEdit)
-                    return <AddNode click={showEditor(emptyChallenge(x, y), chals, true)} key={"add_" + x + "," + y} />;
+                    return <AddNode onClick={showEditor(emptyChallenge(x, y), chals, true)} key={"add_" + x + "," + y} />;
                 return <div className={"campaignSpacer"} key={"spacer_" + x + "," + y} />;
             }
 
