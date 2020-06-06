@@ -126,7 +126,7 @@ export default () => {
                 </Link><br /></>)}
             </div>
             <div className={"userSolves"}>
-                {(!teamData.solves || teamData.solves.length === 0) ? <div className={"noSolves"}>
+                {(!teamData.solves || teamData.solves.filter("Boolean").length === 0) ? <div className={"noSolves"}>
                     {t("teams.no_solves", { name: teamData.name })}
                 </div> : <TabbedView>
                         <Tab label={"Solves"}>
