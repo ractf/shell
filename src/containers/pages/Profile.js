@@ -132,7 +132,7 @@ export default () => {
                 {userData.is_staff &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
-                {(!userData.solves || userData.solves.length === 0) ? <div className={"noSolves"}>
+                {(!userData.solves || userData.solves.filter("Boolean").length === 0) ? <div className={"noSolves"}>
                     {t("profile.no_solves", { name: userData.username })}
                 </div> : <TabbedView>
                         <Tab label={"Solves"}>
