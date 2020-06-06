@@ -49,7 +49,7 @@ export default () => {
 
     let categoryValues = {};
     let userValues = {};
-    let tData = teamData.solves.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
+    let tData = teamData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
     let scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.x.push(api.config.start_time);
@@ -130,14 +130,14 @@ export default () => {
                     {t("teams.no_solves", { name: teamData.name })}
                 </div> : <TabbedView>
                         <Tab label={"Solves"}>
-                            {teamData.solves && teamData.solves.map(i => <UserSolve key={i.timestamp} {...i} />)}
+                            {teamData.solves && teamData.solves.filter(Boolean).map(i => <UserSolve key={i.timestamp} {...i} />)}
                         </Tab>
                         <Tab label={"Stats"}>
                             <div className={"ppwRow"}>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Solve attempts</div>
                                     <Pie data={[{
-                                        values: [teamData.solves.length, teamData.incorrect_solves],
+                                        values: [teamData.solves.filter(Boolean).length, teamData.incorrect_solves],
                                         labels: ['Correct', 'Incorrect'],
                                         marker: {
                                             colors: [
