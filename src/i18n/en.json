@@ -124,6 +124,8 @@
     },
     "admin": {
         "import_export": "Import/Export",
+        "show_locked": "Show locked challenges",
+        "hide_locked": "Hide locked challenges",
         "import_and_export": "Import and Export",
         "account_active": "Account Active",
         "account_visible": "Account Visible",

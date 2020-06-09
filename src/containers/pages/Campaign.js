@@ -8,7 +8,7 @@ import {
     Button, FlexRow, Input, Form, FormError, SBTSection, Section, Link,
     FlashText, Leader, SectionTitle2, Modal, Page
 } from "@ractf/ui-kit";
-import { plugins, apiContext, apiEndpoints, appContext } from "ractf";
+import { plugins, apiContext, apiEndpoints, appContext, localConfig } from "ractf";
 
 import "./Campaign.scss";
 
@@ -110,6 +110,7 @@ const CategoryList = () => {
 
 export default () => {
     const [anc, setAnc] = useState(false);
+    const [showLocked, setShowLocked] = useState(localConfig("prefs.show_locked", undefined, false));
 
     const { t } = useTranslation();
     const { history, location, match } = useReactRouter();
@@ -135,6 +136,11 @@ export default () => {
         };
     };
 
+    const toggleShowLocked = () => {
+        localConfig("prefs.show_locked", !showLocked);
+        setShowLocked(!showLocked);
+    };
+
     if (!api.challenges)
         api.challenges = [];
 
@@ -156,7 +162,7 @@ export default () => {
         </>;
     } else {
         challengeTab = React.createElement(
-            handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit }
+            handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit, showLocked: showLocked }
         );
     }
 
@@ -175,9 +181,15 @@ export default () => {
                     <Button key={"edS"} className={"campEditButton"} to={"#"} warning>
                         {t("edit_stop")}
                     </Button>
-                </> : <Button key={"edE"} className={"campEditButton"} to={"#edit"} warning>
+                </> : <>
+                    <Button key={"toggleShowLocked"} className={"campEditButton"} click={toggleShowLocked}>
+                        {showLocked ? t("admin.hide_locked") : t("admin.show_locked")}
+                    </Button>
+                    <Button key={"edE"} className={"campEditButton"} to={"#edit"} warning>
                         {t("edit")}
-                    </Button>}
+                    </Button>
+                </>
+                }
             </FlexRow>}
             {!api.user.team && <FlashText warning>{t("campaign.no_team")}</FlashText>}
             <div className={"campInner"}>{challengeTab}</div>
