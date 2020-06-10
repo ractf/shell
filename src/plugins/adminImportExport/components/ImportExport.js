@@ -95,13 +95,14 @@ export default () => {
         });
     };
 
-    const fullyPaginate = async route => {
+    const fullyPaginate = async (route, callback) => {
         let results = [];
         let data;
 
         do {
-            data = (await endpoints.get(route, {"X-Exporting": "true"})).d;
+            data = (await endpoints.get(route, { "X-Exporting": "true" })).d;
             results = [...results, ...data.results];
+            if (callback) callback(results);
             route = data.next;
         } while (route);
 
@@ -109,44 +110,78 @@ export default () => {
     };
 
     const exportPlayers = () => {
-        fullyPaginate(ENDPOINTS.USER).then(data => {
-            data = data.map(i => [
-                i.id, i.username, i.email, i.email_verified, i.date_joined,
-                i.is_active, i.is_visible, i.is_staff,
-                i.team, i.points, i.leaderboard_points,
-                i.reddit, i.twitter, i.discord, i.discordid,
-                i.bio,
-                i.solves ? i.solves.map(j => j.id).join(",") : ""
-            ]);
-            downloadCSV([[
-                "id", "username", "email", "email verified", "date joined",
-                "active", "visible", "staff",
-                "team id", "points", "leaderboard points",
-                "reddit", "twitter", "discord", "discord id",
-                "bio", "solves"
-            ], ...data], "players");
-        }).catch(e => app.alert(endpoints.getError(e)));
+        app.showProgress("Exporting users", 0);
+
+        endpoints.get(ENDPOINTS.STATS).then(({ d: { user_count } }) => {
+            if (user_count === 0) return app.alert("No users to export!");
+
+            const every = data => app.showProgress(
+                `Exporting users: ${data.length}/${user_count}`,
+                data.length / user_count
+            );
+            every([]);
+
+            fullyPaginate(ENDPOINTS.USER, every).then(data => {
+                data = data.map(i => [
+                    i.id, i.username, i.email, i.email_verified, i.date_joined,
+                    i.is_active, i.is_visible, i.is_staff,
+                    i.team, i.points, i.leaderboard_points,
+                    i.reddit, i.twitter, i.discord, i.discordid,
+                    i.bio,
+                    i.solves ? i.solves.filter(Boolean).map(j => j.id).join(",") : ""
+                ]);
+                app.showProgress(null);
+                downloadCSV([[
+                    "id", "username", "email", "email verified", "date joined",
+                    "active", "visible", "staff",
+                    "team id", "points", "leaderboard points",
+                    "reddit", "twitter", "discord", "discord id",
+                    "bio", "solves"
+                ], ...data], "players");
+            }).catch(e => app.alert(endpoints.getError(e)));
+        });
     };
 
     const exportTeams = () => {
-        fullyPaginate(ENDPOINTS.TEAM).then(data => {
-            data = data.map(i => [
-                i.id, i.name, i.is_visible,
-                i.owner, i.password,
-                i.members ? i.members.map(j => j.id).join(",") : "",
-                i.solves ? i.solves.map(j => j.id).join(",") : ""
-            ]);
-            downloadCSV([[
-                "id", "name", "visible", "owner", "password", "members", "solves"
-            ], ...data], "teams");
-        }).catch(e => app.alert(endpoints.getError(e)));
+        app.showProgress("Exporting teams", 0);
+
+        endpoints.get(ENDPOINTS.STATS).then(({ d: { team_count } }) => {
+            if (team_count === 0) return app.alert("No teams to export!");
+
+            const every = data => app.showProgress(
+                `Exporting teams: ${data.length}/${team_count}`,
+                data.length / team_count
+            );
+            every([]);
+
+            fullyPaginate(ENDPOINTS.TEAM, every).then(data => {
+                data = data.map(i => [
+                    i.id, i.name, i.is_visible,
+                    i.owner, i.password,
+                    i.members ? i.members.map(j => j.id).join(",") : "",
+                    i.solves ? i.solves.filter(Boolean).map(j => j.id).join(",") : ""
+                ]);
+                app.showProgress(null);
+                downloadCSV([[
+                    "id", "name", "visible", "owner", "password", "members", "solves"
+                ], ...data], "teams");
+            }).catch(e => app.alert(endpoints.getError(e)));
+        });
     };
 
     const exportLeaderboard = () => {
+        let progress = [false, false];
+        app.showProgress("Exporting...", 0);
+        
         fullyPaginate(ENDPOINTS.LEADERBOARD_TEAM).then(data => {
             data = data.map(i => [
                 i.name, i.leaderboard_points
             ]);
+
+            progress[0] = true;
+            if (progress[1]) app.showProgress(null);
+            else app.showProgress("Exporting...", .5);
+
             downloadCSV([[
                 "team name", "points"
             ], ...data], "team leaderboard");
@@ -155,6 +190,11 @@ export default () => {
             data = data.map(i => [
                 i.username, i.leaderboard_points
             ]);
+
+            progress[1] = true;
+            if (progress[0]) app.showProgress(null);
+            else app.showProgress("Exporting...", .5);
+
             downloadCSV([[
                 "username", "points"
             ], ...data], "user leaderboard");

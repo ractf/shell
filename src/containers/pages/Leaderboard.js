@@ -74,17 +74,17 @@ export default () => {
     }, [graph, api]);
 
     const userData = (lbdata) => {
-        return lbdata.map((i, n) => [i.username, i.leaderboard_points, "/profile/" + i.id]);
+        return lbdata.map((i, n) => [n + 1, i.username, i.leaderboard_points, "/profile/" + i.id]);
     };
     const teamData = (lbdata) => {
-        return lbdata.map((i, n) => [i.name, i.leaderboard_points, "/team/" + i.id]);
+        return lbdata.map((i, n) => [n + 1, i.name, i.leaderboard_points, "/team/" + i.id]);
     };
 
     return <Page title={t("leaderboard")}>
         <TabbedView center initial={1}>
             <Tab label={t("user_plural")}>
                 <Graph data={userGraphData} />
-                <Table headings={[t("user"), t("point_plural")]} data={userData(uState.data)} />
+                <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
                 {uState.hasMore && <FlexRow>
                     <Button disabled={uState.loading} click={uNext}>Load More</Button>
                 </FlexRow>}
@@ -92,7 +92,7 @@ export default () => {
 
             <Tab label={t("team_plural")}>
                 <Graph data={teamGraphData} />
-                <Table headings={[t("team"), t("point_plural")]} data={teamData(tState.data)} />
+                <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
                 {tState.hasMore && <FlexRow>
                     <Button disabled={tState.loading} click={tNext}>Load More</Button>
                 </FlexRow>}
