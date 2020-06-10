@@ -7,6 +7,7 @@ import {
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavLink, NavMenu, NavMenuLink, NavItem, NavCollapse,
     Footer, FootRow, FootCol, FootLink, Column, Breadcrumbs, Crumb, Form,
+    BareForm
 } from "@ractf/ui-kit";
 
 
@@ -45,16 +46,6 @@ const Inner = () => (<NavCollapse>
 </NavCollapse>);
 
 export default () => <Page><Row left>
-    <Form handle={console.log}>
-        <Input name="test" />
-        <Input name="test2" />
-        <Input name="test3" />
-        <Button submit>Submit</Button>
-    </Form>
-    <HR />
-    <HR />
-    <HR />
-    <HR />
     <H1>Really Awesome UI Framework</H1>
     <HR />
     <H2>Nav Bars</H2>
@@ -69,7 +60,9 @@ export default () => <Page><Row left>
             <NavGap />
             <NavItem>This is some text</NavItem>
             <NavGap />
-            <Input slim placeholder={"Search"} />
+            <BareForm>
+                <Input slim placeholder={"Search"} />
+            </BareForm>
         </NavCollapse>
     </NavBar>
     <NavBar primary>
@@ -157,44 +150,49 @@ export default () => <Page><Row left>
     <HR />
     <H2>Inputs</H2>
     <Column lgWidth={6}>
-        <FormGroup label={"Basic Inputs"}>
-            <Input placeholder={"Default"} />
-            <Input placeholder={"Limited"} limit={15} />
-            <Input placeholder={"Multi-line"} rows={3} />
-            <Input placeholder={"Password"} password />
-        </FormGroup>
-        <FormGroup label={"Select"}>
-            <Select options={[
-                { key: 0, value: "Example Select" },
-                { key: 1, value: "This" },
-                { key: 2, value: "is" },
-                { key: 3, value: "a" },
-                { key: 4, value: "dropdown" },
-            ]} />
-        </FormGroup>
-        <FormGroup label={"Input Groups"}>
-            <InputButton placeholder={"Inline Submit"} />
-            <InputGroup left={
-                <InputHint>@</InputHint>
-            } right={<>
-                <Button success>Add New</Button>
-                <Button danger>Remove</Button>
-            </>} />
-        </FormGroup>
+        <Form>
+            <FormGroup label={"Basic Inputs"}>
+                <Input placeholder={"Default"} />
+                <Input placeholder={"Invalid"} error />
+                <Input placeholder={"Limited"} limit={15} />
+                <Input placeholder={"Multi-line"} rows={3} />
+                <Input placeholder={"Password"} password />
+            </FormGroup>
+            <FormGroup label={"Select"}>
+                <Select options={[
+                    { key: 0, value: "Example Select" },
+                    { key: 1, value: "This" },
+                    { key: 2, value: "is" },
+                    { key: 3, value: "a" },
+                    { key: 4, value: "dropdown" },
+                ]} />
+            </FormGroup>
+            <FormGroup label={"Input Groups"}>
+                <InputButton placeholder={"Inline Submit"} />
+                <InputGroup left={
+                    <InputHint>@</InputHint>
+                } right={<>
+                    <Button success>Add New</Button>
+                    <Button danger>Remove</Button>
+                </>} />
+            </FormGroup>
+        </Form>
     </Column>
     <Column lgWidth={6}>
-        <FormGroup label={"Disabled"}>
-            <Input placeholder={"Disabled"} disabled />
-        </FormGroup>
-        <FormGroup label={"Disabled Input Groups"}>
-            <InputButton placeholder={"Disabled Inline Submit"} disabled />
-            <InputGroup disabled left={
-                <InputHint>@</InputHint>
-            } right={<>
-                <Button disabled success>Add New</Button>
-                <Button disabled danger>Remove</Button>
-            </>} />
-        </FormGroup>
+        <Form>
+            <FormGroup label={"Disabled"}>
+                <Input placeholder={"Disabled"} disabled />
+            </FormGroup>
+            <FormGroup label={"Disabled Input Groups"}>
+                <InputButton placeholder={"Disabled Inline Submit"} disabled />
+                <InputGroup disabled left={
+                    <InputHint>@</InputHint>
+                } right={<>
+                    <Button disabled success>Add New</Button>
+                    <Button disabled danger>Remove</Button>
+                </>} />
+            </FormGroup>
+        </Form>
     </Column>
     <HR />
     <H2>Progress Bar</H2>
@@ -221,15 +219,19 @@ export default () => <Page><Row left>
     <HR />
     <Column lgWidth={6}>
         <H2>Radio</H2>
-        <Radio options={
-            [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
-        } value={2} />
+        <Form>
+            <Radio name="demoRadio" options={
+                [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
+            } val={2} />
+        </Form>
         <HR />
     </Column>
     <Column lgWidth={6}>
         <H2>Checkbox</H2>
-        <Checkbox>Checkbox</Checkbox>
-        <Checkbox checked>Checkbox checked</Checkbox>
+        <Form>
+            <Checkbox name="cb1">Checkbox</Checkbox>
+            <Checkbox name="cb2" val={true}>Checkbox checked</Checkbox>
+        </Form>
         <HR />
     </Column>
     <H2>Scrollbar</H2>

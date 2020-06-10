@@ -12,7 +12,7 @@ import Header from "./Header";
 
 import footerLogo from "../static/spine.svg";
 
-const USE_HEAD_NAV = true;
+const USE_HEAD_NAV = false;
 
 
 const HeaderNav = () => {

@@ -78,9 +78,9 @@ export default () => {
                 </FormGroup>
                 <FormGroup label={"Rights"}>
                     <Row left>
-                        <Checkbox checked={state.member.is_active} name={"is_active"}>Active</Checkbox>
-                        <Checkbox checked={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
-                        <Checkbox checked={state.member.is_visible} name={"is_active"}>Visible</Checkbox>
+                        <Checkbox val={state.member.is_active} name={"is_active"}>Active</Checkbox>
+                        <Checkbox val={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
+                        <Checkbox val={state.member.is_visible} name={"is_active"}>Visible</Checkbox>
                     </Row>
                 </FormGroup>
                 <FormGroup label={"Bio"} htmlFor={"bio"}>
@@ -98,7 +98,7 @@ export default () => {
                 </FormGroup>
                 <FormGroup label={"Email"} htmlFor={"email"}>
                     <Input val={state.member.email} name={"email"} />
-                    <Checkbox checked={state.member.email_verified} name={"email_verified"}>
+                    <Checkbox val={state.member.email_verified} name={"email_verified"}>
                         Email verified
                     </Checkbox>
                 </FormGroup>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from 'react-i18next';
 
@@ -6,7 +6,7 @@ import {
     Page, HR, Row, TabbedView, Tab, Button, Form, FormError, Input,
     Checkbox, FormGroup, InputButton
 } from "@ractf/ui-kit";
-import { apiContext, appContext, apiEndpoints, zxcvbn, localConfig } from "ractf";
+import { apiContext, appContext, apiEndpoints, zxcvbn, localConfig, ENDPOINTS } from "ractf";
 
 import "./SettingsPage.scss";
 
@@ -53,66 +53,48 @@ export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
 
-    const [unError, setUnError] = useState("");
-    const [pfError, setPfError] = useState("");
-    const [pwError, setPwError] = useState("");
-    const [teamError, setTeamError] = useState("");
+    const passwordValidator = ({ old, new1, new2 }) => {
+        return new Promise((resolve, reject) => {
+            if (!old)
+                return resolve({ old: t("settings.curr_pass_required") });
+            if (!new1)
+                return resolve({ new1: t("settings.new_pass_required") });
+            if (!new2)
+                return resolve({ new2: t("settings.new_pass_required") });
+            if (new1 !== new2)
+                return resolve({ new2: t("auth.pass_match") });
 
-    const changePassword = ({ old, new1, new2 }) => {
-        if (!old)
-            return setPwError(t("settings.curr_pass_required"));
-        if (!new1 || !new2)
-            return setPwError(t("settings.new_pass_required"));
-        if (new1 !== new2)
-            return setPwError(t("auth.pass_match"));
+            const strength = zxcvbn()(new1);
+            if (strength.score < 3)
+                return resolve({ new1: strength.feedback.warning || t("auth.pass_weak") });
 
-        const strength = zxcvbn()(new1);
-        if (strength.score < 3)
-            return setPwError((strength.feedback.warning || t("auth.pass_weak")));
-
-        endpoints.modifyUser("self", { oPass: old, nPass: new1 }).then(() => {
-            app.alert(t("settings.pass_changed"));
-            endpoints.logout();
-        }).catch(e => {
-            setPwError(endpoints.getError(e));
+            resolve();
         });
     };
-
-    const changeUsername = ({ name }) => {
-        console.log(name);
-        if (!name)
-            return setUnError(t("settings.uname_required"));
-        if (name === api.user.username)
-            return setUnError(t("settings.uname_unchanged"));
-
-        endpoints.modifyUser("self", { name: name }).then(() => {
-            app.alert(t("settings.uname_changed"));
-            endpoints.logout();
-        }).catch(e => {
-            setUnError(endpoints.getError(e));
-        });
+    const passwordChanged = () => {
+        app.alert(t("settings.pass_changed"));
+        endpoints.logout();
     };
 
-    const updateDetails = ({ discord, discordid, twitter, reddit, bio }) => {
-        endpoints.modifyUser("self", {
-            discord: discord, discordid: discordid, twitter: twitter, reddit: reddit, bio: bio
-        }).then(() => {
-            app.alert(t("settings.details_changed"));
-            endpoints.setup();
-            setPfError(null);
-        }).catch(e => {
-            setPfError(endpoints.getError(e));
+    const usernameValidator = ({ name }) => {
+        return new Promise((resolve, reject) => {
+            if (!name) return reject({ name: t("settings.uname_required") });
+            if (name === api.user.username) return reject({ name: t("settings.uname_unchanged") });
+
+            resolve();
         });
     };
-
-    const alterTeam = ({ name, desc, pass }) => {
-        endpoints.modifyTeam("self", { name: name, description: desc, password: pass }).then(() => {
-            app.alert(t("settings.team_details_changed"));
-            endpoints.setup();
-            setTeamError(null);
-        }).catch(e => {
-            setTeamError(endpoints.getError(e));
-        });
+    const usernameChanged = () => {
+        app.alert(t("settings.uname_changed"));
+        endpoints.logout();
+    };
+    const detailsUpdated = () => {
+        app.alert(t("settings.details_changed"));
+        endpoints.setup();
+    };
+    const teamUpdated = () => {
+        app.alert(t("settings.team_details_changed"));
+        endpoints.setup();
     };
 
     const saveNotificationPrefs = (args) => {
@@ -143,29 +125,28 @@ export default () => {
                     </>
                 }
 
-                <Form handle={changeUsername}>
+                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
+                    postSubmit={usernameChanged}>
                     <FormGroup htmlFor={"name"} label={t("username")}>
                         <InputButton name={"name"} label={t("username")} val={api.user.username}
                             limit={36} placeholder={t("username")} button={t("save")} submit />
                     </FormGroup>
-                    {unError && <FormError>{unError}</FormError>}
                 </Form>
                 <HR />
-                <Form handle={changePassword}>
+                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={passwordValidator}
+                    postSubmit={passwordChanged}>
                     <FormGroup>
                         <Input password name={"old"} placeholder={t("curr_pass")} />
                         <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={t("new_pass")} />
                         <Input password name={"new2"} placeholder={t("new_pass")} />
                     </FormGroup>
-
-                    {pwError && <FormError>{pwError}</FormError>}
                     <Row>
                         <Button submit>{t("change_pass")}</Button>
                     </Row>
                 </Form>
             </Tab>
             <Tab label={t("settings.profile")}>
-                <Form handle={updateDetails}>
+                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
                     <FormGroup htmlFor={"discord"} label={t("settings.discord")}>
                         <Input name={"discord"} val={api.user.discord} limit={36} placeholder={t("settings.discord")} />
                         <Input name={"discordid"} val={api.user.discordid} format={/\d+/} limit={18}
@@ -182,7 +163,6 @@ export default () => {
                         <Input name={"bio"} rows={5} val={api.user.bio} limit={400} placeholder={t("bio")} />
                     </FormGroup>
 
-                    {pfError && <FormError>{pfError}</FormError>}
                     <Row>
                         <Button submit>{t("save")}</Button>
                     </Row>
@@ -190,7 +170,8 @@ export default () => {
             </Tab>
             <Tab label={t("team")}>
                 {api.team ? <>
-                    <Form handle={alterTeam} locked={!teamOwner}>
+                    <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
+                        locked={!teamOwner}>
                         <FormGroup htmlFor={"name"} label={t("team_name")}>
                             <Input val={api.team.name} name={"name"} limit={36} placeholder={t("team_name")} />
                         </FormGroup>
@@ -202,7 +183,6 @@ export default () => {
                             <div style={{ opacity: .5 }}>{t("team_secret_warn")}</div>
                         </FormGroup>
 
-                        {teamError && <FormError>{teamError}</FormError>}
                         {teamOwner && <Row>
                             <Button submit>{t("settings.modify_team")}</Button>
                         </Row>}
@@ -232,7 +212,7 @@ export default () => {
                     <FormGroup label={t("settings.notifications.send_options")}>
                         {notificationGroups.map((group) =>
                             <Checkbox key={group.name} name={group.name}
-                                checked={localConfig("notifs." + group.name, undefined, true)}>
+                                val={localConfig("notifs." + group.name, undefined, true)}>
                                 {group.description}
                             </Checkbox>
                         )}

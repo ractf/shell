@@ -16,7 +16,7 @@ export const TeamsList = () => {
     const { t } = useTranslation();
 
     return <Page
-        title={t("team_plural")} vCentre={state.error}>
+        title={t("team_plural")} centre={state.error}>
         <div style={{ textAlign: "center" }}>
             <H2>{t("lists.all_teams")}</H2>
             <br />
@@ -44,7 +44,7 @@ export const UsersList = () => {
     const { t } = useTranslation();
 
     return <Page
-        title={t("user_plural")} vCentre={!!state.error}>
+        title={t("user_plural")} centre={!!state.error}>
         <div style={{ textAlign: "center" }}>
             <H2>{t("lists.all_users")}</H2>
             <br />

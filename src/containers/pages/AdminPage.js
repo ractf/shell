@@ -15,7 +15,7 @@ export default () => {
         content = React.createElement(plugins.adminPage[page].component);
     }
 
-    return <Page selfContained>
+    return <Page>
         {content}
     </Page>;
 };

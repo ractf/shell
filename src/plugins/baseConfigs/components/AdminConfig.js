@@ -85,7 +85,7 @@ export default () => {
                         </FormGroup>, type]);
                         break;
                     case "boolean":
-                        stack.push([<Checkbox key={stack.length} name={key} checked={adminConfig[key]}>
+                        stack.push([<Checkbox key={stack.length} name={key} val={adminConfig[key]}>
                             {name}
                         </Checkbox>, type]);
                         break;

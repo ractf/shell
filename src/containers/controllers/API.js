@@ -147,6 +147,7 @@ class APIClass extends Component {
             cachedGet: this.cachedGet,
             abortableGet: this.abortableGet,
             get: this.get,
+            makeRequest: this.makeRequest,
         };
         this.state = {
             popups: [],
@@ -227,25 +228,9 @@ class APIClass extends Component {
                 let translated = this.props.t("api." + error);
                 if (translated !== error && (typeof translated) !== "object") error = translated;
 
-                switch (typeof e.response.data.d) {
-                    case "string":
-                        if (e.response.data.d.length > 0)
-                            error += "\n" + e.response.data.d;
-                        break;
-                    case "object":
-                        if (e.response.status === 400) error = "";
-                        let extra = "";
-                        Object.keys(e.response.data.d).forEach(i => {
-                            if (i === "reason") return;
-                            if (extra.length !== 0) extra += "\n";
-                            extra += e.response.data.d[i];
-                        });
-                        if (e.response.status === 400 && extra.length !== 0) error = extra;
-                        else error += "\n" + extra;
-                        break;
-                    default:
-                        break;
-                }
+                if (typeof e.response.data.d ===  "string")
+                    if (e.response.data.d.length > 0)
+                        error += "\n" + e.response.data.d;
 
                 return error;
             }
@@ -274,71 +259,27 @@ class APIClass extends Component {
         }), source.cancel];
     };
 
-    get = url => {
+    makeRequest = (method, url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
                 url: this.appendSlash(BASE_URL + url),
-                method: "get",
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
-
-    post = (url, data) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.appendSlash(BASE_URL + url),
-                method: "post",
+                method: method,
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    put = (url, data) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.appendSlash(BASE_URL + url),
-                method: "put",
-                data: data,
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
+    get = this.makeRequest.bind(this, "get");
+    post = this.makeRequest.bind(this, "post");
+    put = this.makeRequest.bind(this, "put");
+    patch = this.makeRequest.bind(this, "patch");
+    delete = this.makeRequest.bind(this, "delete");
 
-    patch = (url, data) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.appendSlash(BASE_URL + url),
-                method: "patch",
-                data: data,
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
-
-    delete = (url) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                url: this.appendSlash(BASE_URL + url),
-                method: "delete",
-                headers: this._getHeaders(),
-            }).then(response => {
-                resolve(response.data);
-            }).catch(reject);
-        });
-    };
-
-    _getHeaders = () => {
-        let headers = {};
+    _getHeaders = (extra) => {
+        let headers = extra ? {...extra} : {};
         if (localStorage.getItem("token"))
             headers.Authorization = 'Token ' + localStorage.getItem("token");
         return headers;

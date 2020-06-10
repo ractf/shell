@@ -36,11 +36,11 @@ export default () => {
 
     const { t } = useTranslation();
 
-    if (error) return <Page title={t("teams.teams")} vCentre>
+    if (error) return <Page title={t("teams.teams")} centre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (!teamData) return <Page title={t("teams.teams")} vCentre><Spinner /></Page>;
+    if (!teamData) return <Page title={t("teams.teams")} centre><Row><Spinner /></Row></Page>;
 
     const UserSolve = ({ solved_by_name, challenge_name, points }) => <div className={"userSolve"}>
         <div>{challenge_name}</div>

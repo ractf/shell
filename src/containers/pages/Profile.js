@@ -7,7 +7,7 @@ import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter } from "@ractf/util";
 import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page
+    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Row
 } from "@ractf/ui-kit";
 import { useApi, apiContext, ENDPOINTS } from "ractf";
 
@@ -45,11 +45,11 @@ export default () => {
     const user = match.params.user;
     const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
 
-    if (error) return <Page title={"Users"} vCentre>
+    if (error) return <Page title={"Users"} centre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (!userData) return <Page title={"Users"} vCentre><Spinner /></Page>;
+    if (!userData) return <Page title={"Users"} centre><Row><Spinner /></Row></Page>;
 
     let categoryValues = {};
     let uData = userData.solves.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
@@ -74,7 +74,7 @@ export default () => {
         scorePlotData.y.push(score);
     });
 
-    return <Page maxWidth={1400} title={userData.username}>
+    return <Page title={userData.username}>
         <div className={"profileSplit"}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>

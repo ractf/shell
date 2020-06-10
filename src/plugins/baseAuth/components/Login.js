@@ -59,7 +59,7 @@ export default () => {
         });
     };
 
-    return <Page vCentre>
+    return <Page centre>
         <Wrap>
             <Form locked={locked} handle={doLogin}>
                 <H2>{t("auth.login")}</H2>

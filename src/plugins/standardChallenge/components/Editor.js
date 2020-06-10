@@ -170,10 +170,10 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                     </FormGroup>
 
                     <Row>
-                        <Checkbox checked={challenge.hidden} name={"hidden"}>
+                        <Checkbox val={challenge.hidden} name={"hidden"}>
                             {t("editor.hide_challenge")}
                         </Checkbox>
-                        <Checkbox checked={challenge.auto_unlock} name={"autoUnlock"}>
+                        <Checkbox val={challenge.auto_unlock} name={"autoUnlock"}>
                             {t("editor.auto_unlock")}
                         </Checkbox>
                     </Row>

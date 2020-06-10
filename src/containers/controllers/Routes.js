@@ -38,12 +38,12 @@ class ErrorBoundary extends React.Component {
 
     render() {
         if (this.state.error) {
-            return <div className={"pageContent vCentre"}>
+            return <BasePage centre>
                 <BrokenShards />
                 <H1>This page failed to load.</H1>
                 <H2>Please report this!</H2>
                 <TextBlock style={{textAlign: "left"}}>{this.state.error.stack}</TextBlock>
-            </div>;
+            </BasePage>;
         }
 
         return this.props.children;
@@ -82,7 +82,7 @@ const Login = () => {
     let provider = api.configGet("login_provider") || "basicAuth";
     if (plugins.loginProvider[provider])
         return React.createElement(plugins.loginProvider[provider].component);
-    return <BasePage vCentre>
+    return <BasePage centre>
         <Row><p>Login provider plugin missing for <code>{provider}</code>.</p></Row>
     </BasePage>;
 };
@@ -91,7 +91,7 @@ const Register = () => {
     let provider = api.configGet("registration_provider") || "basicAuth";
     if (plugins.registrationProvider[provider])
         return React.createElement(plugins.registrationProvider[provider].component);
-    return <BasePage vCentre>
+    return <BasePage centre>
         <Row><p>Registration provider plugin missing for <code>{provider}</code>.</p></Row>
     </BasePage>;
 };
@@ -101,7 +101,7 @@ const Logout = () => {
 };
 
 
-export default () => {
+const Routes = () => {
     return <Switch>
         {Object.entries(plugins.page).map(([url, page]) =>
             <Route exact path={url} key={url}>
@@ -177,3 +177,4 @@ export default () => {
         </Route>
     </Switch>;
 };
+export default Routes;
