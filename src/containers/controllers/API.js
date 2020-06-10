@@ -47,6 +47,8 @@ export const ENDPOINTS = {
 
     STATS: "/stats/stats/",
     VERSION: "/stats/version/",
+
+    STATUS: "/status/"
 };
 
 
@@ -149,6 +151,8 @@ class APIClass extends Component {
             cachedGet: this.cachedGet,
             abortableGet: this.abortableGet,
             get: this.get,
+
+            getStatus: this.getStatus,
         };
         this.state = {
             popups: [],
@@ -828,6 +832,18 @@ class APIClass extends Component {
     abortRunCode = () => {
         this.setState({ codeRunState: { running: false } });
     };
+
+    getStatus = (setter) => {
+        const errorMessage = [{
+            "name": "An error was encountered whilst attempting to fetch status",
+            "status": "offline",
+            "details": ""
+        }];
+
+        this.get(ENDPOINTS.STATUS).then( resp => {
+            return setter(resp.d);
+        }).catch((err) => setter(errorMessage));
+    }
 
     // React
     render() {
