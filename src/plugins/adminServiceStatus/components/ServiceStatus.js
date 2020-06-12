@@ -29,15 +29,16 @@ export default () => {
     return <SBTSection title={t("admin.status")}>
         {
         services.map((value, index) => {
-            return <Section title={value.name}>
-                <div className={"absIndicator " + value.status} />
-                { (() => {
-                        if (value.details !== '') {
-                            return <><pre><code>{value.details}</code></pre></>;
-                        }
-                })()
-                }
-            </Section>;
+            if (value.details === '') {
+                return  <Section title={value.name}>
+                            <div className={"absIndicator " + value.status} />
+                        </Section>;
+            } else {
+                return  <Section title={value.name}>
+                            <div className={"absIndicator " + value.status} />
+                            <pre><code>{value.details}</code></pre>
+                        </Section>;
+            }
         })
         }
     </SBTSection>;
