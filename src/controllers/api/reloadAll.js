@@ -6,7 +6,7 @@ import { ENDPOINTS } from "./consts";
 
 
 export const reloadAll = async (minimal) => {
-    let userData, teamData, challenges = true;
+    let userData = null, teamData = null, challenges = true;
     if (!minimal) {
         try {
             userData = await http.get(ENDPOINTS.USER + "self");

@@ -1,19 +1,15 @@
 .challengeSplit {
     display: flex;
-    position: absolute;
+    position: relative;
     padding: 0;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-
-    .challengeLeft {
-        padding: 2em;
-    }
+    align-items: stretch;
 
     & > div {
-        height: 100%;
-        padding: 0;
+        padding: .5em;
     }
 
     @media (max-width: 1200px) {

@@ -14,7 +14,7 @@ import Header from "./Header";
 import footerLogo from "../static/spine.svg";
 import { useConfig } from "@ractf/util";
 
-const USE_HEAD_NAV = false;
+const USE_HEAD_NAV = true;
 
 
 const HeaderNav = () => {

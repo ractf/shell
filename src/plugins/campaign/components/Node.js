@@ -8,9 +8,9 @@ import NodeLink from "./NodeLink";
 import "./Node.scss";
 
 
-export default ({
+export const Node = ({
     name, unlocked, done, right, below, linksU, linksD, linksR, linksL, isEdit,
-    click, toggleLink, largeName, orange, url, points, hidden
+    onClick, toggleLink, largeName, orange, url, points, hidden
 }) => {
     const toggle = side => {
         return e => {
@@ -72,7 +72,7 @@ export default ({
 
     if (!url)
         return <div tabIndex={unlocked || done ? "0" : ""}
-            onClick={(done || unlocked) ? click : null} className={nodeClass}>
+            onClick={(done || unlocked) ? onClick : null} className={nodeClass}>
             {inner}
         </div>;
 
@@ -80,3 +80,4 @@ export default ({
         {inner}
     </Link>;
 };
+export const AddNode = props => <Node name="+" largeName orange unlocked {...props} />;

@@ -148,7 +148,6 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
             title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
             back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
         />
-        <br />
         <TabbedView>
             <Tab label={t("editor.challenge")}>
                 <Form handle={saveEdit}>
