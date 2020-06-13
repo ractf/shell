@@ -15,6 +15,7 @@
     "babel-preset-react-app": "^9.1.2",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "connected-react-router": "^6.8.0",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
@@ -66,9 +67,13 @@
     "react-markdown": "^4.3.1",
     "react-moment": "^0.9.7",
     "react-plotly.js": "^2.4.0",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-simple-code-editor": "^0.11.0",
     "react-sizeme": "^2.6.12",
+    "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
+    "redux-state-sync": "^3.1.1",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "semver": "6.0.0",
@@ -99,6 +104,11 @@
       "semi": [
         "warn",
         "always"
+      ],
+      "prefer-const": "warn",
+      "quotes": [
+        "warn",
+        "double"
       ]
     }
   },

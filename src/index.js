@@ -1,14 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import AppWrap from './containers/controllers/App';
-import * as serviceWorker from './serviceWorker';
-import { AppContainer } from 'react-hot-loader';
+import React from "react";
+import i18next from "i18next";
+import ReactDOM from "react-dom";
 import Loadable from "react-loadable";
-import { I18nextProvider } from 'react-i18next';
-import i18next from 'i18next';
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { AppContainer } from "react-hot-loader";
+import * as serviceWorker from "./serviceWorker";
+import { I18nextProvider } from "react-i18next";
+
+import AppWrap from "./controllers/App";
+import { store, persistor } from "store";
 
 import en from "./i18n/en.json";
-
 
 (r => r.keys().forEach(key => r(key).default()))(
     require.context("./plugins", true, /setup\.js$/)
@@ -19,7 +22,7 @@ i18next.getFixedT = (lng, ns) => {
     const t = gft(lng, ns);
     
     const fixedT = (key, opts, ...rest) => {
-        let tl = t(key, opts, ...rest);
+        const tl = t(key, opts, ...rest);
         if (tl === key)
             return <span style={{background: "#3a3"}}>{tl}</span>;
         return tl;
@@ -41,11 +44,15 @@ i18next.init({
 
 const render = () => {
     ReactDOM.render(
-        <I18nextProvider i18n={i18next}>
-            <AppContainer>
-                <AppWrap />
-            </AppContainer>
-        </I18nextProvider>,
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <I18nextProvider i18n={i18next}>
+                    <AppContainer>
+                        <AppWrap />
+                    </AppContainer>
+                </I18nextProvider>
+            </PersistGate>
+        </Provider>,
         document.getElementById("root")
     );
 };
@@ -53,7 +60,7 @@ const render = () => {
 serviceWorker.register({
     onUpdate: registration => {
         if (registration && registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            registration.waiting.postMessage({ type: "SKIP_WAITING" });
         }
         window.location.reload();
     }
@@ -64,7 +71,7 @@ render();
 
 // Webpack Hot Module Replacement API
 if (module.hot) {
-    module.hot.accept('./containers/controllers/App', () => {
+    module.hot.accept("./controllers/App", () => {
         render();
     });
 }

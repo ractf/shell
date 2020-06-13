@@ -1,5 +1,5 @@
 import { registerPlugin, dynamicLoad } from "ractf";
-import LoadingPage from "../../containers/pages/LoadingPage";
+import LoadingPage from "../../pages/LoadingPage";
 
 export default () => {
     const wsTester = dynamicLoad(() => import("./components/WSTester"));

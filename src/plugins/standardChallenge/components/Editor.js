@@ -1,20 +1,20 @@
 import React, { useContext } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Row, Checkbox, Button, Select, HR, PageHead, Link, Tab,
     TabbedView, FlashText, FormGroup
 } from "@ractf/ui-kit";
-import { plugins, apiEndpoints, appContext } from "ractf";
+import { api, http, plugins, appContext } from "ractf";
 
 import File from "./File";
 import Hint from "./Hint";
 
 
 const MetadataEditor = ({ challenge, category, save }) => {
-    let fields = [<HR key={-1} />];
+    const fields = [<HR key={-1} />];
     Object.keys(plugins.challengeMetadata).forEach(key => {
-        let i = plugins.challengeMetadata[key];
+        const i = plugins.challengeMetadata[key];
         let n = 0;
         if (!i.check || i.check(challenge, category)) {
             i.fields.forEach(field => {
@@ -23,8 +23,8 @@ const MetadataEditor = ({ challenge, category, save }) => {
                     case "code":
                     case "text":
                     case "number":
-                        let val = challenge.challenge_metadata[field.name];
-                        let format = field.type === "number" ? /\d+/ : /.+/;
+                        const val = challenge.challenge_metadata[field.name];
+                        const format = field.type === "number" ? /\d+/ : /.+/;
                         fields.push(<FormGroup htmlFor={field.name} label={field.label} key={key + (n++)}>
                             <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
                                 placeholder={field.label} format={format}
@@ -33,7 +33,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
                         </FormGroup>);
                         break;
                     case "select":
-                        let idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
+                        const idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
                         fields.push(<FormGroup key={key + (n++)} htmlFor={field.name} label={field.label}>
                             <Select name={field.name} options={field.options}
                                 initial={idx !== -1 ? idx : 0} />
@@ -68,22 +68,21 @@ const MetadataEditor = ({ challenge, category, save }) => {
 };
 
 const HintEditor = ({ challenge }) => {
-    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
 
     const addHint = () => {
         app.promptConfirm({ message: "New hint" },
-            [{ name: 'name', placeholder: 'Hint name', label: "Name" },
-            { name: 'cost', placeholder: 'Hint cost', label: "Cost", format: /\d+/ },
-            { name: 'body', placeholder: 'Hint text', label: "Message", rows: 5 }]
+            [{ name: "name", placeholder: "Hint name", label: "Name" },
+            { name: "cost", placeholder: "Hint cost", label: "Cost", format: /\d+/ },
+            { name: "body", placeholder: "Hint text", label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
 
             if (!cost.match(/\d+/)) return app.alert("Invalid file size!");
 
-            endpoints.newHint(challenge.id, name, cost, body).then(() =>
+            api.newHint(challenge.id, name, cost, body).then(() =>
                 app.alert("New hint added!")
             ).catch(e =>
-                app.alert("Error creating new hint:\n" + endpoints.getError(e))
+                app.alert("Error creating new hint:\n" + http.getError(e))
             );
         });
     };
@@ -105,22 +104,21 @@ const HintEditor = ({ challenge }) => {
 };
 
 const FileEditor = ({ challenge }) => {
-    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
 
     const addFile = () => {
         app.promptConfirm({ message: "New file", },
-            [{ name: 'name', placeholder: 'File name', label: "Name" },
-            { name: 'url', placeholder: 'File URL', label: "URL" },
-            { name: 'size', placeholder: 'File size', label: "Size (bytes)", format: /\d+/ }]
+            [{ name: "name", placeholder: "File name", label: "Name" },
+            { name: "url", placeholder: "File URL", label: "URL" },
+            { name: "size", placeholder: "File size", label: "Size (bytes)", format: /\d+/ }]
         ).then(({ name, url, size }) => {
             if (!size.match(/\d+/)) return app.alert("Invalid file size!");
 
-            endpoints.newFile(challenge.id, name, url, size).then((id) => {
+            api.newFile(challenge.id, name, url, size).then((id) => {
                 challenge.files.push(id);
                 app.alert("New file added!");
             }).catch(e =>
-                app.alert("Error creating new file:\n" + endpoints.getError(e))
+                app.alert("Error creating new file:\n" + http.getError(e))
             );
         });
     };

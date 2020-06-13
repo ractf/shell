@@ -1,17 +1,17 @@
-import React, { useContext } from "react";
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import { H2, Page, Button, Row } from "@ractf/ui-kit";
-import { apiContext } from "ractf";
 import { Wrap } from "./Parts";
 
 
 export default () => {
-    const api = useContext(apiContext);
     const { t } = useTranslation();
+    const team = useSelector(state => state.team);
     
-    if (api.team) return <Redirect to={"/team"}/>;
+    if (team) return <Redirect to={"/team"}/>;
 
     return <Page vCentre>
         <Wrap>

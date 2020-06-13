@@ -1,17 +1,19 @@
 import React, { useState, useContext, useRef } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import {
     Button, Input, TextBlock, Form, FormError, PageHead, Link, Row, FlashText,
     Markdown, Badge
 } from "@ractf/ui-kit";
-import { appContext, apiEndpoints, apiContext, plugins } from "ractf";
+import { api, http, appContext, plugins } from "ractf";
 
 import Split from "./Split";
 import File from "./File";
 import Hint from "./Hint";
 
 import "./Challenge.scss";
+import { useConfig } from "@ractf/util";
 
 
 export default ({ challenge, category, rightComponent }) => {
@@ -20,26 +22,25 @@ export default ({ challenge, category, rightComponent }) => {
     const [locked, setLocked] = useState(false);
     const onFlagResponse = useRef();
 
-    const endpoints = useContext(apiEndpoints);
+    const flag_prefix = useConfig("flag_prefix", "flag");
+    const user = useSelector(state => state.user);
     const app = useContext(appContext);
-    const api = useContext(apiContext);
 
     const { t } = useTranslation();
 
-    const escape = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escape = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const flagRegex = () => {
         let regex = challenge.challenge_metadata.flag_regex;
         let partial = challenge.challenge_metadata.flag_partial_regex;
-        let prefix = endpoints.configGet("flag_prefix") || "flag";
         let format_string;
         if (!regex || !partial) {
-            regex = new RegExp("^" + escape(prefix) + "{.+}$");
+            regex = new RegExp("^" + escape(flag_prefix) + "{.+}$");
             partial = "";
-            for (let i = 0; i < prefix.length; i++) {
-                partial += "(?:" + escape(prefix[i]) + "|$)";
+            for (let i = 0; i < flag_prefix.length; i++) {
+                partial += "(?:" + escape(flag_prefix[i]) + "|$)";
             }
             partial = new RegExp("^" + partial + "(?:{|$)(?:[^}]+|$)(?:}|$)$");
-            format_string = prefix + "{...}";
+            format_string = flag_prefix + "{...}";
         } else {
             format_string = regex.toString();
         }
@@ -57,15 +58,15 @@ export default ({ challenge, category, rightComponent }) => {
         return () => {
             if (hint.used) return app.alert(hint.name + ":\n" + hint.text);
 
-            let msg = <>
+            const msg = <>
                 Are you sure you want to use a hint?<br /><br />
                 This hint will deduct {hint.penalty} points from this challenge.
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
-                endpoints.useHint(hint.id).then(body =>
+                api.useHint(hint.id).then(body =>
                     app.alert(hint.name + ":\n" + body.text)
                 ).catch(e =>
-                    app.alert("Error using hint:\n" + endpoints.getError(e))
+                    app.alert("Error using hint:\n" + http.getError(e))
                 );
             }).catch(() => { });
         };
@@ -74,8 +75,8 @@ export default ({ challenge, category, rightComponent }) => {
     const tryFlag = challenge => {
         return ({ flag }) => {
             setLocked(true);
-            endpoints.attemptFlag(flag, challenge).then(resp => {
-                if (resp.d.correct) {
+            api.attemptFlag(flag, challenge).then(resp => {
+                if (resp.correct) {
                     app.alert("Flag correct!");
                     if (onFlagResponse.current)
                         onFlagResponse.current(true);
@@ -83,7 +84,7 @@ export default ({ challenge, category, rightComponent }) => {
 
                     // NOTE: This is potentially very slow. If there are performance issues in production, this is
                     // where to look first!
-                    endpoints._reloadCache();
+                    api.reloadAll();
                     /*  // This is the start of what would be the code to rebuild the local cache
                     api.challenges.forEach(group => group.chals.forEach(chal => {
                         if (chal.deps.indexOf(challenge.id) !== -1) {
@@ -96,9 +97,9 @@ export default ({ challenge, category, rightComponent }) => {
                 }
                 setLocked(false);
             }).catch(e => {
-                setMessage(endpoints.getError(e));
+                setMessage(http.getError(e));
                 if (onFlagResponse.current)
-                    onFlagResponse.current(false, endpoints.getError(e));
+                    onFlagResponse.current(false, http.getError(e));
                 setLocked(false);
             });
         };
@@ -130,9 +131,9 @@ export default ({ challenge, category, rightComponent }) => {
             break;
     }
 
-    let challengeMods = [];
+    const challengeMods = [];
     Object.keys(plugins.challengeMod).forEach(key => {
-        let i = plugins.challengeMod[key];
+        const i = plugins.challengeMod[key];
         if (!i.check || i.check(challenge, category)) {
             challengeMods.push(React.createElement(i.component, {
                 challenge: challenge, category: category, key: key,
@@ -144,7 +145,7 @@ export default ({ challenge, category, rightComponent }) => {
     if (rightComponent)
         rightSide = React.createElement(rightComponent, { challenge: challenge });
 
-    let chalContent = <>
+    const chalContent = <>
         {challengeMods}
         <Row>
             <TextBlock className={"challengeBrief"}>
@@ -157,7 +158,7 @@ export default ({ challenge, category, rightComponent }) => {
                 file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
             )}
         </div>}
-        {api.user.team && challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
+        {user.team && challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
             {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
                 return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
                     points={hint.penalty} id={hint.id} key={hint.id} />;
@@ -166,7 +167,7 @@ export default ({ challenge, category, rightComponent }) => {
 
         {challenge.solved ? <Row>
             {t("challenge.already_solved")}
-        </Row> : api.user.team ? <Row>
+        </Row> : user.team ? <Row>
             <Form handle={tryFlag(challenge)} locked={locked}>
                 {flagInput && <>
                     {flagInput}
@@ -184,12 +185,12 @@ export default ({ challenge, category, rightComponent }) => {
         </FlashText>}
     </>;
 
-    let tags = <>
-        <Badge primary>{category.name}</Badge>
-        <Badge primary>{challenge.author}</Badge>
+    const tags = <>
+        <Badge pill primary>{category.name}</Badge>
+        <Badge pill primary>{challenge.author}</Badge>
     </>;
 
-    let solveMsg = (challenge.first_blood_name
+    const solveMsg = (challenge.first_blood_name
         ? t("challenge.first_solve", { name: challenge.first_blood_name })
         : t("challenge.no_solve"));
 

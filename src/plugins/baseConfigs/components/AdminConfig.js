@@ -1,37 +1,33 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
+import { api, http, appContext, useApi, plugins } from "ractf";
 import {
     Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead,
     Column
 } from "@ractf/ui-kit";
-import { apiContext, apiEndpoints, appContext, useApi, plugins, ENDPOINTS } from "ractf";
 
 
 export default () => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
     const app = useContext(appContext);
     const { t } = useTranslation();
     const [adminConfig, setAdminConfig] = useState(null);
-    const [adminConfig_] = useApi(ENDPOINTS.CONFIG);
+    const [adminConfig_] = useApi(api.ENDPOINTS.CONFIG);
 
     useEffect(() => {
         if (adminConfig_) {
-            let config = {};
+            const config = {};
             Object.entries(adminConfig_).forEach(([key, value]) => config[key] = value);
             setAdminConfig(config);
         }
     }, [adminConfig_]);
 
     const configSet = (key, value) => {
-        endpoints.setConfigValue(key, value).then(() => {
-            if (api.config)
-                api.config[key] = value;
+        api.setConfigValue(key, value).then(() => {
             setAdminConfig(oldConf => ({ ...oldConf, key: value }));
         }).catch(e => {
             console.error(e);
-            app.alert(endpoints.getError(e));
+            app.alert(http.getError(e));
         });
     };
     const updateConfig = (changes) => {
@@ -40,7 +36,7 @@ export default () => {
         });
     };
 
-    let fields = [];
+    const fields = [];
     let stack = [];
     let stack2 = [];
 
@@ -74,7 +70,7 @@ export default () => {
                     case "string":
                     case "int":
                     case "float":
-                        let format = (type === "string") ? null : (type === "int") ? /\d+/ : /\d+(\.\d+)?/;
+                        const format = (type === "string") ? null : (type === "int") ? /\d+/ : /\d+(\.\d+)?/;
                         stack.push([<FormGroup key={stack.length} label={name}>
                             <Input placeholder={name} val={adminConfig[key]} format={format} name={key} />
                         </FormGroup>, type]);

@@ -1,25 +1,25 @@
-import React, { useState, useContext } from "react";
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import {
     Form, FormError, Page, HR, Input, Button, Row,
     SubtleText, Link, FormGroup, H2
 } from "@ractf/ui-kit";
-import { apiContext, apiEndpoints } from "ractf";
+import { api, http } from "ractf";
 import { Wrap } from "./Parts";
 
 
 export const JoinTeam = () => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
     const { t } = useTranslation();
 
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
     const [locked, setLocked] = useState(false);
+    const team = useSelector(state => state.team);
 
-    if (api.team !== null)
+    if (team !== null)
         return <Redirect to={"/campaign"} />;
 
     const doJoinTeam = ({ name, password }) => {
@@ -27,10 +27,10 @@ export const JoinTeam = () => {
             return setMessage(t("team_wiz.name_missing"));
 
         setLocked(true);
-        endpoints.joinTeam(name, password).then(resp => {
+        api.joinTeam(name, password).then(resp => {
             setSuccess(true);
         }).catch(e => {
-            setMessage(endpoints.getError(e));
+            setMessage(http.getError(e));
             setLocked(false);
         });
     };
@@ -74,15 +74,14 @@ export const JoinTeam = () => {
 
 
 export const CreateTeam = () => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
     const { t } = useTranslation();
 
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
     const [locked, setLocked] = useState(false);
+    const team = useSelector(state => state.team);
 
-    if (api.team !== null)
+    if (team !== null)
         return <Redirect to={"/campaign"} />;
 
     const doCreateTeam = ({ name, password }) => {
@@ -92,11 +91,11 @@ export const CreateTeam = () => {
             return setMessage(t("team_wiz.pass_short"));
 
         setLocked(true);
-        endpoints.createTeam(name, password).then(resp => {
-            endpoints._reloadCache();
+        api.createTeam(name, password).then(resp => {
+            api.reloadAll();
             setSuccess(true);
         }).catch(e => {
-            setMessage(endpoints.getError(e));
+            setMessage(http.getError(e));
             setLocked(false);
         });
     };

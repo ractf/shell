@@ -1,16 +1,15 @@
-import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
     Form, FormError, Page, Input, Button, Row, Link,
     Checkbox, FormGroup, H2
 } from "@ractf/ui-kit";
-import { apiEndpoints, zxcvbn } from "ractf";
+import { api, http, zxcvbn } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
 
 export default () => {
-    const endpoints = useContext(apiEndpoints);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
@@ -35,15 +34,15 @@ export default () => {
         }
 
         setLocked(true);
-        endpoints.register(username, passwd1, email).catch(
+        api.register(username, passwd1, email).catch(
             message => {
-                setMessage(endpoints.getError(message));
+                setMessage(http.getError(message));
                 setLocked(false);
             }
         );
     };
 
-    return <Page vCentre>
+    return <Page centre>
         <Wrap>
             <Form locked={locked} handle={doRegister}>
                 <H2>{t("auth.register")}</H2>

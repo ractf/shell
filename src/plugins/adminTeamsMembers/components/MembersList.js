@@ -1,16 +1,15 @@
 import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
     FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
-import { apiEndpoints, appContext, ENDPOINTS } from "ractf";
+import { api, http, appContext } from "ractf";
 
 
 export default () => {
     const app = useContext(appContext);
-    const endpoints = useContext(apiEndpoints);
     const { t } = useTranslation();
 
     const [state, setState] = useState({
@@ -19,34 +18,34 @@ export default () => {
     const doSearch = ({ name }) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
-        endpoints.get(ENDPOINTS.USER + "?search=" + name).then(data => {
+        http.get(api.ENDPOINTS.USER + "?search=" + name).then(data => {
             setState(prevState => ({
-                ...prevState, results: data.d.results, more: !!data.d.next, loading: false
+                ...prevState, results: data.results, more: !!data.next, loading: false
             }));
         }).catch(e => {
-            setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+            setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
         });
     };
 
     const editMember = (member) => {
         return () => {
             setState(prevState => ({ ...prevState, loading: true }));
-            endpoints.get(ENDPOINTS.USER + member.id).then(data => {
-                setState(prevState => ({ ...prevState, loading: false, member: data.d }));
+            http.get(api.ENDPOINTS.USER + member.id).then(data => {
+                setState(prevState => ({ ...prevState, loading: false, member: data }));
             }).catch(e => {
-                setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+                setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
             });
         };
     };
     const saveMember = (member) => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
-            endpoints.modifyUser(member.id, changes).then(() => {
+            api.modifyUser(member.id, changes).then(() => {
                 app.alert("Modified user");
                 setState(prevState => ({ ...prevState, member: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(endpoints.getError(e));
+                app.alert(http.getError(e));
             });
         };
     };

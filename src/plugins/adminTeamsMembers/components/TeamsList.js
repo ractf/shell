@@ -1,16 +1,15 @@
 import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
     FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
-import { apiEndpoints, appContext, ENDPOINTS } from "ractf";
+import { api, http, appContext } from "ractf";
 
 
 export default () => {
     const app = useContext(appContext);
-    const endpoints = useContext(apiEndpoints);
     const { t } = useTranslation();
 
     const [state, setState] = useState({
@@ -19,34 +18,34 @@ export default () => {
     const doSearch = ({ name }) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
-        endpoints.get(ENDPOINTS.TEAM + "?search=" + name).then(data => {
+        http.get(api.ENDPOINTS.TEAM + "?search=" + name).then(data => {
             setState(prevState => ({
-                ...prevState, results: data.d.results, more: !!data.d.next, loading: false
+                ...prevState, results: data.results, more: !!data.next, loading: false
             }));
         }).catch(e => {
-            setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+            setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
         });
     };
 
     const editTeam = (team) => {
         return () => {
             setState(prevState => ({ ...prevState, loading: true }));
-            endpoints.get(ENDPOINTS.TEAM + team.id).then(data => {
-                setState(prevState => ({ ...prevState, loading: false, team: data.d }));
+            http.get(api.ENDPOINTS.TEAM + team.id).then(data => {
+                setState(prevState => ({ ...prevState, loading: false, team: data }));
             }).catch(e => {
-                setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+                setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
             });
         };
     };
     const saveTeam = (team) => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
-            endpoints.modifyTeam(team.id, changes).then(() => {
+            api.modifyTeam(team.id, changes).then(() => {
                 app.alert("Modified team");
                 setState(prevState => ({ ...prevState, team: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(endpoints.getError(e));
+                app.alert(http.getError(e));
             });
         };
     };
@@ -60,14 +59,14 @@ export default () => {
             app.promptConfirm({
                 message: `Make ${member.username} the owner of ${team.name}?`, small: true
             }).then(() => {
-                endpoints.modifyTeam(team.id, { owner: member.id }).then(() => {
+                api.modifyTeam(team.id, { owner: member.id }).then(() => {
                     app.alert(`Transfered ownership to ${team.name}.`);
                     setState(prevState => {
                         if (!prevState.team) return prevState;
                         return { ...prevState, team: { ...prevState.team, owner: member.id } };
                     });
                 }).catch(e => {
-                    app.alert(endpoints.getError(e));
+                    app.alert(http.getError(e));
                 });
             }).catch(() => { });
         };
@@ -107,7 +106,7 @@ export default () => {
                 </FormGroup>
                 <FormGroup label={"Members"}>
                     {state.team.members.map(i => {
-                        let owner = i.id === state.team.owner;
+                        const owner = i.id === state.team.owner;
                         return <Leader sub={owner ? "Owner" : ""} none={owner}
                             onClick={!owner ? makeOwner(state.team, i) : null}>
                             {i.username}

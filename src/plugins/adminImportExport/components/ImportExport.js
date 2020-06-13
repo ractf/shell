@@ -1,22 +1,22 @@
 import React, { useContext } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
+import { api, http, appContext } from "ractf";
 import { Button, PageHead, Card, Row } from "@ractf/ui-kit";
-import { apiContext, apiEndpoints, appContext, ENDPOINTS } from "ractf";
 
 
 export default () => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
     const app = useContext(appContext);
     const { t } = useTranslation();
+    const categories = useSelector(state => state.challenges?.categories);
 
     const downloadData = (data, filename, mimetype) => {
-        let blob = new Blob([data], { type: `${mimetype};charset=utf-8;` });
+        const blob = new Blob([data], { type: `${mimetype};charset=utf-8;` });
         if (navigator.msSaveBlob)
             return navigator.msSaveBlob(blob, filename);
 
-        let elem = document.createElement("a");
+        const elem = document.createElement("a");
         elem.style = "display: none";
         elem.href = URL.createObjectURL(blob);
         elem.target = "_blank";
@@ -63,15 +63,15 @@ export default () => {
     };
 
     const exportCTF = () => {
-        downloadJSON(api.challenges.map(i => ({ ...i, challenges: i.challenges.map(cleanChallenge) })), "challenges");
+        downloadJSON(categories.map(i => ({ ...i, challenges: i.challenges.map(cleanChallenge) })), "challenges");
     };
 
     const exportCat = () => {
         app.promptConfirm({ message: "Select category", small: true }, [
-            { name: "cat", options: api.challenges.map(i => ({ key: i.id, value: i.name })) }
+            { name: "cat", options: categories.map(i => ({ key: i.id, value: i.name })) }
         ]).then(({ cat }) => {
             if (typeof cat === "number") {
-                let category = api.challenges.filter(i => i.id === cat)[0];
+                const category = categories.filter(i => i.id === cat)[0];
                 category.challenges = category.challenges.map(cleanChallenge);
                 if (!category) return app.alert("Something went wrong while trying to export");
                 downloadJSON(category, category.name);
@@ -81,13 +81,13 @@ export default () => {
     const exportChal = () => {
         app.promptConfirm({ message: "Select challenge", small: true }, [
             {
-                name: "chal", options: api.challenges.map(i => i.challenges).flat().map(
+                name: "chal", options: categories.map(i => i.challenges).flat().map(
                     i => ({ key: i.id, value: i.name })
                 )
             }
         ]).then(({ chal }) => {
             if (typeof chal === "number") {
-                let challenge = api.challenges.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
+                let challenge = categories.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
                 challenge = cleanChallenge(challenge);
                 if (!challenge) return app.alert("Something went wrong while trying to export");
                 downloadJSON(challenge, challenge.name);
@@ -101,9 +101,9 @@ export default () => {
         let data;
 
         do {
-            let path = (page === 0) ? route : (route + "?page=" + page);
+            const path = (page === 0) ? route : (route + "?page=" + page);
 
-            data = (await endpoints.get(path)).d;
+            data = await http.get(path);
             results = [...results, ...data.results];
             page++;
         } while (data.next);
@@ -112,7 +112,7 @@ export default () => {
     };
 
     const exportPlayers = () => {
-        fullyPaginate(ENDPOINTS.USER).then(data => {
+        fullyPaginate(api.ENDPOINTS.USER).then(data => {
             data = data.map(i => [
                 i.id, i.username, i.email, i.email_verified, i.date_joined,
                 i.is_active, i.is_visible, i.is_staff,
@@ -128,11 +128,11 @@ export default () => {
                 "reddit", "twitter", "discord", "discord id",
                 "bio", "solves"
             ], ...data], "players");
-        }).catch(e => app.alert(endpoints.getError(e)));
+        }).catch(e => app.alert(http.getError(e)));
     };
 
     const exportTeams = () => {
-        fullyPaginate(ENDPOINTS.TEAM).then(data => {
+        fullyPaginate(api.ENDPOINTS.TEAM).then(data => {
             data = data.map(i => [
                 i.id, i.name, i.is_visible,
                 i.owner, i.password,
@@ -142,11 +142,11 @@ export default () => {
             downloadCSV([[
                 "id", "name", "visible", "owner", "password", "members", "solves"
             ], ...data], "teams");
-        }).catch(e => app.alert(endpoints.getError(e)));
+        }).catch(e => app.alert(http.getError(e)));
     };
 
     const exportLeaderboard = () => {
-        fullyPaginate(ENDPOINTS.LEADERBOARD_TEAM).then(data => {
+        fullyPaginate(api.ENDPOINTS.LEADERBOARD_TEAM).then(data => {
             data = data.map(i => [
                 i.name, i.leaderboard_points
             ]);
@@ -154,7 +154,7 @@ export default () => {
                 "team name", "points"
             ], ...data], "team leaderboard");
         });
-        fullyPaginate(ENDPOINTS.LEADERBOARD_USER).then(data => {
+        fullyPaginate(api.ENDPOINTS.LEADERBOARD_USER).then(data => {
             data = data.map(i => [
                 i.username, i.leaderboard_points
             ]);
@@ -166,7 +166,7 @@ export default () => {
 
     const askOpen = (accept) => {
         return new Promise(resolve => {
-            let elem = document.createElement("input");
+            const elem = document.createElement("input");
             elem.setAttribute("type", "file");
             elem.setAttribute("accept", accept);
             elem.style = "display: none";
@@ -228,7 +228,7 @@ export default () => {
     };
 
     const importChallengeData = (cat, data) => {
-        return endpoints.createChallenge({
+        return api.createChallenge({
             id: cat, name: data.name,
             description: data.description,
             challenge_type: data.challenge_type,
@@ -239,12 +239,12 @@ export default () => {
             author: data.author,
             score: data.score,
             flag_metadata: data.flag_metadata,
-        }).then(({ d }) => d).then(async (chal) => {
+        }).then.then(async (chal) => {
             await Promise.all([
-                ...data.hints.map(hint => endpoints.newHint(
+                ...data.hints.map(hint => api.newHint(
                     chal.id, hint.name, hint.penalty, hint.text
                 )),
-                ...data.files.map(file => endpoints.newFile(
+                ...data.files.map(file => api.newFile(
                     chal.id, file.name, file.url, file.size
                 ))
             ]);
@@ -259,18 +259,18 @@ export default () => {
 
             app.promptConfirm({ message: "Select category to import into", small: true }, [
                 {
-                    name: "cat", options: api.challenges.map(
+                    name: "cat", options: categories.map(
                         i => ({ key: i.id, value: i.name })
                     )
                 }
             ]).then(({ cat }) => {
                 if (typeof cat === "number") {
                     importChallengeData(cat, data).then(() => {
-                        endpoints._reloadCache();
+                        api.reloadAll();
                         app.alert("Imported challenge!");
                     }).catch(e => {
-                        endpoints._reloadCache();
-                        app.alert("Failed to import challenge:\n" + endpoints.getError(e));
+                        api.reloadAll();
+                        app.alert("Failed to import challenge:\n" + http.getError(e));
                         console.error(e);
                     });
                 }
@@ -283,10 +283,9 @@ export default () => {
             if (!validate_category(data))
                 return app.alert("Invalid category data");
             app.showProgress("Creating category...", .5);
-            endpoints.createGroup(data.name, data.description, data.contained_type)
-                .then(({ d }) => d)
+            api.createGroup(data.name, data.description, data.contained_type)
                 .then(async ({ id }) => {
-                    let challenge_map = {};
+                    const challenge_map = {};
                     let progress = 0;
 
                     await Promise.all(data.challenges.map(chal => (importChallengeData(id, chal).then(cdat => {
@@ -298,7 +297,7 @@ export default () => {
                 }).then(challenge_map => {
                     let progress = 0;
                     return Promise.all(data.challenges.map(chal => (
-                        endpoints.editChallenge({
+                        api.editChallenge({
                             ...challenge_map[chal.id],
                             unlocks: chal.unlocks.map(i => challenge_map[i].id)
                         }).then(() => {
@@ -307,11 +306,11 @@ export default () => {
                         })
                     )));
                 }).then(() => {
-                    endpoints._reloadCache();
+                    api.reloadAll();
                     app.alert("Imported category!");
                 }).catch(e => {
-                    endpoints._reloadCache();
-                    app.alert("Failed to import category:\n" + endpoints.getError(e));
+                    api.reloadAll();
+                    app.alert("Failed to import category:\n" + http.getError(e));
                     console.error(e);
                 });
         });

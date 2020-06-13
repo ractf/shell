@@ -1,24 +1,26 @@
-import React, { useContext } from "react";
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import {
     Link, SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
     FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
     NavMenu
 } from "@ractf/ui-kit";
-import { apiContext, apiEndpoints, plugins } from "ractf";
+import { plugins } from "ractf";
 import Wordmark from "./Wordmark";
 import Header from "./Header";
 
 import footerLogo from "../static/spine.svg";
+import { useConfig } from "@ractf/util";
 
 const USE_HEAD_NAV = false;
 
 
 const HeaderNav = () => {
-    const api = useContext(apiContext);
+    const user = useSelector(state => state.user);
 
-    return <NavBar danger>
+    return <NavBar primary>
         <NavBrand><b>RACTF</b></NavBrand>
         <NavCollapse>
             <NavLink to={"/users"}>Users</NavLink>
@@ -26,13 +28,16 @@ const HeaderNav = () => {
             <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
             <NavLink to={"/campaign"}>Challenges</NavLink>
             <NavGap />
-            {api.user && <>
+            {user ? <>
                 <NavLink to={"/profile/me"}>Profile</NavLink>
                 <NavLink to={"/team/me"}>Team</NavLink>
                 <NavLink to={"/settings"}>Settings</NavLink>
                 <NavLink to={"/logout"}>Logout</NavLink>
+            </> : <>
+                <NavLink to={"/login"}>Login</NavLink>
+                <NavLink to={"/signup"}>Register</NavLink>
             </>}
-            {api.user && api.user.is_staff && <NavMenu name={"Admin"}>
+            {user && user.is_staff && <NavMenu name={"Admin"}>
                 {Object.entries(plugins.adminPage).map(([key, value]) => (
                     <NavMenuLink key={key} to={"/admin/" + key}>{value.sidebar}</NavMenuLink>
                 ))}
@@ -42,14 +47,14 @@ const HeaderNav = () => {
 };
 
 const SideBarNav = ({ children }) => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
     const { t } = useTranslation();
 
-    const login = endpoints.configGet("enable_login", true);
-    const registration = endpoints.configGet("enable_registration", true);
+    const registration = useConfig("enable_registration", true);
+    const login = useConfig("enable_login", true);
+    const categories = useSelector(state => state.challenges?.categories) || [];
+    const user = useSelector(state => state.user);
 
-    let menu = [];
+    const menu = [];
     menu.push({
         name: t("sidebar.brand"),
         submenu: [
@@ -61,10 +66,10 @@ const SideBarNav = ({ children }) => {
         startOpen: true
     });
 
-    if (api.user) {
-        if (api.user.is_staff || api.challenges.length) {
-            let submenu = api.challenges.map(i => [i.name, "/campaign/" + i.id]);
-            if (api.user.is_staff) {
+    if (user) {
+        if (user.is_staff || categories.length) {
+            const submenu = categories.map(i => [i.name, "/campaign/" + i.id]);
+            if (user.is_staff) {
                 submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
             }
             menu.push({
@@ -75,7 +80,7 @@ const SideBarNav = ({ children }) => {
         }
 
         menu.push({
-            name: api.user.username,
+            name: user.username,
             submenu: [
                 [t("settings.profile"), "/profile/me"],
                 [t("team"), "/team/me"],
@@ -84,7 +89,7 @@ const SideBarNav = ({ children }) => {
             ]
         });
     } else if (login || registration) {
-        let submenu = [];
+        const submenu = [];
         if (login)
             submenu.push([t("login"), "/login"]);
         if (registration)
@@ -95,7 +100,7 @@ const SideBarNav = ({ children }) => {
             startOpen: true
         });
     }
-    if (api.user && api.user.is_staff) {
+    if (user && user.is_staff) {
         menu.push({
             name: t("sidebar.admin"),
             submenu: Object.entries(plugins.adminPage).map(([key, value]) => [value.sidebar, "/admin/" + key])
@@ -135,7 +140,7 @@ export default ({ children }) => {
             <HeaderNav />
             <Container children={children} />
             <Footer>
-                <FootRow main danger>
+                <FootRow main>
                     <FootCol title={"RACTF"}>
                         <FootLink to={"/home"}>Home</FootLink>
                         <FootLink to={"/privacy"}>Privacy Policy</FootLink>

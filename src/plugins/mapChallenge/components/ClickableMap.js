@@ -35,7 +35,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const provider = (x, y, z, dpr) => {
         // Fallback to a free provider
         if (!PROVIDER_URL)
-            return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? '@2x' : ''}.png`;
+            return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? "@2x" : ""}.png`;
         return fillTemplate(PROVIDER_URL, { x: x, y: y, z: z, dpr: dpr });
     };
 
@@ -60,7 +60,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
         if (!jumpTo)
             return app.alert(INVALID_JUMP_MESSAGE);
 
-        let latLon = LAT_LON_RE.exec(jumpTo);
+        const latLon = LAT_LON_RE.exec(jumpTo);
         if (!latLon)
             return app.alert(INVALID_JUMP_MESSAGE);
 

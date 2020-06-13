@@ -1,8 +1,12 @@
-import { registerPlugin, dynamicLoad } from "ractf";
+import { registerPlugin, registerReducer, dynamicLoad } from "ractf";
+
+import codeRunReducer from "./reducers/codeRunReducer";
 
 
 export default () => {
     const chal = dynamicLoad(() => import("./components/IDE"));
+
+    registerReducer("codeRun", codeRunReducer);
 
     registerPlugin("challengeMetadata", "codeIngest", {
         fields: [

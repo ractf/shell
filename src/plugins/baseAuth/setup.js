@@ -1,4 +1,5 @@
 import { registerPlugin } from "ractf";
+import { push } from "connected-react-router";
 
 import { EmailVerif, EmailMessage } from "./components/EmailVerif";
 import { JoinTeam, CreateTeam } from "./components/Teams";
@@ -6,6 +7,8 @@ import PasswordReset from "./components/PasswordReset";
 import NoTeam from "./components/NoTeam";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
+
+import { store } from "store";
 
 
 export default () => {
@@ -21,12 +24,13 @@ export default () => {
     registerPlugin("registrationProvider", "basic_auth", {
         component: SignUp,
     });
-    registerPlugin("postLogin", "noteam", ({ api, history }) => {
-        if (api.team)
-            if (api.challenges.length)
-                history.push("/campaign");
-            else history.push("/");
-        else history.push("/noteam");
+    registerPlugin("postLogin", "noteam", () => {
+        const { team, challenges: { categories } } = store.getState();
+        if (team)
+            if (categories.length)
+                store.dispatch(push("/campaign"));
+            else store.dispatch(push("/"));
+        else store.dispatch(push("/noteam"));
     });
 
     registerPlugin("page", "/noteam", {
