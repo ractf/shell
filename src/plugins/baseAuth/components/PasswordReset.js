@@ -1,18 +1,17 @@
 import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
 import { useReactRouter } from "@ractf/util";
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FormGroup, FlexRow
+    Form, FormError, Page, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
-import { apiEndpoints, appContext, zxcvbn } from "ractf";
+import { api, http, appContext, zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
 
 
 export default () => {
-    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
@@ -34,11 +33,11 @@ export default () => {
             return setMessage((strength.feedback.warning || t("auth.pass_weak")));
 
         setLocked(true);
-        endpoints.completePasswordReset(props.id, props.secret, passwd1).then(() => {
+        api.completePasswordReset(props.id, props.secret, passwd1).then(() => {
             app.alert(t("auth.pass_reset"));
         }).catch(
             message => {
-                setMessage(endpoints.getError(message));
+                setMessage(http.getError(message));
                 setLocked(false);
             }
         );
@@ -47,7 +46,7 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doReset}>
-                <SectionTitle2>{t("auth.reset_password")}</SectionTitle2>
+                <H2>{t("auth.reset_password")}</H2>
 
                 <FormGroup>
                     <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
@@ -56,9 +55,9 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <FlexRow right>
+                <Row right>
                     <Button large submit>{t("auth.reset")}</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Wrap>
     </Page>;

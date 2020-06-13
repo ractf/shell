@@ -28,12 +28,12 @@ export default ({
     if (unlocked && !hidden) nodeClass += " unlocked";
     if (orange) nodeClass += " orange";
 
-    let lockDoneR = done && right && right.solved;
-    let lockDoneD = done && below && below.solved;
+    const lockDoneR = done && right && right.solved;
+    const lockDoneD = done && below && below.solved;
 
-    let lockUnlockedR = ((done && right && !right.solved)
+    const lockUnlockedR = ((done && right && !right.solved)
         || (!done && right && right.solved));
-    let lockUnlockedD = ((done && below && !below.solved)
+    const lockUnlockedD = ((done && below && !below.solved)
         || (!done && below && below.solved));
 
     let lockClassR = "lockRight";
@@ -43,7 +43,7 @@ export default ({
     if (lockDoneD) lockClassD += " lockDoneD";
     if (lockUnlockedD) lockClassD += " lockUnlockedD";
 
-    let inner = <>
+    const inner = <>
         <div>{name}</div>
         {unlocked &&
             <div className={"worth"}>{points}</div>
@@ -57,16 +57,16 @@ export default ({
         </div>}
 
         <NodeLink
-            onClick={toggle('left')} isEdit={isEdit} show={linksL} left
+            onClick={toggle("left")} isEdit={isEdit} show={linksL} left
             done={done} unlocked={unlocked} />
         <NodeLink
-            onClick={toggle('right')} isEdit={isEdit} show={linksR} right
+            onClick={toggle("right")} isEdit={isEdit} show={linksR} right
             done={done} unlocked={unlocked} />
         <NodeLink
-            onClick={toggle('up')} isEdit={isEdit} show={linksU} up
+            onClick={toggle("up")} isEdit={isEdit} show={linksU} up
             done={done} unlocked={unlocked} />
         <NodeLink
-            onClick={toggle('down')} isEdit={isEdit} show={linksD} down
+            onClick={toggle("down")} isEdit={isEdit} show={linksD} down
             done={done} unlocked={unlocked} />
     </>;
 

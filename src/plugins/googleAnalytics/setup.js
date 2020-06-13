@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga";
 
 import { registerPlugin } from "ractf";
 import { useReactRouter } from "@ractf/util";

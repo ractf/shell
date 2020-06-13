@@ -1,22 +1,60 @@
-import React, { useContext } from "react";
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
-import { Link, SideNav } from "@ractf/ui-kit";
-import { apiContext, apiEndpoints, plugins } from "ractf";
+import {
+    Link, SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
+    FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
+    NavMenu
+} from "@ractf/ui-kit";
+import { plugins } from "ractf";
 import Wordmark from "./Wordmark";
+import Header from "./Header";
 
 import footerLogo from "../static/spine.svg";
+import { useConfig } from "@ractf/util";
+
+const USE_HEAD_NAV = false;
 
 
-export default ({ children }) => {
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
+const HeaderNav = () => {
+    const user = useSelector(state => state.user);
+
+    return <NavBar primary>
+        <NavBrand><b>RACTF</b></NavBrand>
+        <NavCollapse>
+            <NavLink to={"/users"}>Users</NavLink>
+            <NavLink to={"/teams"}>Teams</NavLink>
+            <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
+            <NavLink to={"/campaign"}>Challenges</NavLink>
+            <NavGap />
+            {user ? <>
+                <NavLink to={"/profile/me"}>Profile</NavLink>
+                <NavLink to={"/team/me"}>Team</NavLink>
+                <NavLink to={"/settings"}>Settings</NavLink>
+                <NavLink to={"/logout"}>Logout</NavLink>
+            </> : <>
+                <NavLink to={"/login"}>Login</NavLink>
+                <NavLink to={"/signup"}>Register</NavLink>
+            </>}
+            {user && user.is_staff && <NavMenu name={"Admin"}>
+                {Object.entries(plugins.adminPage).map(([key, value]) => (
+                    <NavMenuLink key={key} to={"/admin/" + key}>{value.sidebar}</NavMenuLink>
+                ))}
+            </NavMenu>}
+        </NavCollapse>
+    </NavBar>;
+};
+
+const SideBarNav = ({ children }) => {
     const { t } = useTranslation();
 
-    const login = endpoints.configGet("enable_login", true);
-    const registration = endpoints.configGet("enable_registration", true);
+    const registration = useConfig("enable_registration", true);
+    const login = useConfig("enable_login", true);
+    const categories = useSelector(state => state.challenges?.categories) || [];
+    const user = useSelector(state => state.user);
 
-    let menu = [];
+    const menu = [];
     menu.push({
         name: t("sidebar.brand"),
         submenu: [
@@ -28,10 +66,10 @@ export default ({ children }) => {
         startOpen: true
     });
 
-    if (api.user) {
-        if (api.user.is_staff || api.challenges.length) {
-            let submenu = api.challenges.map(i => [i.name, "/campaign/" + i.id]);
-            if (api.user.is_staff) {
+    if (user) {
+        if (user.is_staff || categories.length) {
+            const submenu = categories.map(i => [i.name, "/campaign/" + i.id]);
+            if (user.is_staff) {
                 submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
             }
             menu.push({
@@ -42,7 +80,7 @@ export default ({ children }) => {
         }
 
         menu.push({
-            name: api.user.username,
+            name: user.username,
             submenu: [
                 [t("settings.profile"), "/profile/me"],
                 [t("team"), "/team/me"],
@@ -51,7 +89,7 @@ export default ({ children }) => {
             ]
         });
     } else if (login || registration) {
-        let submenu = [];
+        const submenu = [];
         if (login)
             submenu.push([t("login"), "/login"]);
         if (registration)
@@ -62,7 +100,7 @@ export default ({ children }) => {
             startOpen: true
         });
     }
-    if (api.user && api.user.is_staff) {
+    if (user && user.is_staff) {
         menu.push({
             name: t("sidebar.admin"),
             submenu: Object.entries(plugins.adminPage).map(([key, value]) => [value.sidebar, "/admin/" + key])
@@ -71,10 +109,10 @@ export default ({ children }) => {
 
     const header = <Wordmark />;
     const footer = <>
-        <div className="sbtfCopy">
+        <footer>
             <img alt={""} src={footerLogo} />
             &copy; Really Awesome Technology Ltd 2020
-        </div>
+        </footer>
         <Link to="/">
             {t("footer.home")}
         </Link> - <Link to="/privacy">
@@ -88,7 +126,37 @@ export default ({ children }) => {
         </Link>
     </>;
 
-    return <SideNav header={header} footer={footer} items={menu}>
-        {children}
-    </SideNav>;
+    return <>
+        <Header />
+        <SideNav header={header} footer={footer} items={menu}>
+            {children}
+        </SideNav>
+    </>;
 };
+
+export default ({ children }) => {
+    if (USE_HEAD_NAV)
+        return <SiteWrap>
+            <HeaderNav />
+            <Container children={children} />
+            <Footer>
+                <FootRow main>
+                    <FootCol title={"RACTF"}>
+                        <FootLink to={"/home"}>Home</FootLink>
+                        <FootLink to={"/privacy"}>Privacy Policy</FootLink>
+                        <FootLink to={"/conduct"}>Terms of Use</FootLink>
+                    </FootCol>
+                    <FootCol title={"For Developers"}>
+                        <FootLink to={"/ui"}>UI Framework</FootLink>
+                        <FootLink to={"/debug"}>Debug</FootLink>
+                    </FootCol>
+                </FootRow>
+                <FootRow center slim darken>
+                    &copy; Really Awesome Technology Ltd 2020
+                </FootRow>
+            </Footer>
+        </SiteWrap>;
+    return <SideBarNav children={children} />;
+};
+
+

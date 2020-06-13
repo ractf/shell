@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
+import Editor from "react-simple-code-editor";
+import { highlight, languages } from "prismjs/components/prism-core";
+import "prismjs/components/prism-clike";
+import "prismjs/components/prism-javascript";
 
 import colours from "@ractf/ui-kit/Colours.scss";
 
@@ -11,7 +11,7 @@ import "./Theme.scss";
 
 
 export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
-    const [value, setValue] = useState(val || '');
+    const [value, setValue] = useState(val || "");
 
     return <div className={"ractf-code"}><Editor
         value={value}
@@ -19,12 +19,12 @@ export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
         onValueChange={v => {setValue(v); if (onChange) onChange(v);}}
         highlight={code =>
             highlight(code, languages.js)
-              .split('\n')
+              .split("\n")
               .map(
                 line =>
                   `<span class="container_editor_line_number">${line}</span>`
               )
-              .join('\n')
+              .join("\n")
           }
         tabSize={4}
         style={{

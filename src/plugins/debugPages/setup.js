@@ -1,4 +1,5 @@
 import { registerPlugin, dynamicLoad } from "ractf";
+import LoadingPage from "../../pages/LoadingPage";
 
 export default () => {
     const wsTester = dynamicLoad(() => import("./components/WSTester"));
@@ -7,6 +8,10 @@ export default () => {
     registerPlugin("page", "/debug/ws", {
         title: "WebSocket Debugger",
         component: wsTester
+    });
+    registerPlugin("page", "/debug/loading", {
+        title: "LoadingPage",
+        component: LoadingPage
     });
     registerPlugin("page", "/debug", {
         title: "Debug",

@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { FaLock, FaEyeSlash } from "react-icons/fa";
 
-import { apiEndpoints, registerPlugin } from "ractf";
+import { api, registerPlugin } from "ractf";
 
 import AddNode from "./components/AddNode";
 import Node from "./components/Node";
@@ -25,25 +25,25 @@ const emptyChallenge = (x, y) => ({
 
 const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     const [reRender, setReRender] = useState(0);
-    const endpoints = useContext(apiEndpoints);
 
-    let chals = challenges.challenges || [];
+    const chals = challenges.challenges || [];
 
     // Inflate the list of challenges into a 2d structure
-    let rows = [], maxX = 0;
+    const rows = [];
+    let maxX = 0;
     chals.forEach(chal => {
-        let { x, y } = chal[meta];
+        const { x, y } = chal[meta];
         while (rows.length <= y) rows.push([]);
         while (rows[y].length <= x) rows[y].push(null);
 
         if (rows[y][x]) console.log(`[WARN] Challenge stacking at ${x}-${y}!`, rows[y][x], chal);
-        
+
         rows[y][x] = chal;
         if (x > maxX) maxX = x;
     });
 
     const toggleLink = chal => {
-        let { x, y } = chal[meta];
+        const { x, y } = chal[meta];
         return side => {
             let other;
             switch (side) {
@@ -63,7 +63,7 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                     break;
             }
             if (other) {
-                endpoints.linkChallenges(
+                api.linkChallenges(
                     chal, other,
                     chal.unlocks.indexOf(other.id) === -1
                 );
@@ -81,26 +81,27 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
     });
 
     // Convert the 2d structure into DOM elements
-    let reactRows = rows.map((row, y) =>
+    const reactRows = rows.map((row, y) =>
         <Row key={y}>{row.map((chal, x) => {
             if (!chal) {
                 if (isEdit)
-                    return <AddNode click={showEditor(emptyChallenge(x, y), chals, true)} key={"add_" + x + "," + y} />;
+                    return <AddNode onClick={showEditor(emptyChallenge(x, y), chals, true)}
+                        key={"add_" + x + "," + y} />;
                 return <div className={"campaignSpacer"} key={"spacer_" + x + "," + y} />;
             }
 
             // ( ... || []) ensures we have a list to lookup with [x].
-            let right = rows[y][x + 1],
+            const right = rows[y][x + 1],
                 left = rows[y][x - 1],
                 above = (rows[y - 1] || [])[x],
                 below = (rows[y + 1] || [])[x];
 
-            let linksR = (right && chal.unlocks.indexOf(right.id) !== -1),
+            const linksR = (right && chal.unlocks.indexOf(right.id) !== -1),
                 linksL = (left && chal.unlocks.indexOf(left.id) !== -1),
                 linksU = (above && chal.unlocks.indexOf(above.id) !== -1),
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
-            let unlocked = isEdit || (chal.unlocked && !chal.hidden) || chal.solved;
+            const unlocked = isEdit || (chal.unlocked && !chal.hidden) || chal.solved;
 
             return <Node
                 key={chal.id} unlocked={unlocked} hidden={!isEdit && chal.hidden}
