@@ -20,7 +20,7 @@ const makeOwner = (api, endpoints, app, member, t) => {
             </>), small: true
         }).then(() => {
             // Kick 'em
-            endpoints.modifyTeam(api.team.id, { captain: member.id }).then(() => {
+            endpoints.modifyTeam("self", { captain: member.id }).then(() => {
                 app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 endpoints.setup();
             }).catch(e => {
@@ -70,23 +70,21 @@ export default () => {
         if (strength.score < 3)
             return setPwError((strength.feedback.warning || t("auth.pass_weak")));
 
-        endpoints.modifyUser("self", { oPass: old, nPass: new1 }).then(() => {
+        endpoints.changePassword(new1, old).then(() => {
             app.alert(t("settings.pass_changed"));
-            endpoints.logout();
         }).catch(e => {
             setPwError(endpoints.getError(e));
         });
     };
 
-    const changeUsername = ({ name }) => {
-        if (!name)
+    const changeUsername = ({ username }) => {
+        if (!username)
             return setUnError(t("settings.uname_required"));
-        if (name === api.user.username)
+        if (username === api.user.username)
             return setUnError(t("settings.uname_unchanged"));
 
-        endpoints.modifyUser("self", { name: name }).then(() => {
+        endpoints.modifyUser("self", { username: username }).then(() => {
             app.alert(t("settings.uname_changed"));
-            endpoints.logout();
         }).catch(e => {
             setUnError(endpoints.getError(e));
         });
@@ -143,8 +141,8 @@ export default () => {
                 }
 
                 <Form handle={changeUsername}>
-                    <FormGroup htmlFor={"name"} label={t("username")}>
-                        <Input name={"name"} val={api.user.username} limit={36}
+                    <FormGroup htmlFor={"username"} label={t("username")}>
+                        <Input name={"username"} val={api.user.username} limit={36}
                             placeholder={t("username")} />
                     </FormGroup>
 

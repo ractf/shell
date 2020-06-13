@@ -25,6 +25,7 @@ export const ENDPOINTS = {
     VERIFY: "/auth/verify_email/",
     REQUEST_RESET: "/auth/request_password_reset/",
     COMPLETE_RESET: "/auth/password_reset/",
+    CHANGE_PASSWORD: "/auth/change_password/",
 
     CATEGORIES: "/challenges/categories/",
     CHALLENGES: "/challenges/",
@@ -118,6 +119,7 @@ class APIClass extends Component {
             add_2fa: this.add_2fa,
             register: this.register,
             verify_2fa: this.verify_2fa,
+            changePassword: this.changePassword,
             requestPasswordReset: this.requestPasswordReset,
             completePasswordReset: this.completePasswordReset,
 
@@ -258,13 +260,19 @@ class APIClass extends Component {
         return "Unknown error occurred.";
     };
 
+    prefixBase = (url) => {
+        if (url.indexOf("https://") === 0 || url.indexOf("http://") === 0)
+            return url;
+        return BASE_URL + url;
+    }
+
     abortableGet = (url) => {
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
 
         return [new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 cancelToken: source.token,
                 method: "get",
                 headers: this._getHeaders(),
@@ -274,71 +282,71 @@ class APIClass extends Component {
         }), source.cancel];
     };
 
-    get = url => {
+    get = (url, headers) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "get",
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    post = (url, data) => {
+    post = (url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "post",
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    put = (url, data) => {
+    put = (url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "put",
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    patch = (url, data) => {
+    patch = (url, data, headers) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "patch",
                 data: data,
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    delete = (url) => {
+    delete = (url, headers) => {
         return new Promise((resolve, reject) => {
             axios({
-                url: this.appendSlash(BASE_URL + url),
+                url: this.appendSlash(this.prefixBase(url)),
                 method: "delete",
-                headers: this._getHeaders(),
+                headers: this._getHeaders(headers),
             }).then(response => {
                 resolve(response.data);
             }).catch(reject);
         });
     };
 
-    _getHeaders = () => {
-        let headers = {};
+    _getHeaders = (extra) => {
+        let headers = extra ? {...extra} : {};
         if (localStorage.getItem("token"))
             headers.Authorization = 'Token ' + localStorage.getItem("token");
         return headers;
@@ -526,8 +534,8 @@ class APIClass extends Component {
         }
     };
 
-    modifyUser = (userId, data) => this.patch(BASE_URL + ENDPOINTS.USER + userId, data);
-    modifyTeam = (teamId, data) => this.patch(BASE_URL + ENDPOINTS.TEAM + teamId, data);
+    modifyUser = (userId, data) => this.patch(ENDPOINTS.USER + userId, data);
+    modifyTeam = (teamId, data) => this.patch(ENDPOINTS.TEAM + teamId, data);
 
     createTeam = (name, password) => {
         return new Promise((resolve, reject) => {
@@ -594,6 +602,7 @@ class APIClass extends Component {
 
     add_2fa = () => this.post(ENDPOINTS.ADD_2FA);
     verify_2fa = (otp) => this.post(ENDPOINTS.VERIFY_2FA, { otp });
+    changePassword = (password, old_password) => this.post(ENDPOINTS.CHANGE_PASSWORD, { password, old_password });
     requestPasswordReset = (email) => this.post(ENDPOINTS.REQUEST_RESET, { email });
     verify = (uid, token) => {
         try {

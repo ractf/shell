@@ -81,7 +81,7 @@ export default () => {
                     <FlexRow left>
                         <Checkbox checked={state.member.is_active} name={"is_active"}>Active</Checkbox>
                         <Checkbox checked={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
-                        <Checkbox checked={state.member.is_visible} name={"is_active"}>Visible</Checkbox>
+                        <Checkbox checked={state.member.is_visible} name={"is_visible"}>Visible</Checkbox>
                     </FlexRow>
                 </FormGroup>
                 <FormGroup label={"Bio"} htmlFor={"bio"}>
@@ -95,7 +95,7 @@ export default () => {
                     <Input val={state.member.reddit} name={"reddit"} />
                 </FormGroup>
                 <FormGroup label={"Twitter"} htmlFor={"twitter"}>
-                    <Input val={state.member.twitter} name={"twitte"} />
+                    <Input val={state.member.twitter} name={"twitter"} />
                 </FormGroup>
                 <FormGroup label={"Email"} htmlFor={"email"}>
                     <Input val={state.member.email} name={"email"} />

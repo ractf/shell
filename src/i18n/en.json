@@ -39,10 +39,10 @@
         "no_longer_captain": "You are no longer the team captain!",
         "curr_pass_required": "Current password required",
         "new_pass_required": "New password required",
-        "pass_changed": "Password changed. Please log back in.",
+        "pass_changed": "Password changed succesfully.",
         "uname_required": "Username required",
         "uname_unchanged": "Username has not changed",
-        "uname_changed": "Username changed. Please log back in.",
+        "uname_changed": "Username changed succesfully.",
         "details_changed": "Personal details updated succesfully.",
         "team_details_changed": "Team details updated succesfully.",
         "for": "Settings for {{name}}",
@@ -124,6 +124,8 @@
     },
     "admin": {
         "import_export": "Import/Export",
+        "show_locked": "Show locked challenges",
+        "hide_locked": "Hide locked challenges",
         "import_and_export": "Import and Export",
         "account_active": "Account Active",
         "account_visible": "Account Visible",
@@ -170,7 +172,7 @@
         "export_chal": "Export challenge",
         "export_sb": "Export scoreboards",
         "export_players": "Export players list",
-        "export_teams": "export teams list"
+        "export_teams": "Export teams list"
     },
     "team_wiz": {
         "name_missing": "Team name missing",

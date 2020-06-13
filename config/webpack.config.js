@@ -35,7 +35,7 @@ const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const commitHash = require('child_process')
-  .execSync('git rev-parse --short HEAD')
+  .execSync('git rev-parse HEAD')
   .toString();
 
 module.exports = function(webpackEnv) {

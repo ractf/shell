@@ -23,7 +23,7 @@ const emptyChallenge = (x, y) => ({
 });
 
 
-const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
+const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked }) => {
     const [reRender, setReRender] = useState(0);
     const endpoints = useContext(apiEndpoints);
 
@@ -100,10 +100,10 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 linksU = (above && chal.unlocks.indexOf(above.id) !== -1),
                 linksD = (below && chal.unlocks.indexOf(below.id) !== -1);
 
-            let unlocked = isEdit || (chal.unlocked && !chal.hidden) || chal.solved;
+            let unlocked = isEdit || (chal.unlocked && !chal.hidden) || chal.solved || showLocked;
 
             return <Node
-                key={chal.id} unlocked={unlocked} hidden={!isEdit && chal.hidden}
+                key={chal.id} unlocked={unlocked} hidden={!(isEdit || showLocked) && chal.hidden}
                 done={!isEdit && chal.solved}
 
                 linksR={linksR} linksL={linksL}
@@ -114,10 +114,10 @@ const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                 isEdit={isEdit} toggleLink={toggleLink(chal)}
                 points={chal.score}
 
-                url={(isEdit || unlocked) ? "/campaign/" + challenges.id + "/challenge/" + chal.id
+                url={(isEdit || unlocked || showLocked) ? "/campaign/" + challenges.id + "/challenge/" + chal.id
                     + (isEdit ? "#edit" : "") : null}
 
-                name={(chal.hidden && !isEdit) ? <FaEyeSlash /> : !unlocked ? <FaLock /> : chal.name}
+                name={(chal.hidden && !(isEdit || showLocked)) ? <FaEyeSlash /> : !unlocked ? <FaLock /> : chal.name}
             />;
         })}</Row>
     );
