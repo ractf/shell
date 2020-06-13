@@ -44,7 +44,7 @@ export default () => {
         ["enable_teams", "Enable Teams", "boolean"],
         ["team_size", "Max Team Size", "int"],
 
-        ["", "Integratiosn"],
+        ["", "Integrations"],
         ["enable_ctftime", "Enable CTFTime", "boolean"],
         ["login_provider", "Login provider", "string"],
         ["registration_provider", "Registration provider", "string"],

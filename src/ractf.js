@@ -5,7 +5,7 @@ import LoadingPage from "pages/LoadingPage";
 import { store, injectReducer } from "store";
 import * as actions from "actions";
 
-import { get, patch, post, put, delete_, getError, abortableGet } from "controllers/http";
+import * as http_ from "controllers/http";
 import * as api_ from "controllers/api";
 export * from "controllers/UseAPI";
 
@@ -58,9 +58,7 @@ export const registerPlugin = (type, key, handler) => {
 export const registerReducer = (name, reducer) => {
     injectReducer(store, name, reducer);
 };
-export const http = {
-    get, post, put, patch, delete: delete_, getError, abortableGet
-};
+export const http = { ...http_, delete:http_.delete_ };
 
 const _fastClick = e => {
     e.target && e.target.click && e.target.click();

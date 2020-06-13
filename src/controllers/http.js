@@ -13,6 +13,12 @@ const _getHeaders = (extra) => {
     return headers;
 };
 
+const prefixBase = (url) => {
+    if (url.indexOf("https://") === 0 || url.indexOf("http://") === 0)
+        return url;
+    return BASE_URL + url;
+};
+
 const appendSlash = url => {
     // Split the url and the query string
     const chunks = /^([^?]*?)(\?.*)?$/.exec(url).slice(1);
@@ -52,7 +58,7 @@ export const abortableGet = (url) => {
 
     return [new Promise((resolve, reject) => {
         axios({
-            url: appendSlash(BASE_URL + url),
+            url: appendSlash(prefixBase(url)),
             cancelToken: source.token,
             method: "get",
             headers: _getHeaders(),
@@ -65,7 +71,7 @@ export const abortableGet = (url) => {
 export const makeRequest = (method, url, data, headers) => {
     return new Promise((resolve, reject) => {
         axios({
-            url: appendSlash(BASE_URL + url),
+            url: appendSlash(prefixBase(url)),
             method: method,
             data: data,
             headers: _getHeaders(headers),

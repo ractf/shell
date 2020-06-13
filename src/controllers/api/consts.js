@@ -13,6 +13,7 @@ export const ENDPOINTS = {
     VERIFY: "/auth/verify_email/",
     REQUEST_RESET: "/auth/request_password_reset/",
     COMPLETE_RESET: "/auth/password_reset/",
+    CHANGE_PASSWORD: "/auth/change_password/",
 
     CATEGORIES: "/challenges/categories/",
     CHALLENGES: "/challenges/",

@@ -4,6 +4,12 @@ export const setUser = (user) => {
         payload: user
     };
 };
+export const editUser = (changes) => {
+    return {
+        type: "EDIT_USER",
+        payload: changes
+    };
+};
 export const clearUser = () => {
     return {
         type: "SET_USER",

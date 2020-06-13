@@ -52,13 +52,14 @@ jobs:
     - name: Publish Sentry Release
       run: >-
         VERSION=$(sentry-cli releases propose-version) &&
-        sentry-cli releases new -p react $VERSION &&
+        sentry-cli releases new $VERSION &&
         sentry-cli releases set-commits --auto $VERSION &&
         sentry-cli releases files $VERSION upload-sourcemaps build &&
         sentry-cli releases finalize $VERSION
       env:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         SENTRY_ORG: ractf
+        SENTRY_PROJECT: react 
 
     - name: Clear Sourcemaps
       run: find . -type f -name '*.map' -delete

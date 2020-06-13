@@ -22,7 +22,7 @@ const makeOwner = (team, app, member, t) => {
             </>), small: true
         }).then(() => {
             // Kick 'em
-            api.modifyTeam(team.id, { captain: member.id }).then(() => {
+            api.modifyTeam("self", { captain: member.id }).then(() => {
                 app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 api.reloadAll();
             }).catch(e => {
@@ -56,40 +56,39 @@ export default () => {
     const team = useSelector(state => state.team);
     const dispatch = useDispatch();
 
-    const passwordValidator = ({ old, new1, new2 }) => {
+    const passwordValidator = ({ old_password, password, new2 }) => {
         return new Promise((resolve, reject) => {
-            if (!old)
-                return resolve({ old: t("settings.curr_pass_required") });
-            if (!new1)
-                return resolve({ new1: t("settings.new_pass_required") });
+            if (!old_password)
+                return reject({ old_password: t("settings.curr_pass_required") });
+            if (!password)
+                return reject({ password: t("settings.new_pass_required") });
             if (!new2)
-                return resolve({ new2: t("settings.new_pass_required") });
-            if (new1 !== new2)
-                return resolve({ new2: t("auth.pass_match") });
+                return reject({ new2: t("settings.new_pass_required") });
+            if (password !== new2)
+                return reject({ new2: t("auth.pass_match") });
 
-            const strength = zxcvbn()(new1);
+            const strength = zxcvbn()(password);
             if (strength.score < 3)
-                return resolve({ new1: strength.feedback.warning || t("auth.pass_weak") });
+                return reject({ password: strength.feedback.warning || t("auth.pass_weak") });
 
             resolve();
         });
     };
     const passwordChanged = () => {
         app.alert(t("settings.pass_changed"));
-        api.logout();
     };
 
-    const usernameValidator = ({ name }) => {
+    const usernameValidator = ({ username }) => {
         return new Promise((resolve, reject) => {
-            if (!name) return reject({ name: t("settings.uname_required") });
-            if (name === user.username) return reject({ name: t("settings.uname_unchanged") });
+            if (!username) return reject({ username: t("settings.uname_required") });
+            if (username === user.username) return reject({ username: t("settings.uname_unchanged") });
 
             resolve();
         });
     };
-    const usernameChanged = () => {
+    const usernameChanged = ({ form: { username } }) => {
         app.alert(t("settings.uname_changed"));
-        api.logout();
+        dispatch(actions.editUser({ username }));
     };
     const detailsUpdated = () => {
         app.alert(t("settings.details_changed"));
@@ -116,17 +115,17 @@ export default () => {
             <Tab label={t("user")}>
                 <Form action={api.ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
                     postSubmit={usernameChanged}>
-                    <FormGroup htmlFor={"name"} label={t("username")}>
-                        <InputButton name={"name"} label={t("username")} val={user.username}
+                    <FormGroup htmlFor={"username"} label={t("username")}>
+                        <InputButton name={"username"} label={t("username")} val={user.username}
                             limit={36} placeholder={t("username")} button={t("save")} submit />
                     </FormGroup>
                 </Form>
                 <HR />
-                <Form action={api.ENDPOINTS.USER + "self"} method={"PATCH"} validator={passwordValidator}
+                <Form action={api.ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
                     postSubmit={passwordChanged}>
                     <FormGroup>
-                        <Input password name={"old"} placeholder={t("curr_pass")} />
-                        <Input zxcvbn={zxcvbn()} password name={"new1"} placeholder={t("new_pass")} />
+                        <Input password name={"old_password"} placeholder={t("curr_pass")} />
+                        <Input zxcvbn={zxcvbn()} password name={"password"} placeholder={t("new_pass")} />
                         <Input password name={"new2"} placeholder={t("new_pass")} />
                     </FormGroup>
                     <Row>

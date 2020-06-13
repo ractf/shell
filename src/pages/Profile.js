@@ -53,7 +53,7 @@ export default () => {
     if (!userData) return <Page title={"Users"} centre><Row><Spinner /></Row></Page>;
 
     const categoryValues = {};
-    const uData = userData.solves.sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
+    const uData = userData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
     const scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.x.push(api.config.start_time);
@@ -112,7 +112,7 @@ export default () => {
                     <div className={"profilePieWrap"}>
                         <div className={"ppwHead"}>Solve attempts</div>
                         <Pie data={[{
-                            values: [userData.solves.length, userData.incorrect_solves],
+                            values: [userData.solves.filter(Boolean).length, userData.incorrect_solves],
                             labels: ["Correct", "Incorrect"],
                             marker: {
                                 colors: [
@@ -133,18 +133,20 @@ export default () => {
                 {userData.is_staff &&
                     <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
 
-                {(!userData.solves || userData.solves.length === 0) ? <div className={"noSolves"}>
+                {(!userData.solves || userData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
                     {t("profile.no_solves", { name: userData.username })}
                 </div> : <TabbedView>
                         <Tab label={"Solves"}>
-                            {userData.solves && userData.solves.map((i, n) => <UserSolve key={i.timestamp} {...i} />)}
+                            {userData.solves && userData.solves.filter(Boolean).map((i, n) => (
+                                <UserSolve key={i.timestamp} {...i} />
+                            ))}
                         </Tab>
                         <Tab label={"Stats"}>
                             <div className={"ppwRow"}>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Solve attempts</div>
                                     <Pie data={[{
-                                        values: [userData.solves.length, userData.incorrect_solves],
+                                        values: [userData.solves.filter(Boolean).length, userData.incorrect_solves],
                                         labels: ["Correct", "Incorrect"],
                                         marker: {
                                             colors: [
