@@ -5,7 +5,7 @@ import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
 import { PERSIST, PURGE } from "redux-persist/es/constants";
 import createReducer from "./reducers";
-import localForage from 'localforage';
+import localForage from "localforage";
 
 export const history = createBrowserHistory();
 
