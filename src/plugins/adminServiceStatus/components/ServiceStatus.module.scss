@@ -1,0 +1,42 @@
+@import "@ractf/ui-kit/Colours.scss";
+
+.indicator {
+    background-color: black;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+
+    &::after {
+        position: relative;
+        top: -5px;
+        left: 18px;
+    }
+
+    &.online {
+        background-color: map-get($colours, "green");
+        &::after {
+            content: "Online";
+        }
+    }
+
+    &.partial {
+        background-color: map-get($colours, "orange");
+        &::after {
+            content: "Partial";
+        }
+    }
+
+    &.offline {
+        background-color: map-get($colours, "red");
+        &::after {
+            content: "Offline";
+        }
+    }
+
+    &.unknown {
+        background-color: map-get($colours, "grey");
+        &::after {
+            content: "Unknown";
+        }
+    }
+}

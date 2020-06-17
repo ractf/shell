@@ -19,8 +19,10 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Row, PageHead } from "@ractf/ui-kit";
+import { makeClass } from "@ractf/util";
 import { http, api } from "ractf";
 
+import style from "./ServiceStatus.module.scss";
 
 const getServiceStatus = (setter) => {
     http.get(api.ENDPOINTS.STATUS).then(
@@ -41,7 +43,7 @@ export default () => {
             "status": "unknown",
             "details": ""
         }]);
-        
+
     useEffect(() => {
 
         getServiceStatus(setServices);
@@ -60,13 +62,23 @@ export default () => {
                 if (value.details === "") {
                     return <Row>
                                 <Card header={value.name}>
-                                    <div className={"absIndicator " + value.status} />
+                                    <div className={makeClass(style.indicator,
+                                                value.status === "unknown" && style.unknown,
+                                                value.status === "offline" && style.offline,
+                                                value.status === "partial" && style.unknown,
+                                                value.status === "online" && style.online,
+                                            )} />
                                 </Card>
                             </Row>;
                 } else {
                     return  <Row>
                                 <Card header={value.name}>
-                                    <div className={"absIndicator " + value.status} />
+                                <div className={makeClass(style.indicator,
+                                                value.status === "unknown" && style.unknown,
+                                                value.status === "offline" && style.offline,
+                                                value.status === "partial" && style.unknown,
+                                                value.status === "online" && style.online,
+                                            )} />
                                     <pre><code>{value.details}</code></pre>
                                 </Card>
                             </Row>;
