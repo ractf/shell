@@ -1,3 +1,20 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
 import React from "react";
 import { FaCheck, FaLockOpen, FaLock } from "react-icons/fa";
 
@@ -8,9 +25,9 @@ import NodeLink from "./NodeLink";
 import "./Node.scss";
 
 
-export default ({
+export const Node = ({
     name, unlocked, done, right, below, linksU, linksD, linksR, linksL, isEdit,
-    click, toggleLink, largeName, orange, url, points, hidden
+    onClick, toggleLink, largeName, orange, url, points, hidden
 }) => {
     const toggle = side => {
         return e => {
@@ -28,12 +45,12 @@ export default ({
     if (unlocked && !hidden) nodeClass += " unlocked";
     if (orange) nodeClass += " orange";
 
-    let lockDoneR = done && right && right.solved;
-    let lockDoneD = done && below && below.solved;
+    const lockDoneR = done && right && right.solved;
+    const lockDoneD = done && below && below.solved;
 
-    let lockUnlockedR = ((done && right && !right.solved)
+    const lockUnlockedR = ((done && right && !right.solved)
         || (!done && right && right.solved));
-    let lockUnlockedD = ((done && below && !below.solved)
+    const lockUnlockedD = ((done && below && !below.solved)
         || (!done && below && below.solved));
 
     let lockClassR = "lockRight";
@@ -43,7 +60,7 @@ export default ({
     if (lockDoneD) lockClassD += " lockDoneD";
     if (lockUnlockedD) lockClassD += " lockUnlockedD";
 
-    let inner = <>
+    const inner = <>
         <div>{name}</div>
         {unlocked &&
             <div className={"worth"}>{points}</div>
@@ -57,22 +74,22 @@ export default ({
         </div>}
 
         <NodeLink
-            onClick={toggle('left')} isEdit={isEdit} show={linksL} left
+            onClick={toggle("left")} isEdit={isEdit} show={linksL} left
             done={done} unlocked={unlocked} />
         <NodeLink
-            onClick={toggle('right')} isEdit={isEdit} show={linksR} right
+            onClick={toggle("right")} isEdit={isEdit} show={linksR} right
             done={done} unlocked={unlocked} />
         <NodeLink
-            onClick={toggle('up')} isEdit={isEdit} show={linksU} up
+            onClick={toggle("up")} isEdit={isEdit} show={linksU} up
             done={done} unlocked={unlocked} />
         <NodeLink
-            onClick={toggle('down')} isEdit={isEdit} show={linksD} down
+            onClick={toggle("down")} isEdit={isEdit} show={linksD} down
             done={done} unlocked={unlocked} />
     </>;
 
     if (!url)
         return <div tabIndex={unlocked || done ? "0" : ""}
-            onClick={(done || unlocked) ? click : null} className={nodeClass}>
+            onClick={(done || unlocked) ? onClick : null} className={nodeClass}>
             {inner}
         </div>;
 
@@ -80,3 +97,4 @@ export default ({
         {inner}
     </Link>;
 };
+export const AddNode = props => <Node name="+" largeName orange unlocked {...props} />;

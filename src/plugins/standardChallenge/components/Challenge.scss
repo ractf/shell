@@ -1,3 +1,20 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
 @import "@ractf/ui-kit/Colours.scss";
 
 
@@ -5,10 +22,6 @@ $challengeLink: (
     border: $back_700,
     background: $back_750,
     text: $white_100
-);
-$tag: (
-    background: $back_700,
-    text: $back_100
 );
 
 
@@ -93,28 +106,4 @@ $tag: (
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-}
-
-.challengeTags {
-    > span:first-child {
-        margin-right: 16px;
-    }
-    > * {
-        margin-right: 8px;
-    }
-}
-.challengeTag {
-    display: inline-block;
-    vertical-align: middle;
-
-    background-color: map-get($tag, "background");
-    color: map-get($tag, "text");
-    padding: 0 11px;
-    line-height: 22px;
-    border-radius: 11px;
-    height: 22px;
-    font-size: .6em;
-    font-weight: 400;
-    font-family: $fontStack;
-    user-select: none;
 }

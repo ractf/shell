@@ -1,16 +1,32 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
 import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Spinner, Modal, FlexRow, FormGroup, InputButton,
-    FormError, Leader, Checkbox, SBTSection
+    Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
+    FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
-import { apiEndpoints, appContext, ENDPOINTS } from "ractf";
+import { api, http, appContext } from "ractf";
 
 
 export default () => {
     const app = useContext(appContext);
-    const endpoints = useContext(apiEndpoints);
     const { t } = useTranslation();
 
     const [state, setState] = useState({
@@ -19,34 +35,34 @@ export default () => {
     const doSearch = ({ name }) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
-        endpoints.get(ENDPOINTS.TEAM + "?search=" + name).then(data => {
+        http.get(api.ENDPOINTS.TEAM + "?search=" + name).then(data => {
             setState(prevState => ({
-                ...prevState, results: data.d.results, more: !!data.d.next, loading: false
+                ...prevState, results: data.results, more: !!data.next, loading: false
             }));
         }).catch(e => {
-            setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+            setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
         });
     };
 
     const editTeam = (team) => {
         return () => {
             setState(prevState => ({ ...prevState, loading: true }));
-            endpoints.get(ENDPOINTS.TEAM + team.id).then(data => {
-                setState(prevState => ({ ...prevState, loading: false, team: data.d }));
+            http.get(api.ENDPOINTS.TEAM + team.id).then(data => {
+                setState(prevState => ({ ...prevState, loading: false, team: data }));
             }).catch(e => {
-                setState(prevState => ({ ...prevState, error: endpoints.getError(e), loading: false }));
+                setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
             });
         };
     };
     const saveTeam = (team) => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
-            endpoints.modifyTeam(team.id, changes).then(() => {
+            api.modifyTeam(team.id, changes).then(() => {
                 app.alert("Modified team");
                 setState(prevState => ({ ...prevState, team: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(endpoints.getError(e));
+                app.alert(http.getError(e));
             });
         };
     };
@@ -60,45 +76,44 @@ export default () => {
             app.promptConfirm({
                 message: `Make ${member.username} the owner of ${team.name}?`, small: true
             }).then(() => {
-                endpoints.modifyTeam(team.id, { owner: member.id }).then(() => {
+                api.modifyTeam(team.id, { owner: member.id }).then(() => {
                     app.alert(`Transfered ownership to ${team.name}.`);
                     setState(prevState => {
                         if (!prevState.team) return prevState;
                         return { ...prevState, team: { ...prevState.team, owner: member.id } };
                     });
                 }).catch(e => {
-                    app.alert(endpoints.getError(e));
+                    app.alert(http.getError(e));
                 });
             }).catch(() => { });
         };
     };
 
-    return <SBTSection title={t("admin.teams")}>
+    return <>
+        <PageHead title={t("admin.teams")} />
         <Form handle={doSearch} locked={state.loading}>
             <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
             {state.error && <FormError>{state.error}</FormError>}
         </Form>
-        {state.loading && <Spinner />}
-        {state.results && <>
-            <br />
+        <br />
+        {state.loading && <Row><Spinner /></Row>}
+        {state.results && <Row>
             {state.results.length ? <>
-                {state.more && <><FlexRow>
+                {state.more && <p>
                     Additional results were omitted. Please refine your search.
-                </FlexRow><br /></>}
-                {state.results.map(i => <Leader click={editTeam(i)} key={i.id}>{i.name}</Leader>)}
-            </> : <FlexRow><br />
-                No results found
-            </FlexRow>}
-        </>}
+                </p>}
+                    {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+            </> : <p>No results found</p>}
+        </Row>}
         {state.team && <Modal onHide={close}>
             <Form handle={saveTeam(state.team)} locked={state.loading}>
                 <FormGroup label={"Team Name"} htmlFor={"name"}>
                     <Input val={state.team.name} name={"name"} />
                 </FormGroup>
                 <FormGroup label={"Rights"}>
-                    <FlexRow left>
+                    <Row left>
                         <Checkbox checked={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
-                    </FlexRow>
+                    </Row>
                 </FormGroup>
                 <FormGroup label={"Password"} htmlFor={"password"}>
                     <Input val={state.team.password} name={"password"} />
@@ -108,17 +123,17 @@ export default () => {
                 </FormGroup>
                 <FormGroup label={"Members"}>
                     {state.team.members.map(i => {
-                        let owner = i.id === state.team.owner;
+                        const owner = i.id === state.team.owner;
                         return <Leader sub={owner ? "Owner" : ""} none={owner}
-                            click={!owner ? makeOwner(state.team, i) : null}>
+                            onClick={!owner ? makeOwner(state.team, i) : null}>
                             {i.username}
                         </Leader>;
                     })}
                 </FormGroup>
-                <FlexRow>
+                <Row>
                     <Button submit>Save</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Modal>}
-    </SBTSection>;
+    </>;
 };

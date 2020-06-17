@@ -1,27 +1,44 @@
-import React, { useContext } from "react";
-import { useTranslation } from 'react-i18next';
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-import { Page, SectionTitle2, Button, FlexRow } from "@ractf/ui-kit";
-import { apiContext } from "ractf";
+import { H2, Page, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
 
 
 export default () => {
-    const api = useContext(apiContext);
     const { t } = useTranslation();
+    const team = useSelector(state => state.team);
     
-    if (api.team) return <Redirect to={"/team"}/>;
+    if (team) return <Redirect to={"/team"}/>;
 
     return <Page vCentre>
         <Wrap>
-            <SectionTitle2>{t("auth.welcome")}</SectionTitle2>
+            <H2>{t("auth.welcome")}</H2>
             <br />
             <div>{t("auth.next")}</div>
-            <FlexRow>
+            <Row>
                 <Button to={"/team/new"}>{t("create_a_team")}</Button>
                 <Button to={"/team/join"}>{t("join_a_team")}</Button>
-            </FlexRow>
+            </Row>
         </Wrap>
     </Page>;
 };

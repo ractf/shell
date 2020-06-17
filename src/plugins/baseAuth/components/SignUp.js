@@ -1,16 +1,32 @@
-import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FlexRow, Link,
-    Checkbox, FormGroup
+    Form, FormError, Page, Input, Button, Row, Link,
+    Checkbox, FormGroup, H2
 } from "@ractf/ui-kit";
-import { apiEndpoints, zxcvbn } from "ractf";
+import { api, http, zxcvbn } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
 
 
 export default () => {
-    const endpoints = useContext(apiEndpoints);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
@@ -35,18 +51,18 @@ export default () => {
         }
 
         setLocked(true);
-        endpoints.register(username, passwd1, email).catch(
+        api.register(username, passwd1, email).catch(
             message => {
-                setMessage(endpoints.getError(message));
+                setMessage(http.getError(message));
                 setLocked(false);
             }
         );
     };
 
-    return <Page vCentre>
+    return <Page centre>
         <Wrap>
             <Form locked={locked} handle={doRegister}>
-                <SectionTitle2>{t("auth.register")}</SectionTitle2>
+                <H2>{t("auth.register")}</H2>
 
                 <FormGroup>
                     <Input name={"username"} placeholder={t("username")} />
@@ -63,9 +79,9 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <FlexRow right>
+                <Row right>
                     <Button large submit>{t("register")}</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Wrap>
     </Page>;

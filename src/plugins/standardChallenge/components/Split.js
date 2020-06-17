@@ -1,6 +1,24 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
 import React, { useState } from "react";
 
 import "./Split.scss";
+import { Row, Column } from "@ractf/ui-kit";
 
 
 export default ({ children, ...props }) => {
@@ -23,8 +41,16 @@ export default ({ children, ...props }) => {
             ...props
         });
     }
-    return <div className={(right ? "challengeSplit" : "")}>
-        {showLeft && left && <div className={"challengeLeft"}><div>{left}</div></div>}
-        {showRight && right && <div className={"challengeRight"}><div>{right}</div></div>}
-    </div>;
+
+    const double = (left && showLeft && right && showRight);
+    const wasDouble = (left && right);
+
+    return <Row className={wasDouble && "challengeSplit"}>
+        {showLeft && left && <Column lgWidth={double ? 6 : 12} className={"challengeLeft"}>
+            {left}
+        </Column>}
+        {showRight && right && <Column lgWidth={double ? 6 : 12} className={"challengeRight"}>
+            {right}
+        </Column>}
+    </Row>;
 };

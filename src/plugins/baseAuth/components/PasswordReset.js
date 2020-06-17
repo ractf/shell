@@ -1,18 +1,34 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
 import React, { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
 import { useReactRouter } from "@ractf/util";
 import {
-    Form, FormError, Page, SectionTitle2, Input, Button, FormGroup, FlexRow
+    Form, FormError, Page, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
-import { apiEndpoints, appContext, zxcvbn } from "ractf";
+import { api, http, appContext, zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
 
 
 export default () => {
-    const endpoints = useContext(apiEndpoints);
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
@@ -34,11 +50,11 @@ export default () => {
             return setMessage((strength.feedback.warning || t("auth.pass_weak")));
 
         setLocked(true);
-        endpoints.completePasswordReset(props.id, props.secret, passwd1).then(() => {
+        api.completePasswordReset(props.id, props.secret, passwd1).then(() => {
             app.alert(t("auth.pass_reset"));
         }).catch(
             message => {
-                setMessage(endpoints.getError(message));
+                setMessage(http.getError(message));
                 setLocked(false);
             }
         );
@@ -47,7 +63,7 @@ export default () => {
     return <Page vCentre>
         <Wrap>
             <Form locked={locked} handle={doReset}>
-                <SectionTitle2>{t("auth.reset_password")}</SectionTitle2>
+                <H2>{t("auth.reset_password")}</H2>
 
                 <FormGroup>
                     <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
@@ -56,9 +72,9 @@ export default () => {
 
                 {message && <FormError>{message}</FormError>}
 
-                <FlexRow right>
+                <Row right>
                     <Button large submit>{t("auth.reset")}</Button>
-                </FlexRow>
+                </Row>
             </Form>
         </Wrap>
     </Page>;

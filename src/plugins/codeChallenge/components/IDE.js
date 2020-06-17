@@ -1,44 +1,62 @@
-import React, { useState, useContext } from "react";
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import CodeInput from "./CodeInput";
 
-import { apiContext, apiEndpoints } from "ractf";
+import { codeRunAbort } from "../actions";
+import { runCode } from "../api";
+import { store } from "store";
 
 import "./IDE.scss";
 
 
 const Console = () => {
-    const api = useContext(apiContext);
+    const runState = useSelector(state => state.codeRun);
     let content;
-    if (api.codeRunState.error)
-        content = "Error: " + api.codeRunState.error;
-    else if (api.codeRunState.output)
-        content = api.codeRunState.output;
+    if (runState.error)
+        content = "Error: " + runState.error;
+    else if (runState.output)
+        content = runState.output;
     else
-        content = '';
+        content = "";
     return <div className={"ide-console"}>{content}</div>;
 };
 
 export default ({ challenge, showLeft, setLeft }) => {
     const [console, setConsole] = useState(false);
-    const endpoints = useContext(apiEndpoints);
-    const api = useContext(apiContext);
     const [content, setContent] = useState(challenge.challenge_metadata.code_default || "");
+    const runState = useSelector(state => state.codeRun);
     const lang = challenge.challenge_metadata.code_language || "python";
 
     const run = () => {
-        endpoints.runCode(lang, "main.py", content);
+        runCode(lang, "main.py", content);
         setConsole(true);
     };
     const stop = () => {
-        endpoints.abortRunCode();
+        store.dispatch(codeRunAbort());
     };
 
     return <div className={"ide-editor" + (showLeft ? "" : " ie-row")}>
         <div className={"editor-top"}>
             <CodeInput val={content} onChange={setContent} lang={lang} />
             <div className={"editor-toolbar"}>
-                {api.codeRunState.running ?
+                {runState.running ?
                     <div className={"etb-button"} onClick={stop}>Stop</div>
                     : <div className={"etb-button run"} onClick={run}>Run</div>
                 }

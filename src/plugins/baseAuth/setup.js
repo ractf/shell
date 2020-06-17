@@ -1,4 +1,22 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
 import { registerPlugin } from "ractf";
+import { push } from "connected-react-router";
 
 import { EmailVerif, EmailMessage } from "./components/EmailVerif";
 import { JoinTeam, CreateTeam } from "./components/Teams";
@@ -6,6 +24,8 @@ import PasswordReset from "./components/PasswordReset";
 import NoTeam from "./components/NoTeam";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
+
+import { store } from "store";
 
 
 export default () => {
@@ -21,12 +41,13 @@ export default () => {
     registerPlugin("registrationProvider", "basic_auth", {
         component: SignUp,
     });
-    registerPlugin("postLogin", "noteam", ({ api, history }) => {
-        if (api.team)
-            if (api.challenges.length)
-                history.push("/campaign");
-            else history.push("/");
-        else history.push("/noteam");
+    registerPlugin("postLogin", "noteam", () => {
+        const { team, challenges: { categories } } = store.getState();
+        if (team)
+            if (categories.length)
+                store.dispatch(push("/campaign"));
+            else store.dispatch(push("/"));
+        else store.dispatch(push("/noteam"));
     });
 
     registerPlugin("page", "/noteam", {
