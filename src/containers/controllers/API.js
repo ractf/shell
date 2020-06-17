@@ -850,18 +850,6 @@ class APIClass extends Component {
         this.setState({ codeRunState: { running: false } });
     };
 
-    getStatus = (setter) => {
-        const errorMessage = [{
-            "name": "An error was encountered whilst attempting to fetch status",
-            "status": "offline",
-            "details": ""
-        }];
-
-        this.get(ENDPOINTS.STATUS).then( resp => {
-            return setter(resp.d);
-        }).catch((err) => setter(errorMessage));
-    }
-
     // React
     render() {
         return <APIContext.Provider value={this.state}>

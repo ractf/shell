@@ -52,4 +52,6 @@ export const ENDPOINTS = {
 
     STATS: "/stats/stats/",
     VERSION: "/stats/version/",
+
+    STATUS: "/status/"
 };
