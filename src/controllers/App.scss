@@ -41,7 +41,7 @@ html {
 }
 body {
     font-family: $fontStack;
-    background-color: $background-color;
+    background-color: $background;
     color: $color;
     height: 100%;
     width: 100%;
@@ -114,7 +114,7 @@ b {
     vertical-align: middle;
 }
 .redacted::after {
-    background: $back_850;
+    background: map-get($colours, "black");
     border-radius: 0.1em;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
     content: " ";
@@ -202,8 +202,8 @@ b {
 }
 
 .eventPopup {
-    background-color: $back_850;
-    border: 1px solid $back_600;
+    background-color: $background;
+    border: 1px solid $back_lift;
     display: inline-block;
     width: 300px;
     margin-top: 16px;
@@ -220,7 +220,8 @@ b {
     z-index: 10000;
 
     &>div {
-        background-color: $back_850;
+        background-color: $background;
+        border: 1px solid $back_lift;
         display: inline-block;
         width: 300px;
         margin-top: 16px;
@@ -241,7 +242,7 @@ b {
 
         & b {
             font-weight: 700;
-            color: $bgreen;
+            color: map-get($colours, "green");
         }
     }
 }
@@ -287,7 +288,7 @@ b {
     &.less {
         background-color: map-get($colours, "yellow");
     }
-    color: $back_900;
+    color: map-get($colours, "black");
     font-weight: 600;
     font-size: 18px;
     cursor: default;

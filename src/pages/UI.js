@@ -26,6 +26,7 @@ import {
     Footer, FootRow, FootCol, FootLink, Column, Breadcrumbs, Crumb, Form,
     BareForm
 } from "@ractf/ui-kit";
+import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
 
 
@@ -124,50 +125,35 @@ export default () => <Page><Row left>
     <H2>Badges</H2>
     <Column lgWidth={6} mdWidth={12}>
         <Row left tight>
-            <Badge primary>Primary</Badge>
-            <Badge secondary>Secondary</Badge>
-            <Badge success>Success</Badge>
-            <Badge info>Info</Badge>
-            <Badge warning>Warning</Badge>
-            <Badge danger>Danger</Badge>
+            {TYPES.map(type => (
+                <Badge {...{ [type]: true }} key={type}>{type}</Badge>
+            ))}
         </Row>
     </Column>
     <Column lgWidth={6} mdWidth={12}>
         <Row left tight>
-            <Badge pill primary>Primary</Badge>
-            <Badge pill secondary>Secondary</Badge>
-            <Badge pill success>Success</Badge>
-            <Badge pill info>Info</Badge>
-            <Badge pill warning>Warning</Badge>
-            <Badge pill danger>Danger</Badge>
+            {TYPES.map(type => (
+                <Badge pill {...{ [type]: true }} key={type}>{type}</Badge>
+            ))}
         </Row>
     </Column>
     <HR />
     <H2>Buttons</H2>
     <Column lgWidth={6} mdWidth={12}>
         <Row left>
-            <Button>Primary</Button>
-            <Button secondary>Secondary</Button>
-            <Button success>Success</Button>
-            <Button info>Info</Button>
-            <Button warning>Warning</Button>
-            <Button danger>Danger</Button>
+            {TYPES.map(type => (
+                <Button {...{ [type]: true }} key={type}>{type}</Button>
+            ))}
         </Row>
         <Row left>
-            <Button disabled>Primary</Button>
-            <Button disabled secondary>Secondary</Button>
-            <Button disabled success>Success</Button>
-            <Button disabled info>Info</Button>
-            <Button disabled warning>Warning</Button>
-            <Button disabled danger>Danger</Button>
+            {TYPES.map(type => (
+                <Button disabled {...{ [type]: true }} key={type}>{type}</Button>
+            ))}
         </Row>
         <Row left>
-            <Button lesser>Primary</Button>
-            <Button lesser secondary>Secondary</Button>
-            <Button lesser success>Success</Button>
-            <Button lesser info>Info</Button>
-            <Button lesser warning>Warning</Button>
-            <Button lesser danger>Danger</Button>
+            {TYPES.map(type => (
+                <Button lesser {...{ [type]: true }} key={type}>{type}</Button>
+            ))}
         </Row>
         <Row left>
             <Button large>Large</Button>
@@ -181,28 +167,19 @@ export default () => <Page><Row left>
     </Column>
     <Column lgWidth={6} mdWidth={12}>
         <Row left>
-            <Button pill>Primary</Button>
-            <Button pill secondary>Secondary</Button>
-            <Button pill success>Success</Button>
-            <Button pill info>Info</Button>
-            <Button pill warning>Warning</Button>
-            <Button pill danger>Danger</Button>
+            {TYPES.map(type => (
+                <Button pill {...{ [type]: true }} key={type}>{type}</Button>
+            ))}
         </Row>
         <Row left>
-            <Button pill disabled>Primary</Button>
-            <Button pill disabled secondary>Secondary</Button>
-            <Button pill disabled success>Success</Button>
-            <Button pill disabled info>Info</Button>
-            <Button pill disabled warning>Warning</Button>
-            <Button pill disabled danger>Danger</Button>
+            {TYPES.map(type => (
+                <Button pill disabled {...{ [type]: true }} key={type}>{type}</Button>
+            ))}
         </Row>
         <Row left>
-            <Button pill lesser>Primary</Button>
-            <Button pill lesser secondary>Secondary</Button>
-            <Button pill lesser success>Success</Button>
-            <Button pill lesser info>Info</Button>
-            <Button pill lesser warning>Warning</Button>
-            <Button pill lesser danger>Danger</Button>
+            {TYPES.map(type => (
+                <Button pill lesser {...{ [type]: true }} key={type}>{type}</Button>
+            ))}
         </Row>
         <Row left>
             <Button pill large>Large</Button>
@@ -238,10 +215,12 @@ export default () => <Page><Row left>
         </Form>
     </Column>
     <Column lgWidth={6}>
-        <Form>
+        <Form locked>
             <FormGroup label={"Disabled"}>
-                <Input name="dis" placeholder={"Disabled"} disabled />
+                <Input name="dis" placeholder={"Disabled"} />
             </FormGroup>
+        </Form>
+        <Form>
             <FormGroup label={"Input Groups"}>
                 <InputButton name="inl" placeholder={"Inline Submit"} />
                 <InputGroup name="ing" left={
@@ -251,14 +230,15 @@ export default () => <Page><Row left>
                     <Button danger>Remove</Button>
                 </>} />
             </FormGroup>
-
+        </Form>
+        <Form locked>
             <FormGroup label={"Disabled Input Groups"}>
-                <InputButton name="din" placeholder={"Disabled Inline Submit"} disabled />
-                <InputGroup name="dig" disabled left={
+                <InputButton name="din" placeholder={"Disabled Inline Submit"} />
+                <InputGroup name="dig" left={
                     <InputHint>@</InputHint>
                 } right={<>
-                    <Button disabled success>Add New</Button>
-                    <Button disabled danger>Remove</Button>
+                    <Button success>Add New</Button>
+                    <Button danger>Remove</Button>
                 </>} />
             </FormGroup>
         </Form>

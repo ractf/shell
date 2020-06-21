@@ -21,7 +21,7 @@ export { default as useWindowSize } from "./useWindowSize";
 export { default as useConfig } from "./useConfig";
 export { default as getUUID } from "./getUUID";
 
-export const TYPES = ["primary", "secondary", "success", "info", "warning", "danger", "light"];
+export const TYPES = ["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"];
 
 export const makeClass = (...classes) => (
     classes.filter(x => !!x).join(" ")
@@ -49,13 +49,18 @@ export const basicComponent = (localClass, name, element) => {
 };
 
 export const propsToTypeClass = (props, styles, fallback) => {
-    let className = "";
-    for (const i of TYPES) {
-        if (props[i]) {
-            if (className.length) className += " ";
-            className += styles[i];
-        };
+    const className = [];
+
+    let willFallback = true;
+    for (const i of Object.keys(props)) {
+        if (props[i] && styles[i]) {
+            className.push(styles[i]);
+            if (TYPES.indexOf(i) !== -1)
+                willFallback = false;
+        }
     }
-    if (!className.length && fallback) className += styles[fallback];
-    return className;
+    if (willFallback && fallback) {
+        className.push(styles[fallback]);
+    }
+    return makeClass(...className);
 };

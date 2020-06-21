@@ -133,7 +133,7 @@ export default () => {
                             labels: ["Correct", "Incorrect"],
                             marker: {
                                 colors: [
-                                    colours.bgreen,
+                                    colours.green,
                                     colours.red
                                 ]
                             }
@@ -167,7 +167,7 @@ export default () => {
                                         labels: ["Correct", "Incorrect"],
                                         marker: {
                                             colors: [
-                                                colours.bgreen,
+                                                colours.green,
                                                 colours.red
                                             ]
                                         }

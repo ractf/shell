@@ -31,7 +31,7 @@ import Header from "./Header";
 import footerLogo from "../static/spine.svg";
 import { useConfig } from "@ractf/util";
 
-const USE_HEAD_NAV = true;
+const USE_HEAD_NAV = false;
 
 
 const HeaderNav = () => {
@@ -145,7 +145,7 @@ const SideBarNav = ({ children }) => {
 
     return <>
         <Header />
-        <SideNav header={header} footer={footer} items={menu}>
+        <SideNav ractfSidebar header={header} footer={footer} items={menu}>
             {children}
         </SideNav>
     </>;
