@@ -27,6 +27,6 @@ export default () => {
             registerPlugin("errorHandler", "sentry", (error, errorInfo) => {
                 Sentry.captureException(error, { extra: errorInfo });
             });
-        }
+        });
     }
 };

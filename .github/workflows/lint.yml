@@ -57,5 +57,5 @@ jobs:
     - name: Install dependencies
       run: npm ci --progress=false
 
-    - name: Run Build
-      run: npm run build
+    - name: Run Lint
+      run: npm run lint
