@@ -22,7 +22,7 @@ import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
 import { PERSIST, PURGE } from "redux-persist/es/constants";
 import createReducer from "./reducers";
-import localForage from "localforage";
+import storage from "redux-persist/lib/storage";
 
 export const history = createBrowserHistory();
 
@@ -31,7 +31,7 @@ const syncConfig = {
 };
 const persistConfig = {
     key: "root",
-    storage: localForage,
+    storage: storage,
 };
 
 const middleware = [
@@ -52,6 +52,7 @@ store.asyncReducers = {};
 const injectReducer = (store, name, asyncReducer) => {
     store.asyncReducers[name] = asyncReducer;
     store.replaceReducer(persistReducer(persistConfig, createReducer(history, store.asyncReducers)));
+    persistor.persist();
 };
 const persistor = persistStore(store);
 initMessageListener(store);
