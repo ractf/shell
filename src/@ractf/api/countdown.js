@@ -15,9 +15,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { api, http } from "ractf";
+import { getChallenges } from "@ractf/api";
 import * as actions from "actions";
 import { store } from "store";
+import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -40,7 +41,7 @@ export const recheckCountdowns = (old) => {
             changed = true;
     });
     if (old) return countdown;
-    if (changed) api.getChallenges();
+    if (changed) getChallenges();
 
     store.dispatch(actions.setCountdowns(countdown));
 };

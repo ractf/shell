@@ -20,9 +20,10 @@ import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
 import { Page, Spinner, FormError } from "@ractf/ui-kit";
-import { api, http } from "ractf";
 import { useReactRouter } from "@ractf/util";
+import { verify } from "@ractf/api";
 import { Wrap } from "./Parts";
+import http from "@ractf/http";
 
 
 export const EmailVerif = () => {
@@ -35,7 +36,7 @@ export const EmailVerif = () => {
     const secret = props.secret;
 
     useEffect(() => {
-        api.verify(id, secret).then(() => {
+        verify(id, secret).then(() => {
             setVerif(2);
         }).catch((e) => {
             setMessage(http.getError(e));

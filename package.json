@@ -45,6 +45,7 @@
     "pigeon-marker": "^0.3.4",
     "pnp-webpack-plugin": "1.2.1",
     "polished": "^3.5.1",
+    "popper.js": "^1.16.1",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
     "postcss-normalize": "7.0.1",
@@ -68,6 +69,7 @@
     "react-markdown": "^4.3.1",
     "react-moment": "^0.9.7",
     "react-plotly.js": "^2.4.0",
+    "react-popper": "^2.2.3",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-simple-code-editor": "^0.11.0",
@@ -88,6 +90,7 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js"
   },
@@ -126,6 +129,7 @@
     ]
   },
   "devDependencies": {
-    "html-replace-webpack-plugin": "^2.5.6"
+    "html-replace-webpack-plugin": "^2.5.6",
+    "source-map-explorer": "^2.4.2"
   }
 }

@@ -18,17 +18,19 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { api, http, appContext, useApi } from "ractf";
 import {
     Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead
 } from "@ractf/ui-kit";
+import { appContext, useApi } from "ractf";
+import { ENDPOINTS } from "@ractf/api";
+import http from "@ractf/http";
 
 import { addAnnouncement, removeAnnouncement } from "../api/announcements";
 
 
 export default () => {
     const app = useContext(appContext);
-    const [announcements] = useApi(api.ENDPOINTS.ANNOUNCEMENTS);
+    const [announcements] = useApi(ENDPOINTS.ANNOUNCEMENTS);
     const [localA, setLocalA] = useState(null);
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();

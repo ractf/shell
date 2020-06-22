@@ -19,7 +19,9 @@ import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { api, http, appContext } from "ractf";
+import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
+import { appContext } from "ractf";
+import http from "@ractf/http";
 import { Button, PageHead, Card, Row } from "@ractf/ui-kit";
 
 
@@ -129,7 +131,7 @@ export default () => {
     const exportPlayers = () => {
         app.showProgress("Exporting users", 0);
 
-        http.get(api.ENDPOINTS.STATS).then(({ user_count }) => {
+        http.get(ENDPOINTS.STATS).then(({ user_count }) => {
             if (user_count === 0) return app.alert("No users to export!");
 
             const every = data => app.showProgress(
@@ -138,7 +140,7 @@ export default () => {
             );
             every([]);
 
-            fullyPaginate(api.ENDPOINTS.USER, every).then(data => {
+            fullyPaginate(ENDPOINTS.USER, every).then(data => {
                 data = data.map(i => [
                     i.id, i.username, i.email, i.email_verified, i.date_joined,
                     i.is_active, i.is_visible, i.is_staff,
@@ -162,7 +164,7 @@ export default () => {
     const exportTeams = () => {
         app.showProgress("Exporting teams", 0);
 
-        http.get(api.ENDPOINTS.STATS).then(({ team_count }) => {
+        http.get(ENDPOINTS.STATS).then(({ team_count }) => {
             if (team_count === 0) return app.alert("No teams to export!");
 
             const every = data => app.showProgress(
@@ -171,7 +173,7 @@ export default () => {
             );
             every([]);
 
-            fullyPaginate(api.ENDPOINTS.TEAM, every).then(data => {
+            fullyPaginate(ENDPOINTS.TEAM, every).then(data => {
                 data = data.map(i => [
                     i.id, i.name, i.is_visible,
                     i.owner, i.password,
@@ -189,8 +191,8 @@ export default () => {
     const exportLeaderboard = () => {
         const progress = [false, false];
         app.showProgress("Exporting...", 0);
-        
-        fullyPaginate(api.ENDPOINTS.LEADERBOARD_TEAM).then(data => {
+
+        fullyPaginate(ENDPOINTS.LEADERBOARD_TEAM).then(data => {
             data = data.map(i => [
                 i.name, i.leaderboard_points
             ]);
@@ -203,7 +205,7 @@ export default () => {
                 "team name", "points"
             ], ...data], "team leaderboard");
         });
-        fullyPaginate(api.ENDPOINTS.LEADERBOARD_USER).then(data => {
+        fullyPaginate(ENDPOINTS.LEADERBOARD_USER).then(data => {
             data = data.map(i => [
                 i.username, i.leaderboard_points
             ]);
@@ -282,7 +284,7 @@ export default () => {
     };
 
     const importChallengeData = (cat, data) => {
-        return api.createChallenge({
+        return createChallenge({
             id: cat, name: data.name,
             description: data.description,
             challenge_type: data.challenge_type,
@@ -295,10 +297,10 @@ export default () => {
             flag_metadata: data.flag_metadata,
         }).then.then(async (chal) => {
             await Promise.all([
-                ...data.hints.map(hint => api.newHint(
+                ...data.hints.map(hint => newHint(
                     chal.id, hint.name, hint.penalty, hint.text
                 )),
-                ...data.files.map(file => api.newFile(
+                ...data.files.map(file => newFile(
                     chal.id, file.name, file.url, file.size
                 ))
             ]);
@@ -320,10 +322,10 @@ export default () => {
             ]).then(({ cat }) => {
                 if (typeof cat === "number") {
                     importChallengeData(cat, data).then(() => {
-                        api.reloadAll();
+                        reloadAll();
                         app.alert("Imported challenge!");
                     }).catch(e => {
-                        api.reloadAll();
+                        reloadAll();
                         app.alert("Failed to import challenge:\n" + http.getError(e));
                         console.error(e);
                     });
@@ -337,7 +339,7 @@ export default () => {
             if (!validate_category(data))
                 return app.alert("Invalid category data");
             app.showProgress("Creating category...", .5);
-            api.createGroup(data.name, data.description, data.contained_type)
+            createGroup(data.name, data.description, data.contained_type)
                 .then(async ({ id }) => {
                     const challenge_map = {};
                     let progress = 0;
@@ -351,7 +353,7 @@ export default () => {
                 }).then(challenge_map => {
                     let progress = 0;
                     return Promise.all(data.challenges.map(chal => (
-                        api.editChallenge({
+                        editChallenge({
                             ...challenge_map[chal.id],
                             unlocks: chal.unlocks.map(i => challenge_map[i].id)
                         }).then(() => {
@@ -360,10 +362,10 @@ export default () => {
                         })
                     )));
                 }).then(() => {
-                    api.reloadAll();
+                    reloadAll();
                     app.alert("Imported category!");
                 }).catch(e => {
-                    api.reloadAll();
+                    reloadAll();
                     app.alert("Failed to import category:\n" + http.getError(e));
                     console.error(e);
                 });

@@ -24,8 +24,9 @@ import {
     Form, FormError, Page, HR, Input, Button, Row,
     SubtleText, Link, FormGroup, H2
 } from "@ractf/ui-kit";
-import { api, http } from "ractf";
+import { joinTeam, createTeam, reloadAll } from "@ractf/api";
 import { Wrap } from "./Parts";
+import http from "@ractf/http";
 
 
 export const JoinTeam = () => {
@@ -44,7 +45,7 @@ export const JoinTeam = () => {
             return setMessage(t("team_wiz.name_missing"));
 
         setLocked(true);
-        api.joinTeam(name, password).then(resp => {
+        joinTeam(name, password).then(resp => {
             setSuccess(true);
         }).catch(e => {
             setMessage(http.getError(e));
@@ -108,8 +109,8 @@ export const CreateTeam = () => {
             return setMessage(t("team_wiz.pass_short"));
 
         setLocked(true);
-        api.createTeam(name, password).then(resp => {
-            api.reloadAll();
+        createTeam(name, password).then(resp => {
+            reloadAll();
             setSuccess(true);
         }).catch(e => {
             setMessage(http.getError(e));

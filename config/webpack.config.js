@@ -342,6 +342,8 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
+      // Remove all moment.js locales besides en
+      new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
       new HtmlReplaceWebpackPlugin([
         {
           pattern: '__DISABLE_DEVTOOLS__',

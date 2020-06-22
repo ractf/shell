@@ -21,7 +21,7 @@ import codeRunReducer from "./reducers/codeRunReducer";
 
 
 export default () => {
-    const chal = dynamicLoad(() => import("./components/IDE"));
+    const chal = dynamicLoad(() => import(/* webpackChunkName: "ide" */ "./components/IDE"));
 
     registerReducer("codeRun", codeRunReducer);
 

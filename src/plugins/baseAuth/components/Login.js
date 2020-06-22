@@ -22,8 +22,10 @@ import {
     Form, FormError, Page, Input, Button, Row, FormGroup,
     Link, H2
 } from "@ractf/ui-kit";
-import { api, http, appContext } from "ractf";
+import { login, requestPasswordReset } from "@ractf/api";
 import { Wrap, EMAIL_RE } from "./Parts";
+import { appContext } from "ractf";
+import http from "@ractf/http";
 
 
 export default () => {
@@ -39,7 +41,7 @@ export default () => {
             return setMessage(t("auth.no_pass"));
 
         setLocked(true);
-        api.login(username, password, pin).catch(
+        login(username, password, pin).catch(
             message => {
                 if (message.response && message.response.data && message.response.data.d.reason === "2fa_required") {
                     // 2fa required
@@ -67,7 +69,7 @@ export default () => {
         app.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
             [{ name: "email", placeholder: t("email"), format: EMAIL_RE }]
         ).then(({ email }) => {
-            api.requestPasswordReset(email).then(() => {
+            requestPasswordReset(email).then(() => {
                 app.alert(t("auth.email_sent"));
             }).catch(e => {
                 app.alert(http.getError(e));

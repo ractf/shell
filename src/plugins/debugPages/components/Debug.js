@@ -20,12 +20,13 @@ import React from "react";
 import {
     Page, HR, Button, TextBlock, Row, H2
 } from "@ractf/ui-kit";
-import { api, useApi } from "ractf";
+import { ENDPOINTS } from "@ractf/api";
+import { useApi } from "ractf";
 import { store } from "store";
 
 
 export default () => {
-    const [backendVersion] = useApi(api.ENDPOINTS.VERSION);
+    const [backendVersion] = useApi(ENDPOINTS.VERSION);
 
     const state = store.getState();
     const challenges = state.challenges?.categories;

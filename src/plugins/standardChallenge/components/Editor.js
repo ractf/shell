@@ -22,7 +22,9 @@ import {
     Form, Input, Row, Checkbox, Button, Select, HR, PageHead, Link, Tab,
     TabbedView, FlashText, FormGroup
 } from "@ractf/ui-kit";
-import { api, http, plugins, appContext } from "ractf";
+import { plugins, appContext } from "ractf";
+import { newHint, newFile } from "@ractf/api";
+import http from "@ractf/http";
 
 import File from "./File";
 import Hint from "./Hint";
@@ -96,7 +98,7 @@ const HintEditor = ({ challenge }) => {
 
             if (!cost.match(/\d+/)) return app.alert("Invalid file size!");
 
-            api.newHint(challenge.id, name, cost, body).then(() =>
+            newHint(challenge.id, name, cost, body).then(() =>
                 app.alert("New hint added!")
             ).catch(e =>
                 app.alert("Error creating new hint:\n" + http.getError(e))
@@ -131,7 +133,7 @@ const FileEditor = ({ challenge }) => {
         ).then(({ name, url, size }) => {
             if (!size.match(/\d+/)) return app.alert("Invalid file size!");
 
-            api.newFile(challenge.id, name, url, size).then((id) => {
+            newFile(challenge.id, name, url, size).then((id) => {
                 challenge.files.push(id);
                 app.alert("New file added!");
             }).catch(e =>

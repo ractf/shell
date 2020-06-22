@@ -20,7 +20,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from "react-i18next";
 
-import { api, http, appContext, zxcvbn, getLocalConfig } from "ractf";
+import { appContext, zxcvbn, getLocalConfig } from "ractf";
+import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
+import http from "@ractf/http";
 import {
     Page, HR, Row, TabbedView, Tab, Button, Form, FormError, Input,
     Checkbox, FormGroup, InputButton, Leader
@@ -39,11 +41,11 @@ const makeOwner = (team, app, member, t) => {
             </>), small: true
         }).then(() => {
             // Kick 'em
-            api.modifyTeam("self", { captain: member.id }).then(() => {
+            modifyTeam("self", { captain: member.id }).then(() => {
                 app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
-                api.reloadAll();
+                reloadAll();
             }).catch(e => {
-                api.promptConfirm({ message: t("error") + http.getError(e), noCancel: true, small: true });
+                app.promptConfirm({ message: t("error") + http.getError(e), noCancel: true, small: true });
             });
         }).catch(() => {
         });
@@ -109,11 +111,11 @@ export default () => {
     };
     const detailsUpdated = () => {
         app.alert(t("settings.details_changed"));
-        api.reloadAll();
+        reloadAll();
     };
     const teamUpdated = () => {
         app.alert(t("settings.team_details_changed"));
-        api.reloadAll();
+        reloadAll();
     };
 
     const saveNotificationPrefs = (args) => {
@@ -130,7 +132,7 @@ export default () => {
     return <Page title={t("settings.for", { name: user.username })}>
         <TabbedView>
             <Tab label={t("user")}>
-                <Form action={api.ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
+                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
                     postSubmit={usernameChanged}>
                     <FormGroup htmlFor={"username"} label={t("username")}>
                         <InputButton name={"username"} label={t("username")} val={user.username}
@@ -138,7 +140,7 @@ export default () => {
                     </FormGroup>
                 </Form>
                 <HR />
-                <Form action={api.ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
+                <Form action={ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
                     postSubmit={passwordChanged}>
                     <FormGroup>
                         <Input password name={"old_password"} placeholder={t("curr_pass")} />
@@ -165,7 +167,7 @@ export default () => {
                 }
             </Tab>
             <Tab label={t("settings.profile")}>
-                <Form action={api.ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
+                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
                     <FormGroup htmlFor={"discord"} label={t("settings.discord")}>
                         <Input name={"discord"} val={user.discord} limit={36} placeholder={t("settings.discord")} />
                         <Input name={"discordid"} val={user.discordid} format={/\d+/} limit={18}
@@ -189,7 +191,7 @@ export default () => {
             </Tab>
             <Tab label={t("team")}>
                 {team ? <>
-                    <Form action={api.ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
+                    <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
                         locked={!teamOwner}>
                         <FormGroup htmlFor={"name"} label={t("team_name")}>
                             <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />

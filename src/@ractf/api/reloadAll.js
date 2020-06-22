@@ -15,9 +15,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { api, http } from "ractf";
 import * as actions from "actions";
+import { logout } from "@ractf/api";
 import { store } from "store";
+import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -29,7 +30,7 @@ export const reloadAll = async (minimal) => {
             userData = await http.get(ENDPOINTS.USER + "self");
         } catch (e) {
             if (e.response && e.response.data)
-                return api.logout(true, http.getError(e));
+                return logout(true, http.getError(e));
         }
 
         if (userData && userData.team !== null) {
@@ -40,7 +41,7 @@ export const reloadAll = async (minimal) => {
                     teamData = null;
                 } else {
                     if (e.response && e.response.data)
-                        return api.logout(true, http.getError(e));
+                        return logout(true, http.getError(e));
                 }
             }
         } else teamData = null;

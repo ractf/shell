@@ -22,8 +22,10 @@ import {
     Form, FormError, Page, Input, Button, Row, Link,
     Checkbox, FormGroup, H2
 } from "@ractf/ui-kit";
-import { api, http, zxcvbn } from "ractf";
 import { Wrap, EMAIL_RE } from "./Parts";
+import { register } from "@ractf/api";
+import { zxcvbn } from "ractf";
+import http from "@ractf/http";
 
 
 export default () => {
@@ -51,7 +53,7 @@ export default () => {
         }
 
         setLocked(true);
-        api.register(username, passwd1, email).catch(
+        register(username, passwd1, email).catch(
             message => {
                 setMessage(http.getError(message));
                 setLocked(false);

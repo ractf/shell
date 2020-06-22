@@ -16,12 +16,11 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { store } from "store";
-import { http } from "ractf";
+import http from "@ractf/http";
 
 import * as actions from "../actions/announcements";
 
-import { api } from "ractf";
-const ENDPOINTS = api.ENDPOINTS;
+import { ENDPOINTS } from "@ractf/api";
 
 export const addAnnouncement = (title, body) => http.post(ENDPOINTS.ANNOUNCEMENTS, { title, body });
 

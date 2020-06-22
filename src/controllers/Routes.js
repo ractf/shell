@@ -25,18 +25,19 @@ import Countdown from "../pages/Countdown";
 import TeamPage from "../pages/TeamPage";
 
 import { Row, TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
-import { api, plugins, dynamicLoad } from "ractf";
+import { plugins, dynamicLoad } from "ractf";
 import { useConfig } from "@ractf/util";
+import { logout } from "@ractf/api";
 
 
-const ChallengePage = dynamicLoad(() => import("../pages/ChallengePage"));
-const SettingsPage = dynamicLoad(() => import("../pages/SettingsPage"));
-const Leaderboard = dynamicLoad(() => import("../pages/Leaderboard"));
-const AdminPage = dynamicLoad(() => import("../pages/AdminPage"));
-const Campaign = dynamicLoad(() => import("../pages/Campaign"));
-const Profile = dynamicLoad(() => import("../pages/Profile"));
-const TwoFA = dynamicLoad(() => import("../pages/TwoFA"));
-const UI = dynamicLoad(() => import("../pages/UI"));
+const ChallengePage = dynamicLoad(() => import(/* webpackChunkName: "challenge-page" */ "../pages/ChallengePage"));
+const SettingsPage = dynamicLoad(() => import(/* webpackChunkName: "settings-page" */ "../pages/SettingsPage"));
+const Leaderboard = dynamicLoad(() => import(/* webpackChunkName: "leaderboard" */ "../pages/Leaderboard"));
+const AdminPage = dynamicLoad(() => import(/* webpackChunkName: "admin-page" */ "../pages/AdminPage"));
+const Campaign = dynamicLoad(() => import(/* webpackChunkName: "campaign" */ "../pages/Campaign"));
+const Profile = dynamicLoad(() => import(/* webpackChunkName: "profile" */ "../pages/Profile"));
+const TwoFA = dynamicLoad(() => import(/* webpackChunkName: "2fa" */ "../pages/TwoFA"));
+const UI = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "../pages/UI"));
 
 
 class ErrorBoundary extends React.Component {
@@ -114,7 +115,7 @@ const Register = () => {
     </BasePage>;
 };
 const Logout = () => {
-    api.logout();
+    logout();
     return <Redirect to={"/home"} />;
 };
 

@@ -20,7 +20,9 @@ import { FaInfoCircle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 import "./Challenge.scss";
-import { api, http, appContext } from "ractf";
+import { removeHint, editHint } from "@ractf/api";
+import { appContext } from "ractf";
+import http from "@ractf/http";
 
 
 export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
@@ -28,7 +30,7 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
     const { t } = useTranslation();
 
     const edit = () => {
-        app.promptConfirm({message: "Edit hint", remove: () => api.removeHint(id)},
+        app.promptConfirm({message: "Edit hint", remove: () => removeHint(id)},
             [{name: "name", placeholder: "Hint name", val: name, label: "Name"},
              {name: "cost", placeholder: "Hint cost", val: points.toString(), label: "Cost", format: /\d+/},
              {name: "body", placeholder: "Hint text", val: body, label: "Message", rows: 5}]
@@ -36,7 +38,7 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
 
             if (!cost.toString().match(/\d+/)) return app.alert("Invalid hint const!");
 
-            api.editHint(id, name, cost, body).then(() =>
+            editHint(id, name, cost, body).then(() =>
                 app.alert("Hint edited!")
             ).catch(e =>
                 app.alert("Error editing hint:\n" + http.getError(e))

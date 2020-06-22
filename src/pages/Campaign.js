@@ -27,7 +27,9 @@ import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
     FlashText, Leader, Modal, Page, H2
 } from "@ractf/ui-kit";
-import { api, http, plugins, appContext } from "ractf";
+import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
+import { plugins, appContext } from "ractf";
+import http from "@ractf/http";
 
 import "./Campaign.scss";
 import { useSelector } from "react-redux";
@@ -47,8 +49,8 @@ const ANC = ({ hide, anc, modal }) => {
 
         setLocked(true);
 
-        (anc.id ? api.editGroup(anc.id, cname, cdesc, ctype)
-            : api.createGroup(cname, cdesc, ctype)).then(async resp => {
+        (anc.id ? editGroup(anc.id, cname, cdesc, ctype)
+            : createGroup(cname, cdesc, ctype)).then(async resp => {
                 if (hide)
                     hide();
             }).catch(e => {
@@ -64,13 +66,13 @@ const ANC = ({ hide, anc, modal }) => {
             app.showProgress("Removing challenges...", 0);
             let progress = 0;
             await Promise.all(anc.challenges.map(i => {
-                return api.quickRemoveChallenge(i).then(() => {
+                return quickRemoveChallenge(i).then(() => {
                     progress += 1 / anc.challenges.length;
                     app.showProgress("Removing challenges...", progress);
                 });
             }));
             app.showProgress("Removing category...", .5);
-            await api.removeGroup(anc.id);
+            await removeGroup(anc.id);
             dispatch(push("/campaign"));
             app.alert("Category removed!");
         }).catch(e => {

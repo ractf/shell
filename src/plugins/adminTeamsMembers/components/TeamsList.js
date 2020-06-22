@@ -22,7 +22,9 @@ import {
     Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
     FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
-import { api, http, appContext } from "ractf";
+import { ENDPOINTS, modifyTeam } from "@ractf/api";
+import { appContext } from "ractf";
+import http from "@ractf/http";
 
 
 export default () => {
@@ -35,7 +37,7 @@ export default () => {
     const doSearch = ({ name }) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
-        http.get(api.ENDPOINTS.TEAM + "?search=" + name).then(data => {
+        http.get(ENDPOINTS.TEAM + "?search=" + name).then(data => {
             setState(prevState => ({
                 ...prevState, results: data.results, more: !!data.next, loading: false
             }));
@@ -47,7 +49,7 @@ export default () => {
     const editTeam = (team) => {
         return () => {
             setState(prevState => ({ ...prevState, loading: true }));
-            http.get(api.ENDPOINTS.TEAM + team.id).then(data => {
+            http.get(ENDPOINTS.TEAM + team.id).then(data => {
                 setState(prevState => ({ ...prevState, loading: false, team: data }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
@@ -57,7 +59,7 @@ export default () => {
     const saveTeam = (team) => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
-            api.modifyTeam(team.id, changes).then(() => {
+            modifyTeam(team.id, changes).then(() => {
                 app.alert("Modified team");
                 setState(prevState => ({ ...prevState, team: null, loading: false }));
             }).catch(e => {
@@ -76,7 +78,7 @@ export default () => {
             app.promptConfirm({
                 message: `Make ${member.username} the owner of ${team.name}?`, small: true
             }).then(() => {
-                api.modifyTeam(team.id, { owner: member.id }).then(() => {
+                modifyTeam(team.id, { owner: member.id }).then(() => {
                     app.alert(`Transfered ownership to ${team.name}.`);
                     setState(prevState => {
                         if (!prevState.team) return prevState;

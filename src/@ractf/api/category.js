@@ -16,36 +16,34 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import * as actions from "actions";
+import { reloadAll } from "@ractf/api";
 import { store } from "store";
-import { http } from "ractf";
+import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
 
-export const newHint = (challenge, name, penalty, text) => (
-    http.post(ENDPOINTS.HINT, { challenge, name, penalty, text }).then(data => {
-        store.dispatch(actions.addHint(challenge, data));
+export const createGroup = (name, desc, type) => {
+    return http.post(ENDPOINTS.CATEGORIES, {
+        name, metadata: null, description: desc, contained_type: type
+    }).then(data => {
+        store.dispatch(actions.addCategory(data));
         return data;
-    })
-);
-
-export const editHint = (id, name, cost, text) => (
-    http.patch(ENDPOINTS.HINT + id, { name, cost, text }).then(() => {
-        store.dispatch(actions.editHint(id, { name, cost, text }));
-        return { name, cost, text };
-    })
-);
-
-export const removeHint = (id) => (
-    http.delete(ENDPOINTS.HINT + id).then(data => {
-        store.dispatch(actions.removeHint(id));
+    });
+};
+export const removeGroup = async (id) => {
+    return http.delete(ENDPOINTS.CATEGORIES + id).then(() => {
+        return reloadAll();
+    }).then(data => {
+        store.dispatch(actions.removeCategory(data));
         return data;
-    })
-);
-
-export const useHint = (id) => (
-    http.post(ENDPOINTS.USE_HINT, { id }).then(data => {
-        store.dispatch(actions.editHint(id, { text: data.text, used: true }));
+    });
+};
+export const editGroup = (id, name, desc, type) => {
+    return http.patch(ENDPOINTS.CATEGORIES + id, {
+        name, description: desc, contained_type: type
+    }).then(data => {
+        store.dispatch(actions.editCategory(data));
         return data;
-    })
-);
+    });
+};

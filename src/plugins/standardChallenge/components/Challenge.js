@@ -23,7 +23,9 @@ import {
     Button, Input, TextBlock, Form, FormError, PageHead, Link, Row, FlashText,
     Markdown, Badge
 } from "@ractf/ui-kit";
-import { api, http, appContext, plugins } from "ractf";
+import { useHint, attemptFlag, reloadAll } from "@ractf/api";
+import { appContext, plugins } from "ractf";
+import http from "@ractf/http";
 
 import Split from "./Split";
 import File from "./File";
@@ -80,7 +82,7 @@ export default ({ challenge, category, rightComponent }) => {
                 This hint will deduct {hint.penalty} points from this challenge.
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
-                api.useHint(hint.id).then(body =>
+                useHint(hint.id).then(body =>
                     app.alert(hint.name + ":\n" + body.text)
                 ).catch(e =>
                     app.alert("Error using hint:\n" + http.getError(e))
@@ -92,7 +94,7 @@ export default ({ challenge, category, rightComponent }) => {
     const tryFlag = challenge => {
         return ({ flag }) => {
             setLocked(true);
-            api.attemptFlag(flag, challenge).then(resp => {
+            attemptFlag(flag, challenge).then(resp => {
                 if (resp.correct) {
                     app.alert("Flag correct!");
                     if (onFlagResponse.current)
@@ -101,7 +103,7 @@ export default ({ challenge, category, rightComponent }) => {
 
                     // NOTE: This is potentially very slow. If there are performance issues in production, this is
                     // where to look first!
-                    api.reloadAll();
+                    reloadAll();
                     /*  // This is the start of what would be the code to rebuild the local cache
                     api.challenges.forEach(group => group.chals.forEach(chal => {
                         if (chal.deps.indexOf(challenge.id) !== -1) {

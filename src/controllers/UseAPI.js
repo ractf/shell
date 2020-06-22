@@ -17,7 +17,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { http } from "ractf";
+import http from "@ractf/http";
 
 
 export const useApi = route => {

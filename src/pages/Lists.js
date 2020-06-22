@@ -23,12 +23,13 @@ import { BrokenShards } from "./ErrorPages";
 import {
     Page, Table, FormError, Button, Row, H2
 } from "@ractf/ui-kit";
-import { usePaginated, api } from "ractf";
+import { ENDPOINTS } from "@ractf/api";
+import { usePaginated } from "ractf";
 
 
 export const TeamsList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.TEAM);
-    const [state, next] = usePaginated(api.ENDPOINTS.TEAM); 
+    const [state, next] = usePaginated(ENDPOINTS.TEAM); 
 
     const { t } = useTranslation();
 
@@ -57,7 +58,7 @@ export const TeamsList = () => {
 
 export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
-    const [state, next] = usePaginated(api.ENDPOINTS.USER); 
+    const [state, next] = usePaginated(ENDPOINTS.USER); 
     const { t } = useTranslation();
 
     return <Page

@@ -23,7 +23,8 @@ import QRCode from "qrcode.react";
 import {
     Page, Row, Button, Spinner, TextBlock, FormError, H2
 } from "@ractf/ui-kit";
-import { api, appContext } from "ractf";
+import { appContext } from "ractf";
+import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
 
 
 export default () => {
@@ -38,7 +39,7 @@ export default () => {
     const startFlow = () => {
         setPage(1);
 
-        api.add_2fa().then(resp => {
+        add_2fa().then(resp => {
             setSecret(resp.totp_secret);
             setPage(2);
         }).catch(() => {
@@ -55,9 +56,9 @@ export default () => {
             [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]).then(({ pin }) => {
                 if (pin.length !== 6) return faPrompt();
 
-                api.verify_2fa(pin).then(async resp => {
+                verify_2fa(pin).then(async resp => {
                     if (resp.valid) {
-                        await api.reloadAll();
+                        await reloadAll();
                         setPage(3);
                     } else {setMessage(t("2fa.validation_fail"));}
                 }).catch(e => {

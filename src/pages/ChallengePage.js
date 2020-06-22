@@ -21,9 +21,11 @@ import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
 import { push } from "connected-react-router";
 
-import { api, http, plugins, appContext } from "ractf";
+import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
+import { plugins, appContext } from "ractf";
 import { useReactRouter } from "@ractf/util";
 import { Page } from "@ractf/ui-kit";
+import http from "@ractf/http";
 
 
 const EditorWrap = ({ challenge, category, isCreator }) => {
@@ -62,7 +64,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
             }
         }
 
-        (isCreator ? api.createChallenge : api.editChallenge)({
+        (isCreator ? createChallenge : editChallenge)({
             ...original, ...changes, id: (isCreator ? category.id : original.id), flag_metadata: flag
         }).then(async (data) => {
             for (const i in changes)
@@ -77,13 +79,13 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
             else
                 dispatch(push("/campaign/" + category.id + "#edit"));
 
-            await api.reloadAll();
+            await reloadAll();
         }).catch(e => app.alert(http.getError(e)));
     };
 
-    const removeChallenge = () => {
+    const doRemoveChallenge = () => {
         app.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
-            api.removeChallenge(challenge).then(() => {
+            removeChallenge(challenge).then(() => {
                 app.alert("Challenge removed");
                 dispatch(push("/campaign/" + category.id));
             }).catch(e => {
@@ -93,7 +95,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
     };
 
     return React.createElement(handler.component, {
-        challenge, category, isCreator: isCreator, saveEdit, removeChallenge
+        challenge, category, isCreator: isCreator, saveEdit, removeChallenge: doRemoveChallenge
     });
 };
 

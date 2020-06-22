@@ -26,7 +26,8 @@ import { useReactRouter } from "@ractf/util";
 import {
     Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Row
 } from "@ractf/ui-kit";
-import { useApi, api } from "ractf";
+import { ENDPOINTS } from "@ractf/api";
+import { useApi } from "ractf";
 
 import admin from "static/img/admin.png";
 import donor from "static/img/donor_large.png";
@@ -61,7 +62,7 @@ export default () => {
     const { t } = useTranslation();
     const user = match.params.user;
     const categories = useSelector(state => state.challenges?.categories);
-    const [userData, error] = useApi(api.ENDPOINTS.USER + (user === "me" ? "self" : user));
+    const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
 
     if (error) return <Page title={"Users"} centre>
         <FormError>{error}</FormError>

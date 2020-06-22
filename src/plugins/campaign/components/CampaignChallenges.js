@@ -18,7 +18,7 @@
 import React, { useState } from "react";
 import { FaLock, FaEyeSlash } from "react-icons/fa";
 
-import { api } from "ractf";
+import { linkChallenges } from "@ractf/api";
 
 import { Node, AddNode } from "./Node";
 import Row from "./Row";
@@ -78,7 +78,7 @@ export const CampaignChallenges = ({ challenges, showEditor, isEdit }) => {
                     break;
             }
             if (other) {
-                api.linkChallenges(
+                linkChallenges(
                     chal, other,
                     chal.unlocks.indexOf(other.id) === -1
                 );

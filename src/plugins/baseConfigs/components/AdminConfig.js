@@ -18,18 +18,20 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-import { api, http, appContext, useApi, plugins } from "ractf";
 import {
     Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead,
     Column
 } from "@ractf/ui-kit";
+import { appContext, useApi, plugins } from "ractf";
+import { ENDPOINTS, setConfigValue } from "@ractf/api";
+import http from "@ractf/http";
 
 
 export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
     const [adminConfig, setAdminConfig] = useState(null);
-    const [adminConfig_] = useApi(api.ENDPOINTS.CONFIG);
+    const [adminConfig_] = useApi(ENDPOINTS.CONFIG);
 
     useEffect(() => {
         if (adminConfig_) {
@@ -40,7 +42,7 @@ export default () => {
     }, [adminConfig_]);
 
     const configSet = (key, value) => {
-        api.setConfigValue(key, value).then(() => {
+        setConfigValue(key, value).then(() => {
             setAdminConfig(oldConf => ({ ...oldConf, key: value }));
         }).catch(e => {
             console.error(e);

@@ -18,7 +18,7 @@
 import { codeRunError, codeRunStart } from "../actions";
 import { store } from "store";
 
-import { http } from "ractf";
+import http from "@ractf/http";
 
 const RUN_CODE_ENDPOINT = "/";
 

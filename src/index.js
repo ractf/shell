@@ -82,7 +82,7 @@ serviceWorker.register({
         window.location.reload();
     }
 });
-Loadable.preloadAll();
+//Loadable.preloadAll();
 
 render();
 

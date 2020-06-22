@@ -17,8 +17,9 @@
 
 import React, { useState, useEffect } from "react";
 
-import { api, http, registerPlugin, useApi } from "ractf";
 import { FlashText, Spinner, Button } from "@ractf/ui-kit";
+import { registerPlugin, useApi } from "ractf";
+import http from "@ractf/http";
 
 const ChallengeServer = ({ challenge }) => {
     const [state, setState] = useState({});
@@ -34,7 +35,7 @@ const ChallengeServer = ({ challenge }) => {
         http.get("/challengeserver/reset/" + challenge.challenge_metadata.cserv_name).then(data => {
             setState({ instance: data, error: null });
         }).catch(e => {
-            setState({ instance: null, error: api.getError(e) });
+            setState({ instance: null, error: http.getError(e) });
         });
     };
 

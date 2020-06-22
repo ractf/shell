@@ -22,14 +22,11 @@ import LoadingPage from "pages/LoadingPage";
 import { store, injectReducer } from "store";
 import * as actions from "actions";
 
-import * as http_ from "controllers/http";
-import * as api_ from "controllers/api";
 export * from "controllers/UseAPI";
 
-export const api = api_;
 export const appContext = AppContext;
 
-import("zxcvbn").then(zx => window.__zxcvbn = zx.default);
+import(/* webpackChunkName: "zxcvbn" */ "zxcvbn").then(zx => window.__zxcvbn = zx.default);
 export const zxcvbn = () => (window.__zxcvbn || null);
 
 export const plugins = {
@@ -75,7 +72,6 @@ export const registerPlugin = (type, key, handler) => {
 export const registerReducer = (name, reducer) => {
     injectReducer(store, name, reducer);
 };
-export const http = { ...http_, delete:http_.delete_ };
 
 const _fastClick = e => {
     e.target && e.target.click && e.target.click();

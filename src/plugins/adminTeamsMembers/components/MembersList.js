@@ -22,7 +22,9 @@ import {
     Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
     FormError, Leader, Checkbox, PageHead
 } from "@ractf/ui-kit";
-import { api, http, appContext } from "ractf";
+import { ENDPOINTS, modifyUser } from "@ractf/api";
+import { appContext } from "ractf";
+import http from "@ractf/http";
 
 
 export default () => {
@@ -35,7 +37,7 @@ export default () => {
     const doSearch = ({ name }) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
-        http.get(api.ENDPOINTS.USER + "?search=" + name).then(data => {
+        http.get(ENDPOINTS.USER + "?search=" + name).then(data => {
             setState(prevState => ({
                 ...prevState, results: data.results, more: !!data.next, loading: false
             }));
@@ -47,7 +49,7 @@ export default () => {
     const editMember = (member) => {
         return () => {
             setState(prevState => ({ ...prevState, loading: true }));
-            http.get(api.ENDPOINTS.USER + member.id).then(data => {
+            http.get(ENDPOINTS.USER + member.id).then(data => {
                 setState(prevState => ({ ...prevState, loading: false, member: data }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
@@ -57,7 +59,7 @@ export default () => {
     const saveMember = (member) => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
-            api.modifyUser(member.id, changes).then(() => {
+            modifyUser(member.id, changes).then(() => {
                 app.alert("Modified user");
                 setState(prevState => ({ ...prevState, member: null, loading: false }));
             }).catch(e => {

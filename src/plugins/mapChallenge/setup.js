@@ -19,7 +19,7 @@ import { registerPlugin, dynamicLoad } from "ractf";
 
 
 export default () => {
-    const chal = dynamicLoad(() => import("./components/ClickableMap"));
+    const chal = dynamicLoad(() => import(/* webpackChunkName: "clickable-map" */ "./components/ClickableMap"));
 
     registerPlugin("challengeMetadata", "mapData", {
         fields: [

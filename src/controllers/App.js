@@ -32,7 +32,9 @@ import { history } from "store";
 import Routes from "./Routes";
 import WS from "./WS";
 
-import { api, plugins, http } from "ractf";
+import { reloadAll, getCountdown, ENDPOINTS } from "@ractf/api";
+import { plugins } from "ractf";
+import http from "@ractf/http";
 
 import lockImg from "static/spine.png";
 import "./App.scss";
@@ -125,9 +127,9 @@ const LockWarn = () => {
 class FirstLoader extends React.Component {
     componentDidMount() {
         if (store.getState().token)
-            api.reloadAll();
+            reloadAll();
 
-        http.get(api.ENDPOINTS.CONFIG).then(config => {
+        http.get(ENDPOINTS.CONFIG).then(config => {
             store.dispatch(actions.setConfig(config));
         }).catch((e) => {
             console.error("Error loading config:", e);
@@ -185,7 +187,7 @@ const App = React.memo(() => {
     };
 
     useEffect(() => {
-        api.getCountdown();
+        getCountdown();
     }, []);
 
     // Vim-mode

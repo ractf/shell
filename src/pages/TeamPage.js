@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
+import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -27,8 +28,8 @@ import {
     Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page
 } from "@ractf/ui-kit";
-import { useApi, api } from "ractf";
-import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
+import { ENDPOINTS } from "@ractf/api";
+import { useApi } from "ractf";
 import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
@@ -46,7 +47,7 @@ export default () => {
     const { match } = useReactRouter();
     const categories = useSelector(state => state.challenges?.categories);
     const team = match.params.team;
-    const [teamData, error] = useApi(api.ENDPOINTS.TEAM + (team === "me" ? "self" : team));
+    const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
     const user = useSelector(state => state.user);
 
     window.td = teamData;

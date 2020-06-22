@@ -15,18 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import http from "@ractf/http";
 
+import { ENDPOINTS } from "./consts";
 
-export default () => {
-    const dsn = process.env.REACT_APP_SENTRY_DSN;
-    if (dsn) {
-        import("@sentry/browser").then(Sentry => {
-            Sentry.init({dsn: dsn, release: __COMMIT_HASH__});
-
-            registerPlugin("errorHandler", "sentry", (error, errorInfo) => {
-                Sentry.captureException(error, { extra: errorInfo });
-            });
-        }
-    }
-};
+export const setConfigValue = (key, value) => http.post(ENDPOINTS.CONFIG + key, { value });

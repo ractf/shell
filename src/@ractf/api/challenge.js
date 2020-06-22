@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { api, http } from "ractf";
+import { reloadAll } from "@ractf/api";
+import { ENDPOINTS } from "./consts";
 import * as actions from "actions";
 import { store } from "store";
-
-import { ENDPOINTS } from "./consts";
+import http from "@ractf/http";
 
 export const getChallenges = () => {
     return http.get(ENDPOINTS.CATEGORIES).then(data => {
@@ -78,7 +78,7 @@ export const removeChallenge = async (challenge, dumbRemove) => {
             ))
         ))
     )));
-    quickRemoveChallenge(challenge).then(() => api.reloadAll());
+    quickRemoveChallenge(challenge).then(() => reloadAll());
 };
 
 export const linkChallenges = (chal1, chal2, linkState) => {

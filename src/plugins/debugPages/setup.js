@@ -19,8 +19,8 @@ import { registerPlugin, dynamicLoad } from "ractf";
 import LoadingPage from "../../pages/LoadingPage";
 
 export default () => {
-    const wsTester = dynamicLoad(() => import("./components/WSTester"));
-    const debug = dynamicLoad(() => import("./components/Debug"));
+    const wsTester = dynamicLoad(() => import(/* webpackChunkName: "ws-tester" */ "./components/WSTester"));
+    const debug = dynamicLoad(() => import(/* webpackChunkName: "debug" */ "./components/Debug"));
 
     registerPlugin("page", "/debug/ws", {
         title: "WebSocket Debugger",

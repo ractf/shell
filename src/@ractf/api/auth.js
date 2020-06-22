@@ -18,14 +18,16 @@
 import * as actions from "actions";
 import { push } from "connected-react-router";
 
-import { api, http, plugins } from "ractf";
+import { reloadAll } from "@ractf/api";
 import { ENDPOINTS } from "./consts";
+import { plugins } from "ractf";
 import { store } from "store";
+import http from "@ractf/http";
 
 
 const _postLogin = async token => {
     store.dispatch(actions.setToken(token));
-    await api.reloadAll();
+    await reloadAll();
 
     const post = Object.values(plugins.postLogin);
     for (let i = 0; i < post.length; i++) {

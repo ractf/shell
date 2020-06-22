@@ -19,8 +19,8 @@ import { registerPlugin, dynamicLoad } from "ractf";
 
 
 export default () => {
-    const chal = dynamicLoad(() => import("./components/Challenge"));
-    const editor = dynamicLoad(() => import("./components/Editor"));
+    const chal = dynamicLoad(() => import(/* webpackChunkName: "challenge" */ "./components/Challenge"));
+    const editor = dynamicLoad(() => import(/* webpackChunkName: "challenge-editor" */ "./components/Editor"));
 
     registerPlugin("challengeMetadata", "standardChallenge", {
         fields: [

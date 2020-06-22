@@ -21,7 +21,8 @@ import { useTranslation } from "react-i18next";
 import {
     Button, Row, Graph, TabbedView, Tab, Table, Page
 } from "@ractf/ui-kit";
-import { useApi, usePaginated, api } from "ractf";
+import { useApi, usePaginated } from "ractf";
+import { ENDPOINTS } from "@ractf/api";
 import { useConfig } from "@ractf/util";
 
 
@@ -30,9 +31,9 @@ export default () => {
     const [teamGraphData, setTeamGraphData] = useState([]);
     const { t } = useTranslation();
 
-    const [graph] = useApi(api.ENDPOINTS.LEADERBOARD_GRAPH);
-    const [uState, uNext] = usePaginated(api.ENDPOINTS.LEADERBOARD_USER);
-    const [tState, tNext] = usePaginated(api.ENDPOINTS.LEADERBOARD_TEAM);
+    const [graph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
+    const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
+    const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
     const start_time = useConfig("start_time");
 
     useEffect(() => {

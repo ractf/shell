@@ -24,8 +24,10 @@ import { useReactRouter } from "@ractf/util";
 import {
     Form, FormError, Page, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
-import { api, http, appContext, zxcvbn } from "ractf";
+import { completePasswordReset } from "@ractf/api";
+import { appContext, zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
+import http from "@ractf/http";
 
 
 export default () => {
@@ -50,7 +52,7 @@ export default () => {
             return setMessage((strength.feedback.warning || t("auth.pass_weak")));
 
         setLocked(true);
-        api.completePasswordReset(props.id, props.secret, passwd1).then(() => {
+        completePasswordReset(props.id, props.secret, passwd1).then(() => {
             app.alert(t("auth.pass_reset"));
         }).catch(
             message => {

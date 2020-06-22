@@ -15,9 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { http } from "ractf";
+import * as http_ from "./http_";
 
-import { ENDPOINTS } from "./consts";
-
-
-export const modifyUser = (userId, data) => http.patch(ENDPOINTS.USER + userId, data);
+export default { ...http_, delete: http_.delete_ };

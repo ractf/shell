@@ -18,8 +18,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
-import { Spinner } from "@ractf/ui-kit";
-import { api } from "ractf";
+import { recheckCountdowns } from "@ractf/api";
+//import { Spinner } from "@ractf/ui-kit";
 
 import lockImg from "static/spine.png";
 
@@ -103,7 +103,7 @@ export default ({ cdKey }) => {
             + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
 
         if (delta === 0) {
-            api.recheckCountdowns();
+            recheckCountdowns();
         }
     }, 100);
 
@@ -213,7 +213,7 @@ export default ({ cdKey }) => {
     };
     useEffect(animate, []);
 
-    if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
+    //if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
     return <div className={"lockWrap"} ref={wrapRef}>
         <canvas ref={cRef} />
         <img alt={""} src={lockImg} style={{ display: "none" }} ref={iRef} />
