@@ -61,20 +61,22 @@ export default ({ cdKey }) => {
     if (!shardData.current) shardData.current = [];
     window._wave = wave;
     if (wave.on && !wave.audio) {
-        wave.audio = (new AudioContext()).createBufferSource();
+        if (typeof AudioContext !== "undefined") {
+            wave.audio = (new AudioContext()).createBufferSource();
 
-        const request = new XMLHttpRequest();
-        request.open("GET", BGM, true);
-        request.responseType = "arraybuffer";
-        request.onload = function () {
-            wave.audio.context.decodeAudioData(request.response, function (response) {
-                wave.audio.buffer = response;
-                wave.audio.loop = true;
-                wave.audio.start(0);
-                if (wave.on) wave.audio.connect(wave.audio.context.destination);
-            }, function () { console.error("The request failed."); });
-        };
-        request.send();
+            const request = new XMLHttpRequest();
+            request.open("GET", BGM, true);
+            request.responseType = "arraybuffer";
+            request.onload = function () {
+                wave.audio.context.decodeAudioData(request.response, function (response) {
+                    wave.audio.buffer = response;
+                    wave.audio.loop = true;
+                    wave.audio.start(0);
+                    if (wave.on) wave.audio.connect(wave.audio.context.destination);
+                }, function () { console.error("The request failed."); });
+            };
+            request.send();
+        }
     }
 
     const pad = n => {
