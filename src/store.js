@@ -48,9 +48,12 @@ const store = createStore(
         ? compose(appliedMiddleware, window.__REDUX_DEVTOOLS_EXTENSION__())
         : appliedMiddleware,
 );
-store.asyncReducers = {};
+store.asyncReducers = { named: {}, anon: [] };
 const injectReducer = (store, name, asyncReducer) => {
-    store.asyncReducers[name] = asyncReducer;
+    if (name)
+        store.asyncReducers.named[name] = asyncReducer;
+    else
+        store.asyncReducers.anon.push(asyncReducer);
     store.replaceReducer(persistReducer(persistConfig, createReducer(history, store.asyncReducers)));
     persistor.persist();
 };

@@ -257,7 +257,7 @@ b {
 
     &>img {
         height: 32px;
-        animation: spineSpin 1s infinite ease;
+        animation: spineSpin 1s infinite cubic-bezier(0.37, 0, 0.63, 1);
     }
     &>span {
         margin-top: 9px;
@@ -268,6 +268,24 @@ b {
 	0%{transform: scaleX(1)}
 	50% {transform: scaleX(-1)}
 	100% {transform: scaleX(1)}
+}
+
+.siteLoading {
+    .spinningSpine {
+        opacity: 1;
+        left: 50%;
+        top: 50%;
+        height: 25vh;
+        transform: translate(-50%, -50%);
+        filter: invert(79%) sepia(79%) saturate(1676%) hue-rotate(333deg) brightness(96%) contrast(91%);
+
+        img {
+            height: 100%;
+        }
+        span {
+            margin: 0;
+        }
+    }
 }
 
 .bodyScroll {

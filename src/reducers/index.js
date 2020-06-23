@@ -27,7 +27,20 @@ import tokenReducer from "./tokenReducer";
 import teamReducer from "./teamReducer";
 import userReducer from "./userReducer";
 
-export default (history, asyncReducers) => combineReducers({
+const mergeReducers = (...reducers) => {
+    console.log("Merging", reducers)
+    return (state, action) => {
+        let nextState = { ...state };
+        for (const reducer of reducers) {
+            if (reducer)
+                nextState = reducer(nextState, action);
+        }
+        if (nextState !== state) return nextState;
+        return state;
+    };
+};
+
+export default (history, asyncReducers) => mergeReducers(combineReducers({
     router: connectRouter(history),
 
     preferences: preferencesReducer,
@@ -38,5 +51,5 @@ export default (history, asyncReducers) => combineReducers({
     token: tokenReducer,
     team: teamReducer,
     user: userReducer,
-    ...asyncReducers
-});
+    ...(asyncReducers ? asyncReducers.named : {})
+}), ...(asyncReducers ? asyncReducers.anon : []));

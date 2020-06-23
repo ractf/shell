@@ -18,7 +18,7 @@
 import React from "react";
 import i18next from "i18next";
 import ReactDOM from "react-dom";
-import Loadable from "react-loadable";
+//import Loadable from "react-loadable";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { AppContainer } from "react-hot-loader";

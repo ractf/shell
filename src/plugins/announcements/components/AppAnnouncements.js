@@ -27,10 +27,11 @@ import Announcement from "./Announcement";
 
 const AppAnnouncements = () => {
     const announcements = useSelector(store => store.announcements?.active) || [];
+    const token = useSelector(store => store.token);
 
     useEffect(() => {
-        getAnnouncements();
-    }, []);
+        if (token) getAnnouncements();
+    }, [token]);
 
     const notifsEl = announcements.map((notif, n) => {
         const hide = () => {

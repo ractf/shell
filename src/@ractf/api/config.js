@@ -18,5 +18,12 @@
 import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
+import * as actions from "actions";
+import { store } from "store";
 
 export const setConfigValue = (key, value) => http.post(ENDPOINTS.CONFIG + key, { value });
+export const getConfig = () => {
+    return http.get(ENDPOINTS.CONFIG).then(data => {
+        store.dispatch(actions.setConfig(data));
+    });
+};

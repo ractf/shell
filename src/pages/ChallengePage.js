@@ -131,14 +131,15 @@ const ChallengeWrap = ({ challenge, category }) => {
 };
 
 export default () => {
-    const { match, location } = useReactRouter();
+    const { match } = useReactRouter();
     const catId = match.params.tabId;
     const chalId = match.params.chalId;
 
+    const locationHash = useSelector(state => state.router?.location?.hash);
     const categories = useSelector(state => state.challenges?.categories);
     const user = useSelector(state => state.user);
 
-    const isEditor = location.hash === "#edit" && user && user.is_staff;
+    const isEditor = locationHash === "#edit" && user && user.is_staff;
     const isCreator = chalId === "new" && user && user.is_staff;
 
     const category = (() => {
@@ -154,7 +155,7 @@ export default () => {
     })();
     if (isCreator) {
         try {
-            challenge = JSON.parse(decodeURIComponent(location.hash.substring(1)));
+            challenge = JSON.parse(decodeURIComponent(locationHash.substring(1)));
         } catch (e) {
             challenge = null;
         }

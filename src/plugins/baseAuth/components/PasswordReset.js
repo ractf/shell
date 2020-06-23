@@ -17,10 +17,10 @@
 
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
-import { useReactRouter } from "@ractf/util";
 import {
     Form, FormError, Page, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
@@ -32,12 +32,12 @@ import http from "@ractf/http";
 
 export default () => {
     const app = useContext(appContext);
+    const locationSearch = useSelector(state => state.router?.location?.search);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
 
-    const { location } = useReactRouter();
-    const props = qs.parse(location.search, { ignoreQueryPrefix: true });
+    const props = qs.parse(locationSearch, { ignoreQueryPrefix: true });
 
     if (!(props.secret && props.id)) return <Redirect to={"/login"} />;
 

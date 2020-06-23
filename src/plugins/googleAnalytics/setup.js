@@ -15,35 +15,28 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { useEffect } from "react";
 import ReactGA from "react-ga";
 
-import { registerPlugin } from "ractf";
-import { useReactRouter } from "@ractf/util";
+import { registerReducer } from "ractf";
+
+import { LOCATION_CHANGE } from "connected-react-router";
 
 
 export const UA = process.env.REACT_APP_GA_UA;
 
 
-const GA = () => {
-    const { history } = useReactRouter();
-
-    useEffect(() => {
-        history.listen((location) => {
-            ReactGA.set({ page: location.pathname });
-            ReactGA.pageview(location.pathname);
-        });
-    }, [history]);
-
-    return null;
+const analyticsReducer = (state, { type, payload }) => {
+    if (type === LOCATION_CHANGE) {
+        const { location } = payload;
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname);
+    }
+    return state;
 };
-
 
 export default () => {
     if (UA) {
         ReactGA.initialize(UA);
-        ReactGA.pageview(window.location.pathname + window.location.search);
-
-        registerPlugin("mountWithinApp", "googleAnalytics", { component: GA });
+        registerReducer(null, analyticsReducer);
     }
 };

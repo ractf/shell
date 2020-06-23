@@ -32,7 +32,7 @@ import { history } from "store";
 import Routes from "./Routes";
 import WS from "./WS";
 
-import { reloadAll, getCountdown, ENDPOINTS } from "@ractf/api";
+import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
 import { plugins } from "ractf";
 import http from "@ractf/http";
 
@@ -138,9 +138,18 @@ class FirstLoader extends React.Component {
     render = () => null;
 }
 
+const SiteLoading = () => {
+    return <div className={"siteLoading"}>
+        <SpinningSpine />
+    </div>;
+};
+
 const App = React.memo(() => {
     const user = useSelector(state => state.user);
     useMemo(() => { new WS(); }, []);
+
+    const countdowns = useSelector(state => state.countdowns);
+    const config = useSelector(state => state.config);
 
     const [consoleMode, setConsole] = useState(false);
     const [currentPrompt, setCurrentPrompt] = useState(null);
@@ -188,6 +197,7 @@ const App = React.memo(() => {
 
     useEffect(() => {
         getCountdown();
+        getConfig();
     }, []);
 
     // Vim-mode
@@ -209,6 +219,8 @@ const App = React.memo(() => {
     }, []);
 
     if (consoleMode) return <VimDiv />;
+
+    if (!countdowns || !config) return <SiteLoading />;
 
     const removePopup = (n) => {
         const popups_ = [...popups];
@@ -240,7 +252,7 @@ const App = React.memo(() => {
         </div> : null*/}
 
             <SiteNav>
-                {<Routes />}
+                <Routes />
             </SiteNav>
 
             {currentPrompt ? <ModalPrompt

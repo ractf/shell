@@ -18,7 +18,7 @@
 @import "@ractf/ui-kit/Colours.scss";
 
 .notif {
-    background-color: map-get($colours, "white");
+    background-color: $background;
     padding: 16px 24px;
     border: 1px solid $back_lift;
     font-size: 1.2em;
