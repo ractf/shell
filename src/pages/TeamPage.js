@@ -49,12 +49,9 @@ export default () => {
     const team = match.params.team;
     const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
     const user = useSelector(state => state.user);
-
-    window.td = teamData;
-
-    if (user.team === null && team === "me") return <Redirect to={"/noteam"} />;
-
     const { t } = useTranslation();
+    
+    if (user.team === null && team === "me") return <Redirect to={"/noteam"} />;
 
     if (error) return <Page title={t("teams.teams")} centre>
         <FormError>{error}</FormError>
