@@ -23,7 +23,7 @@ import { recheckCountdowns } from "@ractf/api";
 
 import lockImg from "static/spine.png";
 
-import "./Countdown.scss";
+import style from "./Countdown.module.scss";
 
 const BGM = "/synthwave.mp3";
 
@@ -212,15 +212,17 @@ export default ({ cdKey }) => {
         }
     };
     useEffect(animate, []);
+    useEffect(() => {
+        document.title = "Countdown";
+    }, []);
 
-    //if (!api.ready) return <div className={"lockWrap"}><Spinner /></div>;
-    return <div className={"lockWrap"} ref={wrapRef}>
+    return <div className={style.lockWrap} ref={wrapRef}>
         <canvas ref={cRef} />
         <img alt={""} src={lockImg} style={{ display: "none" }} ref={iRef} />
-        <div className={"lockTitle"}>Site Locked!</div>
-        <div className={"siteCountdown"}>{countdownText ? "Unlock in " + countdownText : ""}</div>
+        <div className={style.lockTitle}>Site Locked!</div>
+        <div className={style.siteCountdown}>{countdownText ? "Unlock in " + countdownText : ""}</div>
 
-        <div className={"slide" + (wave.on ? " on" : "")} onClick={() => {
+        <div className={style.slide + (wave.on ? ` ${style.on}` : "")} onClick={() => {
             wave.on = !wave.on;
             setWave(swc + 1);
             if (wave.audio) {

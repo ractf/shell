@@ -22,10 +22,14 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    position: relative;
+    position: absolute;
     flex-grow: 1;
     padding: 32px;
     text-align: center;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
 
     @media (max-width: 800px) {
         height: calc(100vh - 60px);
