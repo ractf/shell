@@ -35,7 +35,7 @@ import colours from "@ractf/ui-kit/Colours.scss";
 import "./Profile.scss";
 
 
-export default () => {
+const TeamPage = () => {
     /*
     const suffix = n => {
         let l = n.toString()[n.toString().length - 1];
@@ -50,7 +50,7 @@ export default () => {
     const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
     const user = useSelector(state => state.user);
     const { t } = useTranslation();
-    
+
     if (user.team === null && team === "me") return <Redirect to={"/noteam"} />;
 
     if (error) return <Page title={t("teams.teams")} centre>
@@ -67,10 +67,9 @@ export default () => {
     const categoryValues = {};
     const userValues = {};
     const tData = teamData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    const scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
+    const scorePlotData = { data: [], label: "test" };
     // OPTIONAL: Use start time instead of first solve
-    // scorePlotData.x.push(api.config.start_time);
-    // scorePlotData.y.push(0);
+    // scorePlotData.data.push({ x: api.config.start_time, y: 0 });
     tData.forEach(solve => {
         let category;
         categories && categories.forEach(cat => {
@@ -85,9 +84,8 @@ export default () => {
         if (!userValues[solve.solved_by_name]) userValues[solve.solved_by_name] = 0;
         userValues[solve.solved_by_name]++;
 
-        const score = (scorePlotData.y[scorePlotData.y.length - 1] || 0) + solve.points;
-        scorePlotData.x.push(new Date(solve.timestamp));
-        scorePlotData.y.push(score);
+        const score = (scorePlotData.data[scorePlotData.data.length - 1] || {y: 0}).y + solve.points;
+        scorePlotData.data.push({ x: new Date(solve.timestamp), y: score });
     });
 
     const catProgress = [];
@@ -155,30 +153,19 @@ export default () => {
                             <div className={"ppwRow"}>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Solve attempts</div>
-                                    <Pie data={[{
-                                        values: [teamData.solves.filter(Boolean).length, teamData.incorrect_solves],
-                                        labels: ["Correct", "Incorrect"],
-                                        marker: {
-                                            colors: [
-                                                colours.green,
-                                                colours.red
-                                            ]
-                                        }
-                                    }]} height={300} />
+                                    <Pie data={[teamData.solves.filter(Boolean).length, teamData.incorrect_solves]}
+                                        labels={["Correct", "Incorrect"]}
+                                        colors={[colours.green, colours.red]} />
                                 </div>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Category Breakdown</div>
-                                    <Pie data={[{
-                                        values: Object.values(categoryValues),
-                                        labels: Object.keys(categoryValues),
-                                    }]} height={281 + 19 * Object.keys(categoryValues).length} />
+                                    <Pie data={Object.values(categoryValues)}
+                                        labels={Object.keys(categoryValues)} />
                                 </div>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>User Breakdown</div>
-                                    <Pie data={[{
-                                        values: Object.values(userValues),
-                                        labels: Object.keys(userValues),
-                                    }]} height={281 + 19 * Object.keys(userValues).length} />
+                                    <Pie data={Object.values(userValues)}
+                                        labels={Object.keys(userValues)} />
                                 </div>
                             </div>
                             <HR />
@@ -197,7 +184,7 @@ export default () => {
                             <HR />
                             <div>
                                 <div className={"ppwHead"}>Score Over Time</div>
-                                <Graph data={[scorePlotData]} />
+                                <Graph data={[scorePlotData]} filled timeGraph />
                             </div>
                         </Tab>
                     </TabbedView>}
@@ -205,3 +192,4 @@ export default () => {
         </div>
     </Page>;
 };
+export default TeamPage;

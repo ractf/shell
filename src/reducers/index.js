@@ -28,7 +28,6 @@ import teamReducer from "./teamReducer";
 import userReducer from "./userReducer";
 
 const mergeReducers = (...reducers) => {
-    console.log("Merging", reducers)
     return (state, action) => {
         let nextState = { ...state };
         for (const reducer of reducers) {

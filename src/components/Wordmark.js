@@ -17,7 +17,7 @@
 
 import React from "react";
 
-export default ({ height, className }) => (
+const WordMark = ({ height, className }) => (
     <svg style={{ height: height }} className={className} viewBox="0 0 2783.58 768">
         <path d={
             "M736,128,230,485.06,292.58,896,679.76,744.73Zm2277.6,54.86-420,38.4L2937.05,227l-21.56,80.47ZM676." +
@@ -35,3 +35,4 @@ export default ({ height, className }) => (
             transform="translate(-230 -128)" style={{ fill: "#fff" }} />
     </svg>
 );
+export default WordMark;

@@ -130,7 +130,7 @@ const ChallengeWrap = ({ challenge, category }) => {
     return React.createElement(handler.component, { challenge, category });
 };
 
-export default () => {
+const ChallengePage = () => {
     const { match } = useReactRouter();
     const catId = match.params.tabId;
     const chalId = match.params.chalId;
@@ -177,3 +177,4 @@ export default () => {
         {chalEl}
     </Page>;
 };
+export default ChallengePage;

@@ -55,10 +55,11 @@ export const setLocalConfig = (key, value) => {
     store.dispatch(actions.setPreference(key, value));
 };
 
+const Loading = () => <LoadingPage />;
 export const dynamicLoad = (loader) => {
     return Loadable({
         loader: loader,
-        loading: () => <LoadingPage />,
+        loading: Loading,
     });
 };
 

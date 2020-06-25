@@ -59,27 +59,25 @@ export default () => {
 
             if (!userPlots.hasOwnProperty(id)) {
                 userPlots["user_" + i.user_name] = {
-                    x: [minTime], y: [0], name: i.user_name, id: id
+                    data: [{ x: 1 + minTime, y: 0 }], label: i.user_name
                 };
                 points[id] = 0;
             }
 
             points[id] += i.points;
-            userPlots[id].x.push(new Date(i.timestamp));
-            userPlots[id].y.push(points[id]);
+            userPlots[id].data.push({ x: new Date(i.timestamp), y: points[id] });
         });
         lbdata.team.forEach(i => {
             const id = "team_" + i.team_name;
 
             if (!teamPlots.hasOwnProperty(id)) {
                 teamPlots[id] = {
-                    x: [minTime], y: [0], name: i.team_name, id: id
+                    data: [{ x: minTime, y: 0 }], label: i.team_name
                 };
                 points[id] = 0;
             }
             points[id] += i.points;
-            teamPlots[id].x.push(new Date(i.timestamp));
-            teamPlots[id].y.push(points[id]);
+            teamPlots[id].data.push({ x: new Date(i.timestamp), y: points[id] });
         });
 
         setUserGraphData(
@@ -91,16 +89,16 @@ export default () => {
     }, [graph, start_time]);
 
     const userData = (lbdata) => {
-        return lbdata.map((i, n) => [n + 1, i.username, i.leaderboard_points, "/profile/" + i.id]);
+        return lbdata.map((i, n) => [n + 1, i.username, i.leaderboard_points, { link: "/profile/" + i.id }]);
     };
     const teamData = (lbdata) => {
-        return lbdata.map((i, n) => [n + 1, i.name, i.leaderboard_points, "/team/" + i.id]);
+        return lbdata.map((i, n) => [n + 1, i.name, i.leaderboard_points, { link: "/team/" + i.id }]);
     };
 
     return <Page title={t("leaderboard")}>
         <TabbedView center initial={1}>
             <Tab label={t("user_plural")}>
-                <Graph data={userGraphData} />
+                <Graph key="users" data={userGraphData} timeGraph noAnimate />
                 <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
                 {uState.hasMore && <Row>
                     <Button disabled={uState.loading} click={uNext}>Load More</Button>
@@ -108,7 +106,7 @@ export default () => {
             </Tab>
 
             <Tab label={t("team_plural")}>
-                <Graph data={teamGraphData} />
+                <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
                 <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
                 {tState.hasMore && <Row>
                     <Button disabled={tState.loading} click={tNext}>Load More</Button>

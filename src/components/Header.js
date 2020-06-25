@@ -24,11 +24,13 @@ import Wordmark from "./Wordmark";
 import "./Header.scss";
 
 
-export default React.memo(() => <>
+const Header = () => <>
     <div id={"headerPad"} />
     <header>
         <Link to="/">
             <Wordmark />
         </Link>
     </header>
-</>);
+</>;
+export default Header;
+

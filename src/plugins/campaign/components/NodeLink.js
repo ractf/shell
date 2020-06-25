@@ -20,7 +20,7 @@ import React from "react";
 import "./NodeLink.scss";
 
 
-export default props => {
+const NodeLink = (props) => {
     let className = "nodeLink";
     if (props.left) className += " left";
     if (props.right) className += " right";
@@ -34,3 +34,4 @@ export default props => {
     return <div onClick={props.onClick} onMouseDown={props.onMouseDown}
         onTouchStart={props.onTouchStart} className={className} />;
 };
+export default NodeLink;

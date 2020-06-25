@@ -22,7 +22,7 @@ import { Page } from "@ractf/ui-kit";
 import { plugins } from "ractf";
 
 
-export default () => {
+const AdminPage = () => {
     const { match } = useReactRouter();
     if (!match) return null;
     const page = match.params.page;
@@ -36,3 +36,4 @@ export default () => {
         {content}
     </Page>;
 };
+export default AdminPage;

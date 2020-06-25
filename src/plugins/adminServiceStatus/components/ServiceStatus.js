@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { Card, Row, PageHead } from "@ractf/ui-kit";
 
 
-export default () => {
+const ServiceStatus = () => {
     const { t } = useTranslation();
 
     return <>
@@ -48,3 +48,4 @@ export default () => {
         </Row>
     </>;
 };
+export default ServiceStatus;

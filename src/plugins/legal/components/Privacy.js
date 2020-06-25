@@ -20,7 +20,7 @@ import React from "react";
 import { H1, H2, H3, H4, Page } from "@ractf/ui-kit";
 
 
-export default () => <Page>
+const Privacy = () => <Page>
     <H1>Privacy Policy</H1>
 
 
@@ -135,3 +135,4 @@ export default () => <Page>
     <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are
         effective when they are posted on this page.</p>
 </Page>;
+export default Privacy;

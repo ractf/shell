@@ -64,7 +64,7 @@ const Inner = () => (<NavCollapse>
     </NavMenu>
 </NavCollapse>);
 
-export default () => <Page><Row left>
+const UIPage = () => <Page><Row left>
     <H1>Really Awesome UI Framework</H1>
     <HR />
     <H2>Nav Bars</H2>
@@ -436,3 +436,4 @@ export default () => <Page><Row left>
         </FootRow>
     </Footer>
 </Row></Page>;
+export default UIPage;

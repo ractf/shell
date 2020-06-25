@@ -27,7 +27,7 @@ import colours from "@ractf/ui-kit/Colours.scss";
 import "./Theme.scss";
 
 
-export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
+const CodeInput = ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
     const [value, setValue] = useState(val || "");
 
     return <div className={"ractf-code"}><Editor
@@ -55,3 +55,4 @@ export default ({ val, width, height, lang, readOnly, onChange, ...rest }) => {
         }}
     /></div>;
 };
+export default CodeInput;

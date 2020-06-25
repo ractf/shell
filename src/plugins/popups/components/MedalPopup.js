@@ -22,7 +22,7 @@ import { plugins } from "ractf";
 import "./Style.scss";
 
 
-export default ({ popup }) => {
+const MedalPopup = ({ popup }) => {
     const medal = plugins.medal[popup.medal];
     if (!medal) return <div className={"medalWrap"}>Unknown medal type '{popup.medal}'</div>;
 
@@ -34,3 +34,4 @@ export default ({ popup }) => {
         <div className={"medalIcon"}>{ medal.icon }</div>
     </div>;
 };
+export default MedalPopup;

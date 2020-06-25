@@ -57,7 +57,7 @@ const UserSolve = ({ challenge_name, points }) => {
     );
 };
 
-export default () => {
+const Profile = () => {
     const { match } = useReactRouter();
     const { t } = useTranslation();
     const user = match.params.user;
@@ -129,18 +129,10 @@ export default () => {
                 {Object.keys(categoryValues).length !== 0 && <>
                     <div className={"profilePieWrap"}>
                         <div className={"ppwHead"}>Solve attempts</div>
-                        <Pie data={[{
-                            values: [userData.solves.filter(Boolean).length, userData.incorrect_solves],
-                            labels: ["Correct", "Incorrect"],
-                            marker: {
-                                colors: [
-                                    colours.green,
-                                    colours.red
-                                ]
-                            }
-                        }]} width={200} height={200} />
+                        <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
+                            labels={["Correct", "Incorrect"]}
+                            colors={[colours.green, colours.red]} />
                     </div>
-
                 </>}
             </div>
             <div className={"userSolves"}>
@@ -163,23 +155,14 @@ export default () => {
                             <div className={"ppwRow"}>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Solve attempts</div>
-                                    <Pie data={[{
-                                        values: [userData.solves.filter(Boolean).length, userData.incorrect_solves],
-                                        labels: ["Correct", "Incorrect"],
-                                        marker: {
-                                            colors: [
-                                                colours.green,
-                                                colours.red
-                                            ]
-                                        }
-                                    }]} height={300} />
+                                    <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
+                                        colors={[colours.green, colours.red]}
+                                        labels={["Correct", "Incorrect"]} height={300} />
                                 </div>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Category Breakdown</div>
-                                    <Pie data={[{
-                                        values: Object.values(categoryValues),
-                                        labels: Object.keys(categoryValues),
-                                    }]} height={281 + 19 * Object.keys(categoryValues).length} />
+                                    <Pie data={Object.values(categoryValues)}
+                                        labels={Object.keys(categoryValues)} />
                                 </div>
                             </div>
                             <HR />
@@ -193,3 +176,4 @@ export default () => {
         </div>
     </Page>;
 };
+export default Profile;

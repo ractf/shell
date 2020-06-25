@@ -159,7 +159,7 @@ const FileEditor = ({ challenge }) => {
 };
 
 
-export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) => {
+const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) => {
     const { t } = useTranslation();
 
     return <>
@@ -234,3 +234,4 @@ export default ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
         </TabbedView>
     </>;
 };
+export default Editor;

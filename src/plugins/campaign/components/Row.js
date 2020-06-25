@@ -20,10 +20,11 @@ import React from "react";
 import "./Row.scss";
 
 
-export default ({ children }) => (
+const Row = ({ children }) => (
     <div className={"campaignRowOuter"}>
         <div className={"campaignRow"}>
             {children}
         </div>
     </div>
 );
+export default Row;

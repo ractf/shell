@@ -24,7 +24,7 @@ import { H2, Page, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
 
 
-export default () => {
+const NoTeam = () => {
     const { t } = useTranslation();
     const team = useSelector(state => state.team);
     
@@ -42,3 +42,4 @@ export default () => {
         </Wrap>
     </Page>;
 };
+export default NoTeam;

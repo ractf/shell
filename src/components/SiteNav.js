@@ -151,7 +151,7 @@ const SideBarNav = ({ children }) => {
     </>;
 };
 
-export default ({ children }) => {
+const SiteNav = ({ children }) => {
     if (USE_HEAD_NAV)
         return <SiteWrap>
             <HeaderNav />
@@ -175,5 +175,4 @@ export default ({ children }) => {
         </SiteWrap>;
     return <SideBarNav children={children} />;
 };
-
-
+export default SiteNav;
