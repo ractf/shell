@@ -24,7 +24,7 @@ import { appContext, zxcvbn, getLocalConfig } from "ractf";
 import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
 import http from "@ractf/http";
 import {
-    Page, HR, Row, TabbedView, Tab, Button, Form, FormError, Input,
+    Page, HR, Row, URLTabbedView, Tab, Button, Form, FormError, Input,
     Checkbox, FormGroup, InputButton, Leader
 } from "@ractf/ui-kit";
 import * as actions from "actions";
@@ -130,8 +130,8 @@ export default () => {
     ];
 
     return <Page title={t("settings.for", { name: user.username })}>
-        <TabbedView>
-            <Tab label={t("user")}>
+        <URLTabbedView>
+            <Tab index={"user"} label={t("user")}>
                 <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
                     postSubmit={usernameChanged}>
                     <FormGroup htmlFor={"username"} label={t("username")}>
@@ -166,7 +166,7 @@ export default () => {
                     </>
                 }
             </Tab>
-            <Tab label={t("settings.profile")}>
+            <Tab index={"profile"} label={t("settings.profile")}>
                 <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
                     <FormGroup htmlFor={"discord"} label={t("settings.discord")}>
                         <Input name={"discord"} val={user.discord} limit={36} placeholder={t("settings.discord")} />
@@ -189,7 +189,7 @@ export default () => {
                     </Row>
                 </Form>
             </Tab>
-            <Tab label={t("team")}>
+            <Tab index={"team"} label={t("team")}>
                 {team ? <>
                     <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
                         locked={!teamOwner}>
@@ -220,7 +220,7 @@ export default () => {
                     </div>}
             </Tab>
             {team &&
-                <Tab label={t("team_members")}>
+                <Tab index={"members"} label={t("team_members")}>
                     <br />
                     {team.members.map((i, n) => (
                         <TeamMember key={n} team={team} app={app}
@@ -228,7 +228,7 @@ export default () => {
                     ))}
                 </Tab>
             }
-            <Tab label={t("settings.notifications.title")}>
+            <Tab index={"notifications"} label={t("settings.notifications.title")}>
                 <Form handle={saveNotificationPrefs}>
                     <FormGroup label={t("settings.notifications.send_options")}>
                         {notificationGroups.map((group) =>
@@ -243,6 +243,6 @@ export default () => {
                     </Row>
                 </Form>
             </Tab>
-        </TabbedView>
+        </URLTabbedView>
     </Page>;
 };

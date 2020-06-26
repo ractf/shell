@@ -28,7 +28,7 @@ import { appContext } from "ractf";
 import http from "@ractf/http";
 
 
-export default () => {
+const BasicLogin = () => {
     const app = useContext(appContext);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
@@ -99,3 +99,4 @@ export default () => {
         </Wrap>
     </Page>;
 };
+export default React.memo(BasicLogin);

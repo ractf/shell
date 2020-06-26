@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { NotFound, BrokenShards } from "../pages/ErrorPages";
@@ -29,6 +29,9 @@ import { plugins, dynamicLoad } from "ractf";
 import { useConfig } from "@ractf/util";
 import { logout } from "@ractf/api";
 
+const Route = React.memo(Route_);
+const Switch = React.memo(Switch_);
+const Redirect = React.memo(Redirect_);
 
 const ChallengePage = dynamicLoad(() => import(/* webpackChunkName: "challenge-page" */ "../pages/ChallengePage"));
 const SettingsPage = dynamicLoad(() => import(/* webpackChunkName: "settings-page" */ "../pages/SettingsPage"));
@@ -40,7 +43,7 @@ const TwoFA = dynamicLoad(() => import(/* webpackChunkName: "2fa" */ "../pages/T
 const UI = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "../pages/UI"));
 
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { error: null };
@@ -71,7 +74,7 @@ class ErrorBoundary extends React.Component {
 }
 
 
-const Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
+let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     const user = useSelector(state => state.user);
     const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
     //if (!process.env.REACT_APP_NO_SITE_LOCK) {
@@ -93,6 +96,7 @@ const Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
         {C ? <C /> : children}
     </ErrorBoundary>;
 };
+Page = React.memo(Page);
 
 const URIHandler = () => {
     return <Redirect to={decodeURIComponent(window.location.search).split(":", 2)[1]} />;
@@ -196,4 +200,4 @@ const Routes = () => {
         </Route>
     </Switch>;
 };
-export default Routes;
+export default React.memo(Routes);

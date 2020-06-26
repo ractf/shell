@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { forwardRef, createElement } from "react";
+import { forwardRef, memo, createElement } from "react";
 export { default as useReactRouter } from "./useReactRouter";
 export { default as useWindowSize } from "./useWindowSize";
 export { default as useConfig } from "./useConfig";
@@ -45,7 +45,7 @@ export const basicComponent = (localClass, name, element) => {
     });
     if (name)
         Object.defineProperty(component, "name", { value: name });
-    return forwardRef(component);
+    return memo(forwardRef(component));
 };
 
 export const propsToTypeClass = (props, styles, fallback) => {

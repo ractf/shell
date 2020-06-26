@@ -41,10 +41,11 @@ import "./App.scss";
 import { store } from "store";
 
 
-const SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
+let SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
     <img alt={""} src={lockImg} />
     <span>{text}</span>
 </div>;
+SpinningSpine = React.memo(SpinningSpine);
 
 
 const VimDiv = () => {
@@ -102,13 +103,14 @@ Keyboard interrupt received, exiting.
     </div>;
 };
 
-const WSSpine = () => {
+let WSSpine = () => {
     const ws = useSelector(store => store.websocket) || {};
     if (ws.connected) return null;
 
     return <SpinningSpine
         text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
 };
+WSSpine = React.memo(WSSpine);
 
 const LockWarn = () => {
     const countdown_passed = useSelector(state => state.countdowns?.passed) || {};

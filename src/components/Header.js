@@ -32,5 +32,5 @@ const Header = () => <>
         </Link>
     </header>
 </>;
-export default Header;
+export default React.memo(Header);
 

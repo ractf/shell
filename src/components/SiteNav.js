@@ -34,7 +34,7 @@ import { useConfig } from "@ractf/util";
 const USE_HEAD_NAV = false;
 
 
-const HeaderNav = () => {
+const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
 
     return <NavBar primary>
@@ -62,8 +62,9 @@ const HeaderNav = () => {
         </NavCollapse>
     </NavBar>;
 };
+const HeaderNav = React.memo(HeaderNav_);
 
-const SideBarNav = ({ children }) => {
+const SideBarNav_ = ({ children }) => {
     const { t } = useTranslation();
 
     const registration = useConfig("enable_registration", true);
@@ -150,6 +151,7 @@ const SideBarNav = ({ children }) => {
         </SideNav>
     </>;
 };
+const SideBarNav = React.memo(SideBarNav_);
 
 const SiteNav = ({ children }) => {
     if (USE_HEAD_NAV)
@@ -175,4 +177,4 @@ const SiteNav = ({ children }) => {
         </SiteWrap>;
     return <SideBarNav children={children} />;
 };
-export default SiteNav;
+export default React.memo(SiteNav);

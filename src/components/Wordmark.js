@@ -35,4 +35,4 @@ const WordMark = ({ height, className }) => (
             transform="translate(-230 -128)" style={{ fill: "#fff" }} />
     </svg>
 );
-export default WordMark;
+export default React.memo(WordMark);

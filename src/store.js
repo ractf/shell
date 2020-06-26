@@ -15,27 +15,21 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { createStateSyncMiddleware, initMessageListener } from "redux-state-sync";
 import { createStore, compose, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
-import { PERSIST, PURGE } from "redux-persist/es/constants";
 import createReducer from "./reducers";
 import storage from "redux-persist/lib/storage";
 
 export const history = createBrowserHistory();
 
-const syncConfig = {
-    blacklist: [PERSIST, PURGE],
-};
 const persistConfig = {
     key: "root",
     storage: storage,
 };
 
 const middleware = [
-    createStateSyncMiddleware(syncConfig),
     routerMiddleware(history)
 ];
 
@@ -58,5 +52,4 @@ const injectReducer = (store, name, asyncReducer) => {
     persistor.persist();
 };
 const persistor = persistStore(store);
-initMessageListener(store);
 export { store, persistor, injectReducer };
