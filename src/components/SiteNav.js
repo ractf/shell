@@ -100,7 +100,7 @@ const SideBarNav_ = ({ children }) => {
         menu.push({
             name: user.username,
             submenu: [
-                [t("settings.profile"), "/profile/me"],
+                [t("sidebar.profile"), "/profile/me"],
                 [t("team"), "/team/me"],
                 [t("setting_plural"), "/settings"],
                 [t("sidebar.logout"), "/logout"],

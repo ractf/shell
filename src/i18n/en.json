@@ -46,22 +46,37 @@
         "details_changed": "Personal details updated successfully.",
         "team_details_changed": "Team details updated successfully.",
         "for": "Settings for {{name}}",
-        "2fa_disabled": "Your account has 2 factor authentication DISABLED",
-        "enable_2fa": "Enable 2FA Now!",
         "modify_team": "Modify Team",
         "not_in_team": "You are not in a team!",
         "team_prompt": "To be able to participate, you must join or create a team (even if you never invite anyone).",
-        "profile": "Profile",
-        "discord": "Discord",
-        "discord_id": "Discord User ID",
-        "twitter": "Twitter",
-        "reddit": "Reddit",
+        "cards": {
+            "2fa": "2-Factor Authentication",
+            "identity": "Identity",
+            "profile": "My Profile",
+            "change_password": "Change Password",
+            "team": "My Team",
+            "members": "Team Members",
+            "notifications": "Notifications",
+            "danger": "Danger Zone"
+        },
+        "profile": {
+            "discord": "Discord",
+            "discord_id": "Discord User ID",
+            "twitter": "Twitter",
+            "reddit": "Reddit",
+            "bio": "Bio"
+        },
         "notifications": {
-            "title": "Notifications",
             "send_options": "Send me notifications when:",
             "success": "Updated notification preferences successfully!"
+        },
+        "2fa": {
+            "enable": "Enable 2-factor authentication",
+            "prompt": "2-factor Authentication improves account security by requiring you to enter a second code from an authorised device after you enter your password",
+            "disabled": "2-factor authentication is disabled for your account.",
+            "enabled": "2-factor authentication is enabled for your account.",
+            "disable": "Disable 2-factor authentication"
         }
-        
     },
     "lists": {
         "all_teams": "All Teams",
@@ -266,7 +281,8 @@
         "brand": "RACTF",
         "home": "Home",
         "logout": "Logout",
-        "admin": "Admin"
+        "admin": "Admin",
+        "profile": "Profile"
     },
     "footer": {
         "home": "Home",
