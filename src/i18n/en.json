@@ -217,7 +217,8 @@
         "enter_email": "Enter your email to reset your password",
         "send_link": "Send Link",
         "email_sent": "Email sent, check your inbox",
-        "pass_forgot": "I forgot my password"
+        "pass_forgot": "I forgot my password",
+        "no_accept": "You must accept the terms of use and privacy policy to register."
     },
     "home": {
         "login": "Login",
@@ -293,6 +294,7 @@
     "back_to_cat": "Back to categories",
     "point_count": "{{count}} point",
     "point_count_plural": "{{count}} points",
+    "required": "This field is required",
     "api": {
         "throttled": "You are being rate-limited.",
         "invalid_token_or_uid": "Invalid token or UID.",

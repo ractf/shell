@@ -25,7 +25,7 @@ import { store } from "store";
 import http from "@ractf/http";
 
 
-const _postLogin = async token => {
+export const postLogin = async token => {
     store.dispatch(actions.setToken(token));
     await reloadAll();
 
@@ -46,25 +46,6 @@ export const logout = (wasForced, details) => {
     }
 };
 
-export const login = (username, password, otp = null) => {
-    return new Promise((resolve, reject) => {
-        http.post(ENDPOINTS.LOGIN, { username, password, otp }).then(data => {
-            // Encourage the user to register the URI handler
-            if (navigator.registerProtocolHandler) {
-                try {
-                    navigator.registerProtocolHandler(
-                        "web+ractf", window.location.origin + "/uri?%s", "Really Awesome CTF"
-                    );
-                } catch (e) {
-                    console.error("Failed to register web+ractf:", e);
-                }
-            }
-            _postLogin(data.token);
-            resolve();
-        }).catch(reject);
-    });
-};
-
 export const add_2fa = () => http.post(ENDPOINTS.ADD_2FA);
 export const verify_2fa = (otp) => http.post(ENDPOINTS.VERIFY_2FA, { otp });
 export const requestPasswordReset = (email) => http.post(ENDPOINTS.REQUEST_RESET, { email });
@@ -74,7 +55,7 @@ export const verify = (uid, token) => {
         uid = parseInt(uid, 10);
     } catch (e) { };
     return http.post(ENDPOINTS.VERIFY, { uid, token }).then(({ token }) => {
-        _postLogin(token);
+        postLogin(token);
     });
 };
 

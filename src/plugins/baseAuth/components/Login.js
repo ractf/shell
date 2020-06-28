@@ -15,14 +15,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, FormError, Page, Input, Button, Row, FormGroup,
-    Link, H2
+    Form, Page, Input, Button, Row, FormGroup, Link, H2, HiddenInput
 } from "@ractf/ui-kit";
-import { login, requestPasswordReset } from "@ractf/api";
+import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
 import { Wrap, EMAIL_RE } from "./Parts";
 import { appContext } from "ractf";
 import http from "@ractf/http";
@@ -30,40 +29,7 @@ import http from "@ractf/http";
 
 const BasicLogin = () => {
     const app = useContext(appContext);
-    const [message, setMessage] = useState("");
-    const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
-
-    const doLogin = ({ username, password, pin = null }) => {
-        if (!username)
-            return setMessage(t("auth.no_uname"));
-        if (!password)
-            return setMessage(t("auth.no_pass"));
-
-        setLocked(true);
-        login(username, password, pin).catch(
-            message => {
-                if (message.response && message.response.data && message.response.data.d.reason === "2fa_required") {
-                    // 2fa required
-                    const faPrompt = () => {
-                        app.promptConfirm({ message: t("2fa.required"), small: true },
-                            [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
-                        ).then(({ pin }) => {
-                            if (pin.length !== 6) return faPrompt();
-                            doLogin({ username: username, password: password, pin: pin });
-                        }).catch(() => {
-                            setMessage(t("2fa.canceled"));
-                            setLocked(false);
-                        });
-                    };
-                    faPrompt();
-                } else {
-                    setMessage(http.getError(message));
-                    setLocked(false);
-                }
-            }
-        );
-    };
 
     const openForget = () => {
         app.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
@@ -77,20 +43,41 @@ const BasicLogin = () => {
         });
     };
 
+    const onError = ({ resp, retry, showError }) => {
+        if (resp && resp.reason === "2fa_required") {
+            const faPrompt = () => {
+                app.promptConfirm({ message: t("2fa.required"), small: true },
+                    [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
+                ).then(({ pin }) => {
+                    if (pin.length !== 6) return faPrompt();
+                    retry({ otp: pin });
+                }).catch(() => {
+                    showError(t("2fa.canceled"));
+                });
+            };
+            faPrompt();
+
+
+            return false;
+        }
+    };
+    const afterLogin = ({ resp: { token } }) => {
+        postLogin(token);
+    };
+
     return <Page centre>
         <Wrap>
-            <Form locked={locked} handle={doLogin}>
+            <Form action={ENDPOINTS.LOGIN} onError={onError} postSubmit={afterLogin} method={"POST"}>
                 <H2>{t("auth.login")}</H2>
                 <FormGroup>
-                    <Input name={"username"} placeholder={t("username")} />
-                    <Input name={"password"} placeholder={t("password")} password />
+                    <Input name={"username"} required placeholder={t("username")} />
+                    <Input name={"password"} required placeholder={t("password")} password />
+                    <HiddenInput name={"otp"} val={""} />
                     <div className={"fgtpsdpmt"}>
                         <span onClick={openForget}>{t("auth.pass_forgot")}
                         </span> - <Link to={"/register"}>I need an account</Link>
                     </div>
                 </FormGroup>
-
-                {message && <FormError>{message}</FormError>}
 
                 <Row right>
                     <Button large submit>{t("login")}</Button>
