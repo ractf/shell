@@ -19,7 +19,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2
+    Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError
 } from "@ractf/ui-kit";
 import { Wrap, EMAIL_RE } from "./Parts";
 import { ENDPOINTS } from "@ractf/api";
@@ -37,7 +37,7 @@ export default () => {
                 return reject({ email: t("auth.no_email") });
             if (!EMAIL_RE.test(email))
                 return reject({ email: t("auth.inv_email") });
-            
+
             if (!password)
                 return reject({ password: t("auth.no_pass") });
             const strength = zxcvbn()(password);
@@ -45,10 +45,10 @@ export default () => {
                 return reject({ password: (strength.feedback.warning || t("auth.pass_weak")) });
             if (password !== password2)
                 return reject({ password2: t("auth.pass_match") });
-            
+
             if (!accept)
                 return reject({ accept: t("auth.no_accept") });
-            
+
             resolve();
         });
     };
@@ -71,6 +71,7 @@ export default () => {
                     </Checkbox>
                 </FormGroup>
 
+                <FormError />
                 <Row right>
                     <Button large submit>{t("register")}</Button>
                 </Row>

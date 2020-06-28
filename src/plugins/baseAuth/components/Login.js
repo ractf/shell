@@ -19,7 +19,8 @@ import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Page, Input, Button, Row, FormGroup, Link, H2, HiddenInput
+    Form, Page, Input, Button, Row, FormGroup, Link, H2, HiddenInput,
+    FormError
 } from "@ractf/ui-kit";
 import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
 import { Wrap, EMAIL_RE } from "./Parts";
@@ -79,6 +80,7 @@ const BasicLogin = () => {
                     </div>
                 </FormGroup>
 
+                <FormError />
                 <Row right>
                     <Button large submit>{t("login")}</Button>
                 </Row>
