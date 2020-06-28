@@ -15,12 +15,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { push } from "connected-react-router";
+import qs from "query-string";
 
 import {
     Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError
 } from "@ractf/ui-kit";
+import { useReactRouter, useConfig } from "@ractf/util";
 import { Wrap, EMAIL_RE } from "./Parts";
 import { ENDPOINTS } from "@ractf/api";
 import { zxcvbn } from "ractf";
@@ -28,8 +32,13 @@ import { zxcvbn } from "ractf";
 
 export default () => {
     const { t } = useTranslation();
+    const inviteRequired = useConfig("invite_required", false);
+    const dispatch = useDispatch();
 
-    const regValidator = ({ username, email, password, password2, accept }) => {
+    const { location } = useReactRouter();
+    const { invite } = qs.parse(location.search, { ignoreQueryPrefix: true });
+
+    const regValidator = useCallback(({ username, email, password, password2, invite, accept }) => {
         return new Promise((resolve, reject) => {
             if (!username)
                 return reject({ username: t("auth.no_uname") });
@@ -46,16 +55,22 @@ export default () => {
             if (password !== password2)
                 return reject({ password2: t("auth.pass_match") });
 
-            if (!accept)
+            if (!invite)
+                return reject({ invite: t("auth.no_invite") });
+            if (inviteRequired && !accept)
                 return reject({ accept: t("auth.no_accept") });
 
             resolve();
         });
-    };
+    }, [inviteRequired, t]);
+
+    const afterSignUp = useCallback(() => {
+        dispatch(push("/register/email"));
+    }, [dispatch]);
 
     return <Page centre>
         <Wrap>
-            <Form action={ENDPOINTS.REGISTER} method={"POST"} validator={regValidator}>
+            <Form action={ENDPOINTS.REGISTER} method={"POST"} validator={regValidator} postSubmit={afterSignUp}>
                 <H2>{t("auth.register")}</H2>
 
                 <FormGroup>
@@ -63,6 +78,10 @@ export default () => {
                     <Input format={EMAIL_RE} name={"email"} placeholder={t("email")} />
                     <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} password />
                     <Input name={"password2"} placeholder={t("password_repeat")} password />
+
+                    {inviteRequired && (
+                        <Input val={invite || ""} disabled={!!invite} name={"invite"}placeholder={t("invite_code")} />
+                    )}
 
                     <Checkbox name={"accept"}>
                         I accept the <Link to={"/conduct"}>terms of use</Link> and <Link to={"/privacy"}>

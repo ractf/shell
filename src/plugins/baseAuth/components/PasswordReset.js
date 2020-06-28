@@ -17,7 +17,6 @@
 
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
@@ -26,20 +25,21 @@ import {
 } from "@ractf/ui-kit";
 import { completePasswordReset } from "@ractf/api";
 import { appContext, zxcvbn } from "ractf";
+import { useReactRouter } from "@ractf/util";
 import { Wrap } from "./Parts";
 import http from "@ractf/http";
 
 
 export default () => {
     const app = useContext(appContext);
-    const locationSearch = useSelector(state => state.router?.location?.search);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
 
-    const props = qs.parse(locationSearch, { ignoreQueryPrefix: true });
+    const { location } = useReactRouter();
+    const { id, secret } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
-    if (!(props.secret && props.id)) return <Redirect to={"/login"} />;
+    if (!(secret && id)) return <Redirect to={"/login"} />;
 
     const doReset = ({ passwd1, passwd2 }) => {
         if (passwd1 !== passwd2)
@@ -52,7 +52,7 @@ export default () => {
             return setMessage((strength.feedback.warning || t("auth.pass_weak")));
 
         setLocked(true);
-        completePasswordReset(props.id, props.secret, passwd1).then(() => {
+        completePasswordReset(id, secret, passwd1).then(() => {
             app.alert(t("auth.pass_reset"));
         }).catch(
             message => {

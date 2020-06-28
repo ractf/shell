@@ -31,9 +31,7 @@ export const EmailVerif = () => {
     const [message, setMessage] = useState("");
 
     const { location } = useReactRouter();
-    const props = qs.parse(location.search, { ignoreQueryPrefix: true });
-    const id = props.id;
-    const secret = props.secret;
+    const { id, secret } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
     useEffect(() => {
         verify(id, secret).then(() => {

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -119,7 +119,9 @@ const Register = () => {
     </BasePage>;
 };
 const Logout = () => {
-    logout();
+    useEffect(() => {
+        logout();
+    }, []);
     return <Redirect to={"/home"} />;
 };
 

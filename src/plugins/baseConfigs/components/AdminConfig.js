@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useState, useEffect } from "react";
+import React, { useCallback, useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -41,19 +41,25 @@ export default () => {
         }
     }, [adminConfig_]);
 
-    const configSet = (key, value) => {
-        setConfigValue(key, value).then(() => {
+    const configSet = useCallback((key, value) => {
+        return setConfigValue(key, value).then(() => {
             setAdminConfig(oldConf => ({ ...oldConf, key: value }));
         }).catch(e => {
             console.error(e);
             app.alert(http.getError(e));
         });
-    };
-    const updateConfig = (changes) => {
-        Object.entries(changes).forEach(([key, value]) => {
-            if (value !== adminConfig[key]) configSet(key, value);
+    }, [app]);
+    const updateConfig = useCallback((changes) => {
+        Promise.all(Object.entries(changes).map(([key, value]) => {
+            if (value !== adminConfig[key])
+                return configSet(key, value);
+            return new Promise(resolve => resolve());
+        })).then(() => {
+            app.alert("Config updated");
+        }).catch(() => {
+            app.alert("Failed to update config");
         });
-    };
+    }, [adminConfig, app, configSet]);
 
     const fields = [];
     let stack = [];

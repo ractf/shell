@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -32,7 +32,7 @@ const BasicLogin = () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
 
-    const openForget = () => {
+    const openForget = useCallback(() => {
         app.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
             [{ name: "email", placeholder: t("email"), format: EMAIL_RE }]
         ).then(({ email }) => {
@@ -42,9 +42,9 @@ const BasicLogin = () => {
                 app.alert(http.getError(e));
             });
         });
-    };
+    }, [app, t]);
 
-    const onError = ({ resp, retry, showError }) => {
+    const onError = useCallback(({ resp, retry, showError }) => {
         if (resp && resp.reason === "2fa_required") {
             const faPrompt = () => {
                 app.promptConfirm({ message: t("2fa.required"), small: true },
@@ -61,10 +61,10 @@ const BasicLogin = () => {
 
             return false;
         }
-    };
-    const afterLogin = ({ resp: { token } }) => {
+    }, [app, t]);
+    const afterLogin = useCallback(({ resp: { token } }) => {
         postLogin(token);
-    };
+    }, []);
 
     return <Page centre>
         <Wrap>

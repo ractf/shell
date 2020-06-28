@@ -43,6 +43,7 @@ export default () => {
         ["", "Registration Restrictions"],
         ["email_domain", "Email Domain", "string"],
         ["email_regex", "Email Regex", "string"],
+        ["invite_required", "Invites required to join", "boolean"],
 
         ["", "Limit Site Access"],
         ["enable_flag_submission", "Enable Flag Submission", "boolean"],

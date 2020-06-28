@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from "react-i18next";
@@ -75,7 +75,7 @@ export default () => {
     const team = useSelector(state => state.team);
     const dispatch = useDispatch();
 
-    const passwordValidator = ({ old_password, password, new2 }) => {
+    const passwordValidator = useCallback(({ old_password, password, new2 }) => {
         return new Promise((resolve, reject) => {
             if (!old_password)
                 return reject({ old_password: t("settings.curr_pass_required") });
@@ -92,43 +92,43 @@ export default () => {
 
             resolve();
         });
-    };
-    const passwordChanged = () => {
+    }, [t]);
+    const passwordChanged = useCallback(() => {
         app.alert(t("settings.pass_changed"));
-    };
+    }, [app, t]);
 
-    const deleteValidator = ({ password }) => {
+    const deleteValidator = useCallback(({ password }) => {
         return new Promise((resolve, reject) => {
             if (!password) return reject({ password: t("settings.curr_pass_required") });
             resolve();
         });
-    };
+    }, [t]);
 
-    const usernameValidator = ({ username }) => {
+    const usernameValidator = useCallback(({ username }) => {
         return new Promise((resolve, reject) => {
             if (!username) return reject({ username: t("settings.uname_required") });
             if (username === user.username) return reject({ username: t("settings.uname_unchanged") });
 
             resolve();
         });
-    };
-    const usernameChanged = ({ form: { username } }) => {
+    }, [t, user.username]);
+    const usernameChanged = useCallback(({ form: { username } }) => {
         app.alert(t("settings.uname_changed"));
         dispatch(actions.editUser({ username }));
-    };
-    const detailsUpdated = () => {
+    }, [app, dispatch, t]);
+    const detailsUpdated = useCallback(() => {
         app.alert(t("settings.details_changed"));
         reloadAll();
-    };
-    const teamUpdated = () => {
+    }, [app, t]);
+    const teamUpdated = useCallback(() => {
         app.alert(t("settings.team_details_changed"));
         reloadAll();
-    };
+    }, [app, t]);
 
-    const saveNotificationPrefs = (args) => {
+    const saveNotificationPrefs = useCallback((args) => {
         dispatch(actions.setPreferences(args));
         app.alert(t("settings.notifications.success"));
-    };
+    }, [app, dispatch, t]);
 
     const teamOwner = (team ? team.owner === user.id : null);
 

@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-export const DOMAIN = "https://api.ractf.co.uk";
-//export const DOMAIN = process.env.REACT_APP_API_DOMAIN;
+//export const DOMAIN = "https://api.ractf.co.uk";
+export const DOMAIN = process.env.REACT_APP_API_DOMAIN;
 export const API_BASE = process.env.REACT_APP_API_BASE;
 export const BASE_URL = DOMAIN + API_BASE;
 export const ENDPOINTS = {

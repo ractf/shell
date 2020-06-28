@@ -167,7 +167,7 @@ export default ({ challenge, category, rightComponent }) => {
     const chalContent = <>
         {challengeMods}
         <Row>
-            <TextBlock className={"challengeBrief"}>
+            <TextBlock>
                 <Markdown source={challenge.description} />
             </TextBlock>
         </Row>

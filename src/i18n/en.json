@@ -218,7 +218,8 @@
         "send_link": "Send Link",
         "email_sent": "Email sent, check your inbox",
         "pass_forgot": "I forgot my password",
-        "no_accept": "You must accept the terms of use and privacy policy to register."
+        "no_accept": "You must accept the terms of use and privacy policy to register.",
+        "no_invite": "This event requires an invitation code to join"
     },
     "home": {
         "login": "Login",
@@ -268,6 +269,7 @@
     "email": "Email",
     "password": "Password",
     "password_repeat": "Repeat Password",
+    "invite_code": "Invite code",
     "save": "Save",
     "team_name": "Team Name",
     "team_desc": "Team Description",
