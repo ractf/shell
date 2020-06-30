@@ -135,7 +135,9 @@
         "remove": "Remove Challenge",
         "save": "Save Challenge",
         "create": "Create Challenge",
-        "hide_challenge": "Hide challenge"
+        "hide_challenge": "Hide challenge",
+        "hide_locked": "Hide Locked Challenges",
+        "show_locked": "Show Locked Challenges"
     },
     "admin": {
         "import_export": "Import/Export",

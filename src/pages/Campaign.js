@@ -28,7 +28,7 @@ import {
     FlashText, Leader, Modal, Page, H2
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
-import { plugins, appContext } from "ractf";
+import { plugins, appContext, getLocalConfig, setLocalConfig } from "ractf";
 import http from "@ractf/http";
 
 import "./Campaign.scss";
@@ -131,6 +131,7 @@ const CategoryList = () => {
 
 export default () => {
     const [anc, setAnc] = useState(false);
+    const [showLocked, setShowLocked] = useState(getLocalConfig("editor.show_locked"));
     const user = useSelector(state => state.user);
     const categories = useSelector(state => state.challenges?.categories) || [];
     const dispatch = useDispatch();
@@ -152,6 +153,11 @@ export default () => {
     else if (!tabId) {
         return <CategoryList />;
     }
+
+    const toggleShowLocked = () => {
+        setLocalConfig("editor.show_locked", !getLocalConfig("editor.show_locked", false));
+        setShowLocked(getLocalConfig("editor.show_locked"));
+    };
 
     const showEditor = (challenge) => {
         return () => {
@@ -176,7 +182,7 @@ export default () => {
         </>;
     } else {
         challengeTab = React.createElement(
-            handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit }
+            handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit, showLocked: showLocked }
         );
     }
 
@@ -195,9 +201,14 @@ export default () => {
                 <Button key={"edS"} className={"campEditButton"} to={"#"} danger>
                     {t("edit_stop")}
                 </Button>
-            </> : <Button key={"edE"} className={"campEditButton"} to={"#edit"} danger>
+            </> : <>
+                <Button key={"edAll"} className={"campEditButton"} onClick={toggleShowLocked}>
+                    {showLocked ? t("editor.hide_locked") : t("editor.show_locked")}
+                </Button>
+                <Button key={"edE"} className={"campEditButton"} to={"#edit"} danger>
                     {t("edit")}
-                </Button>}
+                </Button>
+            </>}
         </Row>}
         {!user.team && <FlashText danger>{t("campaign.no_team")}</FlashText>}
         <div className={"campInner"}>{challengeTab}</div>
