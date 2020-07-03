@@ -285,7 +285,7 @@ const UIPage = () => <Page><Row left>
     </Column>
     <H2>Scrollbar</H2>
     <Column lgWidth={6}>
-        <TextBlock style={{ height: 100, overflowY: "auto" }}>
+        <TextBlock style={{ height: 100 }}>
             <Scrollbar>
                 This is a text block<br />
             The size has been limited to 100 pixels<br />
@@ -297,8 +297,8 @@ const UIPage = () => <Page><Row left>
         </TextBlock>
     </Column>
     <Column lgWidth={6}>
-        <TextBlock style={{ height: 100, overflowY: "auto" }}>
-            <Scrollbar primary>
+        <TextBlock>
+            <Scrollbar height={100} primary>
                 This is the same demo as before<br />
             But this is a primary scrollbar now<br />
             There should usually only be a single primary scrollbar<br />

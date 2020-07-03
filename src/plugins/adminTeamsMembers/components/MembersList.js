@@ -76,7 +76,10 @@ export default () => {
     return <>
         <PageHead title={t("admin.members")} />
         <Form handle={doSearch} locked={state.loading}>
-            <InputButton submit name={"name"} placeholder={"Search for Username"} button={"Search"} />
+            <Row>
+                <InputButton submit name={"name"} placeholder={"Search for Username"} button={"Search"} />
+                <Button>Advanced Search</Button>
+            </Row>
             {state.error && <FormError>{state.error}</FormError>}
         </Form>
         <br />
