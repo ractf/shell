@@ -17,8 +17,9 @@
 
 import http from "@ractf/http";
 
-export const INVITES = "/auth/generate_invites/";
+export const GENERATE_INVITES = "/auth/generate_invites/";
+export const INVITES = "/auth/invites/";
 
 export const generateInvites = ({ amount }) => {
-    return http.post(INVITES, { amount }).then(({ invite_codes }) => invite_codes);
+    return http.post(GENERATE_INVITES, { amount }).then(({ invite_codes }) => invite_codes);
 };

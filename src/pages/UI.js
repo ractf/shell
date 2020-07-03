@@ -161,9 +161,13 @@ const UIPage = () => <Page><Row left>
         <ToggleButton
             options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4], ["Option 5", 5]]}
             default={2} />
-        <ToggleButton small
-            options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
-            default={2} />
+        <Row vCentre>
+            <ToggleButton small
+                options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
+                default={2} />
+            <SubtleText>Items per page:</SubtleText>
+            <Select mini options={[10, 25, 50, 100]} />
+        </Row>
     </Column>
     <Column lgWidth={6} mdWidth={12}>
         <Row left>
@@ -187,9 +191,13 @@ const UIPage = () => <Page><Row left>
         <ToggleButton pill
             options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4], ["Option 5", 5]]}
             default={2} />
-        <ToggleButton pill small
-            options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
-            default={2} />
+        <Row vCentre>
+            <ToggleButton pill small
+                options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
+                default={2} />
+            <SubtleText>Items per page:</SubtleText>
+            <Select pill mini options={[10, 25, 50, 100]} />
+        </Row>
     </Column>
     <HR />
     <H2>Inputs</H2>

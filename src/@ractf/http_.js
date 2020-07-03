@@ -31,7 +31,9 @@ const _getHeaders = (extra) => {
 };
 
 const prefixBase = (url) => {
-    if (url.indexOf("https://") === 0 || url.indexOf("http://") === 0)
+    if (url.indexOf("http://") === 0)
+        return "https://" + url.substring(7, url.length);
+    if (url.indexOf("https://") === 0)
         return url;
     return BASE_URL + url;
 };
@@ -69,13 +71,14 @@ export const getError = e => {
     return "Unknown error occurred.";
 };
 
-export const abortableGet = (url) => {
+export const abortableGet = (url, params) => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
 
     return [new Promise((resolve, reject) => {
         axios({
             url: appendSlash(prefixBase(url)),
+            params: params,
             cancelToken: source.token,
             method: "get",
             headers: _getHeaders(),
@@ -85,10 +88,11 @@ export const abortableGet = (url) => {
     }), source.cancel];
 };
 
-export const makeRequest = (method, url, data, headers) => {
+export const makeRequest = (method, url, data, headers, params) => {
     return new Promise((resolve, reject) => {
         axios({
             url: appendSlash(prefixBase(url)),
+            params: params,
             method: method,
             data: data,
             headers: _getHeaders(headers),

@@ -42,23 +42,28 @@ export const useApi = route => {
 };
 
 
-export const usePaginated = route => {
+export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
     const abortRequest = useRef();
     const inFlight = useRef();
     const nextPage = useRef();
     const [state, setState] = useState({
-        loading: true,
+        loading: autoLoad,
         data: [],
         hasMore: true,
         total: 0,
         error: null
     });
+    const lastRoute = useRef(route);
+    const localLimit = useRef(limit);
+    useEffect(() => {
+        localLimit.current = limit;
+    }, [limit]);
 
     const next = () => {
         if (inFlight.current) return;
         const path = nextPage.current || route;
 
-        const [request, ar] = http.abortableGet(path);
+        const [request, ar] = http.abortableGet(path, { limit: localLimit.current });
         inFlight.current = true;
         abortRequest.current = ar;
 
@@ -84,12 +89,25 @@ export const usePaginated = route => {
     };
 
     useEffect(() => {
-        next();
+        if (route !== lastRoute.current) {
+            setState({
+                loading: autoLoad,
+                data: [],
+                hasMore: true,
+                total: 0,
+                error: null
+            });
+            nextPage.current = null;
+            lastRoute.current = route;
+        }
+
+        if (autoLoad)
+            next();
         return () => {
             if (abortRequest.current) abortRequest.current();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [route]);
 
     return [state, next];
 };

@@ -18,16 +18,24 @@
 import React, { useCallback, useState } from "react";
 
 import {
-    Button, Column, PageHead, Card, Row, Form, FormGroup, Input, InputButton, NewModal
+    Button, Column, PageHead, Card, Row, Form, FormGroup, Input, InputButton,
+    NewModal, Grid, Checkbox, Select, SubtleText
 } from "@ractf/ui-kit";
 
-import { INVITES, generateInvites } from "../api/invites";
+import { GENERATE_INVITES, INVITES, generateInvites } from "../api/invites";
+import { usePaginated } from "ractf";
 import http from "@ractf/http";
 
 
 const Invites = () => {
     const [invites, setInvites] = useState([]);
     const [locked, setLocked] = useState(false);
+    const [onlyUnused, setOnlyUnused] = useState(false);
+    const [limit, setLimit] = useState(100);
+    const [iState, iNext] = usePaginated(
+        INVITES + (onlyUnused ? "?unused=false" : ""),
+        { limit: limit, autoLoad: false }
+    );
 
     const generate = useCallback((amount) => {
         setLocked(true);
@@ -61,6 +69,13 @@ const Invites = () => {
         });
     }, []);
 
+    const toggleUnused = useCallback((unusedState) => {
+        setOnlyUnused(unusedState);
+    }, []);
+    const setPerPage = useCallback((perPage) => {
+        setLimit(perPage);
+    }, []);
+
     return <>
         <NewModal header={"Generated Invites:"} fullHeight={invites.length > 20} show={invites.length}
             key={invites[0]} noCancel>
@@ -78,7 +93,7 @@ const Invites = () => {
                     </Row>
                 </Card>
                 <Card header={"Generate Invites"}>
-                    <Form handle={formCallback} validator={numValidator} action={INVITES} locked={locked}>
+                    <Form handle={formCallback} validator={numValidator} action={GENERATE_INVITES} locked={locked}>
                         <InputButton name={"amount"} format={/\d+/}
                             placeholder={"Number of invites"} button={"Generate"} />
                     </Form>
@@ -102,7 +117,22 @@ const Invites = () => {
             </Column>
             <Column lgWidth={12}>
                 <Card header={"View existing invites"}>
-                    <InputButton submit name={"name"} placeholder={"Search for Username"} button={"Search"} />
+                    <Form>
+                        <Row vCentre>
+                            <Checkbox onChange={toggleUnused} name={"Unused"}>Only show unused codes</Checkbox>
+                            <SubtleText>Items per page:</SubtleText>
+                            <Select onChange={setPerPage} mini options={[10, 100, 500, 1000]} initial={1} />
+                        </Row>
+                    </Form>
+                    <Grid headings={["Code", "Uses", "Team"]}
+                        data={iState.data.map(i => [<code>{i.code}</code>, `${i.uses}/${i.max_uses}`, i.auto_team])} />
+                    {iState.hasMore && (
+                        <Row centre>
+                            <Button disabled={iState.loading} onClick={iNext}>
+                                Load{iState.data.length ? " More" : ""}
+                            </Button>
+                        </Row>
+                    )}
                 </Card>
             </Column>
         </Row>
