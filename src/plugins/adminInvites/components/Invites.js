@@ -62,7 +62,8 @@ const Invites = () => {
     }, []);
 
     return <>
-        <NewModal header={"Generated Invites:"} fullHeight show={invites.length} key={invites[0]}>
+        <NewModal header={"Generated Invites:"} fullHeight={invites.length > 20} show={invites.length}
+            key={invites[0]} noCancel>
             {invites.map(i => <React.Fragment key={i}><code>{i}</code><br /></React.Fragment>)}
         </NewModal>
 
