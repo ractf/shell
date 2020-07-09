@@ -23,7 +23,7 @@ import { MdWarning } from "react-icons/md";
 import SiteNav from "components/SiteNav";
 
 import {
-    ModalPrompt, ProgressBar, Scrollbar, Modal
+    ProgressBar, Scrollbar, NewModal, NewModalPrompt
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
@@ -257,7 +257,7 @@ const App = React.memo(() => {
                 <Routes />
             </SiteNav>
 
-            {currentPrompt ? <ModalPrompt
+            {currentPrompt ? <NewModalPrompt
                 body={currentPrompt.body}
                 promise={currentPrompt.promise}
                 inputs={currentPrompt.inputs}
@@ -268,10 +268,10 @@ const App = React.memo(() => {
                 {popupsEl}
             </div>
 
-            {progressBar && <Modal small>
+            {progressBar && <NewModal small>
                 {progressBar.text}
                 <ProgressBar progress={progressBar.progress} />
-            </Modal>}
+            </NewModal>}
 
             <WSSpine />
 
