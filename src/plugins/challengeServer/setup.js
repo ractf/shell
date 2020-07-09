@@ -58,9 +58,11 @@ const ChallengeServer = ({ challenge }) => {
 export default () => {
     registerPlugin("challengeMetadata", "challengeServer", {
         fields: [
-            { label: "Challenge server settings:", type: "label" },
-            { name: "cserv_name", label: "Challenge server name", type: "text" },
-            { type: "hr" },
+            {
+                label: "Challenge server settings:", type: "group", children: [
+                    { name: "cserv_name", label: "Challenge server name", type: "text" },
+                ]
+            },
         ]
     });
     registerPlugin("challengeMod", "challengeServer", {

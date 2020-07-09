@@ -23,10 +23,12 @@ export default () => {
     registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
     registerPlugin("challengeMetadata", "campaign", {
         fields: [
-            { label: "Campaign settings:", type: "label" },
-            { name: "x", label: "X Position", type: "number" },
-            { name: "y", label: "Y Position", type: "number" },
-            { type: "hr" },
+            {
+                label: "Campaign settings:", type: "group", children: [
+                    { name: "x", label: "X Position", type: "number" },
+                    { name: "y", label: "Y Position", type: "number" },
+                ]
+            },
         ],
         check: (challenge, category) => {
             return category.contained_type === "campaign";

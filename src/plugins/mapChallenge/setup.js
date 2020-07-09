@@ -23,9 +23,11 @@ export default () => {
 
     registerPlugin("challengeMetadata", "mapData", {
         fields: [
-            { label: "Map settings:", type: "label" },
-            { name: "minimum_zoom_level", label: "Min zoom level", type: "number" },
-            { type: "hr" },
+            {
+                label: "Map settings:", type: "group", children: [
+                    { name: "minimum_zoom_level", label: "Min zoom level", type: "number" },
+                ]
+            },
         ],
         check: (challenge) => challenge.challenge_type === "map",
     });

@@ -27,19 +27,23 @@ export default () => {
 
     registerPlugin("challengeMetadata", "codeIngest", {
         fields: [
-            {label: "Code ingest settings:", type: "label"},
-            {name: "code_language", label: "Code language", type: "select", options: [
-                {key: "python", value: "Python"},
-                {key: "cpp", value: "C++"},
-                {key: "gcc", value: "C"},
-                {key: "perl", value: "Perl"},
-                {key: "ruby", value: "Ruby"},
-                {key: "java", value: "Java"},
-                {key: "node", value: "Node.JS"},
-                {key: "nasm", value: "Assembly (NASM)"},
-            ]},
-            {name: "code_default", label: "Default code", type: "code"},
-            {type: "hr"},
+            {
+                label: "Code ingest settings:", type: "group", children: [
+                    {
+                        name: "code_language", label: "Code language", type: "select", options: [
+                            { key: "python", value: "Python" },
+                            { key: "cpp", value: "C++" },
+                            { key: "gcc", value: "C" },
+                            { key: "perl", value: "Perl" },
+                            { key: "ruby", value: "Ruby" },
+                            { key: "java", value: "Java" },
+                            { key: "node", value: "Node.JS" },
+                            { key: "nasm", value: "Assembly (NASM)" },
+                        ]
+                    },
+                    { name: "code_default", label: "Default code", type: "code" },
+                ]
+            },
         ],
         check: (challenge) => challenge.challenge_type === "code",
     });

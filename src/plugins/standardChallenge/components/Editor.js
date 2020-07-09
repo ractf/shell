@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Row, Checkbox, Button, Select, HR, PageHead, Link, Tab,
-    TabbedView, FlashText, FormGroup
+    TabbedView, FlashText, FormGroup, Spoiler
 } from "@ractf/ui-kit";
 import { plugins, appContext } from "ractf";
 import { newHint, newFile } from "@ractf/api";
@@ -31,51 +31,64 @@ import Hint from "./Hint";
 
 
 const MetadataEditor = ({ challenge, category, save }) => {
-    const fields = [<HR key={-1} />];
+    const fields = [];
+    const generateFields = (fields, key = "", n = 0) => {
+        const retFields = [];
+
+        fields.forEach(field => {
+            switch (field.type) {
+                case "multiline":
+                case "code":
+                case "text":
+                case "number":
+                    const val = challenge.challenge_metadata[field.name];
+                    const format = field.type === "number" ? /\d+/ : /.+/;
+                    retFields.push(<FormGroup htmlFor={field.name} label={field.label} key={key + (n++)}>
+                        <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
+                            placeholder={field.label} format={format}
+                            rows={field.type === "multiline" || field.type === "code" ? 5 : ""}
+                            monospace={field.type === "code"} />
+                    </FormGroup>);
+                    break;
+                case "select":
+                    const idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
+                    retFields.push(<FormGroup key={key + (n++)} htmlFor={field.name} label={field.label}>
+                        <Select name={field.name} options={field.options}
+                            initial={idx !== -1 ? idx : 0} />
+                    </FormGroup>);
+                    break;
+                case "label":
+                    retFields.push(<div key={key + (n++)}>{field.label}</div>);
+                    break;
+                case "hr":
+                    retFields.push(<HR key={key + (n++)} />);
+                    break;
+                case "group":
+                    retFields.push(<Spoiler key={key + (n++)} title={field.label}>
+                        {generateFields(field.children)}
+                    </Spoiler>);
+                    break;
+                default:
+                    retFields.push(<div key={key + (n++)}>Unknown field type: {field.type}</div>);
+                    break;
+            }
+        });
+        return retFields;
+    };
+
     Object.keys(plugins.challengeMetadata).forEach(key => {
         const i = plugins.challengeMetadata[key];
-        let n = 0;
         if (!i.check || i.check(challenge, category)) {
-            i.fields.forEach(field => {
-                switch (field.type) {
-                    case "multiline":
-                    case "code":
-                    case "text":
-                    case "number":
-                        const val = challenge.challenge_metadata[field.name];
-                        const format = field.type === "number" ? /\d+/ : /.+/;
-                        fields.push(<FormGroup htmlFor={field.name} label={field.label} key={key + (n++)}>
-                            <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
-                                placeholder={field.label} format={format}
-                                rows={field.type === "multiline" || field.type === "code" ? 5 : ""}
-                                monospace={field.type === "code"} />
-                        </FormGroup>);
-                        break;
-                    case "select":
-                        const idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
-                        fields.push(<FormGroup key={key + (n++)} htmlFor={field.name} label={field.label}>
-                            <Select name={field.name} options={field.options}
-                                initial={idx !== -1 ? idx : 0} />
-                        </FormGroup>);
-                        break;
-                    case "label":
-                        fields.push(<div key={key + (n++)}>{field.label}</div>);
-                        break;
-                    case "hr":
-                        fields.push(<HR key={key + (n++)} />);
-                        break;
-                    default:
-                        fields.push(<div key={key + (n++)}>"Unknown field type: " + field.type</div>);
-                        break;
-                }
-            });
+            fields.push(...generateFields(i.fields, key, fields.length));
         }
     });
     const saveEdit = (changes) => {
-        save({...challenge, challenge_metadata: {
-            ...challenge.challenge_metadata,
-            ...changes
-        }});
+        save({
+            ...challenge, challenge_metadata: {
+                ...challenge.challenge_metadata,
+                ...changes
+            }
+        });
     };
 
     return <div style={{ width: "100%" }}><Form handle={saveEdit}>
@@ -205,11 +218,11 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                             val={challenge.flag_type} />
                     </FormGroup>
                     <FormGroup htmlFor={"flag_metadata"} label={t("editor.chal_flag")}>
-                    <Input placeholder={t("editor.chal_flag")}
-                        name={"flag_metadata"} monospace format={{
-                            test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
-                        }}
-                        val={JSON.stringify(challenge.flag_metadata)} />
+                        <Input placeholder={t("editor.chal_flag")}
+                            name={"flag_metadata"} monospace format={{
+                                test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
+                            }}
+                            val={JSON.stringify(challenge.flag_metadata)} />
                     </FormGroup>
 
                     <Row>
@@ -219,7 +232,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                 </Form>
             </Tab>
             <Tab label={t("editor.files")}>
-                {isCreator 
+                {isCreator
                     ? <FlashText danger>Cannot add files to non-existant challenge.</FlashText>
                     : <FileEditor challenge={challenge} />}
             </Tab>
