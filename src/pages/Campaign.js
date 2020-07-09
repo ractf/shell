@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useContext } from "react";
+import React, { useState, useRef, useContext, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -25,7 +25,7 @@ import { useReactRouter } from "@ractf/util";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
-    FlashText, Leader, Modal, Page, H2
+    FlashText, Leader, NewModal, Page
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { plugins, appContext, getLocalConfig, setLocalConfig } from "ractf";
@@ -40,8 +40,9 @@ const ANC = ({ hide, anc, modal }) => {
     const [error, setError] = useState("");
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const submit = useRef();
 
-    const create = ({ cname, cdesc, ctype }) => {
+    const create = useCallback(({ cname, cdesc, ctype }) => {
         if (!cname.length)
             return setError(t("challenge.no_name"));
         if (!ctype.length || !plugins.categoryType[ctype])
@@ -53,12 +54,13 @@ const ANC = ({ hide, anc, modal }) => {
             : createGroup(cname, cdesc, ctype)).then(async resp => {
                 if (hide)
                     hide();
+                app.alert(t("campaign.edit_success"));
             }).catch(e => {
                 setError(http.getError(e));
                 setLocked(false);
             });
-    };
-    const removeCategory = () => {
+    }, [anc, app, hide, t]);
+    const removeCategory = useCallback(() => {
         app.promptConfirm({
             message: "Are you sure you want to remove the category:\n" + anc.name,
             small: true
@@ -79,10 +81,9 @@ const ANC = ({ hide, anc, modal }) => {
             app.alert("Something went wrong removing the category:\n" + http.getError(e));
         });
         hide();
-    };
+    }, [anc, app, dispatch, hide]);
 
-    const body = <Form locked={locked} handle={create}>
-        {modal && <H2>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</H2>}
+    const body = <Form locked={locked} handle={create} submitRef={submit}>
         <label htmlFor={"cname"}>{t("challenge.cat_name")}</label>
         <Input val={anc.name} name={"cname"} placeholder={t("challenge.cat_name")} />
         <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
@@ -91,18 +92,28 @@ const ANC = ({ hide, anc, modal }) => {
         <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
             placeholder={t("challenge.cat_type")} />
         {error && <FormError>{error}</FormError>}
-        <Row>
-            {anc.id &&
-                <Button danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
-            }
-            <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
-        </Row>
+        {!modal && (
+            <Row>
+                {anc.id &&
+                    <Button danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
+                }
+                <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
+            </Row>
+        )}
     </Form>;
+    const doSubmit = useCallback(() => {
+        submit.current();
+    }, []);
 
     if (modal)
-        return <Modal onHide={hide} title={t("challenge.new_chal")}>
+        return <NewModal onClose={hide} header={anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")} buttons={<>
+            <Button lesser danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
+            <div style={{ flexGrow: 1 }} />
+            <Button onClick={hide}>{t("cancel")}</Button>
+            <Button onClick={doSubmit}>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
+        </>}>
             {body}
-        </Modal>;
+        </NewModal>;
     return body;
 };
 
@@ -195,20 +206,20 @@ export default () => {
         </>} title={tab.name} />
         {user.is_staff && <Row className={"campEdit"} right>
             {edit ? <>
-                <Button key={"edD"} className={"campUnderEditButton"} onClick={() => setAnc(tab)}>
+                <Button key={"edD"} onClick={() => setAnc(tab)}>
                     {t("edit_details")}
                 </Button>
-                <Button key={"edS"} className={"campEditButton"} to={"#"} danger>
+                <Button key={"edS"} to={"#"} danger>
                     {t("edit_stop")}
                 </Button>
             </> : <>
-                <Button key={"edAll"} className={"campEditButton"} onClick={toggleShowLocked}>
-                    {showLocked ? t("editor.hide_locked") : t("editor.show_locked")}
-                </Button>
-                <Button key={"edE"} className={"campEditButton"} to={"#edit"} danger>
-                    {t("edit")}
-                </Button>
-            </>}
+                    <Button key={"edAll"} onClick={toggleShowLocked}>
+                        {showLocked ? t("editor.hide_locked") : t("editor.show_locked")}
+                    </Button>
+                    <Button key={"edE"} to={"#edit"} danger>
+                        {t("edit")}
+                    </Button>
+                </>}
         </Row>}
         {!user.team && <FlashText danger>{t("campaign.no_team")}</FlashText>}
         <div className={"campInner"}>{challengeTab}</div>
