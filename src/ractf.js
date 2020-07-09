@@ -45,6 +45,8 @@ export const plugins = {
     postLogin: {},
     errorHandler: {},
     mountWithinApp: {},
+    categoryMatcher: {},
+    challengeMatcher: {},
 };
 
 export const getLocalConfig = (key, fallback) => {

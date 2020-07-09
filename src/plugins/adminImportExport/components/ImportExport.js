@@ -17,18 +17,18 @@
 
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
 import { Button, PageHead, Card, Row } from "@ractf/ui-kit";
+import { useCategories } from "@ractf/util/hooks";
 
 
 export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
-    const categories = useSelector(state => state.challenges?.categories);
+    const categories = useCategories();
 
     const downloadData = (data, filename, mimetype) => {
         const blob = new Blob([data], { type: `${mimetype};charset=utf-8;` });

@@ -24,11 +24,13 @@ export default () => {
 
     registerPlugin("challengeMetadata", "standardChallenge", {
         fields: [
-            { type: "hr" },
-            { name: "attempt_limit", label: "Challenge attempt limit", type: "number" },
-            { type: "hr" },
             {
-                label: "Flag RexExps (Both must be set).", type: "group", children: [
+                label: "Attempt Limit", type: "group", children: [
+                    { name: "attempt_limit", label: "Challenge attempt limit", type: "number" },
+                ]
+            },
+            {
+                label: "Flag RegExps (Both must be set)", type: "group", children: [
                     { name: "flag_regex", label: "Flag RegExp", type: "text" },
                     { name: "flag_partial_regex", label: "Flag partial RegExp", type: "text" },
                 ]

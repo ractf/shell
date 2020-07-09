@@ -28,8 +28,9 @@ import { plugins } from "ractf";
 import Wordmark from "./Wordmark";
 import Header from "./Header";
 
-import footerLogo from "../static/spine.svg";
+import { useCategories } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
+import footerLogo from "../static/spine.svg";
 
 const USE_HEAD_NAV = false;
 
@@ -69,8 +70,8 @@ const SideBarNav_ = ({ children }) => {
 
     const registration = useConfig("enable_registration", true);
     const login = useConfig("enable_login", true);
-    const categories = useSelector(state => state.challenges?.categories) || [];
     const user = useSelector(state => state.user);
+    const categories = useCategories();
 
     const menu = [];
     menu.push({
@@ -86,7 +87,7 @@ const SideBarNav_ = ({ children }) => {
 
     if (user) {
         if (user.is_staff || categories.length) {
-            const submenu = categories.map(i => [i.name, "/campaign/" + i.id]);
+            const submenu = categories.map(i => [i.name, i.url]);
             if (user.is_staff) {
                 submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
             }

@@ -33,6 +33,7 @@ import { useApi } from "ractf";
 import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
+import { useCategories } from "@ractf/util/hooks";
 
 
 const TeamPage = () => {
@@ -45,7 +46,7 @@ const TeamPage = () => {
     */
 
     const { match } = useReactRouter();
-    const categories = useSelector(state => state.challenges?.categories);
+    const categories = useCategories();
     const team = match.params.team;
     const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
     const user = useSelector(state => state.user);

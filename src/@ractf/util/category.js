@@ -15,23 +15,35 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { getClass } from "@ractf/plugins";
 
-import { CampaignChallenges } from "./components/CampaignChallenges";
+import Challenge from "./challenge";
 
-export default () => {
-    registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
-    registerPlugin("challengeMetadata", "campaign", {
-        fields: [
-            {
-                label: "Campaign settings", type: "group", children: [
-                    { name: "x", label: "X Position", type: "number" },
-                    { name: "y", label: "Y Position", type: "number" },
-                ]
-            },
-        ],
-        check: (challenge, category) => {
-            return category.contained_type === "campaign";
-        }
-    });
-};
+export default class Category {
+    constructor(data) {
+        this._data = data;
+        this._challenges = data.challenges.map(i => (getClass(Challenge).fromJSON(this, i)));
+
+        return new Proxy(this, {
+            get(target, name) {
+                return Reflect.get(...arguments) || target._data[name];
+            }
+        });
+    }
+
+    get url() {
+        return `/campaign/${this.id}`;
+    }
+
+    get id() {
+        return this._data.id;
+    }
+
+    get challenges() {
+        return this._challenges;
+    }
+
+    static fromJSON(data) {
+        return new this(data);
+    }
+}

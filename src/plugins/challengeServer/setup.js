@@ -59,7 +59,7 @@ export default () => {
     registerPlugin("challengeMetadata", "challengeServer", {
         fields: [
             {
-                label: "Challenge server settings:", type: "group", children: [
+                label: "Challenge server settings", type: "group", children: [
                     { name: "cserv_name", label: "Challenge server name", type: "text" },
                 ]
             },

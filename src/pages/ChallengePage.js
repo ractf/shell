@@ -26,6 +26,7 @@ import { plugins, appContext } from "ractf";
 import { useReactRouter } from "@ractf/util";
 import { Page } from "@ractf/ui-kit";
 import http from "@ractf/http";
+import { useChallenge, useCategory } from "@ractf/util/hooks";
 
 
 const EditorWrap = ({ challenge, category, isCreator }) => {
@@ -75,9 +76,9 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
 
             const id = original.id || data.id;
             if (id && isCreator)
-                dispatch(push("/campaign/" + category.id + "/challenge/" + id + "#edit"));
+                dispatch(push(original.url + "#edit"));
             else
-                dispatch(push("/campaign/" + category.id + "#edit"));
+                dispatch(push(category.url + "#edit"));
 
             await reloadAll();
         }).catch(e => app.alert(http.getError(e)));
@@ -87,7 +88,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
         app.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
             removeChallenge(challenge).then(() => {
                 app.alert("Challenge removed");
-                dispatch(push("/campaign/" + category.id));
+                dispatch(push(category.url));
             }).catch(e => {
                 app.alert("Error removing challenge:\n" + http.getError(e));
             });
@@ -136,23 +137,14 @@ const ChallengePage = () => {
     const chalId = match.params.chalId;
 
     const locationHash = useSelector(state => state.router?.location?.hash);
-    const categories = useSelector(state => state.challenges?.categories);
     const user = useSelector(state => state.user);
 
     const isEditor = locationHash === "#edit" && user && user.is_staff;
     const isCreator = chalId === "new" && user && user.is_staff;
 
-    const category = (() => {
-        for (const i in categories) {
-            if (categories[i].id.toString() === catId.toString()) return categories[i];
-        }
-    })();
-    let challenge = (() => {
-        if (!category) return null;
-        const chals = category.challenges || [];
-        for (const i in chals)
-            if (chals[i].id.toString() === chalId.toString()) return chals[i];
-    })();
+    const category = useCategory(catId);
+    let challenge = useChallenge(category, chalId);
+
     if (isCreator) {
         try {
             challenge = JSON.parse(decodeURIComponent(locationHash.substring(1)));

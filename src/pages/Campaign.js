@@ -22,6 +22,7 @@ import { Redirect } from "react-router-dom";
 import { push } from "connected-react-router";
 
 import { useReactRouter } from "@ractf/util";
+import { useCategory, useCategories } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
@@ -120,7 +121,7 @@ const ANC = ({ hide, anc, modal }) => {
 
 const CategoryList = () => {
     const { t } = useTranslation();
-    const categories = useSelector(state => state.challenges?.categories) || [];
+    const categories = useCategories();
 
     return <Page>
         <PageHead subTitle={t("categories.pick")} title={t("categories.all")} />
@@ -128,7 +129,7 @@ const CategoryList = () => {
             {categories.map(i => {
                 const solved = i.challenges.filter(j => j.solved).length;
 
-                return <Leader key={i.id} link={"/campaign/" + i.id} green={solved === i.challenges.length}
+                return <Leader key={i.id} link={i.url} green={solved === i.challenges.length}
                     sub={solved === i.challenges.length ? t("categories.finished") :
                         solved === 0 ? t("categories.none") :
                             t("categories.some", { count: i.challenges.length, total: solved })}>
@@ -144,12 +145,12 @@ export default () => {
     const [anc, setAnc] = useState(false);
     const [showLocked, setShowLocked] = useState(getLocalConfig("editor.show_locked"));
     const user = useSelector(state => state.user);
-    const categories = useSelector(state => state.challenges?.categories) || [];
     const dispatch = useDispatch();
 
     const { t } = useTranslation();
     const { location, match } = useReactRouter();
     const tabId = match.params.tabId;
+    const tab = useCategory(tabId);
 
     const edit = location.hash === "#edit" && user && user.is_staff;
 
@@ -172,14 +173,9 @@ export default () => {
 
     const showEditor = (challenge) => {
         return () => {
-            dispatch(push("/campaign/" + tabId + "/challenge/new#" + encodeURIComponent(JSON.stringify(challenge))));
+            dispatch(push(challenge.category.url + "/challenge/new#" + encodeURIComponent(JSON.stringify(challenge))));
         };
     };
-
-    const tab = (() => {
-        for (const i in categories)
-            if (categories[i].id.toString() === tabId) return categories[i];
-    })();
     let chalEl, challengeTab;
 
     if (!tab) {

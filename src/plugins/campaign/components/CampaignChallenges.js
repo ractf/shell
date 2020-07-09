@@ -130,7 +130,7 @@ export const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked 
                 isEdit={isEdit} toggleLink={toggleLink(chal)}
                 points={chal.score}
 
-                url={(isEdit || unlocked || showLocked) ? "/campaign/" + challenges.id + "/challenge/" + chal.id
+                url={(isEdit || unlocked || showLocked) ? chal.url
                     + (isEdit ? "#edit" : "") : null}
 
                 name={

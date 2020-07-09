@@ -36,7 +36,7 @@ import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
 import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useCategories } from "@ractf/util/hooks";
 
 
 const UserSpecial = ({ children, col, ico }) => (
@@ -61,7 +61,7 @@ const Profile = () => {
     const { match } = useReactRouter();
     const { t } = useTranslation();
     const user = match.params.user;
-    const categories = useSelector(state => state.challenges?.categories);
+    const categories = useCategories();
     const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
 
     if (error) return <Page title={"Users"} centre>
