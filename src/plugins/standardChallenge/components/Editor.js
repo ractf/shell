@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Row, Checkbox, Button, Select, PageHead, Link, Tab,
-    TabbedView, FlashText, FormGroup, fromJson
+    TabbedView, FlashText, FormGroup, fromJson, Page
 } from "@ractf/ui-kit";
 import { plugins, appContext } from "ractf";
 import { newHint, newFile } from "@ractf/api";
@@ -136,7 +136,7 @@ const FileEditor = ({ challenge }) => {
 const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) => {
     const { t } = useTranslation();
 
-    return <>
+    return <Page>
         <PageHead
             title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
             back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
@@ -206,6 +206,6 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                 <MetadataEditor category={category} challenge={challenge} save={saveEdit} />
             </Tab>
         </TabbedView>
-    </>;
+    </Page>;
 };
 export default Editor;

@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 
 import {
     Button, Input, TextBlock, Form, FormError, PageHead, Link, Row, FlashText,
-    Markdown, Badge
+    Markdown, Badge, Page
 } from "@ractf/ui-kit";
 import { useHint, attemptFlag, reloadAll } from "@ractf/api";
 import { appContext, plugins } from "ractf";
@@ -213,18 +213,24 @@ export default ({ challenge, category, rightComponent }) => {
         ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
         : t("challenge.no_solve"));
 
-    return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
-        <>
-            <PageHead
-                subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
-                back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
-                title={challenge.name} tags={tags}
-            />
-            <Row style={{ position: "absolute", top: 16, right: 32 }} right>
-                <Button to="#edit" danger>{t("edit")}</Button>
-            </Row>
-            {chalContent}
-        </>
-        {rightSide}
-    </Split>;
+    const leftSide = <Page>
+        <PageHead
+            subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
+            back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
+            title={challenge.name} tags={tags}
+        />
+        <Row style={{ position: "absolute", top: 16, right: 32 }} right>
+            <Button to="#edit" danger>{t("edit")}</Button>
+        </Row>
+        {chalContent}
+    </Page>;
+
+    if (!rightSide) return leftSide;
+
+    return <Page title={challenge ? challenge.name : "Challenges"} noWrap={!!rightSide}>
+        <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>
+            {leftSide}
+            {rightSide}
+        </Split>
+    </Page>;
 };

@@ -24,7 +24,6 @@ import { push } from "connected-react-router";
 import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
 import { plugins, appContext } from "ractf";
 import { useReactRouter } from "@ractf/util";
-import { Page } from "@ractf/ui-kit";
 import http from "@ractf/http";
 import { useChallenge, useCategory } from "@ractf/util/hooks";
 
@@ -165,8 +164,6 @@ const ChallengePage = () => {
             chalEl = <ChallengeWrap {...{ challenge, category }} />;
     }
 
-    return <Page title={challenge ? challenge.name : "Challenges"}>
-        {chalEl}
-    </Page>;
+    return chalEl;
 };
 export default ChallengePage;
