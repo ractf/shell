@@ -23,14 +23,7 @@ import Category from "@ractf/util/category";
 
 
 export default () => {
-    class SluggedChallenge extends getClass(Challenge) {
-        get url() {
-            const id = this.challenge_metadata?.challenge_slug || this.id;
-            return `${this.category.url}/challenge/${id}`;
-        }
-    };
-    registerSubclass(Challenge, SluggedChallenge);
-
+    // Category slugs
     class SluggedCategory extends getClass(Category) {
         get url() {
             const id = this.metadata?.category_slug || this.id;
@@ -38,7 +31,26 @@ export default () => {
         }
     };
     registerSubclass(Category, SluggedCategory);
+    registerPlugin("categoryMetadata", "challengeSlugs", {
+        fields: [
+            { name: "category_slug", label: "Category Slug", type: "text" },
+        ],
+    });
+    registerPlugin("categoryMatcher", "challengeSlugs", (categories, id) => {
+        for (const i of categories)
+            if (i.metadata?.category_slug === id)
+                return i;
+        return null;
+    });
 
+    // Challenge slugs
+    class SluggedChallenge extends getClass(Challenge) {
+        get url() {
+            const id = this.challenge_metadata?.challenge_slug || this.id;
+            return `${this.category.url}/challenge/${id}`;
+        }
+    };
+    registerSubclass(Challenge, SluggedChallenge);
     registerPlugin("challengeMetadata", "challengeSlugs", {
         fields: [
             {
@@ -48,21 +60,10 @@ export default () => {
             },
         ],
     });
-    registerPlugin("categoryMetadata", "challengeSlugs", {
-        fields: [
-            {
-                label: "Category slug", type: "group", children: [
-                    { name: "category_slug", label: "Category Slug", type: "text" },
-                ]
-            },
-        ],
-    });
     registerPlugin("challengeMatcher", "challengeSlugs", (category, challengeId) => {
-        for (const i of category.challenges) {
-            if (i.challenge_metadata?.challenge_slug === challengeId) {
+        for (const i of category.challenges)
+            if (i.challenge_metadata?.challenge_slug === challengeId)
                 return i;
-            }
-        }
         return null;
     });
 };

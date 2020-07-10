@@ -39,9 +39,9 @@ export const removeGroup = async (id) => {
         return data;
     });
 };
-export const editGroup = (id, name, desc, type) => {
+export const editGroup = (id, name, desc, type, metadata) => {
     return http.patch(ENDPOINTS.CATEGORIES + id, {
-        name, description: desc, contained_type: type
+        name, description: desc, contained_type: type, metadata: metadata
     }).then(data => {
         store.dispatch(actions.editCategory(data));
         return data;

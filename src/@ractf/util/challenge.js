@@ -17,6 +17,8 @@
 
 export default class Challenge {
     constructor(category, data) {
+        if ("toJSON" in data && (typeof data.toJSON) === "function")
+            data = data.toJSON();
         this._data = data;
         this._category = category;
 
@@ -25,6 +27,12 @@ export default class Challenge {
                 return Reflect.get(...arguments) || target._data[name];
             }
         });
+    }
+
+    *[Symbol.iterator]() {
+        for (const i of Object.keys(this._data)) {
+            yield i;
+        }
     }
 
     get category() {
@@ -37,6 +45,13 @@ export default class Challenge {
 
     get url() {
         return `${this.category.url}/challenge/${this.id}`;
+    }
+
+    toJSON() {
+        const ret = {};
+        for (const i of this)
+            ret[i] = this[i];
+        return ret;
     }
 
     static fromJSON(category, data) {

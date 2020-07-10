@@ -21,14 +21,16 @@ import Challenge from "./challenge";
 
 export default class Category {
     constructor(data) {
-        this._data = data;
-        this._challenges = data.challenges.map(i => (getClass(Challenge).fromJSON(this, i)));
-
-        return new Proxy(this, {
+        const proxiedThis = new Proxy(getClass(this), {
             get(target, name) {
                 return Reflect.get(...arguments) || target._data[name];
             }
         });
+
+        this._data = data;
+        this._challenges = data.challenges.map(i => getClass(Challenge).fromJSON(proxiedThis, i));
+
+        return proxiedThis;
     }
 
     get url() {

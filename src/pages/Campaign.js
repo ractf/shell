@@ -26,7 +26,7 @@ import { useCategory, useCategories } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
-    FlashText, Leader, NewModal, Page
+    FlashText, Leader, NewModal, Page, TabbedView, Tab, fromJson
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { plugins, appContext, getLocalConfig, setLocalConfig } from "ractf";
@@ -42,6 +42,7 @@ const ANC = ({ hide, anc, modal }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const submit = useRef();
+    const metadataRef = useRef();
 
     const create = useCallback(({ cname, cdesc, ctype }) => {
         if (!cname.length)
@@ -51,7 +52,7 @@ const ANC = ({ hide, anc, modal }) => {
 
         setLocked(true);
 
-        (anc.id ? editGroup(anc.id, cname, cdesc, ctype)
+        (anc.id ? editGroup(anc.id, cname, cdesc, ctype, metadataRef.current)
             : createGroup(cname, cdesc, ctype)).then(async resp => {
                 if (hide)
                     hide();
@@ -84,24 +85,33 @@ const ANC = ({ hide, anc, modal }) => {
         hide();
     }, [anc, app, dispatch, hide]);
 
-    const body = <Form locked={locked} handle={create} submitRef={submit}>
-        <label htmlFor={"cname"}>{t("challenge.cat_name")}</label>
-        <Input val={anc.name} name={"cname"} placeholder={t("challenge.cat_name")} />
-        <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
-        <Input val={anc.description} name={"cdesc"} rows={5} placeholder={t("challenge.cat_brief")} />
-        <label htmlFor={"ctype"}>{t("challenge.cat_type")}</label>
-        <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
-            placeholder={t("challenge.cat_type")} />
-        {error && <FormError>{error}</FormError>}
-        {!modal && (
-            <Row>
-                {anc.id &&
-                    <Button danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
-                }
-                <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
-            </Row>
-        )}
-    </Form>;
+    const body = <TabbedView neverUnmount>
+        <Tab label={t("editor.cat_settings")}>
+            <Form locked={locked} handle={create} submitRef={submit}>
+                <label htmlFor={"cname"}>{t("challenge.cat_name")}</label>
+                <Input val={anc.name} name={"cname"} placeholder={t("challenge.cat_name")} />
+                <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
+                <Input val={anc.description} name={"cdesc"} rows={5} placeholder={t("challenge.cat_brief")} />
+                <label htmlFor={"ctype"}>{t("challenge.cat_type")}</label>
+                <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
+                    placeholder={t("challenge.cat_type")} />
+                {error && <FormError>{error}</FormError>}
+                {!modal && (
+                    <Row>
+                        {anc.id &&
+                            <Button danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
+                        }
+                        <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
+                    </Row>
+                )}
+            </Form>
+        </Tab>
+        <Tab label={t("editor.metadata")}>
+            <Form locked={locked} valuesRef={metadataRef}>
+                {Object.values(plugins.categoryMetadata).map(i => fromJson(i.fields, anc.metadata))}
+            </Form>
+        </Tab>
+    </TabbedView>;
     const doSubmit = useCallback(() => {
         submit.current();
     }, []);
@@ -205,14 +215,14 @@ export default () => {
                 <Button key={"edD"} onClick={() => setAnc(tab)}>
                     {t("edit_details")}
                 </Button>
-                <Button key={"edS"} to={"#"} danger>
+                <Button key={"edS"} to={"#"} danger lesser>
                     {t("edit_stop")}
                 </Button>
             </> : <>
-                    <Button key={"edAll"} onClick={toggleShowLocked}>
+                    <Button key={"edAll"} onClick={toggleShowLocked} lesser={!showLocked}>
                         {showLocked ? t("editor.hide_locked") : t("editor.show_locked")}
                     </Button>
-                    <Button key={"edE"} to={"#edit"} danger>
+                    <Button key={"edE"} to={"#edit"} danger lesser>
                         {t("edit")}
                     </Button>
                 </>}

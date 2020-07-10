@@ -4,10 +4,11 @@ import Challenge from "./challenge";
 import Category from "./category";
 
 import { plugins } from "ractf";
+import { getClass } from "@ractf/plugins";
 
 export const useCategories = () => {
     const categories = useSelector(state => state.challenges?.categories) || [];
-    return categories.map(i => Category.fromJSON(i));
+    return categories.map(i => getClass(Category).fromJSON(i));
 };
 
 export const useCategory = (id) => {
@@ -17,12 +18,12 @@ export const useCategory = (id) => {
     for (const matcher of matchers) {
         const cat = matcher(categories, id);
         if (cat)
-            return Category.fromJSON(cat);
+            return getClass(Category).fromJSON(cat);
     }
 
     for (const i of categories) {
         if (i.id.toString() === id) {
-            return Category.fromJSON(i);
+            return getClass(Category).fromJSON(i);
         }
     }
     return null;
@@ -37,13 +38,13 @@ export const useChallenge = (category, challengeId) => {
     for (const matcher of matchers) {
         const challenge = matcher(category, challengeId);
         if (challenge)
-            return Challenge.fromJSON(category, challenge);
+            return getClass(Challenge).fromJSON(category, challenge);
     }
 
     const challenges = category.challenges || [];
     for (const i of challenges) {
         if (i.id.toString() === challengeId.toString()) {
-            return Challenge.fromJSON(category, i);
+            return getClass(Challenge).fromJSON(category, i);
         }
     }
 

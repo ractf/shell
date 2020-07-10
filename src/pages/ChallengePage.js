@@ -51,7 +51,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
 
 
     const saveEdit = changes => {
-        const original = challenge;
+        const original = challenge.toJSON();
 
         let flag;
         if (typeof changes.flag_metadata === "object") {
@@ -76,7 +76,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
 
             const id = original.id || data.id;
             if (id && isCreator)
-                dispatch(push(original.url + "#edit"));
+                dispatch(push(challenge.url + "#edit"));
             else
                 dispatch(push(category.url + "#edit"));
 

@@ -19,8 +19,8 @@ import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Row, Checkbox, Button, Select, HR, PageHead, Link, Tab,
-    TabbedView, FlashText, FormGroup, Spoiler
+    Form, Input, Row, Checkbox, Button, Select, PageHead, Link, Tab,
+    TabbedView, FlashText, FormGroup, fromJson
 } from "@ractf/ui-kit";
 import { plugins, appContext } from "ractf";
 import { newHint, newFile } from "@ractf/api";
@@ -32,63 +32,24 @@ import Hint from "./Hint";
 
 const MetadataEditor = ({ challenge, category, save }) => {
     const fields = [];
-    const generateFields = (fields, key = "", n = 0) => {
-        const retFields = [];
-
-        fields.forEach(field => {
-            switch (field.type) {
-                case "multiline":
-                case "code":
-                case "text":
-                case "number":
-                    const val = challenge.challenge_metadata[field.name];
-                    const format = field.type === "number" ? /\d+/ : /.+/;
-                    retFields.push(<FormGroup htmlFor={field.name} label={field.label} key={key + (n++)}>
-                        <Input val={val !== undefined ? val.toString() : undefined} name={field.name}
-                            placeholder={field.label} format={format}
-                            rows={field.type === "multiline" || field.type === "code" ? 5 : ""}
-                            monospace={field.type === "code"} />
-                    </FormGroup>);
-                    break;
-                case "select":
-                    const idx = field.options.map(i => i.key).indexOf(challenge.challenge_metadata[field.name]);
-                    retFields.push(<FormGroup key={key + (n++)} htmlFor={field.name} label={field.label}>
-                        <Select name={field.name} options={field.options}
-                            initial={idx !== -1 ? idx : 0} />
-                    </FormGroup>);
-                    break;
-                case "label":
-                    retFields.push(<div key={key + (n++)}>{field.label}</div>);
-                    break;
-                case "hr":
-                    retFields.push(<HR key={key + (n++)} />);
-                    break;
-                case "group":
-                    retFields.push(<Spoiler key={key + (n++)} title={field.label}>
-                        {generateFields(field.children)}
-                    </Spoiler>);
-                    break;
-                default:
-                    retFields.push(<div key={key + (n++)}>Unknown field type: {field.type}</div>);
-                    break;
-            }
-        });
-        return retFields;
-    };
-
+    
     Object.keys(plugins.challengeMetadata).forEach(key => {
         const i = plugins.challengeMetadata[key];
         if (!i.check || i.check(challenge, category)) {
-            fields.push(...generateFields(i.fields, key, fields.length));
+            fields.push(fromJson(i.fields, challenge.challenge_metadata));
         }
     });
     const saveEdit = (changes) => {
-        save({
-            ...challenge, challenge_metadata: {
-                ...challenge.challenge_metadata,
-                ...changes
-            }
-        });
+        try {
+            save({
+                ...challenge.toJSON(), challenge_metadata: {
+                    ...challenge.challenge_metadata,
+                    ...changes
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return <div style={{ width: "100%" }}><Form handle={saveEdit}>

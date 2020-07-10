@@ -35,6 +35,7 @@ export const plugins = {
     challengeType: {},
     challengeEditor: {},
     challengeMetadata: {},
+    categoryMetadata: {},
     page: {},
     popup: {},
     medals: {},

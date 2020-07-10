@@ -55,7 +55,6 @@ const Invites = () => {
             if ((e.response && e.response.data) && typeof e.response.data.d === "object")
                 errors = e.response.data.d;
             setFormState(ofs => ({ ...ofs, errors: errors, disabled: false, error: http.getError(e) }));
-            console.log(e);
         });
     }, [generate]);
     const generate1 = useCallback(() => generate(1), [generate]);
