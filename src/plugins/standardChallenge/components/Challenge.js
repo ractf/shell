@@ -210,7 +210,7 @@ export default ({ challenge, category, rightComponent }) => {
     </>;
 
     const solveMsg = (challenge.first_blood_name
-        ? t("challenge.first_solve", { name: challenge.first_blood_name })
+        ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
         : t("challenge.no_solve"));
 
     return <Split submitFlag={tryFlag(challenge)} onFlagResponse={onFlagResponse}>

@@ -117,7 +117,8 @@
         "attempt": "Attempt flag",
         "no_team": "You can only submit flags if you are in a team.",
         "no_solve": "Nobody has solved this challenge yet",
-        "first_solve": "First solved by {{name}}"
+        "has_solve": "First solved by {{name}}, {{count}} solve in total.",
+        "has_solve_plural": "First solved by {{name}}, {{count}} solves in total."
     },
     "editor": {
         "chal_name": "Challenge name",
