@@ -15,53 +15,88 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext } from "react";
+import React, { useContext, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
-import { Button, PageHead, Card, Row } from "@ractf/ui-kit";
+import { Button, PageHead, Card, Row, NewModal, Select, Badge, FormGroup, Input, Form, H6 } from "@ractf/ui-kit";
+import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
 import { useCategories } from "@ractf/util/hooks";
+
+
+const PackCreator = ({ close }) => {
+    const [selected, setSelected] = useState([]);
+    const categories = useCategories();
+    const formValues = useRef();
+
+    const options = categories.map(i => i.challenges).flat().map(
+        i => ({ key: i.id, value: i.name })
+    );
+
+    const select = useCallback((key) => {
+        const value = (() => {
+            for (const i of options)
+                if (i.key === key)
+                    return i.value;
+        })();
+        setSelected(oldSelected => {
+            for (const i of oldSelected)
+                if (i.key === key) return oldSelected;
+            return [...oldSelected, { key, value }];
+        });
+    }, [options]);
+    const remove = (key) => {
+        return () => {
+            setSelected(oldSelected => oldSelected.filter(i => i.key !== key));
+        };
+    };
+    const create = useCallback(() => {
+        const allChallenges = categories.map(i => i.challenges).flat();
+        downloadJSON({
+            name: formValues.current.name,
+            description: formValues.current.description,
+            challenges: allChallenges.filter(i => (
+                selected.filter(j => j.key === i.id).length !== 0
+            )).map(i => i.toJSON()),
+        }, cleanFilename(formValues.current.name));
+        if (close)
+            close();
+    }, [categories, selected, close]);
+
+    return <NewModal header={"Create Challenge Pack"} buttons={<>
+        <Button onClick={close} lesser warning>Cancel</Button>
+        <Button onClick={create}>Download Pack</Button>
+    </>} onClose={close}>
+        <H6>Settings:</H6>
+        <Form valuesRef={formValues}>
+            <FormGroup htmlFor={"name"} label={"Name"}>
+                <Input name={"name"} placeholder={"Name"} />
+            </FormGroup>
+            <FormGroup htmlFor={"description"} label={"Description"}>
+                <Input name={"description"} rows={3} placeholder={"Description"} />
+            </FormGroup>
+        </Form>
+        <Row>
+            <H6>Challenges:</H6>
+        </Row>
+        <Row>{selected.map(i => (
+            <Badge key={i.key} onClose={remove(i.key)} x>{i.value}</Badge>
+        ))}</Row>
+        <Row>
+            <Select onChange={select} options={
+                options.filter(i => selected.filter(j => j.key === i.key).length === 0)
+            } hasFilter />
+        </Row>
+    </NewModal>;
+};
 
 
 export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
     const categories = useCategories();
-
-    const downloadData = (data, filename, mimetype) => {
-        const blob = new Blob([data], { type: `${mimetype};charset=utf-8;` });
-        if (navigator.msSaveBlob)
-            return navigator.msSaveBlob(blob, filename);
-
-        const elem = document.createElement("a");
-        elem.style = "display: none";
-        elem.href = URL.createObjectURL(blob);
-        elem.target = "_blank";
-        elem.setAttribute("download", filename);
-        document.body.appendChild(elem);
-        elem.click();
-        document.body.removeChild(elem);
-    };
-    const downloadJSON = (data, filename) => {
-        downloadData(JSON.stringify(data, null, 2), filename + ".json", "application/json");
-    };
-    const downloadCSV = (data, filename) => {
-        let csv = "";
-        data.forEach(rowData => {
-            let row = "";
-            rowData.forEach(cellData => {
-                if (row) row += ",";
-                let cell = JSON.stringify(cellData ? cellData.toString() : "");
-                if (cell[1] === "=")
-                    cell = `=${cell}`;
-                row += cell;
-            });
-            csv += row + "\n";
-        });
-        downloadData(csv, filename + ".csv", "text/csv");
-    };
 
     const stripKeys = (orig, keys) => (
         Object.keys(orig).filter(
@@ -87,10 +122,13 @@ export default () => {
 
     const exportCat = () => {
         app.promptConfirm({ message: "Select category", small: true }, [
-            { name: "cat", options: categories.map(i => ({ key: i.id, value: i.name })) }
+            {
+                name: "cat", options: categories.map(i => ({ key: i.id, value: i.name })),
+                hasFilter: true
+            }
         ]).then(({ cat }) => {
             if (typeof cat === "number") {
-                const category = categories.filter(i => i.id === cat)[0];
+                const category = categories.filter(i => i.id === cat)[0].toJSON();
                 category.challenges = category.challenges.map(cleanChallenge);
                 if (!category) return app.alert("Something went wrong while trying to export");
                 downloadJSON(category, category.name);
@@ -102,12 +140,12 @@ export default () => {
             {
                 name: "chal", options: categories.map(i => i.challenges).flat().map(
                     i => ({ key: i.id, value: i.name })
-                )
+                ), hasFilter: true
             }
         ]).then(({ chal }) => {
             if (typeof chal === "number") {
                 let challenge = categories.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
-                challenge = cleanChallenge(challenge);
+                challenge = cleanChallenge(challenge.toJSON());
                 if (!challenge) return app.alert("Something went wrong while trying to export");
                 downloadJSON(challenge, challenge.name);
             }
@@ -371,12 +409,22 @@ export default () => {
                 });
         });
     };
+    const [isCreatePack, setCreatePack] = useState(false);
+    const createPack = useCallback(() => {
+        setCreatePack(true);
+    }, []);
+    const stopCreatePack = useCallback(() => {
+        setCreatePack(false);
+    }, []);
 
     return <>
         <PageHead title={t("admin.import_and_export")} />
+
+        {isCreatePack && <PackCreator close={stopCreatePack} />}
+
         <Row>
             <Card header={t("admin.import")}>
-                <Row>
+                <Row centre>
                     <Button disabled danger>{t("admin.import_ctf")}</Button>
                     <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
                     <Button onClick={importChal}>{t("admin.import_chal")}</Button>
@@ -385,12 +433,13 @@ export default () => {
         </Row>
         <Row>
             <Card header={t("admin.export")}>
-                <Row>
+                <Row centre>
                     <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>
                     <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
                     <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
+                    <Button onClick={createPack}>Create challenge pack</Button>
                 </Row>
-                <Row>
+                <Row centre>
                     <Button onClick={exportLeaderboard}>{t("admin.export_sb")}</Button>
                     <Button onClick={exportPlayers}>{t("admin.export_players")}</Button>
                     <Button onClick={exportTeams}>{t("admin.export_teams")}</Button>

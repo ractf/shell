@@ -43,7 +43,6 @@ export default ({ children, ...props }) => {
     }
 
     const double = (left && showLeft && right && showRight);
-    const wasDouble = (left && right);
 
     return <Row style={{ padding: 0 }} className={"challengeSplit"}>
         {showLeft && left && <Column mdWidth={12} lgWidth={double ? 6 : 12} className={"challengeLeft"}>

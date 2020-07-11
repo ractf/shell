@@ -20,6 +20,7 @@ import React from "react";
 import {
     Page, HR, Button, TextBlock, Row, H2
 } from "@ractf/ui-kit";
+import { downloadJSON } from "@ractf/util/download";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
 import { store } from "store";
@@ -33,21 +34,6 @@ export default () => {
     const countdowns = state.countdowns;
     const config = state.config;
 
-    const download = (data, filename) => {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8;" });
-        if (navigator.msSaveBlob)
-            return navigator.msSaveBlob(blob, filename);
-    
-        const elem = document.createElement("a");
-        elem.style = "display: none";
-        elem.href = URL.createObjectURL(blob);
-        elem.target = "_blank";
-        elem.setAttribute("download", filename);
-        document.body.appendChild(elem);
-        elem.click();
-        document.body.removeChild(elem);
-    };
-
     const exportData = () => {
         const debugExport = {
             versions: {
@@ -56,7 +42,7 @@ export default () => {
             },
             config, countdowns, challenges,
         };
-        download(debugExport, "debug.json");
+        downloadJSON(debugExport, "debug.json");
     };
 
     return <Page>

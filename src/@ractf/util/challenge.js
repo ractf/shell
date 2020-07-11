@@ -50,7 +50,8 @@ export default class Challenge {
     toJSON() {
         const ret = {};
         for (const i of this)
-            ret[i] = this[i];
+            if (i !== "category")
+                ret[i] = this[i];
         return ret;
     }
 

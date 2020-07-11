@@ -33,6 +33,12 @@ export default class Category {
         return thisProxy;
     }
 
+    *[Symbol.iterator]() {
+        for (const i of Object.keys(this._data)) {
+            yield i;
+        }
+    }
+
     get url() {
         return `/campaign/${this.id}`;
     }
@@ -43,6 +49,14 @@ export default class Category {
 
     get challenges() {
         return this._challenges;
+    }
+
+    toJSON() {
+        const ret = {};
+        for (const i of this)
+            ret[i] = this[i];
+        ret.challenges = this.challenges.map(i => i.toJSON());
+        return ret;
     }
 
     static fromJSON(data) {
