@@ -23,6 +23,7 @@ const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin')
+const { getWebpackImporter, getSassImplementation } = require("sass-loader/dist/utils");
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -38,7 +39,7 @@ const commitHash = require('child_process')
   .execSync('git rev-parse HEAD')
   .toString();
 
-module.exports = function(webpackEnv) {
+module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -78,13 +79,56 @@ module.exports = function(webpackEnv) {
       },
     ].filter(Boolean);
     if (preProcessor) {
+      const FILE_CACHE = {};
+
+      const fstat = (path) => {
+        try {
+          return fs.statSync(path);
+        } catch (err) {
+          return false;
+        }
+      };
+
+      const readFile = (path, done) => {
+        const stat = fstat(path);
+        if (!FILE_CACHE[path] || !stat || stat.mtime.getTime() !== FILE_CACHE[path][0]) {
+          fs.readFile(path, (err, data) => {
+            if (err) return done(err);
+            FILE_CACHE[path] = [stat.mtime.getTime(), data];
+            done(null, data);
+          });
+        } else {
+          done(null, FILE_CACHE[path][1]);
+        }
+      };
+
       loaders.push({
         loader: require.resolve(preProcessor),
         options: {
           sourceMap: isEnvProduction && shouldUseSourceMap,
+          sassOptions: (context) => {
+            const { appendData } = require("./ractf-theme-loader");
+            return {
+              importer: function (url, prev, done) {
+                const newDone = (ret) => {
+                  readFile(ret.file, (err, data) => {
+                    if (err) return done(err);
+
+                    data = appendData(ret.file, data.toString());
+                    FILE_CACHE[ret.file][1] = data;
+                    done({ contents: data });
+                  });
+                };
+
+                const importer = getWebpackImporter(context, getSassImplementation(), [process.cwd()]);
+                return importer(url, prev, newDone);
+              }
+            };
+          }
         },
       });
     }
+    loaders.push(require.resolve('./ractf-theme-loader'))
     return loaders;
   };
 
@@ -97,7 +141,7 @@ module.exports = function(webpackEnv) {
         ? 'source-map'
         : false
       : isEnvDevelopment && 'cheap-module-source-map',
-      
+
     entry: [
       // You can replace the line below with these two lines if you prefer the stock client:
       // require.resolve('webpack-dev-server/client') + '?/',
@@ -119,7 +163,7 @@ module.exports = function(webpackEnv) {
       devtoolModuleFilenameTemplate: isEnvProduction
         ? info => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
         : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+        (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
     optimization: {
       minimize: isEnvProduction,
@@ -153,9 +197,9 @@ module.exports = function(webpackEnv) {
             parser: safePostCssParser,
             map: shouldUseSourceMap
               ? {
-                  inline: false,
-                  annotation: true,
-                }
+                inline: false,
+                annotation: true,
+              }
               : false,
           },
         }),
@@ -326,19 +370,19 @@ module.exports = function(webpackEnv) {
           },
           isEnvProduction
             ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
             : undefined
         )
       ),
@@ -351,8 +395,8 @@ module.exports = function(webpackEnv) {
         },
       ]),
       isEnvProduction &&
-        shouldInlineRuntimeChunk &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+      shouldInlineRuntimeChunk &&
+      new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
 
       new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       new ModuleNotFoundPlugin(paths.appPath),
@@ -362,15 +406,15 @@ module.exports = function(webpackEnv) {
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
       isEnvDevelopment && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
       isEnvProduction &&
-        new MiniCssExtractPlugin({
-          filename: 'static/css/[name].[contenthash:8].css',
-          chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-        }),
+      new MiniCssExtractPlugin({
+        filename: 'static/css/[name].[contenthash:8].css',
+        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+      }),
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: publicPath,
         generate: (seed, files) => {
-          const manifestFiles = files.reduce(function(manifest, file) {
+          const manifestFiles = files.reduce(function (manifest, file) {
             manifest[file.name] = file.path;
             return manifest;
           }, seed);
@@ -384,24 +428,24 @@ module.exports = function(webpackEnv) {
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the Webpack build.
       isEnvProduction &&
-        new WorkboxWebpackPlugin.GenerateSW({
-          clientsClaim: true,
-          skipWaiting: true,
-          exclude: [/\.map$/, /asset-manifest\.json$/],
-          importWorkboxFrom: 'cdn',
-          navigateFallback: publicUrl + '/index.html',
-          navigateFallbackBlacklist: [
-            new RegExp('^/api'),  // Exclude the API
-            new RegExp('/[^/]+\\.[^/]+$'),  // Exclude anything with dots in it
-          ],
-          runtimeCaching: [{
-            urlPattern: new RegExp('^/api'),
-            handler: 'NetworkOnly',
-          }, {
-            urlPattern: /\.html$/,
-            handler: 'StaleWhileRevalidate',
-          }]
-        }),
+      new WorkboxWebpackPlugin.GenerateSW({
+        clientsClaim: true,
+        skipWaiting: true,
+        exclude: [/\.map$/, /asset-manifest\.json$/],
+        importWorkboxFrom: 'cdn',
+        navigateFallback: publicUrl + '/index.html',
+        navigateFallbackBlacklist: [
+          new RegExp('^/api'),  // Exclude the API
+          new RegExp('/[^/]+\\.[^/]+$'),  // Exclude anything with dots in it
+        ],
+        runtimeCaching: [{
+          urlPattern: new RegExp('^/api'),
+          handler: 'NetworkOnly',
+        }, {
+          urlPattern: /\.html$/,
+          handler: 'StaleWhileRevalidate',
+        }]
+      }),
     ].filter(Boolean),
     node: {
       module: 'empty', dgram: 'empty', dns: 'mock', fs: 'empty',
