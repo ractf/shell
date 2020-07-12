@@ -90,11 +90,18 @@ module.exports = function (webpackEnv) {
       };
 
       const readFile = (path, done) => {
-        const stat = fstat(path);
-        if (!FILE_CACHE[path] || !stat || stat.mtime.getTime() !== FILE_CACHE[path][0]) {
+        let check = !FILE_CACHE[path];
+        let time = null;
+        if (isEnvDevelopment) {
+          const stat = fstat(path);
+          check = check || !stat || stat.mtime.getTime() !== FILE_CACHE[path][0];
+          time = stat.mtime.getTime();
+        }
+
+        if (check) {
           fs.readFile(path, (err, data) => {
             if (err) return done(err);
-            FILE_CACHE[path] = [stat.mtime.getTime(), data];
+            FILE_CACHE[path] = [time, data];
             done(null, data);
           });
         } else {
