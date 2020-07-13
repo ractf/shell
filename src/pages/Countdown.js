@@ -19,7 +19,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import { recheckCountdowns } from "@ractf/api";
-//import { Spinner } from "@ractf/ui-kit";
+import { useInterval } from "@ractf/util";
 
 import lockImg from "static/spine.png";
 
@@ -28,24 +28,6 @@ import style from "./Countdown.module.scss";
 const BGM = "/synthwave.mp3";
 
 const wave = { on: false, audio: null };
-
-function useInterval(callback, delay) {
-    const savedCallback = useRef();
-
-    useEffect(() => {
-        savedCallback.current = callback;
-    }, [callback]);
-
-    useEffect(() => {
-        function tick() {
-            savedCallback.current();
-        }
-        if (delay !== null) {
-            const id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        }
-    }, [delay]);
-}
 
 export default ({ cdKey }) => {
     const { offset: countdown_offset, dates: countdown_dates } = useSelector(state => state.countdowns) || {};

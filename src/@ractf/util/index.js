@@ -16,10 +16,13 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { forwardRef, memo, createElement } from "react";
+
 export { default as useReactRouter } from "./useReactRouter";
 export { default as useWindowSize } from "./useWindowSize";
+export { default as useInterval } from "./useInterval";
 export { default as useConfig } from "./useConfig";
 export { default as getUUID } from "./getUUID";
+export * from "./hooks";
 
 export const TYPES = ["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"];
 
