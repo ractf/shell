@@ -35,15 +35,17 @@ export default () => {
     const [state, setState] = useState({
         loading: false, error: null, results: null, member: null
     });
-    const doSearch = useCallback(({ name }) => {
+    const doSearch = useCallback(({ name }, setFormState) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
         http.get(ENDPOINTS.USER + "?search=" + name).then(data => {
             setState(prevState => ({
                 ...prevState, results: data.results, more: !!data.next, loading: false
             }));
+            setFormState(prevState => ({ ...prevState, disabled: false }));
         }).catch(e => {
             setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
+            setFormState(prevState => ({ ...prevState, disabled: false }));
         });
     }, []);
 
