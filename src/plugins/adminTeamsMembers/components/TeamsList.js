@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
-    FormError, Leader, Checkbox, PageHead
+    Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
+    Checkbox, PageHead, NewModal
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
@@ -29,6 +29,7 @@ import http from "@ractf/http";
 
 export default () => {
     const app = useContext(appContext);
+    const submitRef = useRef();
     const { t } = useTranslation();
 
     const [state, setState] = useState({
@@ -90,6 +91,9 @@ export default () => {
             }).catch(() => { });
         };
     };
+    const submit = useCallback(() => {
+        submitRef.current();
+    }, []);
 
     return <>
         <PageHead title={t("admin.teams")} />
@@ -104,14 +108,19 @@ export default () => {
                 {state.more && <p>
                     Additional results were omitted. Please refine your search.
                 </p>}
-                    {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+                {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
             </> : <p>No results found</p>}
         </Row>}
-        {state.team && <Modal onHide={close}>
-            <Form handle={saveTeam(state.team)} locked={state.loading}>
-                <FormGroup label={"Team Name"} htmlFor={"name"}>
-                    <Input val={state.team.name} name={"name"} />
-                </FormGroup>
+        {state.team && <NewModal onClose={close} onConfirm={submit}>
+            <Form handle={saveTeam(state.team)} locked={state.loading} submitRef={submitRef}>
+                <Row>
+                    <FormGroup label={"Team Name"} htmlFor={"name"}>
+                        <Input val={state.team.name} name={"name"} />
+                    </FormGroup>
+                    <FormGroup label={"Team ID"} htmlFor={"id"}>
+                        <Input val={state.team.id} name={"id"} readonly />
+                    </FormGroup>
+                </Row>
                 <FormGroup label={"Rights"}>
                     <Row left>
                         <Checkbox checked={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
@@ -132,10 +141,7 @@ export default () => {
                         </Leader>;
                     })}
                 </FormGroup>
-                <Row>
-                    <Button submit>Save</Button>
-                </Row>
             </Form>
-        </Modal>}
+        </NewModal>}
     </>;
 };

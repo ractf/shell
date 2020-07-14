@@ -15,12 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Spinner, Modal, Row, FormGroup, InputButton,
-    FormError, Leader, Checkbox, PageHead
+    Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
+    Checkbox, PageHead, NewModal, Button
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser } from "@ractf/api";
 import { appContext } from "ractf";
@@ -29,12 +29,13 @@ import http from "@ractf/http";
 
 export default () => {
     const app = useContext(appContext);
+    const submitRef = useRef();
     const { t } = useTranslation();
 
     const [state, setState] = useState({
         loading: false, error: null, results: null, member: null
     });
-    const doSearch = ({ name }) => {
+    const doSearch = useCallback(({ name }) => {
         setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
 
         http.get(ENDPOINTS.USER + "?search=" + name).then(data => {
@@ -44,7 +45,7 @@ export default () => {
         }).catch(e => {
             setState(prevState => ({ ...prevState, error: http.getError(e), loading: false }));
         });
-    };
+    }, []);
 
     const editMember = (member) => {
         return () => {
@@ -69,9 +70,12 @@ export default () => {
         };
     };
 
-    const close = () => {
+    const close = useCallback(() => {
         setState(prevState => ({ ...prevState, member: null }));
-    };
+    }, []);
+    const submit = useCallback(() => {
+        submitRef.current();
+    }, []);
 
     return <>
         <PageHead title={t("admin.members")} />
@@ -89,14 +93,19 @@ export default () => {
                 {state.more && <p>
                     Additional results were omitted. Please refine your search.
                 </p>}
-                    {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
+                {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
             </> : <p>No results found</p>}
         </Row>}
-        {state.member && <Modal onHide={close}>
+        {state.member && <NewModal onClose={close} onConfirm={submit}>
             <Form handle={saveMember(state.member)} locked={state.loading}>
-                <FormGroup label={"Username"} htmlFor={"username"}>
-                    <Input val={state.member.username} name={"username"} />
-                </FormGroup>
+                <Row>
+                    <FormGroup label={"Username"} htmlFor={"username"}>
+                        <Input val={state.member.username} name={"username"} />
+                    </FormGroup>
+                    <FormGroup label={"User ID"} htmlFor={"id"}>
+                        <Input val={state.member.id} name={"id"} readonly />
+                    </FormGroup>
+                </Row>
                 <FormGroup label={"Rights"}>
                     <Row left>
                         <Checkbox val={state.member.is_active} name={"is_active"}>Active</Checkbox>
@@ -123,10 +132,7 @@ export default () => {
                         Email verified
                     </Checkbox>
                 </FormGroup>
-                <Row>
-                    <Button submit>Save</Button>
-                </Row>
             </Form>
-        </Modal>}
+        </NewModal>}
     </>;
 };
