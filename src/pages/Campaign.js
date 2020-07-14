@@ -26,7 +26,7 @@ import { useCategory, useCategories } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
-    FlashText, Leader, NewModal, Page, TabbedView, Tab, fromJson
+    FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { plugins, appContext, getLocalConfig, setLocalConfig } from "ractf";
@@ -117,14 +117,14 @@ const ANC = ({ hide, anc, modal }) => {
     }, []);
 
     if (modal)
-        return <NewModal onClose={hide} header={anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")} buttons={<>
+        return <Modal onClose={hide} header={anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")} buttons={<>
             <Button lesser danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
             <div style={{ flexGrow: 1 }} />
             <Button onClick={hide}>{t("cancel")}</Button>
             <Button onClick={doSubmit}>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
         </>}>
             {body}
-        </NewModal>;
+        </Modal>;
     return body;
 };
 

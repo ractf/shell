@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
-import { Button, PageHead, Card, Row, NewModal, Select, Badge, FormGroup, Input, Form, H6 } from "@ractf/ui-kit";
+import { Button, PageHead, Card, Row, Modal, Select, Badge, FormGroup, Input, Form, H6 } from "@ractf/ui-kit";
 import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
 import { useCategories } from "@ractf/util/hooks";
 
@@ -65,7 +65,7 @@ const PackCreator = ({ close }) => {
             close();
     }, [categories, selected, close]);
 
-    return <NewModal header={"Create Challenge Pack"} buttons={<>
+    return <Modal header={"Create Challenge Pack"} buttons={<>
         <Button onClick={close} lesser warning>Cancel</Button>
         <Button onClick={create}>Download Pack</Button>
     </>} onClose={close}>
@@ -89,7 +89,7 @@ const PackCreator = ({ close }) => {
                 options.filter(i => selected.filter(j => j.key === i.key).length === 0)
             } hasFilter />
         </Row>
-    </NewModal>;
+    </Modal>;
 };
 
 

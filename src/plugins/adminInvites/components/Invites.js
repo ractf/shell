@@ -19,7 +19,7 @@ import React, { useCallback, useState } from "react";
 
 import {
     Button, Column, PageHead, Card, Row, Form, FormGroup, Input, InputButton,
-    NewModal, Grid, Checkbox, Select, SubtleText
+    Modal, Grid, Checkbox, Select, SubtleText
 } from "@ractf/ui-kit";
 
 import { GENERATE_INVITES, INVITES, generateInvites } from "../api/invites";
@@ -76,10 +76,10 @@ const Invites = () => {
     }, []);
 
     return <>
-        <NewModal header={"Generated Invites:"} fullHeight={invites.length > 20} show={invites.length}
+        <Modal header={"Generated Invites:"} fullHeight={invites.length > 20} show={invites.length}
             key={invites[0]} noCancel>
             {invites.map(i => <React.Fragment key={i}><code>{i}</code><br /></React.Fragment>)}
-        </NewModal>
+        </Modal>
 
         <PageHead title={"Invites"} />
         <Row>

@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, NewModal, Button
+    Checkbox, PageHead, Modal, Button
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser } from "@ractf/api";
 import { appContext } from "ractf";
@@ -98,7 +98,7 @@ export default () => {
                 {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
             </> : <p>No results found</p>}
         </Row>}
-        {state.member && <NewModal onClose={close} onConfirm={submit}>
+        {state.member && <Modal onClose={close} onConfirm={submit}>
             <Form handle={saveMember(state.member)} locked={state.loading}>
                 <Row>
                     <FormGroup label={"Username"} htmlFor={"username"}>
@@ -135,6 +135,6 @@ export default () => {
                     </Checkbox>
                 </FormGroup>
             </Form>
-        </NewModal>}
+        </Modal>}
     </>;
 };
