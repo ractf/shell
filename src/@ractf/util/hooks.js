@@ -1,10 +1,12 @@
-import { useSelector } from "react-redux";
+import { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import Challenge from "./challenge";
 import Category from "./category";
 
 import { plugins } from "ractf";
 import { getClass } from "@ractf/plugins";
+import * as actions from "actions";
 
 export const useCategories = () => {
     const categories = useSelector(state => state.challenges?.categories) || [];
@@ -49,4 +51,32 @@ export const useChallenge = (category, challengeId) => {
     }
 
     return null;
+};
+
+export const usePreference = (preferenceName, fallback) => {
+    const preference = useSelector(state => (state.preferences || {})[preferenceName]);
+    const dispatch = useDispatch();
+    const setPreference = useCallback((value) => {
+        let newValue = value;
+        if (typeof value === "function")
+            newValue = value(preference);
+
+        if (newValue !== preference)
+            dispatch(actions.setPreference(preferenceName, newValue));
+    }, [preferenceName, dispatch, preference]);
+    return [typeof preference === "undefined" ? fallback : preference, setPreference];
+};
+
+export const usePreferences = () => {
+    const preferences = useSelector(state => state.preferences);
+    const dispatch = useDispatch();
+    const setPreferences = useCallback((value) => {
+        let newValue = value;
+        if (typeof value === "function")
+            newValue = value(preferences);
+
+        if (newValue !== preferences)
+            dispatch(actions.setPreferences(newValue));
+    }, [dispatch, preferences]);
+    return [preferences, setPreferences];
 };

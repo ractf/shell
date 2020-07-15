@@ -20,8 +20,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from "react-i18next";
 
-import { appContext, zxcvbn, getLocalConfig } from "ractf";
+import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
+import { usePreferences } from "@ractf/util/hooks";
 import http from "@ractf/http";
 import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,
@@ -74,6 +75,7 @@ export default () => {
     const user = useSelector(state => state.user);
     const team = useSelector(state => state.team);
     const dispatch = useDispatch();
+    const [preferences, setPreferences] = usePreferences();
 
     const passwordValidator = useCallback(({ old_password, password, new2 }) => {
         return new Promise((resolve, reject) => {
@@ -126,9 +128,9 @@ export default () => {
     }, [app, t]);
 
     const saveNotificationPrefs = useCallback((args) => {
-        dispatch(actions.setPreferences(args));
+        setPreferences(args);
         app.alert(t("settings.notifications.success"));
-    }, [app, dispatch, t]);
+    }, [app, setPreferences, t]);
 
     const teamOwner = (team ? team.owner === user.id : null);
 
@@ -267,8 +269,8 @@ export default () => {
                     <Form handle={saveNotificationPrefs}>
                         <FormGroup label={t("settings.notifications.send_options")}>
                             {notificationGroups.map((group) =>
-                                <Checkbox key={group.name} name={group.name}
-                                    val={getLocalConfig("notifs." + group.name, undefined, true)}>
+                                <Checkbox key={"notifs." + group.name} name={"notifs." + group.name}
+                                    val={preferences["notifs." + group.name]}>
                                     {group.description}
                                 </Checkbox>
                             )}

@@ -22,14 +22,14 @@ import { Redirect } from "react-router-dom";
 import { push } from "connected-react-router";
 
 import { useReactRouter } from "@ractf/util";
-import { useCategory, useCategories } from "@ractf/util/hooks";
+import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
     FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
-import { plugins, appContext, getLocalConfig, setLocalConfig } from "ractf";
+import { plugins, appContext } from "ractf";
 import http from "@ractf/http";
 
 import "./Campaign.scss";
@@ -153,7 +153,7 @@ const CategoryList = () => {
 
 export default () => {
     const [anc, setAnc] = useState(false);
-    const [showLocked, setShowLocked] = useState(getLocalConfig("editor.show_locked"));
+    const [showLocked, setShowLocked] = usePreference("editor.show_locked");
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
 
@@ -177,8 +177,7 @@ export default () => {
     }
 
     const toggleShowLocked = () => {
-        setLocalConfig("editor.show_locked", !getLocalConfig("editor.show_locked", false));
-        setShowLocked(getLocalConfig("editor.show_locked"));
+        setShowLocked(oldShowLocked => !oldShowLocked);
     };
 
     const showEditor = (challenge) => {
