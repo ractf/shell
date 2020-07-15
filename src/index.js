@@ -34,6 +34,14 @@ import en from "./i18n/en.json";
     require.context("./plugins", true, /setup\.js$/)
 );
 
+/* Enable or disable service workers.
+ * Setting this value to true will store a copy of RACTF in players' browsers
+ *  which allows the site to operate offline and can make it load slightly
+ *  faster after the initial load. See README.md for more details, and why you
+ *  might not want this enabled in some cases.
+ */
+const ENABLE_SERVICE_WORKER = true;
+
 const gft = i18next.getFixedT.bind(i18next);
 i18next.getFixedT = (lng, ns) => {
     const t = gft(lng, ns);
@@ -74,14 +82,17 @@ const render = () => {
     );
 };
 
-serviceWorker.register({
-    onUpdate: registration => {
-        if (registration && registration.waiting) {
-            registration.waiting.postMessage({ type: "SKIP_WAITING" });
+if (ENABLE_SERVICE_WORKER)
+    serviceWorker.register({
+        onUpdate: registration => {
+            if (registration && registration.waiting) {
+                registration.waiting.postMessage({ type: "SKIP_WAITING" });
+            }
+            window.location.reload();
         }
-        window.location.reload();
-    }
-});
+    });
+else if (serviceWorker)
+    serviceWorker.unregister();
 //Loadable.preloadAll();
 
 render();

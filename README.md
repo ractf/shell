@@ -2,16 +2,48 @@
 
 ![Lint](https://github.com/ractf/shell/workflows/Lint/badge.svg) ![Build](https://github.com/ractf/shell/workflows/Build/badge.svg) ![Build (Production)](https://github.com/ractf/shell/workflows/Build%20(Production)/badge.svg)
 
-"Shell" is just a fun name for the SPA frontend I came up with when I realised
-I needed to pick a name when making the project. This is probably going to take
-ages to get properly working, so it's probably best not to touch stuff here
-until the first builds are working.
+## Installation
 
-## // TODO
+`ractf/shell` operates as a static single-page app. This means that you will
+require a separate web server to serve files - nginx or apache will usually do
+the job. The single dependency for building the app is node.js, this
+installation of which widely ranges between distributions. See
+[here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for
+more details on that.
 
-- Get storybook setup for testing of react components
-- Get feature partity with the MPA
+As this project contains submodules, cloning should be performed with the
+command:
 
-## Running the SPA
+```
+$ git clone --recursive https://github.com/ractf/shell
+```
 
-I'm sure you're a smart cookie and can figure it out yourself, but if you're not, use `npm start` to start the site, and `npm run build` to compile a production build.
+Before we can build, there are a few settings we need to change. In the
+`.env.production` file the `REACT_APP_WSS_URL` variable should be changed to
+the websocket location of the backend. This is typically
+`wss://[domain]/api/v2/ws`. You may also wish to change `REACT_APP_SENTRY_DSN`
+to point to a Sentry DSN. Additionally, if you would like to use Google
+Analytics, set the `REACT_APP_GA_UA` variable.
+
+The site will create a copy of itself in players' browsers to allow it to
+operate offline and to decrease load times. This is often ideal, however if
+you plan to make many frequent edits to the site the experience of "updating"
+the web app may not lead to the best user experience. This caching can be
+disabled by setting the `ENABLE_SERVICE_WORKER` variable to `false` in
+`src/index.js`.
+
+A basic build can now be performed with the following commands:
+
+```
+$ cd shell
+$ npm i
+$ npm run build
+```
+
+You can now either serve the `./build` directory directly (not recommended) or
+copy it's contents into a directory the web server is serving from.
+`/var/www/ractf/` is a good choice for this.
+
+It is recommended that you set a very long cache time on the served files, as
+there will always be a unique mapping between the URL a file is stored at, and
+the content of the file, even when updating or editing the site.

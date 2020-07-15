@@ -172,8 +172,8 @@ export default () => {
                         </FormGroup>
                     </Form>
                     <Row centre>
-                        <Button lesser>Link Google account</Button>
-                        <Button lesser>Link RACTF passport</Button>
+                        <Button disabled lesser>Link Google account</Button>
+                        <Button disabled lesser>Link RACTF passport</Button>
                     </Row>
                 </Card>
                 <Card header={t("settings.cards.change_password")}>
