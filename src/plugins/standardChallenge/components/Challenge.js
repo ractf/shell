@@ -133,18 +133,18 @@ export default ({ challenge, category, rightComponent }) => {
         case "freeform":
             flagInput = <Input placeholder="Flag"
                 name={"flag"} onChange={changeFlag}
-                light monospace
+                light monospace autoFocus
                 center width={"80%"} />;
             break;
         case "longText":
             flagInput = <Input rows={5} placeholder="Flag text"
-                format={partial} name={"flag"}
+                format={partial} name={"flag"} autoFocus
                 onChange={changeFlag} light monospace
                 center width={"80%"} />;
             break;
         default:
             flagInput = <Input placeholder={"Flag format: " + format_string}
-                format={partial} name={"flag"}
+                format={partial} name={"flag"} autoFocus
                 onChange={changeFlag} light monospace
                 center width={"80%"} />;
             break;

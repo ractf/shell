@@ -74,7 +74,7 @@ export default () => {
                 <H2>{t("auth.register")}</H2>
 
                 <FormGroup>
-                    <Input name={"username"} placeholder={t("username")} />
+                    <Input name={"username"} placeholder={t("username")} autoFocus />
                     <Input format={EMAIL_RE} name={"email"} placeholder={t("email")} />
                     <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} password />
                     <Input name={"password2"} placeholder={t("password_repeat")} password />

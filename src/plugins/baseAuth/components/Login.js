@@ -71,7 +71,7 @@ const BasicLogin = () => {
             <Form action={ENDPOINTS.LOGIN} onError={onError} postSubmit={afterLogin} method={"POST"}>
                 <H2>{t("auth.login")}</H2>
                 <FormGroup>
-                    <Input name={"username"} required placeholder={t("username")} />
+                    <Input name={"username"} required placeholder={t("username")} autoFocus />
                     <Input name={"password"} required placeholder={t("password")} password />
                     <HiddenInput name={"otp"} val={""} />
                     <div className={"fgtpsdpmt"}>
