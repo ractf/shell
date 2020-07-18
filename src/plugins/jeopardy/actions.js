@@ -36,6 +36,13 @@ export const setJeopardyShowSolved = (showSolved) => {
     };
 };
 
+export const setJeopardyShowLocked = (showLocked) => {
+    return {
+        type: "SET_JEOPARDY_SHOW_LOCKED",
+        payload: showLocked
+    };
+};
+
 export const setJeopardyOpenCards = (openCards) => {
     return {
         type: "SET_JEOPARDY_OPEN_CARDS",

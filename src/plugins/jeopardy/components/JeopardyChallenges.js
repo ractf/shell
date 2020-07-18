@@ -31,8 +31,11 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
 
     const tags = {};
     let solved = 0;
+
     const shouldShow = (challenge, options = {}) => {
         if (!options.ignoreSolved && challenge.solved && !showSolved)
+            return false;
+        if (!showLocked && !challenge.unlocked)
             return false;
 
         if (!options.ignoreTags && Object.keys(filter).length !== 0) {

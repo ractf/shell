@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 const INITIAL = {
-    filter: {}, search: null, showSolved: true, openCards: {}
+    filter: {}, search: null, showSolved: true, showLocked: false, openCards: {}
 };
 
 export const jeopardySearchReducer = (state = INITIAL, { type, payload }) => {
@@ -27,6 +27,8 @@ export const jeopardySearchReducer = (state = INITIAL, { type, payload }) => {
             return { ...state, filter: payload };
         case "SET_JEOPARDY_SHOW_SOLVED":
             return { ...state, showSolved: payload };
+        case "SET_JEOPARDY_SHOW_LOCKED":
+            return { ...state, showLocked: payload };
         case "SET_JEOPARDY_OPEN_CARDS":
             return { ...state, openCards: payload };
         default:

@@ -37,8 +37,9 @@ const Challenge = ({ challenge }) => {
     }, [challenge.id, openCards, dispatch]);
 
     return <Card
-        header={`${challenge.name} (${challenge.score} points)`} success={challenge.solved}
-        framed collapsible startClosed open={openCards[challenge.id]} onOpenToggle={onOpenToggle}
+        header={`${challenge.name} (${challenge.score} points)`} framed
+        collapsible startClosed open={openCards[challenge.id]} onOpenToggle={onOpenToggle}
+        success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden} 
     >
         <Row>
             <Markdown source={challenge.description} />
