@@ -328,7 +328,7 @@ export default () => {
             challenge_type: data.challenge_type,
             // TODO: This, but better
             challenge_metadata: data.challenge_metadata,
-            autoUnlock: data.auto_unlock,
+            auto_unlock: data.auto_unlock,
             flag_type: data.flag_type,
             author: data.author,
             score: data.score,

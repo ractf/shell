@@ -28,7 +28,7 @@ export const getChallenges = () => {
 };
 
 export const createChallenge = ({
-    id, name, score, description, flag_type, flag_metadata, autoUnlock,
+    id, name, score, description, flag_type, flag_metadata, auto_unlock,
     challenge_metadata, author, challenge_type, unlocks, files, hidden
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
@@ -37,7 +37,7 @@ export const createChallenge = ({
         challenge_metadata, hidden,
         author, unlocks, files,
         challenge_type: challenge_type || "default",
-        auto_unlock: autoUnlock,
+        auto_unlock,
     }).then(data => {
         store.dispatch(actions.addChallenge(data));
         return data;
@@ -45,7 +45,7 @@ export const createChallenge = ({
 };
 
 export const editChallenge = ({
-    id, name, score, description, flag_type, flag_metadata, autoUnlock,
+    id, name, score, description, flag_type, flag_metadata, auto_unlock,
     challenge_metadata, author, challenge_type, unlocks, files, hidden
 }) => {
     return http.patch(ENDPOINTS.CHALLENGES + id, {
@@ -54,7 +54,7 @@ export const editChallenge = ({
         challenge_metadata, hidden,
         author, unlocks, files,
         challenge_type: challenge_type || "default",
-        auto_unlock: autoUnlock,
+        auto_unlock,
     }).then(data => {
         store.dispatch(actions.editChallenge(data));
         return data;
