@@ -24,10 +24,10 @@ import {
     FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
     NavMenu
 } from "@ractf/ui-kit";
-import { plugins } from "ractf";
 import Wordmark from "./Wordmark";
 import Header from "./Header";
 
+import { iteratePlugins } from "@ractf/plugins";
 import { useCategories } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
@@ -52,12 +52,12 @@ const HeaderNav_ = () => {
                 <NavLink to={"/settings"}>Settings</NavLink>
                 <NavLink to={"/logout"}>Logout</NavLink>
             </> : <>
-                <NavLink to={"/login"}>Login</NavLink>
-                <NavLink to={"/signup"}>Register</NavLink>
-            </>}
+                    <NavLink to={"/login"}>Login</NavLink>
+                    <NavLink to={"/signup"}>Register</NavLink>
+                </>}
             {user && user.is_staff && <NavMenu name={"Admin"}>
-                {Object.entries(plugins.adminPage).map(([key, value]) => (
-                    <NavMenuLink key={key} to={"/admin/" + key}>{value.sidebar}</NavMenuLink>
+                {iteratePlugins("adminPage").map(({ key, plugin }) => (
+                    <NavMenuLink key={key} to={"/admin/" + key}>{plugin.sidebar}</NavMenuLink>
                 ))}
             </NavMenu>}
         </NavCollapse>
@@ -122,7 +122,7 @@ const SideBarNav_ = ({ children }) => {
     if (user && user.is_staff) {
         menu.push({
             name: t("sidebar.admin"),
-            submenu: Object.entries(plugins.adminPage).map(([key, value]) => [value.sidebar, "/admin/" + key])
+            submenu: iteratePlugins("adminPage").map(({ key, plugin }) => [plugin.sidebar, "/admin/" + key])
         });
     }
 

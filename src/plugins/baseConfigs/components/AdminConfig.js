@@ -22,8 +22,9 @@ import {
     Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead,
     Column
 } from "@ractf/ui-kit";
-import { appContext, useApi, plugins } from "ractf";
+import { appContext, useApi } from "ractf";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
+import { iteratePlugins } from "@ractf/plugins";
 import http from "@ractf/http";
 
 
@@ -79,8 +80,8 @@ export default () => {
     };
 
     if (adminConfig !== null) {
-        Object.values(plugins.config).forEach(i => {
-            i.forEach(([key, name, type, extra]) => {
+        iteratePlugins("config").forEach(({ plugin }) => {
+            plugin.forEach(([key, name, type, extra]) => {
                 if (key === "" || (stack.length && type !== stack[0][1]))
                     flushStack();
                 if (key === "") {
@@ -123,7 +124,7 @@ export default () => {
         <PageHead title={t("admin.configuration")} />
         <Form handle={updateConfig}>
             <Row>
-            {fields}
+                {fields}
             </Row>
             <Row>
                 <Button submit>Save</Button>

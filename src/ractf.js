@@ -29,7 +29,7 @@ export const appContext = AppContext;
 import(/* webpackChunkName: "zxcvbn" */ "zxcvbn").then(zx => window.__zxcvbn = zx.default);
 export const zxcvbn = () => (window.__zxcvbn || null);
 
-export const plugins = {
+const plugins = {
     categoryType: {},
     challengeMod: {},
     challengeType: {},
@@ -49,6 +49,7 @@ export const plugins = {
     categoryMatcher: {},
     challengeMatcher: {},
 };
+export const _plugins = plugins;
 
 export const getLocalConfig = (key, fallback) => {
     const preferenceValue = (store.getState().preferences || {})[key];

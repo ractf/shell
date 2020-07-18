@@ -22,11 +22,10 @@ import { useSelector } from "react-redux";
 import {
     Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page
 } from "@ractf/ui-kit";
-import { appContext, plugins } from "ractf";
+import { appContext } from "ractf";
+import { iteratePlugins, FlagForm } from "@ractf/plugins";
 import { useHint } from "@ractf/api";
 import http from "@ractf/http";
-
-import FlagForm from "@ractf/plugins/FlagForm";
 
 import Split from "./Split";
 import File from "./File";
@@ -63,10 +62,9 @@ export default ({ challenge, category, rightComponent }) => {
     };
 
     const challengeMods = [];
-    Object.keys(plugins.challengeMod).forEach(key => {
-        const i = plugins.challengeMod[key];
-        if (!i.check || i.check(challenge, category)) {
-            challengeMods.push(React.createElement(i.component, {
+    iteratePlugins("challengeMod").forEach(({ key, plugin }) => {
+        if (!plugin.check || plugin.check(challenge, category)) {
+            challengeMods.push(React.createElement(plugin.component, {
                 challenge: challenge, category: category, key: key,
             }));
         }

@@ -33,7 +33,7 @@ import Routes from "./Routes";
 import WS from "./WS";
 
 import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
-import { plugins } from "ractf";
+import { iteratePlugins, PluginComponent } from "@ractf/plugins";
 import http from "@ractf/http";
 
 import lockImg from "static/spine.png";
@@ -230,13 +230,9 @@ const App = React.memo(() => {
         setPopups(popups_);
     };
     const popupsEl = popups.map((popup, n) => {
-        const handler = plugins.popup[popup.type];
-        if (!handler) return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>
-            Plugin handler missing for <code>{popup.type}</code>!
+        return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>
+            <PluginComponent type={"popup"} name={popup.type} popup={popup} key={n} />
         </div>;
-        return <div className={"eventPopup"} onClick={() => removePopup(n)} key={n}>{React.createElement(
-            handler.component, { popup: popup, key: n }
-        )}</div>;
     }).reverse();
 
     const isAdmin = (user && user.is_staff);
@@ -276,8 +272,8 @@ const App = React.memo(() => {
             <WSSpine />
 
             <FirstLoader />
-            {Object.entries(plugins.mountWithinApp).map(([key, value]) => (
-                React.createElement(value.component, { key })
+            {iteratePlugins("mountWithinApp").map(({ key, plugin }) => (
+                React.createElement(plugin.component, { key })
             ))}
         </AppContext.Provider>
     </div></Scrollbar>;

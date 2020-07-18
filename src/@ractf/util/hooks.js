@@ -1,11 +1,10 @@
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import { getClass, iteratePlugins } from "@ractf/plugins";
 import Challenge from "./challenge";
 import Category from "./category";
 
-import { plugins } from "ractf";
-import { getClass } from "@ractf/plugins";
 import * as actions from "actions";
 
 export const useCategories = () => {
@@ -16,8 +15,7 @@ export const useCategories = () => {
 export const useCategory = (id) => {
     const categories = useSelector(state => state.challenges?.categories) || [];
 
-    const matchers = Object.values(plugins.categoryMatcher);
-    for (const matcher of matchers) {
+    for (const { plugin: matcher } of iteratePlugins("categoryMatcher")) {
         const cat = matcher(categories, id);
         if (cat)
             return getClass(Category).fromJSON(cat);
@@ -36,8 +34,7 @@ export const useChallenge = (category, challengeId) => {
         return null;
     }
 
-    const matchers = Object.values(plugins.challengeMatcher);
-    for (const matcher of matchers) {
+    for (const { plugin: matcher } of iteratePlugins("challengeMatcher")) {
         const challenge = matcher(category, challengeId);
         if (challenge)
             return getClass(Challenge).fromJSON(category, challenge);

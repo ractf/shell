@@ -18,8 +18,8 @@
 import React from "react";
 import { useReactRouter } from "@ractf/util";
 
+import { PluginComponent } from "@ractf/plugins";
 import { Page } from "@ractf/ui-kit";
-import { plugins } from "ractf";
 
 
 const AdminPage = () => {
@@ -27,13 +27,8 @@ const AdminPage = () => {
     if (!match) return null;
     const page = match.params.page;
 
-    let content;
-    if (plugins.adminPage && plugins.adminPage[page]) {
-        content = React.createElement(plugins.adminPage[page].component);
-    }
-
     return <Page>
-        {content}
+        <PluginComponent type={"adminPage"} name={page} />
     </Page>;
 };
 export default AdminPage;

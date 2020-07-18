@@ -17,13 +17,13 @@
 
 import React from "react";
 
-import { plugins } from "ractf";
+import { getPlugin } from "@ractf/plugins";
 
 import "./Style.scss";
 
 
 const MedalPopup = ({ popup }) => {
-    const medal = plugins.medal[popup.medal];
+    const medal = getPlugin("medal", popup.medal);
     if (!medal) return <div className={"medalWrap"}>Unknown medal type '{popup.medal}'</div>;
 
     return <div className={"medalOuterWrap"}>

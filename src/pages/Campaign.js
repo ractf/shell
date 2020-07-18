@@ -29,7 +29,8 @@ import {
     FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
-import { plugins, appContext } from "ractf";
+import { getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
+import { appContext } from "ractf";
 import http from "@ractf/http";
 
 import "./Campaign.scss";
@@ -47,8 +48,10 @@ const ANC = ({ hide, anc, modal }) => {
     const create = useCallback(({ cname, cdesc, ctype }) => {
         if (!cname.length)
             return setError(t("challenge.no_name"));
-        if (!ctype.length || !plugins.categoryType[ctype])
-            return setError(t("challenge.invalid_cat") + Object.keys(plugins.categoryType).join(", "));
+        if (!ctype.length || !getPlugin("categoryType", ctype))
+            return setError(
+                t("challenge.invalid_cat") + iteratePlugins("categoryType").map(({ key }) => key).join(", "))
+                ;
 
         setLocked(true);
 
@@ -93,7 +96,7 @@ const ANC = ({ hide, anc, modal }) => {
                 <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
                 <Input val={anc.description} name={"cdesc"} rows={5} placeholder={t("challenge.cat_brief")} />
                 <label htmlFor={"ctype"}>{t("challenge.cat_type")}</label>
-                <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!plugins.categoryType[i] }}
+                <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!getPlugin("categoryType", i) }}
                     placeholder={t("challenge.cat_type")} />
                 {error && <FormError>{error}</FormError>}
                 {!modal && (
@@ -108,7 +111,7 @@ const ANC = ({ hide, anc, modal }) => {
         </Tab>
         <Tab label={t("editor.metadata")}>
             <Form locked={locked} valuesRef={metadataRef}>
-                {Object.values(plugins.categoryMetadata).map(i => fromJson(i.fields, anc.metadata))}
+                {iteratePlugins("categoryMetadata").map(({ plugin }) => fromJson(plugin.fields, anc.metadata))}
             </Form>
         </Tab>
     </TabbedView>;
@@ -185,25 +188,12 @@ export default () => {
             dispatch(push(challenge.category.url + "/challenge/new#" + encodeURIComponent(JSON.stringify(challenge))));
         };
     };
-    let chalEl, challengeTab;
 
     if (!tab) {
         return <Redirect to={"/404"} />;
     }
-    const handler = plugins.categoryType[tab.contained_type];
-    if (!handler) {
-        challengeTab = <>
-            {t("challenge.cat_renderer_missing", { type: tab.contained_type })}<br /><br />
-            {t("challenge.forgot_plugin")}
-        </>;
-    } else {
-        challengeTab = React.createElement(
-            handler.component, { challenges: tab, showEditor: showEditor, isEdit: edit, showLocked: showLocked }
-        );
-    }
 
     return <Page title={t("challenge_plural")}>
-        {chalEl}
         {anc && <ANC modal anc={anc} hide={() => setAnc(false)} />}
 
         <PageHead subTitle={tab.description} back={<>
@@ -227,6 +217,9 @@ export default () => {
                 </>}
         </Row>}
         {!user.team && <FlashText danger>{t("campaign.no_team")}</FlashText>}
-        <div className={"campInner"}>{challengeTab}</div>
+        <div className={"campInner"}>
+            <PluginComponent type={"categoryType"} name={tab.contained_type} challenges={tab}
+                showEditor={showEditor} isEdit={edit} showLocked={showLocked} />
+        </div>
     </Page>;
 };

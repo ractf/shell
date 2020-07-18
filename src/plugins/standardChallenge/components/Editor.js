@@ -22,8 +22,9 @@ import {
     Form, Input, Row, Checkbox, Button, Select, PageHead, Link, Tab,
     TabbedView, FlashText, FormGroup, fromJson, Page
 } from "@ractf/ui-kit";
-import { plugins, appContext } from "ractf";
+import { appContext } from "ractf";
 import { newHint, newFile } from "@ractf/api";
+import { iteratePlugins } from "@ractf/plugins";
 import http from "@ractf/http";
 
 import File from "./File";
@@ -32,11 +33,10 @@ import Hint from "./Hint";
 
 const MetadataEditor = ({ challenge, category, save }) => {
     const fields = [];
-    
-    Object.keys(plugins.challengeMetadata).forEach(key => {
-        const i = plugins.challengeMetadata[key];
-        if (!i.check || i.check(challenge, category)) {
-            fields.push(fromJson(i.fields, challenge.challenge_metadata));
+
+    iteratePlugins("challengeMetadata").forEach(({ plugin }) => {
+        if (!plugin.check || plugin.check(challenge, category)) {
+            fields.push(fromJson(plugin.fields, challenge.challenge_metadata));
         }
     });
     const saveEdit = (changes) => {
@@ -169,8 +169,8 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                     </Row>
 
                     <FormGroup htmlFor={"challenge_type"} label={t("editor.chal_type")}>
-                        <Select options={Object.keys(plugins.challengeType).map(i => ({ key: i, value: i }))}
-                            initial={Object.keys(plugins.challengeType).indexOf(challenge.challenge_type)}
+                        <Select options={iteratePlugins("challengeType").map(({ key }) => ({ key, value: key }))}
+                            initial={iteratePlugins("challengeType").map(i => i.key).indexOf(challenge.challenge_type)}
                             name={"challenge_type"} />
                     </FormGroup>
 

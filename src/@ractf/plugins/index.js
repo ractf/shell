@@ -1,1 +1,3 @@
-export { getClass, registerSubclass } from "./classes";
+export { default as FlagForm } from "./FlagForm";
+export * from "./classes";
+export * from "./helpers";

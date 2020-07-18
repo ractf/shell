@@ -18,9 +18,9 @@
 import * as actions from "actions";
 import { push } from "connected-react-router";
 
+import { iteratePlugins } from "@ractf/plugins";
 import { reloadAll } from "@ractf/api";
 import { ENDPOINTS } from "./consts";
-import { plugins } from "ractf";
 import { store } from "store";
 import http from "@ractf/http";
 
@@ -29,9 +29,8 @@ export const postLogin = async token => {
     store.dispatch(actions.setToken(token));
     await reloadAll();
 
-    const post = Object.values(plugins.postLogin);
-    for (let i = 0; i < post.length; i++) {
-        if (post[i]()) break;
+    for (const { plugin } of iteratePlugins("postLogin")) {
+        if (plugin()) break; 
     }
 };
 

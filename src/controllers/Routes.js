@@ -24,8 +24,9 @@ import { TeamsList, UsersList } from "../pages/Lists";
 import Countdown from "../pages/Countdown";
 import TeamPage from "../pages/TeamPage";
 
-import { Row, TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
-import { plugins, dynamicLoad } from "ractf";
+import { TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
+import { iteratePlugins, PluginComponent } from "@ractf/plugins";
+import { dynamicLoad } from "ractf";
 import { useConfig } from "@ractf/util";
 import { logout } from "@ractf/api";
 
@@ -54,8 +55,9 @@ class ErrorBoundary extends React.PureComponent {
     }
 
     componentDidCatch(error, errorInfo) {
-        Object.values(plugins.errorHandler).forEach(i => {
-            if (typeof i === "function") i(error, errorInfo);
+        iteratePlugins("errorHandler").forEach(({ plugin }) => {
+            if (typeof plugin === "function")
+                plugin(error, errorInfo);
         });
     }
 
@@ -65,7 +67,7 @@ class ErrorBoundary extends React.PureComponent {
                 <BrokenShards />
                 <H1>This page failed to load.</H1>
                 <H2>Please report this!</H2>
-                <TextBlock style={{textAlign: "left"}}>{this.state.error.stack}</TextBlock>
+                <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
             </BasePage>;
         }
 
@@ -78,11 +80,11 @@ let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     const user = useSelector(state => state.user);
     const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
     //if (!process.env.REACT_APP_NO_SITE_LOCK) {
-        if (!(user && user.is_staff)) {
-            if (countdown)
-                if (!countdown_passed[countdown])
-                    return <Countdown cdKey={countdown} />;
-        }
+    if (!(user && user.is_staff)) {
+        if (countdown)
+            if (!countdown_passed[countdown])
+                return <Countdown cdKey={countdown} />;
+    }
     //}
 
     if (title !== null)
@@ -104,19 +106,11 @@ const URIHandler = () => {
 
 const Login = () => {
     const provider = useConfig("login_provider", "basicAuth");
-    if (plugins.loginProvider[provider])
-        return React.createElement(plugins.loginProvider[provider].component);
-    return <BasePage centre>
-        <Row><p>Login provider plugin missing for <code>{provider}</code>.</p></Row>
-    </BasePage>;
+    return <PluginComponent type={"loginProvider"} name={provider} />;
 };
 const Register = () => {
     const provider = useConfig("registration_provider", "basicAuth");
-    if (plugins.registrationProvider[provider])
-        return React.createElement(plugins.registrationProvider[provider].component);
-    return <BasePage centre>
-        <Row><p>Registration provider plugin missing for <code>{provider}</code>.</p></Row>
-    </BasePage>;
+    return <PluginComponent type={"registrationProvider"} name={provider} />;
 };
 const Logout = () => {
     useEffect(() => {
@@ -128,13 +122,13 @@ const Logout = () => {
 
 const Routes = () => {
     return <Switch>
-        {Object.entries(plugins.page).map(([url, page]) =>
+        {iteratePlugins("page").map(({ key: url, plugin: page }) =>
             <Route exact path={url} key={url}>
                 <Page title={page.title} auth={page.auth} countdown={page.countdown}
                     admin={page.admin} noAuth={page.noAuth} C={page.component} />
             </Route>
         )}
-        
+
         <Route exact path={"/uri"} component={URIHandler} />
 
         <Redirect exact path={"/"} to={"/home"} />

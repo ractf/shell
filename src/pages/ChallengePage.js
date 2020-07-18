@@ -22,10 +22,11 @@ import { Redirect } from "react-router-dom";
 import { push } from "connected-react-router";
 
 import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
-import { plugins, appContext } from "ractf";
-import { useReactRouter } from "@ractf/util";
-import http from "@ractf/http";
+import { PluginComponent, getPlugin } from "@ractf/plugins";
 import { useChallenge, useCategory } from "@ractf/util/hooks";
+import { useReactRouter } from "@ractf/util";
+import { appContext } from "ractf";
+import http from "@ractf/http";
 
 
 const EditorWrap = ({ challenge, category, isCreator }) => {
@@ -35,12 +36,12 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
     let handler;
 
     if (challenge.challenge_type)
-        handler = plugins.challengeEditor[challenge.challenge_type];
+        handler = getPlugin("challengeEditor", challenge.challenge_type);
     else
-        handler = plugins.challengeEditor["default"];
+        handler = getPlugin("challengeEditor", "default");
 
     while (handler && handler.uses)
-        handler = plugins.challengeEditor[handler.uses];
+        handler = getPlugin("challengeEditor", handler.uses);
 
     if (!handler || !handler.component)
         return <>
@@ -99,37 +100,6 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
     });
 };
 
-const ChallengeWrap = ({ challenge, category }) => {
-    const { t } = useTranslation();
-    let handler;
-
-    if (challenge.challenge_type)
-        handler = plugins.challengeType[challenge.challenge_type];
-    else
-        handler = plugins.challengeType["default"];
-
-    if (!handler || !handler.component)
-        return <>
-            {t("challenge.renderer_missing", { type: challenge.challenge_type })}<br /><br />
-            {t("challenge.forgot_plugin")}
-        </>;
-
-    if (handler.rightOf) {
-        const parentHandler = plugins.challengeType[handler.rightOf];
-        if (!parentHandler) {
-            return <>
-                {t("challenge.renderer_missing", { type: handler.rightOf })}<br /><br />
-                {t("challenge.forgot_plugin")}
-            </>;
-        }
-        return React.createElement(parentHandler.component, {
-            rightComponent: handler.component,
-            challenge, category
-        });
-    }
-    return React.createElement(handler.component, { challenge, category });
-};
-
 const ChallengePage = () => {
     const { match } = useReactRouter();
     const catId = match.params.tabId;
@@ -161,7 +131,10 @@ const ChallengePage = () => {
         if (isEditor || isCreator)
             chalEl = <EditorWrap {...{ challenge, category, isCreator }} />;
         else
-            chalEl = <ChallengeWrap {...{ challenge, category }} />;
+            chalEl = (
+                <PluginComponent type={"challengeType"} name={challenge.challenge_type} fallback={"default"}
+                    challenge={challenge} category={category} />
+            );
     }
 
     return chalEl;

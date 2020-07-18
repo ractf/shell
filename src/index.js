@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import "promise-polyfill/src/polyfill";
+
 import React from "react";
 import i18next from "i18next";
 import ReactDOM from "react-dom";
