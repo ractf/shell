@@ -15,14 +15,21 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-@import "@ractf/ui-kit/Colours.scss";
+const INITIAL = {
+    filter: {}, search: null, showSolved: true, openCards: {}
+};
 
-.campEdit {
-    position: absolute;
-    top: 16px;
-    right: 32px;
-}
-
-.campInner {
-    padding-top: 24px;
-}
+export const jeopardySearchReducer = (state = INITIAL, { type, payload }) => {
+    switch (type) {
+        case "SET_JEOPARDY_SEARCH":
+            return { ...state, search: payload };
+        case "SET_JEOPARDY_FILTER":
+            return { ...state, filter: payload };
+        case "SET_JEOPARDY_SHOW_SOLVED":
+            return { ...state, showSolved: payload };
+        case "SET_JEOPARDY_OPEN_CARDS":
+            return { ...state, openCards: payload };
+        default:
+            return state;
+    }
+};

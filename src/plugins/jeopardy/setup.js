@@ -15,14 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-@import "@ractf/ui-kit/Colours.scss";
+import { registerPlugin, registerReducer } from "ractf";
 
-.campEdit {
-    position: absolute;
-    top: 16px;
-    right: 32px;
-}
+import { JeopardyChallenges } from "./components/JeopardyChallenges";
+import { jeopardySearchReducer } from "./reducers";
 
-.campInner {
-    padding-top: 24px;
-}
+export default () => {
+    registerReducer("jeopardySearch", jeopardySearchReducer);
+    registerPlugin("categoryType", "jeopardy", { component: JeopardyChallenges });
+};

@@ -24,7 +24,7 @@ import {
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavLink, NavMenu, NavMenuLink, NavItem, NavCollapse,
     Footer, FootRow, FootCol, FootLink, Column, Breadcrumbs, Crumb, Form,
-    BareForm
+    BareForm, ItemStack
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
@@ -66,6 +66,25 @@ const Inner = () => (<NavCollapse>
 
 const UIPage = () => <Page><Row left>
     <H1>Really Awesome UI Framework</H1>
+    <HR />
+    <HR />
+
+    <ItemStack>
+        <ItemStack.Item>Some</ItemStack.Item>
+        <ItemStack.Item>Item</ItemStack.Item>
+        <ItemStack.Item>Here!</ItemStack.Item>
+    </ItemStack>
+
+    <HR />
+    <Card noPad>
+        <ItemStack>
+            <ItemStack.Item warning label={5}>Some</ItemStack.Item>
+            <ItemStack.Item success active>Item</ItemStack.Item>
+            <ItemStack.Item primary>Here!</ItemStack.Item>
+            <ItemStack.Item>Here!</ItemStack.Item>
+        </ItemStack>
+    </Card>
+    <HR />
     <HR />
     <H2>Nav Bars</H2>
     <NavBar>

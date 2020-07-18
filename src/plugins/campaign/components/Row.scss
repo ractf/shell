@@ -17,6 +17,7 @@
 
 .campaignRow {
     display: flex;
+    text-align: center;
 
     & > * {
         flex-shrink: 0;

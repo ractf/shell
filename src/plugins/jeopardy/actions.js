@@ -15,14 +15,30 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-@import "@ractf/ui-kit/Colours.scss";
+export const setJeopardySearch = (search) => {
+    return {
+        type: "SET_JEOPARDY_SEARCH",
+        payload: search
+    };
+};
 
-.campEdit {
-    position: absolute;
-    top: 16px;
-    right: 32px;
-}
+export const setJeopardyFilter = (filter) => {
+    return {
+        type: "SET_JEOPARDY_FILTER",
+        payload: filter
+    };
+};
 
-.campInner {
-    padding-top: 24px;
-}
+export const setJeopardyShowSolved = (showSolved) => {
+    return {
+        type: "SET_JEOPARDY_SHOW_SOLVED",
+        payload: showSolved
+    };
+};
+
+export const setJeopardyOpenCards = (openCards) => {
+    return {
+        type: "SET_JEOPARDY_OPEN_CARDS",
+        payload: openCards
+    };
+};
