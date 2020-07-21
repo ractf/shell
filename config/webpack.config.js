@@ -257,7 +257,7 @@ module.exports = function (webpackEnv) {
         {
           oneOf: [
             {
-              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+              test: /\.(bmp|gif|jpe?g|png)$/,
               loader: require.resolve('url-loader'),
               options: {
                 limit: 10000,

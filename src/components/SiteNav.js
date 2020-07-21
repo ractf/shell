@@ -22,9 +22,8 @@ import { useSelector } from "react-redux";
 import {
     Link, SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
     FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
-    NavMenu
+    NavMenu, Wordmark
 } from "@ractf/ui-kit";
-import Wordmark from "./Wordmark";
 import Header from "./Header";
 
 import { iteratePlugins } from "@ractf/plugins";

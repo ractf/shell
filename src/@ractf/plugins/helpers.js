@@ -41,6 +41,6 @@ export const PluginComponent = ({ type, name, fallback, ...props }) => {
         );
 
     if (plugin.rightOf)
-        return <PluginComponent type={type} name={plugin.rightOf} rightComponent={plugin.component} {...props} />
+        return <PluginComponent type={type} name={plugin.rightOf} rightComponent={plugin.component} {...props} />;
     return React.createElement(plugin.component, { ...props });
 };
