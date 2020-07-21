@@ -17,9 +17,7 @@
 
 import React from "react";
 
-import { Link } from "@ractf/ui-kit";
-
-import Wordmark from "./Wordmark";
+import { Link, Wordmark } from "@ractf/ui-kit";
 
 import "./Header.scss";
 
