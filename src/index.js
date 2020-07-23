@@ -42,7 +42,7 @@ import en from "./i18n/en.json";
  *  faster after the initial load. See README.md for more details, and why you
  *  might not want this enabled in some cases.
  */
-const ENABLE_SERVICE_WORKER = true;
+const ENABLE_SERVICE_WORKER = false;
 
 const gft = i18next.getFixedT.bind(i18next);
 i18next.getFixedT = (lng, ns) => {
