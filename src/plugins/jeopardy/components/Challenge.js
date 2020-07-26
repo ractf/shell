@@ -18,7 +18,7 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Card, Button, Markdown, Row, HR } from "@ractf/ui-kit";
+import { Card, Button, Markdown, Row, HR, SubtleText } from "@ractf/ui-kit";
 
 import { setJeopardyOpenCards } from "../actions";
 
@@ -36,6 +36,15 @@ const Challenge = ({ challenge }) => {
         dispatch(setJeopardyOpenCards(newOpenCards));
     }, [challenge.id, openCards, dispatch]);
 
+    const additional = [];
+    if (challenge.files.length > 0)
+        additional.push("files");
+    if (challenge.hints.length > 0)
+        additional.push("hints");
+    const additionalWarning = (
+        `This challenge has additional ${additional.join(" and ")} - open the challenge page to view them.`
+    );
+
     return <Card
         header={`${challenge.name} (${challenge.score} points)`} framed
         collapsible startClosed open={openCards[challenge.id]} onOpenToggle={onOpenToggle}
@@ -43,12 +52,15 @@ const Challenge = ({ challenge }) => {
     >
         <Row>
             <Markdown source={challenge.description} />
+            {additional.length !== 0 && (
+                <SubtleText>{additionalWarning}</SubtleText>
+            )}
+            {challenge.challenge_metadata?.cserv_name && <SubtleText>
+                This challenge uses a network socket - open the challenge page for more details.
+            </SubtleText>}
         </Row>
-        <HR />
         <Row>
-            <Button width={"100%"} to={challenge.url}>Open challenge page</Button>
-        </Row>
-        <Row>
+            <Button to={challenge.url}>Open challenge page</Button>
             <FlagForm challenge={challenge} />
         </Row>
     </Card>;
