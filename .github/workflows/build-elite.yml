@@ -62,6 +62,7 @@ jobs:
         REACT_APP_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@sentry.io/1815863
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
         REACT_APP_GA_UA: UA-167342912-2
+        RACTF_UI_KIT_THEME: csa
 
     - name: Install Sentry CLI
       run: curl -sL https://sentry.io/get-cli/ | bash
