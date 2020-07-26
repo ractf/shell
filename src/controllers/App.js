@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { ConnectedRouter } from "connected-react-router";
 import { useSelector } from "react-redux";
 import { MdWarning } from "react-icons/md";
@@ -39,6 +39,9 @@ import http from "@ractf/http";
 import lockImg from "static/spine.png";
 import "./App.scss";
 import { store } from "store";
+
+
+const LOADING_TIMEOUT = 5000;
 
 
 let SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
@@ -141,8 +144,25 @@ class FirstLoader extends React.Component {
 }
 
 const SiteLoading = () => {
+    const timeout = useRef();
+    const [warning, setWarning] = useState(false);
+    const showWarning = useCallback(() => {
+        setWarning(true);
+    }, []);
+    useEffect(() => {
+        timeout.current = setTimeout(showWarning, LOADING_TIMEOUT);
+        return () => { clearTimeout(timeout.current); };
+    }, [showWarning]);
+
     return <div className={"siteLoading"}>
         <SpinningSpine />
+        <div className={"loadingWarn"} style={{ opacity: warning ? 1 : 0 }}>
+            We appear to be having some trouble connecting right now.
+            <br />
+            Please check <a href="https://reallyawesome.atlassian.net/servicedesk/customer/kb/view/21397511">
+                the documentation
+            </a> for more information.
+        </div>
     </div>;
 };
 
@@ -222,7 +242,7 @@ const App = React.memo(() => {
 
     if (consoleMode) return <VimDiv />;
 
-    if (!countdowns || !config) return <SiteLoading />;
+    if (true || !countdowns || !config) return <SiteLoading />;
 
     const removePopup = (n) => {
         const popups_ = [...popups];

@@ -286,6 +286,22 @@ b {
             margin: 0;
         }
     }
+
+    .loadingWarn {
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: px(15);
+        background-color: $back_lift;
+        border-radius: px(4);
+        max-width: 100vw;
+        word-wrap: break-word;
+        word-break: break-word;
+        text-align: center;
+        line-height: 1.5;
+        transition: opacity 500ms ease;
+    }
 }
 
 .bodyScroll {

@@ -18,7 +18,7 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Card, Button, Markdown, Row, HR, SubtleText } from "@ractf/ui-kit";
+import { Card, Button, Markdown, Row, SubtleText } from "@ractf/ui-kit";
 
 import { setJeopardyOpenCards } from "../actions";
 
