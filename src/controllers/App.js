@@ -159,7 +159,8 @@ const SiteLoading = () => {
         <div className={"loadingWarn"} style={{ opacity: warning ? 1 : 0 }}>
             We appear to be having some trouble connecting right now.
             <br />
-            Please check <a href="https://reallyawesome.atlassian.net/servicedesk/customer/kb/view/21397511">
+            Please check <a target="_blank" rel="noopener noreferrer"
+                href="https://reallyawesome.atlassian.net/servicedesk/customer/kb/view/21397511">
                 the documentation
             </a> for more information.
         </div>
