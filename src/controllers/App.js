@@ -243,7 +243,7 @@ const App = React.memo(() => {
 
     if (consoleMode) return <VimDiv />;
 
-    if (true || !countdowns || !config) return <SiteLoading />;
+    if (!countdowns || !config) return <SiteLoading />;
 
     const removePopup = (n) => {
         const popups_ = [...popups];
