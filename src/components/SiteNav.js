@@ -52,7 +52,7 @@ const HeaderNav_ = () => {
                 <NavLink to={"/logout"}>Logout</NavLink>
             </> : <>
                     <NavLink to={"/login"}>Login</NavLink>
-                    <NavLink to={"/signup"}>Register</NavLink>
+                    <NavLink to={"/register"}>Register</NavLink>
                 </>}
             {user && user.is_staff && <NavMenu name={"Admin"}>
                 {iteratePlugins("adminPage").map(({ key, plugin }) => (

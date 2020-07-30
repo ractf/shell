@@ -55,9 +55,9 @@ export default () => {
             if (password !== password2)
                 return reject({ password2: t("auth.pass_match") });
 
-            if (!invite)
+            if (inviteRequired && !invite)
                 return reject({ invite: t("auth.no_invite") });
-            if (inviteRequired && !accept)
+            if (!accept)
                 return reject({ accept: t("auth.no_accept") });
 
             resolve();
