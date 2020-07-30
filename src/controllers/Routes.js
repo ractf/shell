@@ -88,7 +88,7 @@ let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     //}
 
     if (title !== null)
-        document.title = title || "RACTF";
+        document.title = title || process.env.REACT_APP_SITE_NAME;
 
     if (auth && !user) return <Redirect to={"/login"} />;
     if (noAuth && user) return <Redirect to={"/home"} />;

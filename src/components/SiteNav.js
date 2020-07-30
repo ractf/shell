@@ -38,7 +38,7 @@ const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
 
     return <NavBar primary>
-        <NavBrand><NavLink to={"/"}><b>RACTF</b></NavLink></NavBrand>
+        <NavBrand><NavLink to={"/"}><b>{process.env.REACT_APP_SITE_NAME}</b></NavLink></NavBrand>
         <NavCollapse>
             <NavLink to={"/users"}>Users</NavLink>
             <NavLink to={"/teams"}>Teams</NavLink>
@@ -160,7 +160,7 @@ const SiteNav = ({ children }) => {
             <Container children={children} />
             <Footer>
                 <FootRow main>
-                    <FootCol title={"RACTF"}>
+                    <FootCol title={process.env.REACT_APP_SITE_NAME}>
                         <FootLink to={"/home"}>Home</FootLink>
                         <FootLink to={"/privacy"}>Privacy Policy</FootLink>
                         <FootLink to={"/conduct"}>Terms of Use</FootLink>

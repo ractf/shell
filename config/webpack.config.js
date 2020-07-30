@@ -400,6 +400,10 @@ module.exports = function (webpackEnv) {
           pattern: '__DISABLE_DEVTOOLS__',
           replacement: isEnvProduction ? "if(window.__REACT_DEVTOOLS_GLOBAL_HOOK__)__REACT_DEVTOOLS_GLOBAL_HOOK__.inject=function(){}" : ""
         },
+        {
+          pattern: "__SITE_NAME__",
+          replacement: process.env.REACT_APP_SITE_NAME || "RACTF",
+        },
       ]),
       isEnvProduction &&
       shouldInlineRuntimeChunk &&
