@@ -270,7 +270,7 @@ export default () => {
                         <FormGroup label={t("settings.notifications.send_options")}>
                             {notificationGroups.map((group) =>
                                 <Checkbox key={"notifs." + group.name} name={"notifs." + group.name}
-                                    val={preferences["notifs." + group.name]}>
+                                    val={(preferences || {})["notifs." + group.name]}>
                                     {group.description}
                                 </Checkbox>
                             )}

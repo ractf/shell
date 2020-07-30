@@ -75,5 +75,5 @@ export const usePreferences = () => {
         if (newValue !== preferences)
             dispatch(actions.setPreferences(newValue));
     }, [dispatch, preferences]);
-    return [preferences, setPreferences];
+    return [preferences || {}, setPreferences];
 };
