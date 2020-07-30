@@ -38,7 +38,7 @@ const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
 
     return <NavBar primary>
-        <NavBrand><b>RACTF</b></NavBrand>
+        <NavBrand><NavLink to={"/"}><b>RACTF</b></NavLink></NavBrand>
         <NavCollapse>
             <NavLink to={"/users"}>Users</NavLink>
             <NavLink to={"/teams"}>Teams</NavLink>
