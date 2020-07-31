@@ -23,12 +23,14 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             return { ...state, categories: payload };
 
         case "ADD_CATEGORY":
-            return { ...state, categories: [...state.categories, payload] };
+            return { ...state, categories: [...state.categories, { challenges: [], ...payload }] };
         case "EDIT_CATEGORY":
-            return { ...state, categories: categories.map(i => {
-                if (i.id !== payload.id) return i;
-                return {...i, ...payload};
-            })};
+            return {
+                ...state, categories: categories.map(i => {
+                    if (i.id !== payload.id) return i;
+                    return { ...i, ...payload };
+                })
+            };
         case "REMOVE_CATEGORY":
             return { ...state, categories: state.categories.filter(i => i.id !== payload.id) };
 

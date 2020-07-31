@@ -333,9 +333,9 @@ export default () => {
             author: data.author,
             score: data.score,
             flag_metadata: data.flag_metadata,
-        }).then.then(async (chal) => {
+        }).then(async (chal) => {
             await Promise.all([
-                ...data.hints.map(hint => newHint(
+                ...data.hints.map(hint => hint.text && newHint(
                     chal.id, hint.name, hint.penalty, hint.text
                 )),
                 ...data.files.map(file => newFile(

@@ -28,7 +28,7 @@ export default class Category {
         });
 
         this._data = data;
-        this._challenges = data.challenges.map(i => getClass(Challenge).fromJSON(thisProxy, i));
+        this._challenges = (data.challenges || []).map(i => getClass(Challenge).fromJSON(thisProxy, i));
 
         return thisProxy;
     }
