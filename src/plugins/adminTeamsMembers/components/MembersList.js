@@ -122,7 +122,7 @@ export default () => {
             </> : <p>No results found</p>}
         </Row>}
         {state.member && <Modal onClose={close} onConfirm={submit}>
-            <Form handle={saveMember(state.member)} locked={state.loading}>
+            <Form handle={saveMember(state.member)} locked={state.loading} submitRef={submitRef}>
                 <Row>
                     <FormGroup label={"Username"} htmlFor={"username"}>
                         <Input val={state.member.username} name={"username"} />
