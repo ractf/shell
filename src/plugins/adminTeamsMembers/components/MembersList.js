@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Button
+    Checkbox, PageHead, Modal, Button, ModalForm
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser } from "@ractf/api";
 import { appContext } from "ractf";
@@ -33,12 +33,16 @@ export default () => {
     const { t } = useTranslation();
 
     const [state, setState] = useState({
-        loading: false, error: null, results: null, member: null
+        loading: false, error: null, results: null, member: null, advSearch: false
     });
-    const doSearch = useCallback(({ name }, setFormState) => {
-        setState(prevState => ({ ...prevState, results: null, error: null, loading: true }));
+    const doSearch = useCallback(({ username, email }, setFormState) => {
+        setState(prevState => ({ ...prevState, results: null, error: null, advSearch: false, loading: true }));
 
-        http.get(ENDPOINTS.USER + "?search=" + name).then(data => {
+        let params = "?";
+        if (username) params += "search=" + username;
+        if (email) params += "search=" + email;
+
+        http.get(ENDPOINTS.USER + params, {}, { exporting: false }).then(data => {
             setState(prevState => ({
                 ...prevState, results: data.results, more: !!data.next, loading: false
             }));
@@ -79,12 +83,31 @@ export default () => {
         submitRef.current();
     }, []);
 
+    const openAdvSearch = useCallback(() => {
+        setState(prevState => ({ ...prevState, advSearch: true }));
+    }, []);
+    const closeAdvSearch = useCallback(() => {
+        setState(prevState => ({ ...prevState, advSearch: false }));
+    }, []);
+
     return <>
+        {state.advSearch && (
+            <ModalForm header={"Advanced Member Search"} okayLabel={"Search"}
+                onClose={closeAdvSearch} handle={doSearch}>
+                <FormGroup label={"Username"} for={"username"}>
+                    <Input name={"username"} placeholder={"Username"} />
+                </FormGroup>
+                <FormGroup label={"Email"} for={"email"}>
+                    <Input name={"email"} placeholder={"Email"} />
+                </FormGroup>
+            </ModalForm>
+        )}
+
         <PageHead title={t("admin.members")} />
         <Form handle={doSearch} locked={state.loading}>
             <Row>
-                <InputButton submit name={"name"} placeholder={"Search for Username"} button={"Search"} />
-                <Button>Advanced Search</Button>
+                <InputButton submit name={"username"} placeholder={"Search for Username"} button={"Search"} />
+                <Button disabled onClick={openAdvSearch}>Advanced Search</Button>
             </Row>
             {state.error && <FormError>{state.error}</FormError>}
         </Form>
