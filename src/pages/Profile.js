@@ -97,6 +97,7 @@ const Profile = () => {
         <div className={"profileSplit"}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
+                <div>{t("point_count", { count: userData.leaderboard_points })}</div>
                 <div className={"userJoined"}>Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment></div>
                 <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
                     {userData.bio || t("profile.no_bio")}

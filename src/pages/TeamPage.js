@@ -109,6 +109,7 @@ const TeamPage = () => {
         <div className={"profileSplit"}>
             <div className={"userMeta"}>
                 <div className={"userName"}><FaUsers /> {teamData.name}</div>
+                <div>{t("point_count", { count: teamData.leaderboard_points })}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
                     ? " noBio" : "")}>
                     {teamData.description || t("teams.no_bio")}
