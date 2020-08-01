@@ -82,17 +82,17 @@ export default ({ challenge, category, rightComponent }) => {
             </TextBlock>
         </Row>
 
-        {challenge.files && !!challenge.files.length && <div className={"challengeLinkGroup"}>
+        {challenge.files && !!challenge.files.length && <Row>
             {challenge.files.map(file =>
                 file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
             )}
-        </div>}
-        {user.team && challenge.hints && !!challenge.hints.length && <div className={"challengeLinkGroup"}>
+        </Row>}
+        {user.team && challenge.hints && !!challenge.hints.length && <Row>
             {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
                 return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
                     points={hint.penalty} id={hint.id} key={hint.id} />;
             })}
-        </div>}
+        </Row>}
 
         {challenge.solved ? <Row>
             {t("challenge.already_solved")}

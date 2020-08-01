@@ -23,6 +23,7 @@ import { appContext } from "ractf";
 import http from "@ractf/http";
 
 import "./Challenge.scss";
+import { Button } from "@ractf/ui-kit";
 
 
 export default ({ name, url, size, id, isEdit }) => {
@@ -40,10 +41,10 @@ export default ({ name, url, size, id, isEdit }) => {
     };
 
     const edit = () => {
-        app.promptConfirm({message: "Edit file", remove: () => removeFile(id)},
-            [{name: "name", placeholder: "File name", label: "Name", val: name},
-             {name: "url", placeholder: "File URL", label: "URL", val: url},
-             {name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: /\d+/}]
+        app.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
+            [{ name: "name", placeholder: "File name", label: "Name", val: name },
+            { name: "url", placeholder: "File URL", label: "URL", val: url },
+            { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: /\d+/ }]
         ).then(({ name, url, size }) => {
 
             if (!size.toString().match(/\d+/)) return app.alert("Invalid file size!");
@@ -53,25 +54,16 @@ export default ({ name, url, size, id, isEdit }) => {
             ).catch(e =>
                 app.alert("Error editing file:\n" + http.getError(e))
             );
-        }).catch(() => {});
+        }).catch(() => { });
     };
 
     if (isEdit) {
-        return <div className={"challengeLink"} onClick={() => edit()}>
-            <FaFile />
-            <div>
-                <div>{name}</div>
-                <div className={"linkStyle"} href={""}>{url}</div>
-                <div className={"challengeLinkMeta"}>{formatBytes(size)}</div>
-            </div>
-        </div>;
+        return <Button Icon={FaFile} tooltip={`${url}\n(${formatBytes(size)})`} onClick={() => edit()}>
+            {name}
+        </Button>;
     }
 
-    return <div className={"challengeLink"}>
-        <FaFile />
-        <div>
-            <a href={url} target={"_blank"}>{name}</a>
-            <div className={"challengeLinkMeta"}>{formatBytes(size)}</div>
-        </div>
-    </div>;
+    return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink>
+        {name}
+    </Button>;
 };

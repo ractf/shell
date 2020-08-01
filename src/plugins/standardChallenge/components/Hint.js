@@ -23,6 +23,7 @@ import "./Challenge.scss";
 import { removeHint, editHint } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
+import { Button } from "@ractf/ui-kit";
 
 
 export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
@@ -30,10 +31,10 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
     const { t } = useTranslation();
 
     const edit = () => {
-        app.promptConfirm({message: "Edit hint", remove: () => removeHint(id)},
-            [{name: "name", placeholder: "Hint name", val: name, label: "Name"},
-             {name: "cost", placeholder: "Hint cost", val: points.toString(), label: "Cost", format: /\d+/},
-             {name: "body", placeholder: "Hint text", val: body, label: "Message", rows: 5}]
+        app.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
+            [{ name: "name", placeholder: "Hint name", val: name, label: "Name" },
+            { name: "cost", placeholder: "Hint cost", val: points.toString(), label: "Cost", format: /\d+/ },
+            { name: "body", placeholder: "Hint text", val: body, label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
 
             if (!cost.toString().match(/\d+/)) return app.alert("Invalid hint const!");
@@ -43,15 +44,11 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
             ).catch(e =>
                 app.alert("Error editing hint:\n" + http.getError(e))
             );
-        }).catch(() => {});
+        }).catch(() => { });
     };
 
-    return <div className={"challengeLink clickable" + (hintUsed ? " hintUsed" : "")}
-                onClick={isEdit ? (() => edit()) : onClick}>
-        <FaInfoCircle />
-        <div>
-            {name}
-            <div className={"challengeLinkMeta"}>-{t("point_count", {count: points})}.</div>
-        </div>
-    </div>;
+    return <Button onClick={isEdit ? (() => edit()) : onClick} Icon={FaInfoCircle}
+        tooltip={points === 0 ? "Free" : "-" + t("point_count", { count: points })} success={hintUsed}>
+        {name}
+    </Button>;
 };

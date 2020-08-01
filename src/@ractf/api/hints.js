@@ -24,7 +24,7 @@ import { ENDPOINTS } from "./consts";
 
 export const newHint = (challenge, name, penalty, text) => (
     http.post(ENDPOINTS.HINT, { challenge, name, penalty, text }).then(data => {
-        store.dispatch(actions.addHint(challenge, data));
+        store.dispatch(actions.addHint(challenge, { ...data, used: false }));
         return data;
     })
 );

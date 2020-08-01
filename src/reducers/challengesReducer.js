@@ -75,10 +75,13 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             }));
             return { ...state, categories };
         case "EDIT_HINT":
-            categories.forEach(i => i.challenges.forEach(j => j.hints.map(hint => {
-                if (hint.id !== payload.hintId) return hint;
-                return { ...hint, ...payload.data };
-            })));
+            console.log("Edit", payload.data)
+            categories.forEach(i => i.challenges.map(chal => {
+                chal.hints = chal.hints.map(hint => {
+                    if (hint.id !== payload.hintId) return hint;
+                    return { ...hint, ...payload.data };
+                });
+            }));
             return { ...state, categories };
         case "REMOVE_HINT":
             categories.forEach(i => i.challenges.forEach(chal => {

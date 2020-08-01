@@ -81,15 +81,14 @@ const HintEditor = ({ challenge }) => {
     };
 
     return <>
-        <div className={"challengeLinkGroup"}>
+        <Row>
             {!challenge.hints || challenge.hints.length === 0
                 ? <FlashText danger>No hints added yet!</FlashText>
                 : challenge.hints.map(hint =>
                     <Hint key={hint.id} points={hint.penalty} name={hint.name} id={hint.id} body={hint.text} isEdit />
                 )
             }
-        </div>
-
+        </Row>
         <Row>
             <Button onClick={addHint}>Add Hint</Button>
         </Row>
@@ -117,14 +116,14 @@ const FileEditor = ({ challenge }) => {
     };
 
     return <>
-        <div className={"challengeLinkGroup"}>
+        <Row>
             {!challenge.files || challenge.files.length === 0
                 ? <FlashText danger>No files added yet!</FlashText>
                 : challenge.files.map(file =>
                     file && <File key={file.id} name={file.name} url={file.url} id={file.id} size={file.size} isEdit />
                 )
             }
-        </div>
+        </Row>
 
         <Row>
             <Button onClick={addFile}>Add File</Button>
