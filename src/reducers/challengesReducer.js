@@ -75,8 +75,7 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             }));
             return { ...state, categories };
         case "EDIT_HINT":
-            console.log("Edit", payload.data)
-            categories.forEach(i => i.challenges.map(chal => {
+            categories.forEach(i => i.challenges.forEach(chal => {
                 chal.hints = chal.hints.map(hint => {
                     if (hint.id !== payload.hintId) return hint;
                     return { ...hint, ...payload.data };
