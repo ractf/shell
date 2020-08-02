@@ -64,6 +64,7 @@ jobs:
         REACT_APP_GA_UA: UA-167342912-2
         REACT_APP_SITE_NAME: "CS:Awesome"
         RACTF_UI_KIT_THEME: csa
+        REACT_APP_USE_HEAD_NAV: true
 
     - name: Install Sentry CLI
       run: curl -sL https://sentry.io/get-cli/ | bash
