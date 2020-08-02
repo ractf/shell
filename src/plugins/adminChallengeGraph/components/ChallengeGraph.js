@@ -82,7 +82,9 @@ const ChallengeGraph = () => {
                                 id={`link_challenge_${challenge.id}_challenge_${unlocks}`}
                                 key={`link_challenge_${challenge.id}_challenge_${unlocks}`}
                                 from={`challenge_${challenge.id}`} to={`challenge_${unlocks}`}
-                                value={solvesCount[unlocks]}
+                                value={bidirectional
+                                    ? (solvesCount[unlocks] + solvesCount[challenge.id]) / 2
+                                    : solvesCount[unlocks]}
                             />
                         );
                     })
