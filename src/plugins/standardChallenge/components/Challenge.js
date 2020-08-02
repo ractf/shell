@@ -98,12 +98,15 @@ export default ({ challenge, category, rightComponent }) => {
             {t("challenge.already_solved")}
         </Row> : user.team ? <Row>
             <FlagForm challenge={challenge} submitRef={submitFlag} onFlagResponse={onFlagResponse.current} autoFocus />
-        </Row> : <FlashText danger title={t("challenge.no_team")}>
-                    <Row>
-                        <Button to={"/team/new"}>{t("join_a_team")}</Button>
-                        <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                    </Row>
-                </FlashText>}
+        </Row> : <>
+            <Row>
+                <FlashText danger>{t("challenge.no_team")}</FlashText>
+            </Row>
+            <Row>
+                <Button danger to={"/team/new"}>{t("join_a_team")}</Button>
+                <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
+            </Row>
+        </>}
     </>;
 
     const tags = <>
