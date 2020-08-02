@@ -20,17 +20,19 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal
+    Checkbox, PageHead, Modal, FlashText
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
+import { useConfig } from "@ractf/util";
 
 
 export default () => {
     const app = useContext(appContext);
     const submitRef = useRef();
     const { t } = useTranslation();
+    const hasTeams = useConfig("enable_teams");
 
     const [state, setState] = useState({
         loading: false, error: null, results: null, team: null
@@ -96,6 +98,10 @@ export default () => {
     const submit = useCallback(() => {
         submitRef.current();
     }, []);
+
+    if (!hasTeams) {
+        return <FlashText danger>Teams are not enabled for this event.</FlashText>;
+    }
 
     return <>
         <PageHead title={t("admin.teams")} />

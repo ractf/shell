@@ -31,23 +31,24 @@ import { useCategories } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
 
-const USE_HEAD_NAV = true;
+const USE_HEAD_NAV = false;
 
 
 const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
+    const hasTeams = useConfig("enable_teams");
 
     return <NavBar primary>
         <NavBrand><NavLink to={"/"}><b>{process.env.REACT_APP_SITE_NAME}</b></NavLink></NavBrand>
         <NavCollapse>
             <NavLink to={"/users"}>Users</NavLink>
-            <NavLink to={"/teams"}>Teams</NavLink>
+            {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
             <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
             <NavLink to={"/campaign"}>Challenges</NavLink>
             <NavGap />
             {user ? <>
                 <NavLink to={"/profile/me"}>Profile</NavLink>
-                <NavLink to={"/team/me"}>Team</NavLink>
+                {hasTeams && <NavLink to={"/team/me"}>Team</NavLink>}
                 <NavLink to={"/settings"}>Settings</NavLink>
                 <NavLink to={"/logout"}>Logout</NavLink>
             </> : <>
@@ -69,6 +70,7 @@ const SideBarNav_ = ({ children }) => {
 
     const registration = useConfig("enable_registration", true);
     const login = useConfig("enable_login", true);
+    const hasTeams = useConfig("enable_teams");
     const user = useSelector(state => state.user);
     const categories = useCategories();
 
@@ -78,7 +80,7 @@ const SideBarNav_ = ({ children }) => {
         submenu: [
             [t("sidebar.home"), "/home"],
             [t("user_plural"), "/users"],
-            [t("team_plural"), "/teams"],
+            hasTeams ? [t("team_plural"), "/teams"] : null,
             [t("leaderboard"), "/leaderboard"]
         ],
         startOpen: true
@@ -101,7 +103,7 @@ const SideBarNav_ = ({ children }) => {
             name: user.username,
             submenu: [
                 [t("sidebar.profile"), "/profile/me"],
-                [t("team"), "/team/me"],
+                hasTeams ? [t("team"), "/team/me"] : null,
                 [t("setting_plural"), "/settings"],
                 [t("sidebar.logout"), "/logout"],
             ]
