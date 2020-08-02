@@ -25,13 +25,19 @@ import {
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { usePaginated } from "ractf";
+import { useConfig } from "@ractf/util";
+import { Redirect } from "react-router-dom";
 
 
 export const TeamsList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.TEAM);
     const [state, next] = usePaginated(ENDPOINTS.TEAM); 
+    const hasTeams = useConfig("enable_teams");
 
     const { t } = useTranslation();
+
+    if (!hasTeams)
+        return <Redirect to={"/"} />;
 
     return <Page
         title={t("team_plural")} centre={state.error}>

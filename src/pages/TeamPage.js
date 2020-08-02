@@ -23,7 +23,7 @@ import { Redirect } from "react-router-dom";
 
 import { BrokenShards } from "./ErrorPages";
 
-import { useReactRouter } from "@ractf/util";
+import { useReactRouter, useConfig } from "@ractf/util";
 import {
     Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page
@@ -51,7 +51,9 @@ const TeamPage = () => {
     const [teamData, error] = useApi(ENDPOINTS.TEAM + (team === "me" ? "self" : team));
     const user = useSelector(state => state.user);
     const { t } = useTranslation();
+    const hasTeams = useConfig("enable_teams");
 
+    if (!hasTeams) return <Redirect to={"/"} />;
     if (user.team === null && team === "me") return <Redirect to={"/noteam"} />;
 
     if (error) return <Page title={t("teams.teams")} centre>

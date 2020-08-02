@@ -42,8 +42,9 @@ export default () => {
         component: SignUp,
     });
     registerPlugin("postLogin", "noteam", () => {
-        const { team, challenges: { categories } } = store.getState();
-        if (team)
+        const { team, config, challenges: { categories } } = store.getState();
+        const hasTeams = (config || {}).enable_teams;
+        if (team || !hasTeams)
             if (categories.length)
                 store.dispatch(push("/campaign"));
             else store.dispatch(push("/"));

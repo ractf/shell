@@ -22,13 +22,17 @@ import { Redirect } from "react-router-dom";
 
 import { H2, Page, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
+import { useConfig } from "@ractf/util";
 
 
 const NoTeam = () => {
     const { t } = useTranslation();
     const team = useSelector(state => state.team);
-    
-    if (team) return <Redirect to={"/team"}/>;
+    const hasTeams = useConfig("enable_teams");
+
+    if (!hasTeams) return <Redirect to={"/"} />;
+
+    if (team) return <Redirect to={"/team"} />;
 
     return <Page vCentre>
         <Wrap>

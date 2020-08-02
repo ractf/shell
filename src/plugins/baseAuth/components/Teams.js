@@ -27,6 +27,7 @@ import {
 import { joinTeam, createTeam, reloadAll } from "@ractf/api";
 import { Wrap } from "./Parts";
 import http from "@ractf/http";
+import { useConfig } from "@ractf/util";
 
 
 export const JoinTeam = () => {
@@ -36,6 +37,10 @@ export const JoinTeam = () => {
     const [success, setSuccess] = useState(false);
     const [locked, setLocked] = useState(false);
     const team = useSelector(state => state.team);
+    const hasTeams = useConfig("enable_teams");
+
+    if (!hasTeams)
+        return <Redirect to={"/"} />;
 
     if (team !== null)
         return <Redirect to={"/campaign"} />;

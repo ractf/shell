@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Button, Row, Graph, URLTabbedView, Tab, Table, Page
+    Button, Row, Graph, URLTabbedView, Tab, Table, Page, PageHead
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "ractf";
 import { ENDPOINTS } from "@ractf/api";
@@ -35,6 +35,7 @@ const LeaderboardPage = () => {
     const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
     const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
     const start_time = useConfig("start_time");
+    const hasTeams = useConfig("enable_teams");
 
     useEffect(() => {
         if (!graph) return;
@@ -95,28 +96,38 @@ const LeaderboardPage = () => {
         return lbdata.map((i, n) => [n + 1, i.name, i.leaderboard_points, { link: "/team/" + i.id }]);
     };
 
-    return <Page title={t("leaderboard")}>
-        <URLTabbedView center initial={1}>
-            <Tab label={t("team_plural")} index={"team"}>
-                {teamGraphData && teamGraphData.length > 0 && (
-                    <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
-                )}
-                <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
-                {tState.hasMore && <Row>
-                    <Button disabled={tState.loading} onClick={tNext}>Load More</Button>
-                </Row>}
-            </Tab>
+    const teamTab = <>
+        {teamGraphData && teamGraphData.length > 0 && (
+            <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
+        )}
+        <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
+        {tState.hasMore && <Row>
+            <Button disabled={tState.loading} onClick={tNext}>Load More</Button>
+        </Row>}
+    </>;
+    const userTab = <>
+        {userGraphData && userGraphData.length > 0 && (
+            <Graph key="users" data={userGraphData} timeGraph noAnimate />
+        )}
+        <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
+        {uState.hasMore && <Row>
+            <Button disabled={uState.loading} onClick={uNext}>Load More</Button>
+        </Row>}
+    </>;
 
-            <Tab label={t("user_plural")} index={"user"}>
-                {userGraphData && userGraphData.length > 0 && (
-                    <Graph key="users" data={userGraphData} timeGraph noAnimate />
-                )}
-                <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
-                {uState.hasMore && <Row>
-                    <Button disabled={uState.loading} onClick={uNext}>Load More</Button>
-                </Row>}
-            </Tab>
-        </URLTabbedView>
+    return <Page title={t("leaderboard")}>
+        <PageHead>{t("leaderboard")}</PageHead>
+        {hasTeams ? (
+            <URLTabbedView center initial={1}>
+                <Tab label={t("team_plural")} index={"team"}>
+                    {teamTab}
+                </Tab>
+
+                <Tab label={t("user_plural")} index={"user"}>
+                    {userTab}
+                </Tab>
+            </URLTabbedView>
+        ) : userTab}
     </Page>;
 };
 export default React.memo(LeaderboardPage);
