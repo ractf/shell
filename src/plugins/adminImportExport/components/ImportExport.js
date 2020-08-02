@@ -377,7 +377,7 @@ export default () => {
             if (!validate_category(data))
                 return app.alert("Invalid category data");
             app.showProgress("Creating category...", .5);
-            createGroup(data.name, data.description, data.contained_type)
+            createGroup(data.name, data.description, data.contained_type, data.metadata)
                 .then(async ({ id }) => {
                     const challenge_map = {};
                     let progress = 0;

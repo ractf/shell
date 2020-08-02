@@ -1,0 +1,54 @@
+// Copyright (C) 2020 Really Awesome Technology Ltd
+//
+// This file is part of RACTF.
+//
+// RACTF is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RACTF is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
+
+@import "@ractf/ui-kit/Colours.scss";
+
+.networkOuter {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    padding: 2rem;
+
+    @media (max-width: 1200px) {
+        padding: 1rem 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+        padding: 0.5rem;
+    }
+}
+
+.network {
+    border: 2px solid $back_lift;
+
+    flex-grow: 1;
+    position: relative;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    > div {
+        flex-grow: 1;
+        height: auto !important;
+    }
+}

@@ -23,9 +23,9 @@ import http from "@ractf/http";
 import { ENDPOINTS } from "./consts";
 
 
-export const createGroup = (name, desc, type) => {
+export const createGroup = (name, desc, type, metadata) => {
     return http.post(ENDPOINTS.CATEGORIES, {
-        name, metadata: null, description: desc, contained_type: type
+        name, metadata: metadata || {}, description: desc, contained_type: type
     }).then(data => {
         store.dispatch(actions.addCategory(data));
         return data;
