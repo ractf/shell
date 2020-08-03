@@ -59,7 +59,7 @@ jobs:
         REACT_APP_API_DOMAIN: https://api-2020.ractf.co.uk
         REACT_APP_API_BASE: /api/v2
         REACT_APP_WSS_URL: wss://api-2020.ractf.co.uk/api/v2/ws/
-        REACT_APP_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@sentry.io/1815863
+        REACT_APP_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
         REACT_APP_GA_UA: UA-167342912-1
         RACTF_UI_KIT_THEME: RACTF
@@ -77,7 +77,7 @@ jobs:
       env:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         SENTRY_ORG: ractf
-        SENTRY_PROJECT: react 
+        SENTRY_PROJECT: frontend
 
     - name: Clear Sourcemaps
       run: find . -type f -name '*.map' -delete
