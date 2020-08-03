@@ -45,6 +45,7 @@ const HeaderNav_ = () => {
             {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
             <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
             <NavLink to={"/campaign"}>Challenges</NavLink>
+            {user && user.is_staff && <NavLink to={"/campaign/new"}>Add Category</NavLink>}
             <NavGap />
             {user ? <>
                 <NavLink to={"/profile/me"}>Profile</NavLink>
