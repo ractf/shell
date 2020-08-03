@@ -15,25 +15,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { IoMdStopwatch } from "react-icons/io";
 
-import { useInterval, makeClass } from "@ractf/util";
+import { useInterval } from "@ractf/util";
 
-import style from "./EventCountdown.module.scss";
-import { setCountdownVis } from "../actions";
+import { ToggleTab } from "@ractf/ui-kit";
 
 
 const EventCountdown = ({ cdKey = "competition_end" }) => {
     const { offset: countdown_offset, dates: countdown_dates } = useSelector(state => state.countdowns) || {};
-    const dispatch = useDispatch();
-    const open = useSelector(state => state.eventCountdown);
     const [countdown, setCountdown] = useState(null);
-
-    const toggle = useCallback(() => {
-        dispatch(setCountdownVis(!open));
-    }, [dispatch, open]);
 
     const pad = n => (n < 10 ? "0" : "") + n;
     useInterval(() => {
@@ -55,8 +48,8 @@ const EventCountdown = ({ cdKey = "competition_end" }) => {
     }, 1000);
 
     if (!countdown) return null;
-    return <div className={makeClass(style.countdown, !open && style.closed)} onClick={toggle}>
-        {open ? countdown : <IoMdStopwatch />}
-    </div>;
+    return <ToggleTab Icon={IoMdStopwatch}>
+        {countdown}
+    </ToggleTab>;
 };
-export default EventCountdown;
+export default React.memo(EventCountdown);

@@ -15,11 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-export const eventCountdownReducer = (state = true, { type, payload }) => {
-    switch (type) {
-        case "SET_EVENT_COUNTDOWN_VIS":
-            return payload;  
-        default:
-            return state;
-    }
+import { registerPlugin } from "ractf";
+
+import LockWarning from "./components/LockWarning";
+
+export default () => {
+    registerPlugin("toggleTabs", "adminLockWarning", {
+        component: LockWarning,
+    });
 };

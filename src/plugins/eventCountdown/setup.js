@@ -15,14 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin, registerReducer } from "ractf";
+import { registerPlugin } from "ractf";
 
-import { eventCountdownReducer } from "./reducers";
 import EventCountdown from "./components/EventCountdown";
 
 export default () => {
-    registerReducer("eventCountdown", eventCountdownReducer);
-    registerPlugin("mountWithinApp", "eventCountdown", {
+    registerPlugin("toggleTabs", "eventCountdown", {
         component: EventCountdown,
     });
 };

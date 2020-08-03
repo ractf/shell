@@ -18,12 +18,11 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { ConnectedRouter } from "connected-react-router";
 import { useSelector } from "react-redux";
-import { MdWarning } from "react-icons/md";
 
 import SiteNav from "components/SiteNav";
 
 import {
-    ProgressBar, Scrollbar, Modal, ModalPrompt
+    ProgressBar, Scrollbar, Modal, ModalPrompt, ToggleTabHolder
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
@@ -115,20 +114,6 @@ let WSSpine = () => {
 };
 WSSpine = React.memo(WSSpine);
 
-const LockWarn = () => {
-    const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
-
-    if (!countdown_passed.registration_open)
-        return <div className={"lockWarning"}>
-            <MdWarning /> Registration locked!
-            </div>;
-    if (!countdown_passed.countdown_timestamp)
-        return <div className={"lockWarning less"}>
-            <MdWarning /> Challenges locked!
-        </div>;
-    return null;
-};
-
 class FirstLoader extends React.Component {
     componentDidMount() {
         if (store.getState().token)
@@ -168,7 +153,6 @@ const SiteLoading = () => {
 };
 
 const App = React.memo(() => {
-    const user = useSelector(state => state.user);
     useMemo(() => { new WS(); }, []);
 
     const countdowns = useSelector(state => state.countdowns);
@@ -256,10 +240,8 @@ const App = React.memo(() => {
         </div>;
     }).reverse();
 
-    const isAdmin = (user && user.is_staff);
     window.__ractf_alert = showAlert;
     return <Scrollbar primary><div className={"bodyScroll"}>
-        {isAdmin && <LockWarn />}
         <AppContext.Provider value={{
             promptConfirm: promptConfirm, alert: showAlert,
             showProgress: showProgress
@@ -296,6 +278,11 @@ const App = React.memo(() => {
             {iteratePlugins("mountWithinApp").map(({ key, plugin }) => (
                 React.createElement(plugin.component, { key })
             ))}
+            <ToggleTabHolder>
+                {iteratePlugins("toggleTabs").map(({ key, plugin }) => (
+                    React.createElement(plugin.component, { key })
+                ))}
+            </ToggleTabHolder>
         </AppContext.Provider>
     </div></Scrollbar>;
 });
