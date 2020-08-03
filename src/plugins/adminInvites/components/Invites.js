@@ -33,7 +33,7 @@ const Invites = () => {
     const [onlyUnused, setOnlyUnused] = useState(false);
     const [limit, setLimit] = useState(100);
     const [iState, iNext] = usePaginated(
-        INVITES + (onlyUnused ? "?unused=false" : ""),
+        INVITES + (onlyUnused ? "?fully_used=false" : ""),
         { limit: limit, autoLoad: false }
     );
 
