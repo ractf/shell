@@ -319,7 +319,17 @@
         "2fa_required": "A 2-factor code is required, but the prompt failed to load. Please report this.",
         "incorrect_2fa": "Incorrect 2-factor code provided.",
         "registration_not_open": "Registration is not open.",
-        "email_already_verified": "Your email has already been verified",
-        "invalid": "Validation failed on one of the provided fields."
+        "email_already_verified": "Your email has already been verified.",
+        "invalid": "Validation failed on one of the provided fields.",
+        "challenge_server_error": "An error ocurred while communicating with the challenge server.",
+        "invalid_email": "Invalid email.",
+        "email_or_username_in_use": "Username or email already in use.",
+        "invalid_password": "Invalid password.",
+        "invite_already_used": "Invite code has already been exhausted.",
+        "invalid_invite": "Invalid invite code.",
+        "hint_already_used": "Hint has already been used.",
+        "bad_request": "Invalid API request.",
+        "challenge_not_unlocked": "This challenge has not been unlocked yet.",
+        "join_disabled": "Joining teams has been disabled."
     }
 }
