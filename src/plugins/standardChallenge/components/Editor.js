@@ -107,7 +107,6 @@ const FileEditor = ({ challenge }) => {
             if (!size.match(/\d+/)) return app.alert("Invalid file size!");
 
             newFile(challenge.id, name, url, size).then((id) => {
-                challenge.files.push(id);
                 app.alert("New file added!");
             }).catch(e =>
                 app.alert("Error creating new file:\n" + http.getError(e))
