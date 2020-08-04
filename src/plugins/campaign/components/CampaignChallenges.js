@@ -25,7 +25,7 @@ import Row from "./Row";
 import "./Spacer.scss";
 
 
-const emptyChallenge = (x, y) => ({
+const emptyChallenge = (challenges, x, y) => ({
     lock: false,
     solve: false,
     unlocks: [],
@@ -35,7 +35,8 @@ const emptyChallenge = (x, y) => ({
     challenge_metadata: {
         x: x,
         y: y
-    }
+    },
+    category: challenges,
 });
 
 export const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked }) => {
@@ -100,7 +101,7 @@ export const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked 
         <Row key={y}>{row.map((chal, x) => {
             if (!chal) {
                 if (isEdit)
-                    return <AddNode onClick={showEditor(emptyChallenge(x, y), chals, true)}
+                    return <AddNode onClick={showEditor(emptyChallenge(challenges, x, y), chals, true)}
                         key={"add_" + x + "," + y} />;
                 return <div className={"campaignSpacer"} key={"spacer_" + x + "," + y} />;
             }
