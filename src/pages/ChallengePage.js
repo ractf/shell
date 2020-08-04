@@ -51,7 +51,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
 
 
     const saveEdit = changes => {
-        const original = challenge.toJSON();
+        const original = (challenge.toJSON ? challenge.toJSON() : { ...challenge });
 
         let flag;
         if (typeof changes.flag_metadata === "object") {

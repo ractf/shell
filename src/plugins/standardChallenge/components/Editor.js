@@ -42,7 +42,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
     const saveEdit = (changes) => {
         try {
             save({
-                ...challenge.toJSON(), challenge_metadata: {
+                ...(challenge.toJSON ? challenge.toJSON() : challenge), challenge_metadata: {
                     ...challenge.challenge_metadata,
                     ...changes
                 }
