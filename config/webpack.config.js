@@ -94,8 +94,8 @@ module.exports = function (webpackEnv) {
         let time = null;
         if (isEnvDevelopment) {
           const stat = fstat(path);
-          check = check || !stat || stat.mtime.getTime() !== FILE_CACHE[path][0];
-          time = stat.mtime.getTime();
+          time = stat.mtime ? stat.mtime.getTime() : Math.random();
+          check = check || !stat || time !== FILE_CACHE[path][0];
         }
 
         if (check) {
