@@ -48,7 +48,6 @@ const Statistics = () => {
     const [stats] = useApi("/stats/full");
     const categories = useCategories();
     const challenges = categories.flatMap(i => i.challenges);
-    console.log(stats);
 
     if (!stats) return <>
         <PageHead title={"Statistics"} />

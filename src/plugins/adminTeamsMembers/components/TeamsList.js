@@ -131,7 +131,7 @@ export default () => {
                 </Row>
                 <FormGroup label={"Rights"}>
                     <Row left>
-                        <Checkbox checked={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
+                        <Checkbox val={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
                     </Row>
                 </FormGroup>
                 <FormGroup label={"Password"} htmlFor={"password"}>

@@ -237,8 +237,8 @@ export default () => {
                             <FormGroup htmlFor={"desc"} label={t("team_desc")}>
                                 <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
                             </FormGroup>
-                            <FormGroup htmlFor={"pass"} label={t("team_secret")}>
-                                <Input val={team.password} name={"pass"} password placeholder={t("team_secret")} />
+                            <FormGroup htmlFor={"password"} label={t("team_secret")}>
+                                <Input val={team.password} name={"password"} password placeholder={t("team_secret")} />
                                 <SubtleText>{t("team_secret_warn")}</SubtleText>
                             </FormGroup>
 

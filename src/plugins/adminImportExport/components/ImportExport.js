@@ -214,8 +214,7 @@ export default () => {
             fullyPaginate(ENDPOINTS.TEAM, every).then(data => {
                 data = data.map(i => [
                     i.id, i.name, i.is_visible,
-                    i.owner, i.password,
-                    i.members ? i.members.map(j => j.id).join(",") : "",
+                    i.owner, i.password, i.members,
                     i.solves ? i.solves.filter(Boolean).map(j => j.id).join(",") : ""
                 ]);
                 app.showProgress(null);

@@ -26,6 +26,7 @@ import { PluginComponent, getPlugin } from "@ractf/plugins";
 import { useChallenge, useCategory } from "@ractf/util/hooks";
 import { useReactRouter } from "@ractf/util";
 import { appContext } from "ractf";
+import Challenge from "@ractf/util/challenge";
 import http from "@ractf/http";
 
 
@@ -76,7 +77,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
 
             const id = original.id || data.id;
             if (id && isCreator)
-                dispatch(push(challenge.url + "#edit"));
+                dispatch(push((new Challenge(category, { ...original, ...data })).url));
             else
                 dispatch(push(category.url + "#edit"));
 
@@ -120,22 +121,18 @@ const ChallengePage = () => {
         } catch (e) {
             challenge = null;
         }
-    }
+    } else if (!challenge) return <Redirect to={"/404"} />;
+    // Brand new challenge; wait for it to populate
+    if (!challenge) return null;
+    
     let chalEl;
-
-    if (!category || !challenge) {
-        return <Redirect to={"/404"} />;
-    }
-
-    if (challenge) {
-        if (isEditor || isCreator)
-            chalEl = <EditorWrap {...{ challenge, category, isCreator }} />;
-        else
-            chalEl = (
-                <PluginComponent type={"challengeType"} name={challenge.challenge_type} fallback={"default"}
-                    challenge={challenge} category={category} />
-            );
-    }
+    if (isEditor || isCreator)
+        chalEl = <EditorWrap {...{ challenge, category, isCreator }} />;
+    else
+        chalEl = (
+            <PluginComponent type={"challengeType"} name={challenge.challenge_type} fallback={"default"}
+                challenge={challenge} category={category} />
+        );
 
     return chalEl;
 };

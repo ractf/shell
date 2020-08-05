@@ -158,10 +158,10 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                     </FormGroup>
 
                     <Row>
-                        <Checkbox val={challenge.hidden} name={"hidden"}>
+                        <Checkbox val={!!challenge.hidden} name={"hidden"}>
                             {t("editor.hide_challenge")}
                         </Checkbox>
-                        <Checkbox val={challenge.auto_unlock} name={"auto_unlock"}>
+                        <Checkbox val={!!challenge.auto_unlock} name={"auto_unlock"}>
                             {t("editor.auto_unlock")}
                         </Checkbox>
                     </Row>

@@ -36,7 +36,7 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
 
         case "ADD_CHALLENGE":
             categories.forEach(i => {
-                if (i.id === payload.categories) {
+                if (i.id === payload.category) {
                     i.challenges.push(payload);
                 }
             });
