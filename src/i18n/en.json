@@ -331,6 +331,7 @@
         "bad_request": "Invalid API request.",
         "challenge_not_unlocked": "This challenge has not been unlocked yet.",
         "join_disabled": "Joining teams has been disabled.",
-        "blank": "A required field was not provided"
+        "blank": "A required field was not provided",
+        "max_length": "One your submissions was too long"
     }
 }
