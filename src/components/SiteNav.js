@@ -31,7 +31,7 @@ import { useCategories } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
 
-const USE_HEAD_NAV = !process.env.REACT_APP_USE_HEAD_NAV;
+const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
 
 
 const HeaderNav_ = () => {
