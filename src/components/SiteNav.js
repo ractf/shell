@@ -31,7 +31,7 @@ import { useCategories } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
 
-const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
+const USE_HEAD_NAV = !process.env.REACT_APP_USE_HEAD_NAV;
 
 
 const HeaderNav_ = () => {
@@ -174,7 +174,11 @@ const SiteNav = ({ children }) => {
                     </FootCol>
                 </FootRow>
                 <FootRow center slim darken>
+                    <center>
                     &copy; Really Awesome Technology Ltd 2020
+                    <br/>
+                    Organized by the CD Community, hosted by RACTF.
+                    </center>
                 </FootRow>
             </Footer>
         </SiteWrap>;
