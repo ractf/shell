@@ -181,7 +181,7 @@ const TeamPage = () => {
                                         {got}/{tot} ({tot === 0 ? 100 : Math.round(got / tot * 10000) / 100}%)
                                     </span>
                                     <Row>
-                                        <ProgressBar thick progress={got === 0 ? 100 : got / tot} width={"auto"} />
+                                        <ProgressBar thick progress={tot === 0 ? 100 : got / tot} width={"auto"} />
                                     </Row>
                                 </>)}
                             </div>
