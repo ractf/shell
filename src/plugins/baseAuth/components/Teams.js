@@ -144,7 +144,7 @@ export const CreateTeam = () => {
 
                 <Form locked={locked} handle={doCreateTeam}>
                     <FormGroup>
-                        <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
+                        <Input autofill={"off"} name={"name"} limit={36} placeholder={t("team_name")} />
                         <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
                         <div style={{opacity: .5}}>{t("team_secret_warn")}</div>
                     </FormGroup>
