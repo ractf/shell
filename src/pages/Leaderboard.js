@@ -60,7 +60,7 @@ const LeaderboardPage = () => {
 
             if (!userPlots.hasOwnProperty(id)) {
                 userPlots["user_" + i.user_name] = {
-                    data: [{ x: 1 + minTime, y: 0 }], label: i.user_name
+                    data: [{ x: minTime, y: 0 }], label: i.user_name
                 };
                 points[id] = 0;
             }
