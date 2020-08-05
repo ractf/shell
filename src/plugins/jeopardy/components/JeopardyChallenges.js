@@ -101,7 +101,9 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
             </Card>
         </Column>
         <Column xlWidth={9} lgWidth={8} mdWidth={12}>
-            {category.challenges.map(i => (shouldShow(i) ? <Challenge category={category} challenge={i} /> : null))}
+            {category.challenges.sort((x, y) => x.score - y.score).map(
+                i => (shouldShow(i) ? <Challenge category={category} challenge={i} /> : null)
+            )}
         </Column>
     </Row>;
 };
