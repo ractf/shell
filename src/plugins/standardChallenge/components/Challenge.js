@@ -52,9 +52,9 @@ export default ({ challenge, category, rightComponent }) => {
                 This hint will deduct {hint.penalty} points from this challenge.
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
-                useHint(hint.id).then(body =>
-                    app.alert(hint.name + ":\n" + body.text)
-                ).catch(e =>
+                useHint(hint.id).then(body => {
+                    app.alert(<>{hint.name}<br/><Markdown source={body.text} /></>);
+                }).catch(e =>
                     app.alert("Error using hint:\n" + http.getError(e))
                 );
             }).catch(() => { });

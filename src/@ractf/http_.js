@@ -49,23 +49,25 @@ const appendSlash = url => {
 };
 
 export const getError = e => {
-    if (e.response && e.response.data) {
-        // We got a response from the server, but it wasn't happy with something
-        if (e.response.data.m) {
-            let error = e.response.data.m;
-            const translated = i18next.t("api." + error);
-            if (translated !== error && (typeof translated) !== "object") error = translated;
+    if (e) {
+        if (e.response && e.response.data) {
+            // We got a response from the server, but it wasn't happy with something
+            if (e.response.data.m) {
+                let error = e.response.data.m;
+                const translated = i18next.t("api." + error);
+                if (translated !== error && (typeof translated) !== "object") error = translated;
 
-            if (typeof e.response.data.d === "string")
-                if (e.response.data.d.length > 0)
-                    error += "\n" + e.response.data.d;
+                if (typeof e.response.data.d === "string")
+                    if (e.response.data.d.length > 0)
+                        error += "\n" + e.response.data.d;
 
-            return error;
+                return error;
+            }
+            return e.response.data.toString();
+        } else if (e.message) {
+            // We didn't get a response from the server, but the browser is happy to tell us why
+            return e.message;
         }
-        return e.response.data.toString();
-    } else if (e.message) {
-        // We didn't get a response from the server, but the browser is happy to tell us why
-        return e.message;
     }
     // TITSUP!
     return "Unknown error occurred.";

@@ -42,7 +42,7 @@ const makeOwner = (team, app, member, t) => {
             </>), small: true
         }).then(() => {
             // Kick 'em
-            modifyTeam("self", { captain: member.id }).then(() => {
+            modifyTeam("self", { owner: member.id }).then(() => {
                 app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 reloadAll();
             }).catch(e => {
