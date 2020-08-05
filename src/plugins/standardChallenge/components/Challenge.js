@@ -103,7 +103,7 @@ export default ({ challenge, category, rightComponent }) => {
                 <FlashText danger>{t("challenge.no_team")}</FlashText>
             </Row>
             <Row>
-                <Button danger to={"/team/new"}>{t("join_a_team")}</Button>
+                <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
                 <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
             </Row>
         </>}

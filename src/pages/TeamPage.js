@@ -178,10 +178,10 @@ const TeamPage = () => {
                                 {catProgress.map(([name, got, tot]) => <>
                                     <span style={{ fontWeight: 700 }}>{name}</span>
                                     <span style={{ fontSize: ".8em", marginLeft: 8 }}>
-                                        {got}/{tot} ({Math.round(got / tot * 10000) / 100}%)
+                                        {got}/{tot} ({tot === 0 ? 100 : Math.round(got / tot * 10000) / 100}%)
                                     </span>
                                     <Row>
-                                        <ProgressBar thick progress={got / tot} width={"auto"} />
+                                        <ProgressBar thick progress={got === 0 ? 100 : got / tot} width={"auto"} />
                                     </Row>
                                 </>)}
                             </div>
