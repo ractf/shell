@@ -22,7 +22,6 @@ import { registerReducer } from "ractf";
 import { LOCATION_CHANGE } from "connected-react-router";
 
 
-export const UA = process.env.REACT_APP_GA_UA;
 
 
 const analyticsReducer = (state, { type, payload }) => {
@@ -35,6 +34,7 @@ const analyticsReducer = (state, { type, payload }) => {
 };
 
 export default () => {
+    const UA = window.env.gaUa;
     if (UA) {
         ReactGA.initialize(UA);
         registerReducer(null, analyticsReducer);

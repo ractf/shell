@@ -15,10 +15,20 @@
     <meta name="theme-color" content="#161422">
     <meta name="msapplication-square150x150logo" content="/mstile-150x150.png">
 
-    <title>__SITE_NAME__</title>
+    <title>{{env "RACTF_SITE_NAME"}}</title>
   </head>
   <body>
     <script>__DISABLE_DEVTOOLS__</script>
+    <script>
+      window.env = {
+        apiDomain: '{{env "RACTF_API_DOMAIN"}}',
+        siteName: '{{env "RACTF_SITE_NAME"}}',
+        apiBase: '{{env "RACTF_API_BASE"}}',
+        wssUrl: '{{env "RACTF_WSS_URL"}}',
+        gaUa: '{{env "RACTF_GA_UA"}}',
+        dsn: '{{env "RACTF_SENTRY_DSN"}}',
+      }
+    </script>
     <div id="root"></div>
   </body>
 </html>

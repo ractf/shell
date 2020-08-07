@@ -57,6 +57,7 @@ jobs:
       run: npm run build
       env:
         CI: "false"
+        RACTF_USING_CADDY: "true"
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v1
