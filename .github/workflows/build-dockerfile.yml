@@ -9,6 +9,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Checkout submodules
+      uses: textbook/git-checkout-submodule-action@master
+
     - name: Cache docker layers
       uses: satackey/action-docker-layer-caching@v0.0.4
       with:
