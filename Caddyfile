@@ -1,0 +1,9 @@
+localhost:8000
+
+root * /site
+
+file_server
+templates
+encode gzip
+
+reverse_proxy /api/v2/* backend:8000
