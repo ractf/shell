@@ -1,6 +1,6 @@
 # RACTF Shell
 
-![Lint](https://github.com/ractf/shell/workflows/Lint/badge.svg) ![Build](https://github.com/ractf/shell/workflows/Build/badge.svg) ![Build (Production)](https://github.com/ractf/shell/workflows/Build%20(Production)/badge.svg)
+![Lint](https://github.com/ractf/shell/workflows/Lint/badge.svg) ![Build](https://github.com/ractf/shell/workflows/Build/badge.svg) ![Build (Production)](https://github.com/ractf/shell/workflows/Build%20(Production)/badge.svg) ![Build (Elite)](https://github.com/ractf/shell/workflows/Build%20(Elite)/badge.svg) ![Build Docker Container](https://github.com/ractf/shell/workflows/Build%20Docker%20Container/badge.svg)
 
 ## Installation
 
@@ -14,8 +14,8 @@ more details on that.
 As this project contains submodules, cloning should be performed with the
 command:
 
-```
-$ git clone --recursive https://github.com/ractf/shell
+```bash
+git clone --recursive https://github.com/ractf/shell
 ```
 
 Before we can build, there are a few settings we need to change. In the
@@ -34,10 +34,10 @@ disabled by setting the `ENABLE_SERVICE_WORKER` variable to `false` in
 
 A basic build can now be performed with the following commands:
 
-```
-$ cd shell
-$ npm i
-$ npm run build
+```bash
+cd shell
+npm i
+npm run build
 ```
 
 You can now either serve the `./build` directory directly (not recommended) or
