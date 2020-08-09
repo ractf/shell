@@ -7,3 +7,4 @@ templates
 encode gzip
 
 reverse_proxy /api/v2/* backend:8000
+reverse_proxy /api/v2/ws/* sockets:8000
