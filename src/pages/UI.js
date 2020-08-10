@@ -18,7 +18,7 @@
 import React from "react";
 
 import {
-    Page, HR, Row, Button, Input, TextBlock, ProgressBar, Radio, Scrollbar,
+    Page, Row, Button, Input, TextBlock, ProgressBar, Radio, Scrollbar,
     Select, Spinner, TabbedView, Tab, Table, ToggleButton, FlashText, Tree,
     TreeWrap, TreeValue, Checkbox, InputButton, Leader, FormGroup, Card,
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
@@ -28,6 +28,7 @@ import {
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
+import "./UI.scss";
 
 
 const Inner = () => (<NavCollapse>
@@ -66,27 +67,12 @@ const Inner = () => (<NavCollapse>
 
 const UIPage = () => <Page><Row left>
     <H1>Really Awesome UI Framework</H1>
-    <HR />
-    <HR />
+    <p>Really Awesome UI Framework is a UI framework that was created by the team over at Really Awesome Technology.</p>
+    <p>Want to use our UI framework? Get it</p>
+    <a href={"https://github.com/ractf/ui-kit"} className={"danger"}>here</a>
 
-    <ItemStack>
-        <ItemStack.Item>Some</ItemStack.Item>
-        <ItemStack.Item>Item</ItemStack.Item>
-        <ItemStack.Item>Here!</ItemStack.Item>
-    </ItemStack>
-
-    <HR />
-    <Card noPad>
-        <ItemStack>
-            <ItemStack.Item warning label={5}>Some</ItemStack.Item>
-            <ItemStack.Item success active>Item</ItemStack.Item>
-            <ItemStack.Item primary>Here!</ItemStack.Item>
-            <ItemStack.Item>Here!</ItemStack.Item>
-        </ItemStack>
-    </Card>
-    <HR />
-    <HR />
-    <H2>Nav Bars</H2>
+    {/* Navigation Bars */}
+    <H2 className={"section-start"}>Nav Bars</H2>
     <NavBar>
         <NavBrand>RACTF/<b>UI-KIT</b></NavBrand>
         <NavCollapse>
@@ -127,21 +113,24 @@ const UIPage = () => <Page><Row left>
         <NavBrand>Danger</NavBrand>
         <Inner />
     </NavBar>
-    <HR />
+
+    {/* Breadcrumbs */}
     <Breadcrumbs>
         <Crumb to={"#"}>You</Crumb>
         <Crumb to={"#"}>Are</Crumb>
         <Crumb>Here!</Crumb>
     </Breadcrumbs>
-    <HR />
-    <H1>Heading 1</H1>
+
+    {/* Headings */}
+    <H1 className={"section-start"}>Heading 1</H1>
     <H2>Heading 2</H2>
     <H3>Heading 3</H3>
     <H4>Heading 4</H4>
     <H5>Heading 5</H5>
     <H6>Heading 6</H6>
-    <HR />
-    <H2>Badges</H2>
+
+    {/* Badges */}
+    <H2 className={"section-start"}>Badges</H2>
     <Column lgWidth={6} mdWidth={12}>
         <Row left tight>
             {TYPES.map(type => (
@@ -156,8 +145,9 @@ const UIPage = () => <Page><Row left>
             ))}
         </Row>
     </Column>
-    <HR />
-    <H2>Buttons</H2>
+
+    {/* Buttons */}
+    <H2 className={"section-start"}>Buttons</H2>
     <Column lgWidth={6} mdWidth={12}>
         <Row left>
             {TYPES.map(type => (
@@ -218,8 +208,9 @@ const UIPage = () => <Page><Row left>
             <Select pill mini options={[10, 25, 50, 100]} />
         </Row>
     </Column>
-    <HR />
-    <H2>Inputs</H2>
+
+    {/* Input Fields */}
+    <H2 className={"section-start"}>Inputs</H2>
     <Column lgWidth={6}>
         <Form>
             <FormGroup label={"Basic Inputs"}>
@@ -270,8 +261,26 @@ const UIPage = () => <Page><Row left>
             </FormGroup>
         </Form>
     </Column>
-    <HR />
-    <H2>Progress Bar</H2>
+
+    {/* Input Radios & Checkboxes */}
+    <Column lgWidth={6}>
+        <H2>Radio</H2>
+        <Form>
+            <Radio name="demoRadio" options={
+                [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
+            } val={2} />
+        </Form>
+    </Column>
+    <Column lgWidth={6}>
+        <H2>Checkbox</H2>
+        <Form>
+            <Checkbox name="cb1">Checkbox</Checkbox>
+            <Checkbox name="cb2" val={true}>Checkbox checked</Checkbox>
+        </Form>
+    </Column>
+
+    {/* Progress Bars */}
+    <H2 className={"section-start"}>Progress Bar</H2>
     <Row>
         <Column lgWidth={6}>
             <Row>
@@ -292,25 +301,9 @@ const UIPage = () => <Page><Row left>
             </Row>
         </Column>
     </Row>
-    <HR />
-    <Column lgWidth={6}>
-        <H2>Radio</H2>
-        <Form>
-            <Radio name="demoRadio" options={
-                [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
-            } val={2} />
-        </Form>
-        <HR />
-    </Column>
-    <Column lgWidth={6}>
-        <H2>Checkbox</H2>
-        <Form>
-            <Checkbox name="cb1">Checkbox</Checkbox>
-            <Checkbox name="cb2" val={true}>Checkbox checked</Checkbox>
-        </Form>
-        <HR />
-    </Column>
-    <H2>Scrollbar</H2>
+
+    {/* Scrollbar */}
+    <H2 className={"section-start"}>Scrollbar</H2>
     <Column lgWidth={6}>
         <TextBlock style={{ height: 100 }}>
             <Scrollbar>
@@ -335,8 +328,9 @@ const UIPage = () => <Page><Row left>
         </Scrollbar>
         </TextBlock>
     </Column>
-    <HR />
-    <H2>Tabbed notebook</H2>
+
+    {/* Tabs */}
+    <H2 className={"section-start"}>Tabs</H2>
     <TabbedView>
         <Tab label={"Tab 1"}>
             Welcome to my tabbed notebook<br />
@@ -346,8 +340,9 @@ const UIPage = () => <Page><Row left>
             This is a spicy
         </Tab>
     </TabbedView>
-    <HR />
-    <H2>Tables</H2>
+
+    {/* Tables */}
+    <H2 className={"section-start"}>Tables</H2>
     <Table headings={["Header 1", "Header 2", "Header 3"]} data={[
         ["Row 1, cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
         ["Row 2, cell 1", "Row 2, Cell 2", "Row 2, Cell 3"],
@@ -358,8 +353,9 @@ const UIPage = () => <Page><Row left>
         ["Row 7, cell 1", "Row 7, Cell 2", "Row 7, Cell 3", { type: "warning" }],
         ["Row 8, cell 1", "Row 8, Cell 2", "Row 8, Cell 3", { type: "danger" }],
     ]} />
-    <HR />
-    <H2>Trees</H2>
+
+    {/* File Tree */}
+    <H2 className={"section-start"}>File Tree</H2>
     <TreeWrap>
         <Tree name="Folder">
             <TreeValue name="Read-only" value="yes" />
@@ -371,8 +367,9 @@ const UIPage = () => <Page><Row left>
             <TreeValue setValue={() => 0} name="Editable value" value="Edits won't actually occur" />
         </Tree>
     </TreeWrap>
-    <HR />
-    <H2>Card</H2>
+
+    {/* Cards */}
+    <H2 className={"section-start"}>Card</H2>
     <Row>
         <Card header={"Card header"} title={"Card title"} light>Hi there!</Card>
     </Row>
@@ -386,8 +383,9 @@ const UIPage = () => <Page><Row left>
         <Card header={"Card header"} title={"Card title"} warning>Hi there!</Card>
         <Card header={"Card header"} title={"Card title"} danger>Hi there!</Card>
     </Row>
-    <HR />
-    <H2>Alerts</H2>
+
+    {/* Alerts */}
+    <H2 className={"section-start"}>Alerts</H2>
     <Row>
         <FlashText>This is a message for the user</FlashText>
     </Row>
@@ -415,18 +413,31 @@ const UIPage = () => <Page><Row left>
         <FlashText warning title={"Warning"}>This is a <b>warning</b> message for the user</FlashText>
         <FlashText danger title={"Danger"}>This is a <b>danger</b> message for the user</FlashText>
     </Row>
-    <HR />
-    <H2>Misc</H2>
+
+    {/* MISC / OTHER */}
+    <H2 className={"section-start"}>Misc</H2>
+    <ItemStack>
+        <ItemStack.Item>Some</ItemStack.Item>
+        <ItemStack.Item>Item</ItemStack.Item>
+        <ItemStack.Item>Here!</ItemStack.Item>
+    </ItemStack>
+    <Card noPad>
+        <ItemStack>
+            <ItemStack.Item warning label={5}>Some</ItemStack.Item>
+            <ItemStack.Item success active>Item</ItemStack.Item>
+            <ItemStack.Item primary>Here!</ItemStack.Item>
+            <ItemStack.Item>Here!</ItemStack.Item>
+        </ItemStack>
+    </Card>
     <TextBlock>Text block</TextBlock>
-    <Row>
-        <Spinner />
-    </Row>
     <Leader>This leads you on somewhere</Leader>
     <Leader sub={"but this time with a subtitle!"}>This leads you on somewhere</Leader>
     <p>This is text with <code>an inline snippet of code</code> inside it.</p>
-    <SubtleText>Subtle text</SubtleText>
-    <HR />
-    <H2>Footer</H2>
+    <SubtleText>Subtle / muted text</SubtleText>
+    <Spinner />
+
+    {/* Footer */}
+    <H2 className={"section-start"}>Footer</H2>
     <Footer>
         <FootRow primary>
             <p>This is a primary row</p>
