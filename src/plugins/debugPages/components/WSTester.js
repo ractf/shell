@@ -49,7 +49,7 @@ export default () => {
     return <Page>
         <FlashText danger={!state}>{state ? state : "WebSocket closed"}</FlashText>
         <Form handle={connect}>
-            <InputButton name={"ws"} val={process.env.REACT_APP_WSS_URL} placeholder={"wss://"}
+            <InputButton name={"ws"} val={window.env.wssUrl} placeholder={"wss://"}
                 button={"Connect"} submit />
         </Form>
         <HR />

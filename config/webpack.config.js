@@ -29,6 +29,7 @@ const postcssNormalize = require('postcss-normalize');
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
+const shouldUseCaddy = !!process.env.RACTF_USING_CADDY;
 
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -403,6 +404,20 @@ module.exports = function (webpackEnv) {
         {
           pattern: "__SITE_NAME__",
           replacement: process.env.REACT_APP_SITE_NAME || "RACTF",
+        },
+        // When using Caddy, this process requires two stages. This stops the regex replacement
+        // getting stuck in an infinite loop of replacing the same thing with itself.
+        {
+          pattern: /{{\s*?env\s+?"([^"]+?)"\s*?}}/,
+          replacement: function (match, $1) {
+            return shouldUseCaddy ? `{{__ractfEnv__ "${$1}"}}` : (process.env[$1] || "");
+          }
+        },
+        {
+          pattern: /{{__ractfEnv__ "([^"]+?)"}}/,
+          replacement: function (match, $1) {
+            return `{{env "${$1}"}}`;
+          }
         },
       ]),
       isEnvProduction &&

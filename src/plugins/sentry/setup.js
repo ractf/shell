@@ -19,7 +19,7 @@ import { registerPlugin } from "ractf";
 
 
 export default () => {
-    const dsn = process.env.REACT_APP_SENTRY_DSN;
+    const dsn = window.env.dsn;
     if (dsn) {
         import("@sentry/browser").then(Sentry => {
             Sentry.init({dsn: dsn, release: __COMMIT_HASH__});

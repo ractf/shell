@@ -1,0 +1,38 @@
+name: Build Docker Container
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Checkout submodules
+      uses: textbook/git-checkout-submodule-action@master
+
+    - name: Cache docker layers
+      uses: satackey/action-docker-layer-caching@v0.0.4
+      with:
+        key: docker-layer-caching-${{ github.workflow }}-${{ github.event_name }}-{hash}
+        restore-keys: docker-layer-caching-${{ github.workflow }}-${{ github.event_name }}-
+
+    - name: Build Docker container
+      run: docker build -t ractf/shell:latest -t docker.pkg.github.com/ractf/shell/shell:latest .
+
+    - name: Login to Dockerhub
+      if: github.ref == 'refs/heads/master'
+      run: docker login --username ractf --password ${{ secrets.password }}
+
+    - name: Login to Github packages
+      if: github.ref == 'refs/heads/master'
+      run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push to Github packages
+      if: github.ref == 'refs/heads/master'
+      run: docker push docker.pkg.github.com/ractf/shell/shell:latest
+
+    - name: Push to Dockerhub
+      if: github.ref == 'refs/heads/master'
+      run: docker push ractf/shell:latest

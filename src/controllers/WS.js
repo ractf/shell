@@ -23,7 +23,7 @@ import { store } from "store";
 
 
 export default class WS {
-    WSS_URL = process.env.REACT_APP_WSS_URL;
+    WSS_URL = window.env.wssUrl;
 
     CONNECTION = 0;
 

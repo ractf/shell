@@ -39,7 +39,7 @@ const HeaderNav_ = () => {
     const hasTeams = useConfig("enable_teams");
 
     return <NavBar primary>
-        <NavBrand><NavLink to={"/"}><b>{process.env.REACT_APP_SITE_NAME}</b></NavLink></NavBrand>
+        <NavBrand><NavLink to={"/"}><b>{window.env.siteName}</b></NavLink></NavBrand>
         <NavCollapse>
             <NavLink to={"/users"}>Users</NavLink>
             {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
@@ -163,7 +163,7 @@ const SiteNav = ({ children }) => {
             <Container children={children} />
             <Footer>
                 <FootRow main>
-                    <FootCol title={process.env.REACT_APP_SITE_NAME}>
+                    <FootCol title={window.env.siteName}>
                         <FootLink to={"/home"}>Home</FootLink>
                         <FootLink to={"/privacy"}>Privacy Policy</FootLink>
                         <FootLink to={"/conduct"}>Terms of Use</FootLink>
