@@ -51,6 +51,7 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
         case "ADD_FILE":
             categories.forEach(i => i.challenges.forEach(j => {
                 if (j.id === payload.chalId) {
+                    if (typeof j.files === "undefined") j.files = [];
                     j.files.push(payload.data);
                 }
             }));
@@ -70,6 +71,7 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
         case "ADD_HINT":
             categories.forEach(i => i.challenges.forEach(chal => {
                 if (chal.id === payload.chalId) {
+                    if (typeof chal.hints === "undefined") chal.hints = [];
                     chal.hints.push(payload.data);
                 }
             }));

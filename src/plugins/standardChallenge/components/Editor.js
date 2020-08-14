@@ -156,6 +156,10 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                         <Input rows={5} val={challenge.description} name={"description"}
                             placeholder={t("editor.chal_brief")} />
                     </FormGroup>
+                    <FormGroup htmlFor={"post_score_explanation"} label={t("editor.post_score_explanation")}>
+                        <Input rows={3} val={challenge.post_score_explanation } name={"post_score_explanation"}
+                            placeholder={t("editor.post_score_explanation")} />
+                    </FormGroup>
 
                     <Row>
                         <Checkbox val={!!challenge.hidden} name={"hidden"}>

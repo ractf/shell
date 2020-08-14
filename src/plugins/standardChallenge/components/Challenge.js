@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
-    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page
+    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card
 } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
@@ -95,7 +95,11 @@ export default ({ challenge, category, rightComponent }) => {
         </Row>}
 
         {challenge.solved ? <Row>
-            {t("challenge.already_solved")}
+            {challenge.post_score_explanation ? (
+                <Card header={t("challenge.post_score_explanation")}>
+                    <Markdown source={challenge.post_score_explanation} />
+                </Card>
+            ) : t("challenge.already_solved")}
         </Row> : user.team ? <Row>
             <FlagForm challenge={challenge} submitRef={submitFlag} onFlagResponse={onFlagResponse.current} autoFocus />
         </Row> : <>
