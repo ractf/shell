@@ -16,14 +16,14 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { FaFile } from "react-icons/fa";
+import { FaFile, FaPencilAlt, FaTrash } from "react-icons/fa";
 
 import { removeFile, editFile } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
 
 import "./Challenge.scss";
-import { Button } from "@ractf/ui-kit";
+import { Button, Row } from "@ractf/ui-kit";
 
 
 export default ({ name, url, size, id, isEdit }) => {
@@ -58,9 +58,10 @@ export default ({ name, url, size, id, isEdit }) => {
     };
 
     if (isEdit) {
-        return <Button Icon={FaFile} tooltip={`${url}\n(${formatBytes(size)})`} onClick={() => edit()}>
-            {name}
-        </Button>;
+        return <Row>
+            <Button tiny warning Icon={FaPencilAlt} onClick={edit} />
+            <Button tiny danger Icon={FaTrash} onClick={() => removeFile(id)} />
+        </Row>;
     }
 
     return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink>

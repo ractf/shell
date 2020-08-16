@@ -16,14 +16,14 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 import "./Challenge.scss";
 import { removeHint, editHint } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
-import { Button } from "@ractf/ui-kit";
+import { Button, Row } from "@ractf/ui-kit";
 
 
 export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
@@ -47,7 +47,14 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
         }).catch(() => { });
     };
 
-    return <Button onClick={isEdit ? (() => edit()) : onClick} Icon={FaInfoCircle}
+    if (isEdit) {
+        return <Row>
+            <Button tiny warning Icon={FaPencilAlt} onClick={edit} />
+            <Button tiny danger Icon={FaTrash} onClick={() => removeHint(id)} />
+        </Row>;
+    }
+
+    return <Button onClick={onClick} Icon={FaInfoCircle}
         tooltip={points === 0 ? "Free" : "-" + t("point_count", { count: points })} success={hintUsed}>
         {name}
     </Button>;
