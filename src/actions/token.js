@@ -21,3 +21,9 @@ export const setToken = (token) => {
         payload: token
     };
 };
+export const setImpersonationToken = (token) => {
+    return {
+        type: "SET_IMPERSONATION_TOKEN",
+        payload: token
+    };
+};

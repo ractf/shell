@@ -30,11 +30,23 @@ export const postLogin = async token => {
     await reloadAll();
 
     for (const { plugin } of iteratePlugins("postLogin")) {
-        if (plugin()) break; 
+        if (plugin()) break;
     }
 };
 
 export const logout = (wasForced, details) => {
+    if (!store.getState().token.self) {
+        http.post("/auth/desudo").then(({ token }) => {
+            store.dispatch(actions.setToken(token));
+            reloadAll();
+            window.__ractf_alert("Impersonation ended - welcome back.");
+        }).catch(e => {
+            window.__ractf_alert("Failed to gracefully end impersonation. You have been logged out.");
+            store.dispatch(actions.logout());
+        });
+        return;
+    }
+
     console.log("%c[Logout]", "color: #d3d", "Logged out user");
     store.dispatch(actions.logout());
 

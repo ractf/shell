@@ -26,8 +26,8 @@ import Announcement from "./Announcement";
 
 
 const AppAnnouncements = () => {
-    const announcements = useSelector(store => store.announcements?.active) || [];
-    const token = useSelector(store => store.token);
+    const announcements = useSelector(state => state.announcements?.active) || [];
+    const token = useSelector(state => state.token.token);
 
     useEffect(() => {
         if (token) getAnnouncements();

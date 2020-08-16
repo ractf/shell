@@ -24,7 +24,7 @@ import { BASE_URL } from "./api/consts";
 
 const _getHeaders = (extra) => {
     const headers = extra ? { ...extra } : {};
-    const token = store.getState().token;
+    const token = store.getState().token.token;
     if (token)
         headers.Authorization = `Token ${token}`;
     return headers;

@@ -22,15 +22,19 @@ import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
     Checkbox, PageHead, Modal, Button, ModalForm
 } from "@ractf/ui-kit";
-import { ENDPOINTS, modifyUser } from "@ractf/api";
+import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
 import { appContext } from "ractf";
 import http from "@ractf/http";
+import { useSelector, useDispatch } from "react-redux";
+import { setImpersonationToken } from "actions";
 
 
 export default () => {
     const app = useContext(appContext);
     const submitRef = useRef();
     const { t } = useTranslation();
+    const currentUser = useSelector(state => state.user);
+    const dispatch = useDispatch();
 
     const [state, setState] = useState({
         loading: false, error: null, results: null, member: null, advSearch: false
@@ -75,6 +79,27 @@ export default () => {
             });
         };
     };
+    const impersonate = useCallback(() => {
+        if (state.member.id === currentUser.id) {
+            return app.alert("You cannot impersonate yourself.");
+        }
+        app.promptConfirm({
+            small: true,
+            message: <>
+                You are about to impersonate a user.<br />
+                This carries a number of risk with it - be <b>very</b> careful.<br />
+                To return to your current account, logout as the impersonated user.<br /><br />
+                Are you sure you wish to continue?
+            </>
+        }).catch().then(() => {
+            http.post("/auth/sudo", {id: state.member.id}).then(({ token }) => {
+                dispatch(setImpersonationToken(token));
+                reloadAll();
+            }).catch(e => {
+                app.alert(<>Failed to impersonate user:<br/>{http.getError(e)}</>);
+            });
+        });
+    }, [app, currentUser.id, state.member, dispatch]);
 
     const close = useCallback(() => {
         setState(prevState => ({ ...prevState, member: null }));
@@ -121,7 +146,9 @@ export default () => {
                 {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
             </> : <p>No results found</p>}
         </Row>}
-        {state.member && <Modal onClose={close} onConfirm={submit}>
+        {state.member && <Modal onClose={close} onConfirm={submit} extraButtons={<>
+            <Button onClick={impersonate} warning>Impersonate user</Button>
+        </>}>
             <Form handle={saveMember(state.member)} locked={state.loading} submitRef={submitRef}>
                 <Row>
                     <FormGroup label={"Username"} htmlFor={"username"}>
