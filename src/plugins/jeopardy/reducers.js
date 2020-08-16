@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 const INITIAL = {
-    filter: {}, search: null, showSolved: true, showLocked: false, openCards: {}
+    filter: {}, search: "", showSolved: true, showLocked: false, openCards: {}
 };
 
 export const jeopardySearchReducer = (state = INITIAL, { type, payload }) => {

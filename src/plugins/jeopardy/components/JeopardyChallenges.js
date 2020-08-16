@@ -52,13 +52,15 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
 
         return false;
     };
-    for (const i of category.challenges) {
-        if (!tags[i.author]) tags[i.author] = 0;
-        if (shouldShow(i, { ignoreTags: true })) {
-            tags[i.author]++;
+    for (const challenge of category.challenges) {
+        for (const tag of challenge.tags) {
+            if (!tags[tag]) tags[tag] = 0;
+            if (shouldShow(challenge, { ignoreTags: true })) {
+                tags[tag]++;
+            }
         }
-        if (shouldShow(i, { ignoreSolved: true })) {
-            solved += i.solved;
+        if (shouldShow(challenge, { ignoreSolved: true })) {
+            solved += challenge.solved;
         }
     }
 
@@ -76,6 +78,8 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
     };
     const setShowSolved = useCallback(value => dispatch(actions.setJeopardyShowSolved(value)), [dispatch]);
 
+    const sortedTags = Object.keys(tags).sort((a, b) => a.localeCompare(b)).map(i => [i, tags[i]]);
+
     return <Row>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <Card>
@@ -87,22 +91,24 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
                     Show solved challenges ({solved})
                 </Checkbox>
             </Card>
-            <Card noPad header={"Filter"} collapsible>
-                <ItemStack>
-                    {Object.keys(tags).map(i => (
-                        <ItemStack.Item
-                            key={i} label={tags[i]} active={filter[i]}
-                            success={filter[i]} onClick={toggleFilter(i)}
-                        >
-                            {i}
-                        </ItemStack.Item>
-                    ))}
-                </ItemStack>
-            </Card>
+            {sortedTags.length !== 0 && (
+                <Card noPad header={"Filter"} collapsible>
+                    <ItemStack>
+                        {sortedTags.map((tag, tagCount) => (
+                            <ItemStack.Item
+                                key={tag} label={tagCount} active={filter[tag]}
+                                success={filter[tag]} onClick={toggleFilter(tag)}
+                            >
+                                {tag}
+                            </ItemStack.Item>
+                        ))}
+                    </ItemStack>
+                </Card>
+            )}
         </Column>
         <Column xlWidth={9} lgWidth={8} mdWidth={12}>
             {category.challenges.sort((x, y) => x.score - y.score).map(
-                i => (shouldShow(i) ? <Challenge category={category} challenge={i} /> : null)
+                i => (shouldShow(i) ? <Challenge category={category} key={i.id} challenge={i} /> : null)
             )}
         </Column>
     </Row>;

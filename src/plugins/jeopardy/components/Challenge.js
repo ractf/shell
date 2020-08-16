@@ -23,6 +23,7 @@ import { Card, Button, Markdown, Row, SubtleText } from "@ractf/ui-kit";
 import { setJeopardyOpenCards } from "../actions";
 
 import FlagForm from "@ractf/plugins/FlagForm";
+import { store } from "store";
 
 
 const Challenge = ({ challenge }) => {
@@ -30,11 +31,11 @@ const Challenge = ({ challenge }) => {
     const dispatch = useDispatch();
 
     const onOpenToggle = useCallback((open) => {
-        const newOpenCards = {...openCards};
+        const newOpenCards = {...store.getState().jeopardySearch.openCards};
         if (open) newOpenCards[challenge.id] = true;
         else delete newOpenCards[challenge.id];
         dispatch(setJeopardyOpenCards(newOpenCards));
-    }, [challenge.id, openCards, dispatch]);
+    }, [challenge.id, dispatch]);
 
     const additional = [];
     if (challenge.files.length > 0)
