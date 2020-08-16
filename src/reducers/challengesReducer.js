@@ -42,10 +42,12 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             });
             return { ...state, categories };
         case "EDIT_CHALLENGE":
-            categories.forEach(i => i.challenges.map(chal => {
-                if (chal.id !== payload.id) return chal;
-                return { ...chal, ...payload };
-            }));
+            categories.forEach(i => {
+                i.challenges = i.challenges.map(chal => {
+                    if (chal.id !== payload.id) return chal;
+                    return { ...chal, ...payload };
+                });
+            });
             return { ...state, categories };
 
         case "ADD_FILE":
@@ -57,10 +59,12 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             }));
             return { ...state, categories };
         case "EDIT_FILE":
-            categories.forEach(i => i.challenges.forEach(j => j.files.map(file => {
-                if (file.id !== payload.fileId) return file;
-                return { ...file, ...payload.data };
-            })));
+            categories.forEach(i => i.challenges.forEach(j => {
+                j.files = j.files.map(file => {
+                    if (file.id !== payload.fileId) return file;
+                    return { ...file, ...payload.data };
+                });
+            }));
             return { ...state, categories };
         case "REMOVE_FILE":
             categories.forEach(i => i.challenges.forEach(chal => {

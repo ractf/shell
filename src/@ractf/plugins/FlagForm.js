@@ -1,19 +1,25 @@
 import React, { useState, useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
-import { Button, Input, InputButton, Form, FormError, Row } from "@ractf/ui-kit";
+import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H5, H6 } from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
 import { useConfig } from "@ractf/util";
 import http from "@ractf/http";
 
 import { appContext } from "ractf";
+import { editChallenge } from "actions";
+import { useDispatch } from "react-redux";
 
 
 const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
     const [flagValid, setFlagValid] = useState(false);
+    const [feedback, setFeedback] = useState(false);
     const [message, setMessage] = useState(null);
+    const [correct, setCorrect] = useState(false);
     const [locked, setLocked] = useState(false);
     const flag_prefix = useConfig("flag_prefix", "flag");
+    const dispatch = useDispatch();
 
     const app = useContext(appContext);
 
@@ -47,9 +53,10 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
 
     const tryFlag = useCallback(({ flag }) => {
         setLocked(true);
+        setMessage(null);
         attemptFlag(flag, challenge).then(resp => {
             if (resp.correct) {
-                app.alert("Flag correct!");
+                setCorrect(true);
                 if (onFlagResponse)
                     onFlagResponse(true);
                 challenge.solved = true;
@@ -69,12 +76,27 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
             }
             setLocked(false);
         }).catch(e => {
+            console.error(e);
             setMessage(http.getError(e));
             if (onFlagResponse)
                 onFlagResponse(false, http.getError(e));
             setLocked(false);
         });
     }, [challenge, app, onFlagResponse]);
+    const rateNone = useCallback(() => { setCorrect(false); setFeedback(false); }, []);
+    const vote = (positive) => {
+        http.post("/challenges/vote", { challenge: challenge.id, positive }).catch(e => {
+            console.error(e);
+            app.alert("Error submitting vote:\n" + http.getError(e));
+        }).then(() => {
+            const newVotes = { ...(challenge.votes || {}), self: positive };
+            dispatch(editChallenge({ id: challenge.id, votes: newVotes }));
+            //challenge.votes = newVotes;
+        });
+        setFeedback(false);
+        setCorrect(false);
+    };
+    const openFeedback = useCallback(() => setFeedback(true), []);
 
     if (submitRef) submitRef.current = tryFlag;
 
@@ -106,15 +128,49 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
             break;
     }
 
-    return <Form handle={tryFlag} locked={locked}>
-        {flagInput && <>
-            {flagInput}
-            {message && <FormError>{message}</FormError>}
-            {button && <Row>
-                <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
-            </Row>}
-        </>}
-    </Form>;
+    return <>
+        {correct && <Modal onClose={rateNone} noCancel transparent header={"Flag correct!"} buttons={<>
+            <Button onClick={rateNone} lesser>No thanks</Button>
+        </>}>
+            {challenge.post_score_explanation && <>
+                Here's a little extra the challenge author had to say:
+                <HR />
+                <Markdown source={challenge.post_score_explanation} />
+                <HR />
+            </>}
+            <H6>Rate this challenge:</H6>
+            <Row centre>
+                <Button onClick={() => vote(true)} success Icon={FaThumbsUp}>Awesome</Button>
+                <Button onClick={() => vote(false)} danger Icon={FaThumbsDown}>Not great</Button>
+            </Row>
+        </Modal>}
+        {feedback && <Modal onClose={rateNone} noCancel transparent header={"Rate this challenge:"} buttons={<>
+            <Button onClick={rateNone} lesser>No thanks</Button>
+        </>}>
+            <Row centre>
+                <Button onClick={() => vote(true)} success Icon={FaThumbsUp} lesser={challenge.votes?.self === false}>
+                    Awesome
+                </Button>
+                <Button onClick={() => vote(false)} danger Icon={FaThumbsDown} lesser={challenge.votes?.self === true}>
+                    Not great
+                </Button>
+            </Row>
+        </Modal>}
+
+        {challenge.solved ? (<Row>
+            <span>{t("challenge.already_solved")} <a onClick={openFeedback}>Want to submit feedback?</a></span>
+        </Row>) : (
+                <Form handle={tryFlag} locked={locked}>
+                    {flagInput && <>
+                        {flagInput}
+                        {message && <FormError>{message}</FormError>}
+                        {button && <Row>
+                            <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
+                        </Row>}
+                    </>}
+                </Form>
+            )}
+    </>;
 };
 export default React.memo(FlagForm);
 

@@ -53,7 +53,7 @@ export default ({ challenge, category, rightComponent }) => {
             </>;
             app.promptConfirm({ message: msg, small: true }).then(() => {
                 useHint(hint.id).then(body => {
-                    app.alert(<>{hint.name}<br/><Markdown source={body.text} /></>);
+                    app.alert(<>{hint.name}<br /><Markdown source={body.text} /></>);
                 }).catch(e =>
                     app.alert("Error using hint:\n" + http.getError(e))
                 );
@@ -94,13 +94,12 @@ export default ({ challenge, category, rightComponent }) => {
             })}
         </Row>}
 
-        {challenge.solved ? <Row>
-            {challenge.post_score_explanation ? (
-                <Card header={t("challenge.post_score_explanation")}>
-                    <Markdown source={challenge.post_score_explanation} />
-                </Card>
-            ) : t("challenge.already_solved")}
-        </Row> : user.team ? <Row>
+        {challenge.solved && challenge.post_score_explanation && <Row>
+            <Card header={t("challenge.post_score_explanation")}>
+                <Markdown source={challenge.post_score_explanation} />
+            </Card>
+        </Row>}
+        {user.team ? <Row>
             <FlagForm challenge={challenge} submitRef={submitFlag} onFlagResponse={onFlagResponse.current} autoFocus />
         </Row> : <>
             <Row>
