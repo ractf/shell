@@ -117,9 +117,11 @@
         "attempt": "Attempt flag",
         "no_team": "You can only submit flags if you are in a team.",
         "no_solve": "Nobody has solved this challenge yet",
-        "has_solve": "First solved by {{name}}, {{count}} solve in total.",
-        "has_solve_plural": "First solved by {{name}}, {{count}} solves in total.",
-        "post_score_explanation": "Challenge explanation"
+        "has_solve": "First solved by {{name}}, {{count}} solve in total",
+        "has_solve_plural": "First solved by {{name}}, {{count}} solves in total",
+        "post_score_explanation": "Challenge explanation",
+        "no_votes": "Nobody has rated this challenge yet",
+        "votes": "{{percentage}}% positive votes"
     },
     "editor": {
         "chal_name": "Challenge name",

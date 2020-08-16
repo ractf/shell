@@ -117,10 +117,16 @@ export default ({ challenge, category, rightComponent }) => {
     const solveMsg = (challenge.first_blood_name
         ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
         : t("challenge.no_solve"));
+    const votesMessage = ((challenge.votes.positive || challenge.votes.negative)
+        ? t("challenge.votes", { percentage: Math.round(
+            (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
+        ) / 10 })
+        : t("challenge.no_votes")
+    );
 
     const leftSide = <Page>
         <PageHead
-            subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
+            subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg} - {votesMessage}</>}
             back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
             title={challenge.name} tags={tags}
         />
