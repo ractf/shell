@@ -19,7 +19,7 @@ import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Row, Checkbox, Button, Select, PageHead, Link, Tab,
+    Form, Input, Row, Checkbox, Button, Select, PageHead, Link, Tab, InputTags,
     TabbedView, FlashText, FormGroup, fromJson, Page
 } from "@ractf/ui-kit";
 import { appContext } from "ractf";
@@ -156,8 +156,11 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                         <Input rows={5} val={challenge.description} name={"description"}
                             placeholder={t("editor.chal_brief")} />
                     </FormGroup>
+                    <FormGroup htmlFor={"tags"} label={t("editor.tags")}>
+                        <InputTags name={"tags"} val={challenge.tags} />
+                    </FormGroup>
                     <FormGroup htmlFor={"post_score_explanation"} label={t("editor.post_score_explanation")}>
-                        <Input rows={3} val={challenge.post_score_explanation } name={"post_score_explanation"}
+                        <Input rows={3} val={challenge.post_score_explanation} name={"post_score_explanation"}
                             placeholder={t("editor.post_score_explanation")} />
                     </FormGroup>
 

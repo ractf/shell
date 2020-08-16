@@ -112,10 +112,7 @@ export default ({ challenge, category, rightComponent }) => {
         </>}
     </>;
 
-    const tags = <>
-        <Badge pill primary>{category.name}</Badge>
-        <Badge pill primary>{challenge.author}</Badge>
-    </>;
+    const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
 
     const solveMsg = (challenge.first_blood_name
         ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })

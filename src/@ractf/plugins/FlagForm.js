@@ -2,7 +2,7 @@ import React, { useState, useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
-import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H5, H6 } from "@ractf/ui-kit";
+import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6 } from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
 import { useConfig } from "@ractf/util";
 import http from "@ractf/http";
@@ -158,7 +158,9 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
         </Modal>}
 
         {challenge.solved ? (<Row>
-            <span>{t("challenge.already_solved")} <a onClick={openFeedback}>Want to submit feedback?</a></span>
+            <span>{t("challenge.already_solved")} <span className={"linkStyle"} onClick={openFeedback}>
+                Want to submit feedback?
+            </span></span>
         </Row>) : (
                 <Form handle={tryFlag} locked={locked}>
                     {flagInput && <>

@@ -131,6 +131,7 @@
         "chal_flag_type": "Challenge flag type",
         "chal_flag": "Challenge flag",
         "challenge": "Challenge",
+        "tags": "Challenge tags",
         "files": "Files",
         "hints": "Hints",
         "metadata": "Metadata",

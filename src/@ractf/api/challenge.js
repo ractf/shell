@@ -29,13 +29,13 @@ export const getChallenges = () => {
 
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden
+    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
         category: id, name, score, description,
         flag_type, flag_metadata,
         challenge_metadata, hidden,
-        author, unlocks, files,
+        author, unlocks, files, tags,
         challenge_type: challenge_type || "default",
         auto_unlock,
     }).then(data => {
@@ -46,13 +46,13 @@ export const createChallenge = ({
 
 export const editChallenge = ({
     id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden
+    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags
 }) => {
     return http.patch(ENDPOINTS.CHALLENGES + id, {
         name, score, description,
         flag_type, flag_metadata,
         challenge_metadata, hidden,
-        author, unlocks, files,
+        author, unlocks, files, tags,
         challenge_type: challenge_type || "default",
         auto_unlock,
     }).then(data => {
