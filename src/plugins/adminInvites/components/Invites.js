@@ -21,10 +21,11 @@ import {
     Button, Column, PageHead, Card, Row, Form, FormGroup, Input, InputButton,
     Modal, Grid, Checkbox, Select, SubtleText
 } from "@ractf/ui-kit";
+import { usePaginated } from "ractf";
+import { NUMBER_RE } from "@ractf/util";
+import http from "@ractf/http";
 
 import { GENERATE_INVITES, INVITES, generateInvites } from "../api/invites";
-import { usePaginated } from "ractf";
-import http from "@ractf/http";
 
 
 const Invites = () => {
@@ -63,7 +64,7 @@ const Invites = () => {
 
     const numValidator = useCallback(({ amount }) => {
         return new Promise((resolve, reject) => {
-            if (!(/\d+/).test(amount)) return reject({ amount: "Number required" });
+            if (!(NUMBER_RE).test(amount)) return reject({ amount: "Number required" });
             resolve();
         });
     }, []);
@@ -93,7 +94,7 @@ const Invites = () => {
                 </Card>
                 <Card header={"Generate Invites"}>
                     <Form handle={formCallback} validator={numValidator} action={GENERATE_INVITES} locked={locked}>
-                        <InputButton name={"amount"} format={/\d+/}
+                        <InputButton name={"amount"} format={NUMBER_RE}
                             placeholder={"Number of invites"} button={"Generate"} />
                     </Form>
                 </Card>

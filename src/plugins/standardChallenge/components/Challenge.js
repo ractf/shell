@@ -116,7 +116,7 @@ export default ({ challenge, category, rightComponent }) => {
     if (!rightSide) return leftSide;
 
     return <Page title={challenge ? challenge.name : "Challenges"} noWrap={!!rightSide}>
-        <Split submitFlag={submitFlag.current} onFlagResponse={onFlagResponse}>
+        <Split submitFlag={submitFlag} onFlagResponse={onFlagResponse}>
             {leftSide}
             {rightSide}
         </Split>

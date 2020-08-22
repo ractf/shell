@@ -24,10 +24,10 @@ import qs from "query-string";
 import {
     Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
-import { useReactRouter, useConfig } from "@ractf/util";
-import { Wrap, EMAIL_RE } from "./Parts";
+import { EMAIL_RE, useReactRouter, useConfig } from "@ractf/util";
 import { ENDPOINTS } from "@ractf/api";
 import { zxcvbn } from "ractf";
+import { Wrap } from "./Parts";
 
 
 export default () => {

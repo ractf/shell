@@ -24,6 +24,7 @@ import {
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
+import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 import { useConfig } from "@ractf/util";
 
@@ -138,7 +139,7 @@ export default () => {
                     <Input val={state.team.password} name={"password"} />
                 </FormGroup>
                 <FormGroup label={"Owner ID"} htmlFor={"owner"}>
-                    <Input val={state.team.owner} name={"owner"} format={/\d+/} />
+                    <Input val={state.team.owner} name={"owner"} format={NUMBER_RE} />
                 </FormGroup>
                 <FormGroup label={"Members"}>
                     {state.team.members.map(i => {

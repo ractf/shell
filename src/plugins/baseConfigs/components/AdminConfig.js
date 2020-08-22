@@ -25,6 +25,7 @@ import {
 import { appContext, useApi } from "ractf";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
 import { iteratePlugins } from "@ractf/plugins";
+import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 
 
@@ -97,7 +98,9 @@ export default () => {
                     case "string":
                     case "int":
                     case "float":
-                        const format = (type === "string") ? null : (type === "int") ? /\d+/ : /\d+(\.\d+)?/;
+                        const format = (
+                            (type === "string") ? null : (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
+                        );
                         stack.push([<FormGroup key={stack.length} label={name}>
                             <Input placeholder={name} val={adminConfig[key]} format={format} name={key} />
                         </FormGroup>, type]);

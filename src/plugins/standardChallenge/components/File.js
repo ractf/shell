@@ -18,13 +18,13 @@
 import React, { useContext } from "react";
 import { FaFile, FaPencilAlt, FaTrash } from "react-icons/fa";
 
+import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { removeFile, editFile } from "@ractf/api";
+import { Button, Row } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 import http from "@ractf/http";
 
 import "./Challenge.scss";
-import { Button, Row } from "@ractf/ui-kit";
-import { formatBytes } from "@ractf/util";
 
 
 export default ({ name, url, size, id, isEdit, ...props }) => {
@@ -34,10 +34,10 @@ export default ({ name, url, size, id, isEdit, ...props }) => {
         app.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
             [{ name: "name", placeholder: "File name", label: "Name", val: name },
             { name: "url", placeholder: "File URL", label: "URL", val: url },
-            { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: /\d+/ }]
+            { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: NUMBER_RE }]
         ).then(({ name, url, size }) => {
 
-            if (!size.toString().match(/\d+/)) return app.alert("Invalid file size!");
+            if (!size.toString().match(NUMBER_RE)) return app.alert("Invalid file size!");
 
             editFile(id, name, url, size).then(() =>
                 app.alert("File edited!")

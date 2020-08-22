@@ -48,7 +48,7 @@ const Challenge = ({ challenge }) => {
         <Row>
             <Markdown source={challenge.description} />
         </Row>
-        {(challenge.files.length || challenge.hints.length) && <br />}
+        {!!(challenge.files.length || challenge.hints.length) && <br />}
         {!!challenge.files.length && <Row>
             {challenge.files.map(file => <File {...file} key={file.id} tiny />)}
         </Row>}

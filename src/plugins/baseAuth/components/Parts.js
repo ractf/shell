@@ -22,9 +22,6 @@ import { Spinner } from "@ractf/ui-kit";
 import "./Parts.scss";
 
 
-export const EMAIL_RE = /^\S+@\S+\.\S+$/;
-
-
 export const Wrap = ({ locked = false, children }) => {
     return <div className={"authWrap"}>
         {children}

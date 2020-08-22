@@ -67,3 +67,6 @@ export const propsToTypeClass = (props, styles, fallback) => {
     }
     return makeClass(...className);
 };
+
+export const NUMBER_RE = /^(\d+)?\.?(\d+)?$/;
+export const EMAIL_RE = /^\S+@\S+\.\S+$/;

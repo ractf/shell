@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import { removeHint, editHint, useHint } from "@ractf/api";
 import { Button, Row, Markdown } from "@ractf/ui-kit";
 import { appContext } from "ractf";
+import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 
 import "./Challenge.scss";
@@ -34,11 +35,11 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, body, ...props
     const edit = () => {
         app.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
             [{ name: "name", placeholder: "Hint name", val: name, label: "Name" },
-            { name: "cost", placeholder: "Hint cost", val: penalty.toString(), label: "Cost", format: /\d+/ },
+            { name: "cost", placeholder: "Hint cost", val: penalty.toString(), label: "Cost", format: NUMBER_RE },
             { name: "body", placeholder: "Hint text", val: body, label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
 
-            if (!cost.toString().match(/\d+/)) return app.alert("Invalid hint const!");
+            if (!cost.toString().match(NUMBER_RE)) return app.alert("Invalid hint const!");
 
             editHint(id, name, cost, body).then(() =>
                 app.alert("Hint edited!")
