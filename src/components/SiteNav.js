@@ -37,6 +37,7 @@ const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
 const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
     const hasTeams = useConfig("enable_teams");
+    const categories = useCategories();
 
     return <NavBar primary>
         <NavBrand><NavLink to={"/"}><b>{window.env.siteName}</b></NavLink></NavBrand>
@@ -44,7 +45,11 @@ const HeaderNav_ = () => {
             <NavLink to={"/users"}>Users</NavLink>
             {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
             <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
-            <NavLink to={"/campaign"}>Challenges</NavLink>
+            {categories.length === 1 ? (
+                <NavLink to={categories[0].url}>Challenges</NavLink>
+            ) : (
+                <NavLink to={"/campaign"}>Challenges</NavLink>
+            )}
             {user && user.is_staff && <NavLink to={"/campaign/new"}>Add Category</NavLink>}
             <NavGap />
             {user ? <>
@@ -93,11 +98,18 @@ const SideBarNav_ = ({ children }) => {
             if (user.is_staff) {
                 submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
             }
-            menu.push({
-                name: t("challenge_plural"),
-                submenu: submenu,
-                startOpen: true
-            });
+            if (user.is_staff || submenu.length !== 1) {
+                menu.push({
+                    name: t("challenge_plural"),
+                    submenu: submenu,
+                    startOpen: true
+                });
+            } else {
+                menu.push({
+                    name: t("challenge_plural"),
+                    link: categories[0].url,
+                });
+            }
         }
 
         menu.push({
@@ -158,7 +170,7 @@ const SideBarNav_ = ({ children }) => {
 };
 const SideBarNav = React.memo(SideBarNav_);
 
-const SiteNav = ({ children }) => {
+const SiteNav = ({ children }) => {    
     if (USE_HEAD_NAV)
         return <SiteWrap>
             <HeaderNav />
