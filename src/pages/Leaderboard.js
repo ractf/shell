@@ -39,7 +39,7 @@ const LeaderboardPage = () => {
 
     useEffect(() => {
         if (!graph) return;
-        const lbdata = { user: [...graph.user], team: [...graph.team] };
+        const lbdata = { user: [...graph.user], team: hasTeams ? [...graph.team] : [] };
         const userPlots = {};
         const teamPlots = {};
         const points = {};
@@ -87,7 +87,7 @@ const LeaderboardPage = () => {
         setTeamGraphData(
             Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
         );
-    }, [graph, start_time]);
+    }, [graph, start_time, hasTeams]);
 
     const userData = (lbdata) => {
         return lbdata.map((i, n) => [n + 1, i.username, i.leaderboard_points, { link: "/profile/" + i.id }]);
