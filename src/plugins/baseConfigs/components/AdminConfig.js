@@ -56,6 +56,7 @@ export default () => {
                 return configSet(key, value);
             return new Promise(resolve => resolve());
         })).then(() => {
+            setAdminConfig({ ...adminConfig, ...changes });
             app.alert("Config updated");
         }).catch(() => {
             app.alert("Failed to update config");

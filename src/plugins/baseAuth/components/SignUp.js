@@ -22,7 +22,7 @@ import { push } from "connected-react-router";
 import qs from "query-string";
 
 import {
-    Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError
+    Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
 import { useReactRouter, useConfig } from "@ractf/util";
 import { Wrap, EMAIL_RE } from "./Parts";
@@ -38,13 +38,25 @@ export default () => {
     const { location } = useReactRouter();
     const { invite } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
+    const emailDomain = useConfig("email_domain");
+    const emailRegex = useConfig("email_regex");
+
+    const escape = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    let localEmailRegex;
+    if (emailRegex)
+        localEmailRegex = emailRegex;
+    else if (emailDomain)
+        localEmailRegex = new RegExp("^.*@" + escape(emailDomain.replace(/^@+/, "")) + "$");
+    else
+        localEmailRegex = EMAIL_RE;
+
     const regValidator = useCallback(({ username, email, password, password2, invite, accept }) => {
         return new Promise((resolve, reject) => {
             if (!username)
                 return reject({ username: t("auth.no_uname") });
             if (!email)
                 return reject({ email: t("auth.no_email") });
-            if (!EMAIL_RE.test(email))
+            if (!localEmailRegex.test(email))
                 return reject({ email: t("auth.inv_email") });
 
             if (!password)
@@ -62,7 +74,7 @@ export default () => {
 
             resolve();
         });
-    }, [inviteRequired, t]);
+    }, [inviteRequired, localEmailRegex, t]);
 
     const afterSignUp = useCallback(() => {
         dispatch(push("/register/email"));
@@ -75,12 +87,21 @@ export default () => {
 
                 <FormGroup>
                     <Input name={"username"} placeholder={t("username")} autoFocus />
-                    <Input format={EMAIL_RE} name={"email"} placeholder={t("email")} />
+                    <Input format={localEmailRegex} name={"email"} placeholder={t("email")} />
+                    {(!emailRegex && emailDomain) && (
+                        <SubtleText>A <code>{emailDomain}</code> email is required for registration.</SubtleText>
+                    )}
+                    {emailRegex && (
+                        <SubtleText>
+                            The owner of this site has set a complex email requirement.<br />
+                            Please contact them for details.
+                        </SubtleText>
+                    )}
                     <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} password />
                     <Input name={"password2"} placeholder={t("password_repeat")} password />
 
                     {inviteRequired && (
-                        <Input val={invite || ""} disabled={!!invite} name={"invite"}placeholder={t("invite_code")} />
+                        <Input val={invite || ""} disabled={!!invite} name={"invite"} placeholder={t("invite_code")} />
                     )}
 
                     <Checkbox name={"accept"}>
