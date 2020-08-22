@@ -134,6 +134,8 @@ const SideBarNav_ = ({ children }) => {
             <img alt={""} src={footerLogo} />
             &copy; Really Awesome Technology Ltd 2020
         </footer>
+        <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
+        {window.env.footerText && <p>{window.env.footerText}</p>}
         <Link to="/">
             {t("footer.home")}
         </Link> - <Link to="/privacy">
@@ -173,12 +175,10 @@ const SiteNav = ({ children }) => {
                         <FootLink to={"/debug"}>Debug</FootLink>
                     </FootCol>
                 </FootRow>
-                <FootRow center slim darken>
-                    <center>
-                    &copy; Really Awesome Technology Ltd 2020
-                    <br/>
-                    Organized by the CD Community, hosted by RACTF.
-                    </center>
+                <FootRow center slim darken column>
+                    <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
+                    <p>&copy; Really Awesome Technology Ltd 2020</p>
+                    {window.env.footerText && <p>{window.env.footerText}</p>}
                 </FootRow>
             </Footer>
         </SiteWrap>;

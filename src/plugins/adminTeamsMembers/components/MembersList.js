@@ -87,7 +87,7 @@ export default () => {
             small: true,
             message: <>
                 You are about to impersonate a user.<br />
-                This carries a number of risk with it - be <b>very</b> careful.<br />
+                This carries a number of risks with it - be <b>very</b> careful.<br />
                 To return to your current account, logout as the impersonated user.<br /><br />
                 Are you sure you wish to continue?
             </>
@@ -147,7 +147,7 @@ export default () => {
             </> : <p>No results found</p>}
         </Row>}
         {state.member && <Modal onClose={close} onConfirm={submit} extraButtons={<>
-            <Button onClick={impersonate} warning>Impersonate user</Button>
+            <Button lesser onClick={impersonate} warning>Impersonate user</Button>
         </>}>
             <Form handle={saveMember(state.member)} locked={state.loading} submitRef={submitRef}>
                 <Row>
