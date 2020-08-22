@@ -26,7 +26,7 @@ import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
-    FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson
+    FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson, Select
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
@@ -96,8 +96,11 @@ const ANC = ({ hide, anc, modal }) => {
                 <label htmlFor={"cdesc"}>{t("challenge.cat_brief")}</label>
                 <Input val={anc.description} name={"cdesc"} rows={5} placeholder={t("challenge.cat_brief")} />
                 <label htmlFor={"ctype"}>{t("challenge.cat_type")}</label>
-                <Input val={anc.contained_type} name={"ctype"} format={{ test: i => !!getPlugin("categoryType", i) }}
-                    placeholder={t("challenge.cat_type")} />
+                <Select options={iteratePlugins("categoryType").map(({ key }) => ({ key, value: key }))}
+                    initial={
+                        iteratePlugins("categoryType").map(i => i.key).indexOf(anc.contained_type)
+                    } name={"ctype"} />
+
                 {error && <FormError>{error}</FormError>}
                 {!modal && (
                     <Row>
