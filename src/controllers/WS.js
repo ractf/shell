@@ -45,7 +45,7 @@ export default class WS {
 
     _loginCallback = (token) => {
         if (!token)
-            token = store.getState().token;
+            token = store.getState().token?.token;
         if (token && this.ws.readyState === WebSocket.OPEN)
             this.send({ token: token });
     };
