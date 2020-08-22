@@ -25,9 +25,10 @@ import { ENDPOINTS } from "./consts";
 
 export const reloadAll = async (minimal) => {
     const hasTeams = (store.getState().config || {}).enable_teams;
+    const token = store.getState().token?.token;
 
     let userData = null, teamData = null, challenges = true;
-    if (!minimal) {
+    if (token && !minimal) {
         try {
             userData = await http.get(ENDPOINTS.USER + "self");
         } catch (e) {
