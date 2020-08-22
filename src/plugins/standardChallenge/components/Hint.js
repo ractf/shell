@@ -19,21 +19,22 @@ import React, { useContext } from "react";
 import { FaInfoCircle, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
-import "./Challenge.scss";
-import { removeHint, editHint } from "@ractf/api";
+import { removeHint, editHint, useHint } from "@ractf/api";
+import { Button, Row, Markdown } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 import http from "@ractf/http";
-import { Button, Row } from "@ractf/ui-kit";
+
+import "./Challenge.scss";
 
 
-export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
+export default ({ name, text, penalty, used, isEdit, onClick, id, body, ...props }) => {
     const app = useContext(appContext);
     const { t } = useTranslation();
 
     const edit = () => {
         app.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
             [{ name: "name", placeholder: "Hint name", val: name, label: "Name" },
-            { name: "cost", placeholder: "Hint cost", val: points.toString(), label: "Cost", format: /\d+/ },
+            { name: "cost", placeholder: "Hint cost", val: penalty.toString(), label: "Cost", format: /\d+/ },
             { name: "body", placeholder: "Hint text", val: body, label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
 
@@ -47,6 +48,29 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
         }).catch(() => { });
     };
 
+    const showHint = (content) => {
+        app.alert(<>
+            <b>{name}</b><br />
+            <Markdown source={content} />
+        </>);
+    };
+
+    const promptHint = () => {
+        if (used) return showHint(text);
+
+        const msg = <>
+            Are you sure you want to use a hint?<br /><br />
+                This hint will deduct {penalty} points from this challenge.
+        </>;
+        app.promptConfirm({ message: msg, small: true }).then(() => {
+            useHint(id).then(body => {
+                showHint(body.text);
+            }).catch(e =>
+                app.alert("Error using hint:\n" + http.getError(e))
+            );
+        }).catch(() => { });
+    };
+
     if (isEdit) {
         return <Row>
             <Button tiny warning Icon={FaPencilAlt} onClick={edit} />
@@ -54,8 +78,8 @@ export default ({ name, points, hintUsed, isEdit, onClick, id, body }) => {
         </Row>;
     }
 
-    return <Button onClick={onClick} Icon={FaInfoCircle}
-        tooltip={points === 0 ? "Free" : "-" + t("point_count", { count: points })} success={hintUsed}>
+    return <Button onClick={promptHint} Icon={FaInfoCircle} {...props}
+        tooltip={penalty === 0 ? "Free" : "-" + t("point_count", { count: penalty })} success={used}>
         {name}
     </Button>;
 };

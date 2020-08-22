@@ -19,11 +19,14 @@ import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Card, Button, Markdown, Row, SubtleText } from "@ractf/ui-kit";
+import FlagForm from "@ractf/plugins/FlagForm";
 
 import { setJeopardyOpenCards } from "../actions";
 
-import FlagForm from "@ractf/plugins/FlagForm";
 import { store } from "store";
+
+import File from "plugins/standardChallenge/components/File";
+import Hint from "plugins/standardChallenge/components/Hint";
 
 
 const Challenge = ({ challenge }) => {
@@ -37,15 +40,6 @@ const Challenge = ({ challenge }) => {
         dispatch(setJeopardyOpenCards(newOpenCards));
     }, [challenge.id, dispatch]);
 
-    const additional = [];
-    if (challenge.files.length > 0)
-        additional.push("files");
-    if (challenge.hints.length > 0)
-        additional.push("hints");
-    const additionalWarning = (
-        `This challenge has additional ${additional.join(" and ")} - open the challenge page to view them.`
-    );
-
     return <Card
         header={`${challenge.name} (${challenge.score} points)`} framed
         collapsible startClosed open={openCards[challenge.id]} onOpenToggle={onOpenToggle}
@@ -53,13 +47,19 @@ const Challenge = ({ challenge }) => {
     >
         <Row>
             <Markdown source={challenge.description} />
-            {additional.length !== 0 && (
-                <SubtleText>{additionalWarning}</SubtleText>
-            )}
-            {challenge.challenge_metadata?.cserv_name && <SubtleText>
-                This challenge uses a network socket - open the challenge page for more details.
-            </SubtleText>}
         </Row>
+        {(challenge.files.length || challenge.hints.length) && <br />}
+        {!!challenge.files.length && <Row>
+            {challenge.files.map(file => <File {...file} key={file.id} tiny />)}
+        </Row>}
+        {!!challenge.hints.length && <Row>
+            {challenge.hints.map(hint => <Hint {...hint} key={hint.id} tiny />)}
+        </Row>}
+        {challenge.challenge_metadata?.cserv_name && <Row>
+            <SubtleText>
+                This challenge uses a network socket - open the challenge page for more details.
+            </SubtleText>
+        </Row>}
         <Row>
             <Button to={challenge.url}>Open challenge page</Button>
             <FlagForm challenge={challenge} />

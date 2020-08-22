@@ -24,21 +24,11 @@ import http from "@ractf/http";
 
 import "./Challenge.scss";
 import { Button, Row } from "@ractf/ui-kit";
+import { formatBytes } from "@ractf/util";
 
 
-export default ({ name, url, size, id, isEdit }) => {
+export default ({ name, url, size, id, isEdit, ...props }) => {
     const app = useContext(appContext);
-
-    const formatBytes = bytes => {
-        if (bytes === 0) return "0 Bytes";
-
-        const k = 1024;
-        const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-    };
 
     const edit = () => {
         app.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
@@ -64,7 +54,7 @@ export default ({ name, url, size, id, isEdit }) => {
         </Row>;
     }
 
-    return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink>
+    return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink {...props}>
         {name}
     </Button>;
 };

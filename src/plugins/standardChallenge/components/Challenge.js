@@ -15,17 +15,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
     Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card
 } from "@ractf/ui-kit";
-import { appContext } from "ractf";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
-import { useHint } from "@ractf/api";
-import http from "@ractf/http";
 
 import Split from "./Split";
 import File from "./File";
@@ -39,27 +36,8 @@ export default ({ challenge, category, rightComponent }) => {
     const submitFlag = useRef();
 
     const user = useSelector(state => state.user);
-    const app = useContext(appContext);
 
     const { t } = useTranslation();
-
-    const promptHint = (hint) => {
-        return () => {
-            if (hint.used) return app.alert(hint.name + ":\n" + hint.text);
-
-            const msg = <>
-                Are you sure you want to use a hint?<br /><br />
-                This hint will deduct {hint.penalty} points from this challenge.
-            </>;
-            app.promptConfirm({ message: msg, small: true }).then(() => {
-                useHint(hint.id).then(body => {
-                    app.alert(<>{hint.name}<br /><Markdown source={body.text} /></>);
-                }).catch(e =>
-                    app.alert("Error using hint:\n" + http.getError(e))
-                );
-            }).catch(() => { });
-        };
-    };
 
     const challengeMods = [];
     iteratePlugins("challengeMod").forEach(({ key, plugin }) => {
@@ -89,8 +67,7 @@ export default ({ challenge, category, rightComponent }) => {
         </Row>}
         {user.team && challenge.hints && !!challenge.hints.length && <Row>
             {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
-                    points={hint.penalty} id={hint.id} key={hint.id} />;
+                return <Hint {...hint} key={hint.id} />;
             })}
         </Row>}
 
