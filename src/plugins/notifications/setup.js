@@ -20,6 +20,7 @@ import { store } from "store";
 
 import { notificationReducer } from "./reducers";
 import AppNotifications from "./components/AppNotifications";
+import { reloadAll } from "@ractf/api";
 import * as actions from "./actions";
 import { getUUID } from "@ractf/util";
 
@@ -52,6 +53,14 @@ export default () => {
                 `**${data.username}** for **${data.team_name}**, ` +
                 `scoring **${data.challenge_score}** points.`
             );
+        }
+        const teamId = store.getState().team?.id;
+        const userId = store.getState().user?.id;
+        if (data.team === teamId) {
+            if (data.user !== userId)
+                reloadAll();
+            else
+                reloadAll(false, true);
         }
     });
 

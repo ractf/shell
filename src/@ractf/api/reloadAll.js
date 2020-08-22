@@ -23,7 +23,7 @@ import http from "@ractf/http";
 import { ENDPOINTS } from "./consts";
 
 
-export const reloadAll = async (minimal) => {
+export const reloadAll = async (minimal, noChallenges) => {
     const hasTeams = (store.getState().config || {}).enable_teams;
     const token = store.getState().token?.token;
 
@@ -50,10 +50,12 @@ export const reloadAll = async (minimal) => {
         } else teamData = null;
     }
 
-    try {
-        challenges = await http.get(ENDPOINTS.CATEGORIES);
-    } catch (e) {
-        challenges = [];
+    if (!noChallenges) {
+        try {
+            challenges = await http.get(ENDPOINTS.CATEGORIES);
+        } catch (e) {
+            challenges = [];
+        }
     }
 
     store.dispatch(actions.initState({ user: userData, team: teamData, challenges }));
