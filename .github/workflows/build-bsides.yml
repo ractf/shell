@@ -65,6 +65,7 @@ jobs:
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
         REACT_APP_SITE_NAME: "BSides NCL"
         REACT_APP_USE_HEAD_NAV: true
+        RACTF_EXCLUDE_PLUGINS: "ractfCountdown"
 
     - name: Install Sentry CLI
       run: curl -sL https://sentry.io/get-cli/ | bash

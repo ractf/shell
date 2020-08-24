@@ -65,7 +65,6 @@ jobs:
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
         REACT_APP_SITE_NAME: "CS:Awesome"
         REACT_APP_USE_HEAD_NAV: true
-        REACT_APP_SITE_NAME: "RACTF"
 
     - name: Install Sentry CLI
       run: curl -sL https://sentry.io/get-cli/ | bash
