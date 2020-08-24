@@ -19,7 +19,7 @@ name: Build (Elite)
 
 on:
   repository_dispatch:
-    types: [elite_build_deploy]
+    types: [bsides_build_deploy]
 
 jobs:
   build:
