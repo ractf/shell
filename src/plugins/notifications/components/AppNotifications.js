@@ -35,7 +35,7 @@ const PopupMessage = ({ data }) => {
 };
 
 const AppNotifications = () => {
-    const notifications = useSelector(store => store.notifications) || [];
+    const notifications = useSelector(state => state.notifications) || [];
 
     return <div className={"popupMessages"}>
         {notifications.map(i => <PopupMessage data={i} key={i.id} />)}

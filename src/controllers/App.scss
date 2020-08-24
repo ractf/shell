@@ -36,6 +36,10 @@ p {
     margin-bottom: 1em;
     word-wrap: break-word;
     overflow-wrap: break-word;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 html {

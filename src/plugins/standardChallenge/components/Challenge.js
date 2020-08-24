@@ -15,17 +15,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
-    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page
+    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card
 } from "@ractf/ui-kit";
-import { appContext } from "ractf";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
-import { useHint } from "@ractf/api";
-import http from "@ractf/http";
 
 import Split from "./Split";
 import File from "./File";
@@ -39,27 +36,8 @@ export default ({ challenge, category, rightComponent }) => {
     const submitFlag = useRef();
 
     const user = useSelector(state => state.user);
-    const app = useContext(appContext);
 
     const { t } = useTranslation();
-
-    const promptHint = (hint) => {
-        return () => {
-            if (hint.used) return app.alert(hint.name + ":\n" + hint.text);
-
-            const msg = <>
-                Are you sure you want to use a hint?<br /><br />
-                This hint will deduct {hint.penalty} points from this challenge.
-            </>;
-            app.promptConfirm({ message: msg, small: true }).then(() => {
-                useHint(hint.id).then(body => {
-                    app.alert(<>{hint.name}<br/><Markdown source={body.text} /></>);
-                }).catch(e =>
-                    app.alert("Error using hint:\n" + http.getError(e))
-                );
-            }).catch(() => { });
-        };
-    };
 
     const challengeMods = [];
     iteratePlugins("challengeMod").forEach(({ key, plugin }) => {
@@ -89,14 +67,16 @@ export default ({ challenge, category, rightComponent }) => {
         </Row>}
         {user.team && challenge.hints && !!challenge.hints.length && <Row>
             {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                return <Hint name={hint.name} onClick={promptHint(hint)} hintUsed={hint.used}
-                    points={hint.penalty} id={hint.id} key={hint.id} />;
+                return <Hint {...hint} key={hint.id} />;
             })}
         </Row>}
 
-        {challenge.solved ? <Row>
-            {t("challenge.already_solved")}
-        </Row> : user.team ? <Row>
+        {challenge.solved && challenge.post_score_explanation && <Row>
+            <Card header={t("challenge.post_score_explanation")}>
+                <Markdown source={challenge.post_score_explanation} />
+            </Card>
+        </Row>}
+        {user.team ? <Row>
             <FlagForm challenge={challenge} submitRef={submitFlag} onFlagResponse={onFlagResponse.current} autoFocus />
         </Row> : <>
             <Row>
@@ -109,18 +89,21 @@ export default ({ challenge, category, rightComponent }) => {
         </>}
     </>;
 
-    const tags = <>
-        <Badge pill primary>{category.name}</Badge>
-        <Badge pill primary>{challenge.author}</Badge>
-    </>;
+    const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
 
     const solveMsg = (challenge.first_blood_name
         ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
         : t("challenge.no_solve"));
+    const votesMessage = ((challenge.votes.positive || challenge.votes.negative)
+        ? t("challenge.votes", { percentage: Math.round(
+            (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
+        ) / 10 })
+        : t("challenge.no_votes")
+    );
 
     const leftSide = <Page>
         <PageHead
-            subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg}</>}
+            subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg} - {votesMessage}</>}
             back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
             title={challenge.name} tags={tags}
         />
@@ -133,7 +116,7 @@ export default ({ challenge, category, rightComponent }) => {
     if (!rightSide) return leftSide;
 
     return <Page title={challenge ? challenge.name : "Challenges"} noWrap={!!rightSide}>
-        <Split submitFlag={submitFlag.current} onFlagResponse={onFlagResponse}>
+        <Split submitFlag={submitFlag} onFlagResponse={onFlagResponse}>
             {leftSide}
             {rightSide}
         </Split>

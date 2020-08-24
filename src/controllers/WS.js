@@ -45,7 +45,7 @@ export default class WS {
 
     _loginCallback = (token) => {
         if (!token)
-            token = store.getState().token;
+            token = store.getState().token?.token;
         if (token && this.ws.readyState === WebSocket.OPEN)
             this.send({ token: token });
     };
@@ -83,7 +83,7 @@ export default class WS {
     onmessage = message => {
         const data = JSON.parse(message.data);
         
-        const plugin = getPlugin("wsMesasge", data.event_code);
+        const plugin = getPlugin("wsMessage", data.event_code);
         if (plugin)
             plugin(data);
 

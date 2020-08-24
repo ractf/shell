@@ -106,7 +106,7 @@ Keyboard interrupt received, exiting.
 };
 
 let WSSpine = () => {
-    const ws = useSelector(store => store.websocket) || {};
+    const ws = useSelector(state => state.websocket) || {};
     if (ws.connected) return null;
 
     return <SpinningSpine

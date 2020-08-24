@@ -37,6 +37,7 @@ const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
 const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
     const hasTeams = useConfig("enable_teams");
+    const categories = useCategories();
 
     return <NavBar primary>
         <NavBrand><NavLink to={"/"}><b>{window.env.siteName}</b></NavLink></NavBrand>
@@ -44,7 +45,11 @@ const HeaderNav_ = () => {
             <NavLink to={"/users"}>Users</NavLink>
             {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
             <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
-            <NavLink to={"/campaign"}>Challenges</NavLink>
+            {categories.length === 1 ? (
+                <NavLink to={categories[0].url}>Challenges</NavLink>
+            ) : (
+                <NavLink to={"/campaign"}>Challenges</NavLink>
+            )}
             {user && user.is_staff && <NavLink to={"/campaign/new"}>Add Category</NavLink>}
             <NavGap />
             {user ? <>
@@ -93,11 +98,18 @@ const SideBarNav_ = ({ children }) => {
             if (user.is_staff) {
                 submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
             }
-            menu.push({
-                name: t("challenge_plural"),
-                submenu: submenu,
-                startOpen: true
-            });
+            if (user.is_staff || submenu.length !== 1) {
+                menu.push({
+                    name: t("challenge_plural"),
+                    submenu: submenu,
+                    startOpen: true
+                });
+            } else {
+                menu.push({
+                    name: t("challenge_plural"),
+                    link: categories[0].url,
+                });
+            }
         }
 
         menu.push({
@@ -134,6 +146,8 @@ const SideBarNav_ = ({ children }) => {
             <img alt={""} src={footerLogo} />
             &copy; Really Awesome Technology Ltd 2020
         </footer>
+        <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
+        {window.env.footerText && <p>{window.env.footerText}</p>}
         <Link to="/">
             {t("footer.home")}
         </Link> - <Link to="/privacy">
@@ -156,7 +170,7 @@ const SideBarNav_ = ({ children }) => {
 };
 const SideBarNav = React.memo(SideBarNav_);
 
-const SiteNav = ({ children }) => {
+const SiteNav = ({ children }) => {    
     if (USE_HEAD_NAV)
         return <SiteWrap>
             <HeaderNav />
@@ -173,12 +187,10 @@ const SiteNav = ({ children }) => {
                         <FootLink to={"/debug"}>Debug</FootLink>
                     </FootCol>
                 </FootRow>
-                <FootRow center slim darken>
-                    <center>
-                    &copy; Really Awesome Technology Ltd 2020
-                    <br/>
-                    Organized by the CD Community, hosted by RACTF.
-                    </center>
+                <FootRow center slim darken column>
+                    <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
+                    <p>&copy; Really Awesome Technology Ltd 2020</p>
+                    {window.env.footerText && <p>{window.env.footerText}</p>}
                 </FootRow>
             </Footer>
         </SiteWrap>;

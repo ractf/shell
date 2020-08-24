@@ -15,12 +15,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-const tokenReducer = (state = null, { type, payload }) => {
+const tokenReducer = (state = { self: true, token: null }, { type, payload }) => {
     switch (type) {
         case "SET_TOKEN":
-            return payload;
+            return { self: true, token: payload };
+        case "SET_IMPERSONATION_TOKEN":
+            return { self: false, token: payload };
         case "LOGOUT":
-            return null;
+            return { self: true, token: null };
         default:
             return state;
     }

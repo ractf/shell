@@ -66,6 +66,7 @@ export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
     const [state, next] = usePaginated(ENDPOINTS.USER); 
     const { t } = useTranslation();
+    const hasTeams = useConfig("enable_teams");
 
     return <Page
         title={t("user_plural")} centre={!!state.error}>
@@ -79,8 +80,8 @@ export const UsersList = () => {
             </FormError>
             <BrokenShards />
         </> : <>
-            <Table headings={[t("name"), t("team")]} data={
-                state.data.map(x => [x.username, x.team_name, { link: "/profile/" + x.id }])
+            <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
+                state.data.map(x => [x.username, hasTeams && x.team_name, { link: "/profile/" + x.id }].filter(Boolean))
             } />
             {state.hasMore && <Row>
                 <Button disabled={state.loading} onClick={next}>Load More</Button>

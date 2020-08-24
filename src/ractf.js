@@ -48,6 +48,7 @@ const plugins = {
     mountWithinApp: {},
     categoryMatcher: {},
     challengeMatcher: {},
+    flagType: {},
 };
 export const _plugins = plugins;
 

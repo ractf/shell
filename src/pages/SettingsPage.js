@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
 import { usePreferences } from "@ractf/util/hooks";
+import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,
@@ -203,7 +204,7 @@ export default () => {
                         </>}>
                             <Input name={"discord"} val={user.discord} limit={36}
                                 placeholder={t("settings.profile.discord")} />
-                            <Input name={"discordid"} val={user.discordid} format={/\d+/} limit={18}
+                            <Input name={"discordid"} val={user.discordid} format={NUMBER_RE} limit={18}
                                 placeholder={t("settings.profile.discord_id")} />
                         </FormGroup>
                         <FormGroup htmlFor={"twitter"} label={t("settings.profile.twitter")}>

@@ -16,38 +16,28 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { FaFile } from "react-icons/fa";
+import { FaFile, FaPencilAlt, FaTrash } from "react-icons/fa";
 
+import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { removeFile, editFile } from "@ractf/api";
+import { Button, Row } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 import http from "@ractf/http";
 
 import "./Challenge.scss";
-import { Button } from "@ractf/ui-kit";
 
 
-export default ({ name, url, size, id, isEdit }) => {
+export default ({ name, url, size, id, isEdit, ...props }) => {
     const app = useContext(appContext);
-
-    const formatBytes = bytes => {
-        if (bytes === 0) return "0 Bytes";
-
-        const k = 1024;
-        const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-    };
 
     const edit = () => {
         app.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
             [{ name: "name", placeholder: "File name", label: "Name", val: name },
             { name: "url", placeholder: "File URL", label: "URL", val: url },
-            { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: /\d+/ }]
+            { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: NUMBER_RE }]
         ).then(({ name, url, size }) => {
 
-            if (!size.toString().match(/\d+/)) return app.alert("Invalid file size!");
+            if (!size.toString().match(NUMBER_RE)) return app.alert("Invalid file size!");
 
             editFile(id, name, url, size).then(() =>
                 app.alert("File edited!")
@@ -58,12 +48,13 @@ export default ({ name, url, size, id, isEdit }) => {
     };
 
     if (isEdit) {
-        return <Button Icon={FaFile} tooltip={`${url}\n(${formatBytes(size)})`} onClick={() => edit()}>
-            {name}
-        </Button>;
+        return <Row>
+            <Button tiny warning Icon={FaPencilAlt} onClick={edit} />
+            <Button tiny danger Icon={FaTrash} onClick={() => removeFile(id)} />
+        </Row>;
     }
 
-    return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink>
+    return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink {...props}>
         {name}
     </Button>;
 };

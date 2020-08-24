@@ -23,8 +23,9 @@ import {
     FormError
 } from "@ractf/ui-kit";
 import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
-import { Wrap, EMAIL_RE } from "./Parts";
 import { appContext } from "ractf";
+import { EMAIL_RE } from "@ractf/util";
+import { Wrap } from "./Parts";
 import http from "@ractf/http";
 
 

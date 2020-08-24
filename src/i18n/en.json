@@ -117,18 +117,23 @@
         "attempt": "Attempt flag",
         "no_team": "You can only submit flags if you are in a team.",
         "no_solve": "Nobody has solved this challenge yet",
-        "has_solve": "First solved by {{name}}, {{count}} solve in total.",
-        "has_solve_plural": "First solved by {{name}}, {{count}} solves in total."
+        "has_solve": "First solved by {{name}}, {{count}} solve in total",
+        "has_solve_plural": "First solved by {{name}}, {{count}} solves in total",
+        "post_score_explanation": "Challenge explanation",
+        "no_votes": "Nobody has rated this challenge yet",
+        "votes": "{{percentage}}% positive votes"
     },
     "editor": {
         "chal_name": "Challenge name",
         "chal_points": "Challenge points",
         "chal_author": "Challenge author",
         "chal_brief": "Challenge brief",
+        "post_score_explanation": "Challenge explanation provided after solving",
         "chal_type": "Challenge type",
         "chal_flag_type": "Challenge flag type",
         "chal_flag": "Challenge flag",
         "challenge": "Challenge",
+        "tags": "Challenge tags",
         "files": "Files",
         "hints": "Hints",
         "metadata": "Metadata",
@@ -331,7 +336,8 @@
         "bad_request": "Invalid API request.",
         "challenge_not_unlocked": "This challenge has not been unlocked yet.",
         "join_disabled": "Joining teams has been disabled.",
-        "blank": "A required field was not provided",
-        "max_length": "One your submissions was too long"
+        "blank": "A required field was not provided.",
+        "max_length": "One your submissions was too long.",
+        "challenge_not_solved": "Challenge not yet solved."
     }
 }
