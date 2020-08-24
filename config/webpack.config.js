@@ -36,7 +36,7 @@ function escapeRegex (string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 const exclude = (process.env.RACTF_EXCLUDE_PLUGINS || "").split(",").map(i => i.trim());
-const excludeRegex = new RegExp("^./.*?(?<!" + exclude.map(i => "/" + escapeRegex(i)).join("|") + ")/setup\.js$");
+const excludeRegex = new RegExp("^./.*?(?<!" + exclude.map(i => "/" + escapeRegex(i)).join("|") + ")/setup\\.js$");
 
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;

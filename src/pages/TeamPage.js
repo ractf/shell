@@ -119,18 +119,18 @@ const TeamPage = () => {
 
                 {teamData.social && <>
                     {teamData.twitter && teamData.twitter.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"}
+                        <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://twitter.com/" + encodeURIComponent(teamData.twitter)}>
                             <FaTwitter /><span>@{teamData.twitter}</span>
                         </a>}
                     {teamData.reddit && teamData.reddit.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"}
+                        <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://reddit.com/u/" + encodeURIComponent(teamData.reddit)}>
                             <FaRedditAlien /><span>/u/{teamData.reddit}</span>
                         </a>}
                     {teamData.discord && teamData.discord.length !== 0 &&
                         (teamData.discordid && teamData.discordid.length !== 0
-                            ? <a target={"_blank"}
+                            ? <a target={"_blank"} rel={"noopener noreferrer"}
                                 href={"https://discordapp.com/users/" + encodeURIComponent(teamData.discordid)}
                                 className={"userSocial"}>
                                 <FaDiscord /><span>{teamData.discord}</span>

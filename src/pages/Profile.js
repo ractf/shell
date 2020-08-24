@@ -104,18 +104,18 @@ const Profile = () => {
                 </div>
 
                 {userData.twitter && userData.twitter.length !== 0 &&
-                    <a className={"userSocial"} target={"_blank"}
+                    <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                         href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
                         <FaTwitter /><span>@{userData.twitter}</span>
                     </a>}
                 {userData.reddit && userData.reddit.length !== 0 &&
-                    <a className={"userSocial"} target={"_blank"}
+                    <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                         href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
                         <FaRedditAlien /><span>/u/{userData.reddit}</span>
                     </a>}
                 {userData.discord && userData.discord.length !== 0 &&
                     (userData.discordid && userData.discordid.length !== 0
-                        ? <a target={"_blank"}
+                        ? <a target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
                             className={"userSocial"}>
                             <FaDiscord /><span>{userData.discord}</span>
