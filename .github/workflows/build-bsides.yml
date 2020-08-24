@@ -56,9 +56,9 @@ jobs:
       run: npm run build
       env:
         CI: "false"
-        RACTF_API_DOMAIN: https://bsidesncl.ractf.co.uk
+        RACTF_API_DOMAIN: https://api-bsidesncl.ractf.co.uk
         RACTF_API_BASE: /api/v2
-        RACTF_WSS_URL: wss://bsidesncl.ractf.co.uk/api/v2/ws/
+        RACTF_WSS_URL: wss://api-bsidesncl.ractf.co.uk/api/v2/ws/
         RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
         RACTF_GA_UA: UA-167342912-3
         RACTF_UI_KIT_THEME: noTheme
