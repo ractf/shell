@@ -27,7 +27,7 @@ const { getWebpackImporter, getSassImplementation } = require("sass-loader/dist/
 
 const postcssNormalize = require('postcss-normalize');
 
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'true';
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 const shouldUseCaddy = !!process.env.RACTF_USING_CADDY;
 
