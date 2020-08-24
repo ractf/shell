@@ -145,7 +145,7 @@ export default () => {
         </PageHead>
         <Row left>
             <Column lgWidth={6} mdWidth={12}>
-                {user.totp_status !== 2 ? (
+                {!user.has_2fa ? (
                     <Card warning framed header={t("settings.cards.2fa")}>
                         <Row>
                             <H6>{t("settings.2fa.disabled")}</H6>

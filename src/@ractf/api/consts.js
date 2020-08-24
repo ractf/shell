@@ -27,6 +27,7 @@ export const ENDPOINTS = {
 
     REGISTER: "/auth/register/",
     LOGIN: "/auth/login/",
+    LOGIN_2FA: "/auth/login_2fa/",
     ADD_2FA: "/auth/add_2fa/",
     VERIFY_2FA: "/auth/verify_2fa/",
     VERIFY: "/auth/verify_email/",

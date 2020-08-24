@@ -15,12 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useCallback } from "react";
+import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Page, Input, Button, Row, FormGroup, Link, H2, HiddenInput,
-    FormError
+    Form, Page, Input, Button, Row, FormGroup, Link, H2, FormError
 } from "@ractf/ui-kit";
 import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
 import { appContext } from "ractf";
@@ -32,6 +31,8 @@ import http from "@ractf/http";
 const BasicLogin = () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
+    const [needsOtp, setNeedsOtp] = useState(false);
+    const submit = useRef();
 
     const openForget = useCallback(() => {
         app.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
@@ -48,17 +49,19 @@ const BasicLogin = () => {
     const onError = useCallback(({ resp, retry, showError }) => {
         if (resp && resp.reason === "2fa_required") {
             const faPrompt = () => {
+                setNeedsOtp(true);
                 app.promptConfirm({ message: t("2fa.required"), small: true },
                     [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
                 ).then(({ pin }) => {
                     if (pin.length !== 6) return faPrompt();
-                    retry({ otp: pin });
+                    submit.current({ tfa: pin });
+                    setNeedsOtp(false);
                 }).catch(() => {
                     showError(t("2fa.canceled"));
+                    setNeedsOtp(false);
                 });
             };
             faPrompt();
-
 
             return false;
         }
@@ -69,12 +72,12 @@ const BasicLogin = () => {
 
     return <Page centre>
         <Wrap>
-            <Form action={ENDPOINTS.LOGIN} onError={onError} postSubmit={afterLogin} method={"POST"}>
+            <Form action={needsOtp ? ENDPOINTS.LOGIN_2FA : ENDPOINTS.LOGIN} onError={onError}
+                postSubmit={afterLogin} method={"POST"} submitRef={submit}>
                 <H2>{t("auth.login")}</H2>
                 <FormGroup>
                     <Input name={"username"} required placeholder={t("username")} autoFocus />
                     <Input name={"password"} required placeholder={t("password")} password />
-                    <HiddenInput name={"otp"} val={""} />
                     <div className={"fgtpsdpmt"}>
                         <span onClick={openForget}>{t("auth.pass_forgot")}
                         </span> - <Link to={"/register"}>I need an account</Link>

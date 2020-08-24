@@ -84,7 +84,7 @@ export default () => {
     return <Page title={t("2fa.2fa")} vCentre>
         {page === 0 ? <>
             <Row>
-                {user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
+                {user.has_2fa ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
             </Row>
             <Row>
                 <b>{t("2fa.no_remove_warning")}</b>
