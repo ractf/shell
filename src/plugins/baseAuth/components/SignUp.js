@@ -24,7 +24,7 @@ import qs from "query-string";
 import {
     Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
-import { EMAIL_RE, useReactRouter, useConfig } from "@ractf/util";
+import { EMAIL_RE, useReactRouter, useConfig, escapeRegex } from "@ractf/util";
 import { ENDPOINTS } from "@ractf/api";
 import { zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
@@ -41,12 +41,11 @@ export default () => {
     const emailDomain = useConfig("email_domain");
     const emailRegex = useConfig("email_regex");
 
-    const escape = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     let localEmailRegex;
     if (emailRegex)
         localEmailRegex = emailRegex;
     else if (emailDomain)
-        localEmailRegex = new RegExp("^.*@" + escape(emailDomain.replace(/^@+/, "")) + "$");
+        localEmailRegex = new RegExp("^.*@" + escapeRegex(emailDomain.replace(/^@+/, "")) + "$");
     else
         localEmailRegex = EMAIL_RE;
 

@@ -4,7 +4,7 @@ import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
 import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6 } from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
-import { useConfig } from "@ractf/util";
+import { useConfig, escapeRegex } from "@ractf/util";
 import http from "@ractf/http";
 
 import { appContext } from "ractf";
@@ -25,16 +25,15 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
 
     const { t } = useTranslation();
 
-    const escape = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const flagRegex = () => {
         let regex = challenge.challenge_metadata.flag_regex;
         let partial = challenge.challenge_metadata.flag_partial_regex;
         let format_string;
         if (!regex || !partial) {
-            regex = new RegExp("^" + escape(flag_prefix) + "{.+}$");
+            regex = new RegExp("^" + escapeRegex(flag_prefix) + "{.+}$");
             partial = "";
             for (let i = 0; i < flag_prefix.length; i++) {
-                partial += "(?:" + escape(flag_prefix[i]) + "|$)";
+                partial += "(?:" + escapeRegex(flag_prefix[i]) + "|$)";
             }
             partial = new RegExp("^" + partial + "(?:{|$)(?:[^}]+|$)(?:}|$)$");
             format_string = flag_prefix + "{...}";

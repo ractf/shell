@@ -81,7 +81,9 @@ export const UsersList = () => {
             <BrokenShards />
         </> : <>
             <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
-                state.data.map(x => [x.username, hasTeams && x.team_name, { link: "/profile/" + x.id }].filter(Boolean))
+                state.data.map(x => [
+                    x.username, hasTeams && x.team_name, { link: "/profile/" + x.id }
+                ].filter(i => i !== false))
             } />
             {state.hasMore && <Row>
                 <Button disabled={state.loading} onClick={next}>Load More</Button>

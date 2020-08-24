@@ -68,5 +68,7 @@ export const propsToTypeClass = (props, styles, fallback) => {
     return makeClass(...className);
 };
 
+export const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export const NUMBER_RE = /^(\d+)?\.?(\d+)?$/;
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;

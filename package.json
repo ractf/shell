@@ -100,6 +100,7 @@
   "eslintConfig": {
     "extends": "react-app",
     "globals": {
+      "__PLUGIN_REGEX__": "readonly",
       "__COMMIT_HASH__": "readonly"
     },
     "rules": {

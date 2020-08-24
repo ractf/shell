@@ -33,7 +33,7 @@ import { store, persistor } from "store";
 import en from "./i18n/en.json";
 
 (r => r.keys().forEach(key => r(key).default()))(
-    require.context("./plugins", true, /setup\.js$/)
+    require.context("./plugins", true, __PLUGIN_REGEX__)
 );
 
 /* Enable or disable service workers.

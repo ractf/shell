@@ -49,6 +49,7 @@ const plugins = {
     categoryMatcher: {},
     challengeMatcher: {},
     flagType: {},
+    countdownBackdrop: {},
 };
 export const _plugins = plugins;
 
