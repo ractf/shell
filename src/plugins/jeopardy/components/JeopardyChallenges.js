@@ -39,7 +39,14 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
             return false;
 
         if (!options.ignoreTags && Object.keys(filter).length !== 0) {
-            if (!filter[challenge.author])
+            let hasATag = false;
+            for (const i of challenge.tags) {
+                if (filter[i]) {
+                    hasATag = true;
+                    break;
+                }
+            }
+            if (!hasATag)
                 return false;
         }
 
