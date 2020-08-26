@@ -18,15 +18,13 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Card, Button, Markdown, Row, SubtleText } from "@ractf/ui-kit";
-import FlagForm from "@ractf/plugins/FlagForm";
+import { Card } from "@ractf/ui-kit";
 
 import { setJeopardyOpenCards } from "../actions";
 
 import { store } from "store";
 
-import File from "plugins/standardChallenge/components/File";
-import Hint from "plugins/standardChallenge/components/Hint";
+import ChallengePage from "pages/ChallengePage";
 
 
 const Challenge = ({ challenge }) => {
@@ -45,25 +43,7 @@ const Challenge = ({ challenge }) => {
         collapsible startClosed open={openCards[challenge.id]} onOpenToggle={onOpenToggle}
         success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden} 
     >
-        <Row>
-            <Markdown source={challenge.description} />
-        </Row>
-        {!!(challenge.files.length || challenge.hints.length) && <br />}
-        {!!challenge.files.length && <Row>
-            {challenge.files.map(file => <File {...file} key={file.id} tiny />)}
-        </Row>}
-        {!!challenge.hints.length && <Row>
-            {challenge.hints.map(hint => <Hint {...hint} key={hint.id} tiny />)}
-        </Row>}
-        {challenge.challenge_metadata?.cserv_name && <Row>
-            <SubtleText>
-                This challenge uses a network socket - open the challenge page for more details.
-            </SubtleText>
-        </Row>}
-        <Row>
-            <Button to={challenge.url}>Open challenge page</Button>
-            <FlagForm challenge={challenge} />
-        </Row>
+        <ChallengePage tabId={challenge.category.id} chalId={challenge.id} embedded />
     </Card>;
 };
 export default Challenge;

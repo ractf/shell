@@ -83,8 +83,8 @@ const Invites = () => {
         </Modal>
 
         <PageHead title={"Invites"} />
-        <Row>
-            <Column lgWidth={6} mdWidth={12}>
+        <Column lgWidth={6} mdWidth={12}>
+            <Row>
                 <Card header={"Quick Generation"}>
                     <Row centre>
                         <Button onClick={generate1} disabled={locked}>Generate 1 Invite</Button>
@@ -98,8 +98,10 @@ const Invites = () => {
                             placeholder={"Number of invites"} button={"Generate"} />
                     </Form>
                 </Card>
-            </Column>
-            <Column lgWidth={6} mdWidth={12}>
+            </Row>
+        </Column>
+        <Column lgWidth={6} mdWidth={12}>
+            <Row>
                 <Card header={"Generate Single Invite"} >
                     <Form locked={locked}>
                         <FormGroup label={"Auto-join team ID"}>
@@ -114,8 +116,10 @@ const Invites = () => {
                         <Button submit>Generate</Button>
                     </Form>
                 </Card>
-            </Column>
-            <Column lgWidth={12}>
+            </Row>
+        </Column>
+        <Column lgWidth={12}>
+            <Row>
                 <Card header={"View existing invites"}>
                     <Form>
                         <Row vCentre>
@@ -134,8 +138,8 @@ const Invites = () => {
                         </Row>
                     )}
                 </Card>
-            </Column>
-        </Row>
+            </Row>
+        </Column>
     </>;
 };
 export default Invites;

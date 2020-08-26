@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { BrokenShards } from "./ErrorPages";
 
 import {
-    Page, Table, FormError, Button, Row, H2
+    Page, Table, FormError, Button, Row, PageHead, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { usePaginated } from "ractf";
@@ -41,23 +41,20 @@ export const TeamsList = () => {
 
     return <Page
         title={t("team_plural")} centre={state.error}>
-        <div style={{ textAlign: "center" }}>
-            <H2>{t("lists.all_teams")}</H2>
-            <br />
-        </div>
+        <PageHead>{t("lists.all_teams")}</PageHead>
         {state.error ? <>
             <FormError>
                 {t("lists.teams_error")}<br />{t("lists.try_reload")}
             </FormError>
             <BrokenShards />
-        </> : <>
+        </> : <Column>
             <Table headings={[t("team"), t("members")]} data={
                 state.data.map(x => [x.name, x.members, { link: "/team/" + x.id }])
             } />
             {state.hasMore && <Row>
                 <Button disabled={state.loading} onClick={next}>Load More</Button>
             </Row>}
-        </>}
+        </Column>}
     </Page>;
 };
 
@@ -70,16 +67,13 @@ export const UsersList = () => {
 
     return <Page
         title={t("user_plural")} centre={!!state.error}>
-        <div style={{ textAlign: "center" }}>
-            <H2>{t("lists.all_users")}</H2>
-            <br />
-        </div>
+        <PageHead>{t("lists.all_users")}</PageHead>
         {state.error ? <>
             <FormError>
                 {t("lists.users_error")}<br />{t("lists.try_reload")}
             </FormError>
             <BrokenShards />
-        </> : <>
+        </> : <Column>
             <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
                 state.data.map(x => [
                     x.username, hasTeams && x.team_name, { link: "/profile/" + x.id }
@@ -88,6 +82,6 @@ export const UsersList = () => {
             {state.hasMore && <Row>
                 <Button disabled={state.loading} onClick={next}>Load More</Button>
             </Row>}
-        </>}
+        </Column>}
     </Page>;
 };

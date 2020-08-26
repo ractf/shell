@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Button, ModalForm
+    Checkbox, PageHead, Modal, Button, ModalForm, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
 import { appContext } from "ractf";
@@ -129,23 +129,26 @@ export default () => {
         )}
 
         <PageHead title={t("admin.members")} />
-        <Form handle={doSearch} locked={state.loading}>
+        <Column>
             <Row>
-                <InputButton submit name={"username"} placeholder={"Search for Username"} button={"Search"} />
-                <Button disabled onClick={openAdvSearch}>Advanced Search</Button>
+            <Form handle={doSearch} locked={state.loading}>
+                <Row>
+                    <InputButton submit name={"username"} placeholder={"Search for Username"} button={"Search"} />
+                    <Button disabled onClick={openAdvSearch}>Advanced Search</Button>
+                </Row>
+                {state.error && <FormError>{state.error}</FormError>}
+            </Form>
             </Row>
-            {state.error && <FormError>{state.error}</FormError>}
-        </Form>
-        <br />
-        {state.loading && <Row><Spinner /></Row>}
-        {state.results && <Row>
-            {state.results.length ? <>
-                {state.more && <p>
-                    Additional results were omitted. Please refine your search.
-                </p>}
-                {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
-            </> : <p>No results found</p>}
-        </Row>}
+            {state.loading && <Row><Spinner /></Row>}
+            {state.results && <Row>
+                {state.results.length ? <>
+                    {state.more && <p>
+                        Additional results were omitted. Please refine your search.
+                    </p>}
+                    {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
+                </> : <p>No results found</p>}
+            </Row>}
+        </Column>
         {state.member && <Modal onClose={close} onConfirm={submit} extraButtons={<>
             <Button lesser onClick={impersonate} warning>Impersonate user</Button>
         </>}>

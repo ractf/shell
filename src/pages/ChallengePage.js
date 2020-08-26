@@ -102,6 +102,13 @@ const EditorWrap = ({ challenge, category, isCreator, embedded }) => {
 
 const ChallengePage = ({ tabId, chalId, chalData, embedded }) => {
     const { match } = useReactRouter();
+    embedded = (
+        embedded
+        || typeof tabId !== "undefined"
+        || typeof chalId !== "undefined"
+        || typeof chalData !== "undefined"
+    );
+
     const catId = typeof tabId === "undefined" ? match.params.tabId : tabId;
     chalId = typeof chalId === "undefined" ? match.params.chalId : chalId;
 
@@ -113,13 +120,6 @@ const ChallengePage = ({ tabId, chalId, chalData, embedded }) => {
 
     const category = useCategory(catId);
     let challenge = useChallenge(category, chalId);
-
-    embedded = (
-        embedded
-        || typeof tabId !== "undefined"
-        || typeof chalId !== "undefined"
-        || typeof chalData !== "undefined"
-    );
 
     if (isCreator) {
         try {

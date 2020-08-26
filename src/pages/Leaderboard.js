@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Button, Row, Graph, URLTabbedView, Tab, Table, Page, PageHead
+    Button, Row, Graph, URLTabbedView, Tab, Table, Page, PageHead, Column
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "ractf";
 import { ENDPOINTS } from "@ractf/api";
@@ -117,17 +117,19 @@ const LeaderboardPage = () => {
 
     return <Page title={t("leaderboard")}>
         <PageHead>{t("leaderboard")}</PageHead>
-        {hasTeams ? (
-            <URLTabbedView center initial={1}>
-                <Tab label={t("team_plural")} index={"team"}>
-                    {teamTab}
-                </Tab>
+        <Column>
+            {hasTeams ? (
+                <URLTabbedView center initial={1}>
+                    <Tab label={t("team_plural")} index={"team"}>
+                        {teamTab}
+                    </Tab>
 
-                <Tab label={t("user_plural")} index={"user"}>
-                    {userTab}
-                </Tab>
-            </URLTabbedView>
-        ) : userTab}
+                    <Tab label={t("user_plural")} index={"user"}>
+                        {userTab}
+                    </Tab>
+                </URLTabbedView>
+            ) : userTab}
+        </Column>
     </Page>;
 };
 export default React.memo(LeaderboardPage);

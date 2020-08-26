@@ -26,7 +26,7 @@ import { BrokenShards } from "./ErrorPages";
 import { useReactRouter, useConfig } from "@ractf/util";
 import {
     Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
-    Pie, Page
+    Pie, Page, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
@@ -87,7 +87,7 @@ const TeamPage = () => {
         if (!userValues[solve.solved_by_name]) userValues[solve.solved_by_name] = 0;
         userValues[solve.solved_by_name]++;
 
-        const score = (scorePlotData.data[scorePlotData.data.length - 1] || {y: 0}).y + solve.points;
+        const score = (scorePlotData.data[scorePlotData.data.length - 1] || { y: 0 }).y + solve.points;
         scorePlotData.data.push({ x: new Date(solve.timestamp), y: score });
     });
 
@@ -108,7 +108,7 @@ const TeamPage = () => {
     });
 
     return <Page title={teamData.name}>
-        <div className={"profileSplit"}>
+        <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <div className={"userMeta"}>
                 <div className={"userName"}><FaUsers /> {teamData.name}</div>
                 <div>{t("point_count", { count: teamData.leaderboard_points })}</div>
@@ -144,6 +144,8 @@ const TeamPage = () => {
                     <FaUser /> {i.username}
                 </Link><br /></>)}
             </div>
+        </Column>
+        <Column xlWidth={9} lgWidth={8} mdWidth={12}>
             <div className={"userSolves"}>
                 {(!teamData.solves || teamData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
                     {t("teams.no_solves", { name: teamData.name })}
@@ -193,7 +195,7 @@ const TeamPage = () => {
                         </Tab>
                     </TabbedView>}
             </div>
-        </div>
+        </Column>
     </Page>;
 };
 export default TeamPage;

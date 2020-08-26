@@ -24,7 +24,7 @@ import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter } from "@ractf/util";
 import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Row
+    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Row, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
@@ -94,7 +94,7 @@ const Profile = () => {
     });
 
     return <Page title={userData.username}>
-        <div className={"profileSplit"}>
+        <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
                 <div>{t("point_count", { count: userData.leaderboard_points })}</div>
@@ -136,6 +136,8 @@ const Profile = () => {
                     </div>
                 </>}
             </div>
+        </Column>
+        <Column xlWidth={9} lgWidth={8} mdWidth={12}>
             <div className={"userSolves"}>
                 {userData.is_beta &&
                     <UserSpecial col={"#66bb66"} ico={beta}>Beta Tester</UserSpecial>}
@@ -174,7 +176,7 @@ const Profile = () => {
                         </Tab>
                     </TabbedView>}
             </div>
-        </div>
+        </Column>
     </Page>;
 };
 export default Profile;

@@ -91,20 +91,18 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     };
 
     return <>
-        <Row>
-            <FlashText danger={!hasValidZoom && !selectedLongLat}>
-                {selectedLongLat ? <>
-                    <div className="highlight">
-                        Selected location: {round(selectedLongLat[0])}, {round(selectedLongLat[1])}
-                    </div>
-                </> : hasValidZoom ? <>
-                    <div className="highlight">Click on the map to select a location</div>
-                </> : <>
-                            <div className="highlight">Zoom in closer to make a selection!</div>
-                        </>}
-            </FlashText>
-        </Row>
-        <Row className={"mapWrap"}>
+        <FlashText danger={!hasValidZoom && !selectedLongLat}>
+            {selectedLongLat ? <>
+                <div className="highlight">
+                    Selected location: {round(selectedLongLat[0])}, {round(selectedLongLat[1])}
+                </div>
+            </> : hasValidZoom ? <>
+                <div className="highlight">Click on the map to select a location</div>
+            </> : <>
+                        <div className="highlight">Zoom in closer to make a selection!</div>
+                    </>}
+        </FlashText>
+        <div className={"mapWrap"}>
             <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>
                 {selectedLongLat && <Marker paylod={1} anchor={selectedLongLat} />}
@@ -121,12 +119,10 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
                     </div>
                 </div>
             }
-        </Row>
-        <Row>
-            <Form handle={jumpToLongLat}>
-                <InputButton format={LAT_LON_RE} name={"jumpTo"} button={"Jump"}
-                    placeholder={"Jump to Long,Lat or enter G.Maps URL"} submit />
-            </Form>
-        </Row>
+        </div>
+        <Form handle={jumpToLongLat}>
+            <InputButton format={LAT_LON_RE} name={"jumpTo"} button={"Jump"}
+                placeholder={"Jump to Long,Lat or enter G.Maps URL"} submit />
+        </Form>
     </>;
 };

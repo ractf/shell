@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, FlashText
+    Checkbox, PageHead, Modal, FlashText, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
@@ -106,20 +106,24 @@ export default () => {
 
     return <>
         <PageHead title={t("admin.teams")} />
-        <Form handle={doSearch} locked={state.loading}>
-            <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
-            {state.error && <FormError>{state.error}</FormError>}
-        </Form>
-        <br />
-        {state.loading && <Row><Spinner /></Row>}
-        {state.results && <Row>
-            {state.results.length ? <>
-                {state.more && <p>
-                    Additional results were omitted. Please refine your search.
+        <Column>
+            <Row>
+                <Form handle={doSearch} locked={state.loading}>
+                    <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
+                    {state.error && <FormError>{state.error}</FormError>}
+                </Form>
+            </Row>
+            {state.loading && <Row><Spinner /></Row>}
+            {state.results && <Row>
+                {state.results.length ? <>
+                    {state.more && <p>
+                        Additional results were omitted. Please refine your search.
                 </p>}
-                {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
-            </> : <p>No results found</p>}
-        </Row>}
+                    {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+                </> : <p>No results found</p>}
+            </Row>}
+
+        </Column>
         {state.team && <Modal onClose={close} onConfirm={submit}>
             <Form handle={saveTeam(state.team)} locked={state.loading} submitRef={submitRef}>
                 <Row>

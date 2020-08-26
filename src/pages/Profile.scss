@@ -17,31 +17,8 @@
 
 @import "@ractf/ui-kit/Colours.scss";
 
-.profileSplit {
-    display: flex;
-    flex-direction: row;
-
-    & > :first-child {
-        margin-right: 24px;
-    }
-}
-.pfp {
-    background-image: url(https://cdn.discordapp.com/avatars/161508165672763392/d49221388c0a50f8a7cbf4cb64b36eb6.png?size=2048);
-    background-size: cover;
-    border-radius: 24px;
-    box-shadow: 0 2px 30px #0005;
-    width: 256px;
-    height: 256px;
-    margin: auto;
-    margin-bottom: 8px;
-}
 .userMeta {
     line-height: 1.5;
-    flex-shrink: 0;
-    text-align: left;
-    min-width: 256px;
-    max-width: 356px;
-    margin-bottom: 8px;
 
     .userName {
         font-size: 2em;
@@ -55,7 +32,7 @@
     }
     .teamMemberico {
         font-size: 0.9em;
-        color: map-get($colours, "black");
+        color: $color;
 
         svg {
             margin-bottom: -0.125em;
@@ -73,8 +50,9 @@
         display: flex;
         align-items: center;
         margin: 8px 0;
-        color: $back_300;
+        color: $color;
         transition: 150ms color ease;
+        opacity: .8;
         cursor: pointer;
 
         *:first-child {
@@ -85,8 +63,9 @@
             font-size: 0.9em;
         }
         &:hover {
-            color: $back_200;
+            color: $color;
             text-decoration: none;
+            opacity: 1;
         }
     }
     .profilePieWrap {
@@ -114,8 +93,6 @@
     }
 }
 .userSolves {
-    flex-grow: 1;
-
     .noSolves {
         font-style: italic;
         text-align: left;
@@ -185,7 +162,9 @@
 }
 
 @media (max-width: 1200px) {
-    .userMeta .profilePieWrap { display: none; }
+    .userMeta .profilePieWrap {
+        display: none;
+    }
     .profileSplit {
         flex-direction: column;
         align-items: center;

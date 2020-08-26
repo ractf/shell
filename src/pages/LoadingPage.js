@@ -21,7 +21,7 @@ import { Page, Row, Spinner } from "@ractf/ui-kit";
 
 const LoadingPage = () => (
     <Page centre>
-        <Row>
+        <Row centre style={{ width: "100%" }}>
             <Spinner />
         </Row>
     </Page>

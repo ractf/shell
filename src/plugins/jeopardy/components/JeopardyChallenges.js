@@ -18,7 +18,7 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Row, Column, Card, Input, FormGroup, ItemStack, Checkbox, Leader } from "@ractf/ui-kit";
+import { Column, Card, Input, FormGroup, ItemStack, Checkbox } from "@ractf/ui-kit";
 
 import * as actions from "../actions.js";
 
@@ -104,7 +104,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
 
     const sortedTags = Object.keys(tags).sort((a, b) => a.localeCompare(b)).map(i => [i, tags[i]]);
 
-    return <Row>
+    return <>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <Card>
                 <FormGroup>
@@ -140,5 +140,5 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
                 i => (shouldShow(i) ? <Challenge category={category} key={i.id} challenge={i} /> : null)
             )}
         </Column>
-    </Row>;
+    </>;
 };

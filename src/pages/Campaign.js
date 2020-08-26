@@ -26,7 +26,7 @@ import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Link,
-    FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson, Select, FormGroup
+    FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson, Select, FormGroup, Column
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
@@ -144,7 +144,7 @@ const CategoryList = () => {
 
     return <Page>
         <PageHead subTitle={t("categories.pick")} title={t("categories.all")} />
-        <Row>
+        <Column>
             {categories.map(i => {
                 const solved = i.challenges.filter(j => j.solved).length;
 
@@ -155,7 +155,7 @@ const CategoryList = () => {
                     {i.name}
                 </Leader>;
             })}
-        </Row>
+        </Column>
     </Page>;
 };
 
@@ -222,10 +222,12 @@ export default () => {
                     </Button>
                 </>}
         </Row>}
-        {!user.team && <FlashText danger>{t("campaign.no_team")}</FlashText>}
-        <div className={"campInner"}>
-            <PluginComponent type={"categoryType"} name={tab.contained_type} challenges={tab}
-                showEditor={showEditor} isEdit={edit} showLocked={showLocked} />
-        </div>
+        {!user.team && (
+            <Column>
+                <FlashText danger>{t("campaign.no_team")}</FlashText>
+            </Column>
+        )}
+        <PluginComponent type={"categoryType"} name={tab.contained_type} challenges={tab}
+            showEditor={showEditor} isEdit={edit} showLocked={showLocked} />
     </Page>;
 };

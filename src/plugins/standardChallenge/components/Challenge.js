@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
-    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card
+    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card, Column
 } from "@ractf/ui-kit";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
 
@@ -31,7 +31,7 @@ import Hint from "./Hint";
 import "./Challenge.scss";
 
 
-export default ({ challenge, category, rightComponent }) => {
+export default ({ challenge, category, embedded, rightComponent }) => {
     const onFlagResponse = useRef();
     const submitFlag = useRef();
 
@@ -52,7 +52,7 @@ export default ({ challenge, category, rightComponent }) => {
     if (rightComponent)
         rightSide = React.createElement(rightComponent, { challenge: challenge });
 
-    const chalContent = <>
+    const chalContent = <Column noGutter={embedded}>
         {challengeMods}
         <Row>
             <TextBlock>
@@ -61,13 +61,13 @@ export default ({ challenge, category, rightComponent }) => {
         </Row>
 
         {challenge.files && !!challenge.files.length && <Row>
-            {challenge.files.map(file =>
-                file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
-            )}
+            {challenge.files.map(file => file && (
+                <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} tiny={embedded} />
+            ))}
         </Row>}
         {user.team && challenge.hints && !!challenge.hints.length && <Row>
             {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                return <Hint {...hint} key={hint.id} />;
+                return <Hint {...hint} key={hint.id} tiny={embedded} />;
             })}
         </Row>}
 
@@ -76,18 +76,28 @@ export default ({ challenge, category, rightComponent }) => {
                 <Markdown source={challenge.post_score_explanation} />
             </Card>
         </Row>}
-        {user.team ? <Row>
-            <FlagForm challenge={challenge} submitRef={submitFlag} onFlagResponse={onFlagResponse.current} autoFocus />
-        </Row> : <>
-            <Row>
-                <FlashText danger>{t("challenge.no_team")}</FlashText>
-            </Row>
-            <Row>
-                <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
-                <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
-            </Row>
-        </>}
-    </>;
+        {user.team
+            ? (
+                <Row>
+                    {embedded && (
+                        <Button to={challenge.url}>Open challenge page</Button>
+                    )}
+                    <FlagForm challenge={challenge} submitRef={submitFlag}
+                        onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
+                </Row>
+            ) : (
+                <>
+                    <Row>
+                        <FlashText danger>{t("challenge.no_team")}</FlashText>
+                    </Row>
+                    <Row>
+                        <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
+                        <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
+                    </Row>
+                </>
+            )
+        }
+    </Column>;
 
     const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
 
@@ -95,11 +105,21 @@ export default ({ challenge, category, rightComponent }) => {
         ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
         : t("challenge.no_solve"));
     const votesMessage = ((challenge.votes.positive || challenge.votes.negative)
-        ? t("challenge.votes", { percentage: Math.round(
-            (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
-        ) / 10 })
+        ? t("challenge.votes", {
+            percentage: Math.round(
+                (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
+            ) / 10
+        })
         : t("challenge.no_votes")
     );
+
+    if (embedded)
+        return <>
+            <Split submitFlag={submitFlag} onFlagResponse={onFlagResponse} stacked>
+                {chalContent}
+                {rightSide}
+            </Split>
+        </>;
 
     const leftSide = <Page>
         <PageHead

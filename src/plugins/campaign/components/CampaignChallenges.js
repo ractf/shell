@@ -23,6 +23,7 @@ import { linkChallenges } from "@ractf/api";
 import { Node, AddNode } from "./Node";
 import Row from "./Row";
 import "./Spacer.scss";
+import { Column } from "@ractf/ui-kit";
 
 
 const emptyChallenge = (challenges, x, y) => ({
@@ -147,6 +148,5 @@ export const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked 
         })}</Row>
     );
 
-    return reactRows;
-
+    return <Column>{reactRows}</Column>;
 };
