@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -40,7 +40,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
             fields.push(fromJson(plugin.fields, challenge.challenge_metadata));
         }
     });
-    const saveEdit = (changes) => {
+    const saveEdit = useCallback((changes) => {
         try {
             save({
                 ...(challenge.toJSON ? challenge.toJSON() : challenge), challenge_metadata: {
@@ -51,7 +51,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
         } catch (e) {
             console.error(e);
         }
-    };
+    }, [challenge, save]);
 
     return <div style={{ width: "100%" }}><Form handle={saveEdit}>
         {fields}
@@ -64,7 +64,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
 const HintEditor = ({ challenge }) => {
     const app = useContext(appContext);
 
-    const addHint = () => {
+    const addHint = useCallback(() => {
         app.promptConfirm({ message: "New hint" },
             [{ name: "name", placeholder: "Hint name", label: "Name" },
             { name: "cost", placeholder: "Hint cost", label: "Cost", format: NUMBER_RE },
@@ -79,7 +79,7 @@ const HintEditor = ({ challenge }) => {
                 app.alert("Error creating new hint:\n" + http.getError(e))
             );
         });
-    };
+    }, [app, challenge.id]);
 
     return <>
         <Row>
@@ -97,7 +97,7 @@ const HintEditor = ({ challenge }) => {
 const FileEditor = ({ challenge }) => {
     const app = useContext(appContext);
 
-    const addFile = () => {
+    const addFile = useCallback(() => {
         app.promptConfirm({ message: "New file", },
             [{ name: "name", placeholder: "File name", label: "Name" },
             { name: "url", placeholder: "File URL", label: "URL" },
@@ -111,7 +111,7 @@ const FileEditor = ({ challenge }) => {
                 app.alert("Error creating new file:\n" + http.getError(e))
             );
         });
-    };
+    }, [app, challenge.id]);
 
     return <>
         <Row>
@@ -139,12 +139,16 @@ FlagMetadata.displayName = "FlagMetadata";
 const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) => {
     const { t } = useTranslation();
 
+    const editTransformer = useCallback((data) => {
+        return { ...data, tags: data.tags.map(i => ({ type: "tag", text: i })) };
+    }, []);
+
     return <Page>
         <PageHead
             title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
             back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
         />
-        <Form handle={saveEdit}>
+        <Form handle={saveEdit} transformer={editTransformer}>
             <Row left>
                 <Column lgWidth={6} mdWidth={12}>
                     <Card header={"Basic settings"} collapsible>

@@ -27,7 +27,7 @@ export const reloadAll = async (minimal, noChallenges) => {
     const hasTeams = (store.getState().config || {}).enable_teams;
     const token = store.getState().token?.token;
 
-    let userData = null, teamData = null, challenges = true;
+    let userData = null, teamData = null, challenges = undefined;
     if (token && !minimal) {
         try {
             userData = await http.get(ENDPOINTS.USER + "self");
@@ -54,7 +54,7 @@ export const reloadAll = async (minimal, noChallenges) => {
         try {
             challenges = await http.get(ENDPOINTS.CATEGORIES);
         } catch (e) {
-            challenges = [];
+            challenges = undefined;
         }
     }
 

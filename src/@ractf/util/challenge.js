@@ -47,6 +47,10 @@ export default class Challenge {
         return `${this.category.url}/challenge/${this.id}`;
     }
 
+    get tags() {
+        return (this._data.tags || []).map(i => (typeof i === "object" ? i.text : i));
+    }
+
     toJSON() {
         const ret = {};
         for (const i of this)

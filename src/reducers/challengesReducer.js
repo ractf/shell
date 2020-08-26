@@ -95,6 +95,8 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             return { ...state, categories };
 
         case "INIT_STATE":
+            if (typeof payload.challenges === "undefined")
+                return state;
             return { ...state, categories: payload.challenges };
         case "LOGOUT":
             return { ...state, categories: [] };
