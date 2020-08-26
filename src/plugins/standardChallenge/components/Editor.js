@@ -136,18 +136,14 @@ const FlagMetadata = React.memo(({ flag_type, val, onChange }) => {
 });
 FlagMetadata.displayName = "FlagMetadata";
 
-const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) => {
+const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, embedded }) => {
     const { t } = useTranslation();
 
     const editTransformer = useCallback((data) => {
         return { ...data, tags: data.tags.map(i => ({ type: "tag", text: i })) };
     }, []);
 
-    return <Page>
-        <PageHead
-            title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
-            back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
-        />
+    const body = (
         <Form handle={saveEdit} transformer={editTransformer}>
             <Row left>
                 <Column lgWidth={6} mdWidth={12}>
@@ -239,6 +235,15 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge }) =
                 </Column>
             </Row>
         </Form>
+    );
+    if (embedded) return body;
+
+    return <Page>
+        <PageHead
+            title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
+            back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
+        />
+        {body}
     </Page>;
 };
 export default Editor;

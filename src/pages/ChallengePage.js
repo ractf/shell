@@ -30,7 +30,7 @@ import Challenge from "@ractf/util/challenge";
 import http from "@ractf/http";
 
 
-const EditorWrap = ({ challenge, category, isCreator }) => {
+const EditorWrap = ({ challenge, category, isCreator, embedded }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const app = useContext(appContext);
@@ -49,7 +49,6 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
             {t("challenge.editor_missing", { type: challenge.challenge_type })}<br /><br />
             {t("challenge.forgot_plugin")}
         </>;
-
 
     const saveEdit = changes => {
         const original = (challenge.toJSON ? challenge.toJSON() : { ...challenge });
@@ -97,14 +96,14 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
     };
 
     return React.createElement(handler.component, {
-        challenge, category, isCreator: isCreator, saveEdit, removeChallenge: doRemoveChallenge
+        challenge, category, embedded, isCreator, saveEdit, removeChallenge: doRemoveChallenge
     });
 };
 
-const ChallengePage = () => {
+const ChallengePage = ({ tabId, chalId, chalData, embedded }) => {
     const { match } = useReactRouter();
-    const catId = match.params.tabId;
-    const chalId = match.params.chalId;
+    const catId = typeof tabId === "undefined" ? match.params.tabId : tabId;
+    chalId = typeof chalId === "undefined" ? match.params.chalId : chalId;
 
     const locationHash = useSelector(state => state.router?.location?.hash);
     const user = useSelector(state => state.user);
@@ -115,23 +114,35 @@ const ChallengePage = () => {
     const category = useCategory(catId);
     let challenge = useChallenge(category, chalId);
 
+    embedded = (
+        embedded
+        || typeof tabId !== "undefined"
+        || typeof chalId !== "undefined"
+        || typeof chalData !== "undefined"
+    );
+
     if (isCreator) {
         try {
-            challenge = JSON.parse(decodeURIComponent(locationHash.substring(1)));
+            challenge = (typeof chalData === "undefined"
+                ? JSON.parse(decodeURIComponent(locationHash.substring(1)))
+                : chalData
+            );
         } catch (e) {
-            challenge = null;
+            challenge = {};
         }
+        challenge.challenge_metadata = challenge.challenge_metadata || {};
+        challenge = new Challenge(category, challenge);
     } else if (!challenge) return <Redirect to={"/404"} />;
     // Brand new challenge; wait for it to populate
-    if (!challenge) return null;
-    
+    if (!isCreator && !challenge) return null;
+
     let chalEl;
     if (isEditor || isCreator)
-        chalEl = <EditorWrap {...{ challenge, category, isCreator }} />;
+        chalEl = <EditorWrap {...{ challenge, category, isCreator, embedded }} />;
     else
         chalEl = (
             <PluginComponent type={"challengeType"} name={challenge.challenge_type} fallback={"default"}
-                challenge={challenge} category={category} />
+                challenge={challenge} category={category} embedded={embedded} />
         );
 
     return chalEl;

@@ -22,7 +22,7 @@ export const useCategory = (id) => {
     }
 
     for (const i of categories) {
-        if (i.id.toString() === id) {
+        if (i.id.toString() === id.toString()) {
             return getClass(Category).fromJSON(i);
         }
     }
