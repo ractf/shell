@@ -94,7 +94,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
             {sortedTags.length !== 0 && (
                 <Card noPad header={"Filter"} collapsible>
                     <ItemStack>
-                        {sortedTags.map((tag, tagCount) => (
+                        {sortedTags.map(([tag, tagCount]) => (
                             <ItemStack.Item
                                 key={tag} label={tagCount} active={filter[tag]}
                                 success={filter[tag]} onClick={toggleFilter(tag)}
