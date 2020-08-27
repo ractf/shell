@@ -22,7 +22,7 @@ import { push } from "connected-react-router";
 import qs from "query-string";
 
 import {
-    Form, Page, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError, SubtleText
+    Form, Input, Button, Row, Link, Checkbox, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
 import { EMAIL_RE, useReactRouter, useConfig, escapeRegex } from "@ractf/util";
 import { ENDPOINTS } from "@ractf/api";
@@ -79,42 +79,40 @@ export default () => {
         dispatch(push("/register/email"));
     }, [dispatch]);
 
-    return <Page centre>
-        <Wrap>
-            <Form action={ENDPOINTS.REGISTER} method={"POST"} validator={regValidator} postSubmit={afterSignUp}>
-                <H2>{t("auth.register")}</H2>
+    return <Wrap>
+        <Form action={ENDPOINTS.REGISTER} method={"POST"} validator={regValidator} postSubmit={afterSignUp}>
+            <H2>{t("auth.register")}</H2>
 
-                <FormGroup>
-                    <Input name={"username"} placeholder={t("username")} autoFocus />
-                    <Input format={localEmailRegex} name={"email"} placeholder={t("email")} />
-                    {(!emailRegex && emailDomain) && (
-                        <SubtleText>A <code>{emailDomain}</code> email is required for registration.</SubtleText>
-                    )}
-                    {emailRegex && (
-                        <SubtleText>
-                            The owner of this site has set a complex email requirement.<br />
+            <FormGroup>
+                <Input name={"username"} placeholder={t("username")} autoFocus />
+                <Input format={localEmailRegex} name={"email"} placeholder={t("email")} />
+                {(!emailRegex && emailDomain) && (
+                    <SubtleText>A <code>{emailDomain}</code> email is required for registration.</SubtleText>
+                )}
+                {emailRegex && (
+                    <SubtleText>
+                        The owner of this site has set a complex email requirement.<br />
                             Please contact them for details.
-                        </SubtleText>
-                    )}
-                    <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} password />
-                    <Input name={"password2"} placeholder={t("password_repeat")} password />
+                    </SubtleText>
+                )}
+                <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} password />
+                <Input name={"password2"} placeholder={t("password_repeat")} password />
 
-                    {inviteRequired && (
-                        <Input val={invite || ""} disabled={!!invite} name={"invite"} placeholder={t("invite_code")} />
-                    )}
+                {inviteRequired && (
+                    <Input val={invite || ""} disabled={!!invite} name={"invite"} placeholder={t("invite_code")} />
+                )}
 
-                    <Checkbox name={"accept"}>
-                        I accept the <Link to={"/conduct"}>terms of use</Link> and <Link to={"/privacy"}>
-                            privacy policy
+                <Checkbox name={"accept"}>
+                    I accept the <Link to={"/conduct"}>terms of use</Link> and <Link to={"/privacy"}>
+                        privacy policy
                         </Link>.
                     </Checkbox>
-                </FormGroup>
+            </FormGroup>
 
-                <FormError />
-                <Row right>
-                    <Button large submit>{t("register")}</Button>
-                </Row>
-            </Form>
-        </Wrap>
-    </Page>;
+            <FormError />
+            <Row right>
+                <Button large submit>{t("register")}</Button>
+            </Row>
+        </Form>
+    </Wrap>;
 };

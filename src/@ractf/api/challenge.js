@@ -29,11 +29,12 @@ export const getChallenges = () => {
 
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags
+    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags,
+    post_score_explanation
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
         category: id, name, score, description,
-        flag_type, flag_metadata,
+        flag_type, flag_metadata, post_score_explanation,
         challenge_metadata, hidden,
         author, unlocks, files, tags,
         challenge_type: challenge_type || "default",
@@ -46,10 +47,11 @@ export const createChallenge = ({
 
 export const editChallenge = ({
     id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags
+    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags,
+    post_score_explanation
 }) => {
     return http.patch(ENDPOINTS.CHALLENGES + id, {
-        name, score, description,
+        name, score, description, post_score_explanation,
         flag_type, flag_metadata,
         challenge_metadata, hidden,
         author, unlocks, files, tags,

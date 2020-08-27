@@ -19,7 +19,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead
+    Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead, Column
 } from "@ractf/ui-kit";
 import { appContext, useApi } from "ractf";
 import { ENDPOINTS } from "@ractf/api";
@@ -62,34 +62,38 @@ export default () => {
 
     return <>
         <PageHead title={t("admin.announce.head")} />
-        <Row>
-            <Card header={t("admin.announce.active")}>
-                <Form>{localA ?
-                    localA.length ? (
-                        localA.map(i => <Row key={i.id}>
-                            <Leader sub={i.body} x onClick={remove(i)}>
-                                {i.title}
-                            </Leader>
+        <Column lgWidth={6} mdWidth={12}>
+            <Row>
+                <Card header={t("admin.announce.active")}>
+                    <Form>{localA ?
+                        localA.length ? (
+                            localA.map(i => <Row key={i.id}>
+                                <Leader sub={i.body} x onClick={remove(i)}>
+                                    {i.title}
+                                </Leader>
+                            </Row>
+                            )) : <label>{t("admin.announce.none")}</label>
+                        : <Row><Spinner /></Row>
+                    }</Form>
+                </Card>
+            </Row>
+        </Column>
+        <Column lgWidth={6} mdWidth={12}>
+            <Row>
+                <Card header={t("admin.announce.add")}>
+                    <Form handle={add} locked={locked}>
+                        <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
+                            <Input name={"title"} />
+                        </FormGroup>
+                        <FormGroup htmlFor={"body"} label={t("admin.announce.body")}>
+                            <Input name={"body"} rows={4} />
+                        </FormGroup>
+                        <Row>
+                            <Button submit>{t("admin.announce.add")}</Button>
                         </Row>
-                    )) : <label>{t("admin.announce.none")}</label>
-                    : <Row><Spinner /></Row>
-                }</Form>
-            </Card>
-        </Row>
-        <Row>
-            <Card header={t("admin.announce.add")}>
-                <Form handle={add} locked={locked}>
-                    <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
-                        <Input name={"title"} />
-                    </FormGroup>
-                    <FormGroup htmlFor={"body"} label={t("admin.announce.body")}>
-                        <Input name={"body"} rows={4} />
-                    </FormGroup>
-                    <Row>
-                        <Button submit>{t("admin.announce.add")}</Button>
-                    </Row>
-                </Form>
-            </Card>
-        </Row>
+                    </Form>
+                </Card>
+            </Row>
+        </Column>
     </>;
 };

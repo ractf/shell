@@ -17,14 +17,17 @@
 
 import React from "react";
 
-import { Spinner } from "@ractf/ui-kit";
+import { Page, Column, Row } from "@ractf/ui-kit";
 
 import "./Parts.scss";
 
 
-export const Wrap = ({ locked = false, children }) => {
-    return <div className={"authWrap"}>
-        {children}
-        {locked && <div className={"authDarken"}><Spinner /></div>}
-    </div>;
+export const Wrap = ({ children }) => {
+    return <Page>
+        <Column style={{ justifyContent: "center", height: "100%" }}>
+            <Row className={"authWrap"}>
+                {children}
+            </Row>
+        </Column>
+    </Page>;
 };

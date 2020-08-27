@@ -21,7 +21,7 @@ import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
 import {
-    Form, FormError, Page, Input, Button, FormGroup, Row, H2
+    Form, FormError, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
 import { completePasswordReset } from "@ractf/api";
 import { appContext, zxcvbn } from "ractf";
@@ -62,22 +62,20 @@ export default () => {
         );
     };
 
-    return <Page vCentre>
-        <Wrap>
-            <Form locked={locked} handle={doReset}>
-                <H2>{t("auth.reset_password")}</H2>
+    return <Wrap>
+        <Form locked={locked} handle={doReset}>
+            <H2>{t("auth.reset_password")}</H2>
 
-                <FormGroup>
-                    <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
-                    <Input name={"passwd2"} placeholder={t("password_repeat")} password />
-                </FormGroup>
+            <FormGroup>
+                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
+                <Input name={"passwd2"} placeholder={t("password_repeat")} password />
+            </FormGroup>
 
-                {message && <FormError>{message}</FormError>}
+            {message && <FormError>{message}</FormError>}
 
-                <Row right>
-                    <Button large submit>{t("auth.reset")}</Button>
-                </Row>
-            </Form>
-        </Wrap>
-    </Page>;
+            <Row right>
+                <Button large submit>{t("auth.reset")}</Button>
+            </Row>
+        </Form>
+    </Wrap>;
 };

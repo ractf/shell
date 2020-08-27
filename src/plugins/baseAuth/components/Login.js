@@ -19,13 +19,13 @@ import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Page, Input, Button, Row, FormGroup, Link, H2, FormError
+    Form, Input, Button, Row, FormGroup, Link, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
 import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
 import { appContext } from "ractf";
 import { EMAIL_RE } from "@ractf/util";
-import { Wrap } from "./Parts";
 import http from "@ractf/http";
+import { Wrap } from "./Parts";
 
 
 const BasicLogin = () => {
@@ -70,26 +70,24 @@ const BasicLogin = () => {
         postLogin(token);
     }, []);
 
-    return <Page centre>
-        <Wrap>
-            <Form action={needsOtp ? ENDPOINTS.LOGIN_2FA : ENDPOINTS.LOGIN} onError={onError}
-                postSubmit={afterLogin} method={"POST"} submitRef={submit}>
-                <H2>{t("auth.login")}</H2>
-                <FormGroup>
-                    <Input name={"username"} required placeholder={t("username")} autoFocus />
-                    <Input name={"password"} required placeholder={t("password")} password />
-                    <div className={"fgtpsdpmt"}>
-                        <span onClick={openForget}>{t("auth.pass_forgot")}
-                        </span> - <Link to={"/register"}>I need an account</Link>
-                    </div>
-                </FormGroup>
+    return <Wrap>
+        <Form action={needsOtp ? ENDPOINTS.LOGIN_2FA : ENDPOINTS.LOGIN} onError={onError}
+            postSubmit={afterLogin} method={"POST"} submitRef={submit}>
+            <H2>{t("auth.login")}</H2>
+            <FormGroup>
+                <Input name={"username"} required placeholder={t("username")} autoFocus />
+                <Input name={"password"} required placeholder={t("password")} password />
+                <SubtleText>
+                    <Link onClick={openForget}>{t("auth.pass_forgot")}
+                    </Link> - <Link to={"/register"}>I need an account</Link>
+                </SubtleText>
+            </FormGroup>
 
-                <FormError />
-                <Row right>
-                    <Button large submit>{t("login")}</Button>
-                </Row>
-            </Form>
-        </Wrap>
-    </Page>;
+            <FormError />
+            <Row right>
+                <Button large submit>{t("login")}</Button>
+            </Row>
+        </Form>
+    </Wrap>;
 };
 export default React.memo(BasicLogin);

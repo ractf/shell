@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import qs from "query-string";
 
-import { Page, Spinner, FormError } from "@ractf/ui-kit";
+import { Spinner, FormError } from "@ractf/ui-kit";
 import { useReactRouter } from "@ractf/util";
 import { verify } from "@ractf/api";
 import { Wrap } from "./Parts";
@@ -43,31 +43,27 @@ export const EmailVerif = () => {
     }, [setVerif, setMessage, id, secret]);
     if (!(secret && id)) return <Redirect to={"/login"} />;
 
-    return <Page vCentre>
-        <Wrap>
-            {verif === 0 ? <>
-                <div>Verifying your account...</div>
-                <Spinner />
-            </> : verif === 1 ? <>
-                <FormError>Account verification failed!</FormError>
-                <br />
-                <FormError>{message}</FormError>
-            </> : verif === 2 ? <>
-                <Redirect to={"/noteam"} />
-            </> : null}
-        </Wrap>
-    </Page>;
+    return <Wrap>
+        {verif === 0 ? <>
+            <div>Verifying your account...</div>
+            <Spinner />
+        </> : verif === 1 ? <>
+            <FormError>Account verification failed!</FormError>
+            <br />
+            <FormError>{message}</FormError>
+        </> : verif === 2 ? <>
+            <Redirect to={"/noteam"} />
+        </> : null}
+    </Wrap>;
 };
 
 
 export const EmailMessage = () => {
-    return <Page vCentre>
-        <Wrap>
-            Thank you for registering!
-            <br /><br />
-            Please check your inbox for a verification link.
-            <br /><br />
-            Make sure to check your spam folder if you can't find it!
-        </Wrap>
-    </Page>;
+    return <Wrap>
+        Thank you for registering!
+        <br /><br />
+        Please check your inbox for a verification link.
+        <br /><br />
+        Make sure to check your spam folder if you can't find it!
+    </Wrap>;
 };
