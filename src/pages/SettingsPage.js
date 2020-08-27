@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 
 import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
-import { usePreferences, useExperiement } from "@ractf/util/hooks";
+import { usePreferences, useExperiment } from "@ractf/util/hooks";
 import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 import {
@@ -139,8 +139,8 @@ export default () => {
         { "name": "all_solves", "description": "A team scores a flag" },
     ];
 
-    const [accDeletion] = useExperiement("accDeletion");
-    const [accOauth] = useExperiement("accOauth");
+    const [accDeletion] = useExperiment("accDeletion");
+    const [accOauth] = useExperiment("accOauth");
 
     return <Page title={t("settings.for", { name: user.username })}>
         <PageHead>

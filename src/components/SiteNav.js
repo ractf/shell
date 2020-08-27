@@ -27,7 +27,7 @@ import {
 import Header from "./Header";
 
 import { iteratePlugins } from "@ractf/plugins";
-import { useCategories, useExperiement } from "@ractf/util/hooks";
+import { useCategories, useExperiment } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
 
@@ -139,7 +139,7 @@ const SideBarNav_ = ({ children }) => {
             submenu: iteratePlugins("adminPage").map(({ key, plugin }) => [plugin.sidebar, "/admin/" + key])
         });
     }
-    const [showDev] = useExperiement("showDev");
+    const [showDev] = useExperiment("showDev");
 
     const header = <Wordmark />;
     const footer = <>
@@ -163,8 +163,8 @@ const SideBarNav_ = ({ children }) => {
             </Link>
             <br /><Link to="/debug/state">
                 State Export
-            </Link> - <Link to="/debug/experiements">
-                Experiements
+            </Link> - <Link to="/debug/experiments">
+                Experiments
             </Link>
         </>}
     </>;
@@ -179,7 +179,7 @@ const SideBarNav_ = ({ children }) => {
 const SideBarNav = React.memo(SideBarNav_);
 
 const SiteNav = ({ children }) => {    
-    const [showDev] = useExperiement("showDev");
+    const [showDev] = useExperiment("showDev");
     if (USE_HEAD_NAV)
         return <SiteWrap>
             <HeaderNav />

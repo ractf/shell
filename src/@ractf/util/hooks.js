@@ -78,6 +78,6 @@ export const usePreferences = () => {
     return [preferences || {}, setPreferences];
 };
 
-export const useExperiement = (experimentName) => {
+export const useExperiment = (experimentName) => {
     return usePreference("experiment." + experimentName, false);
 };

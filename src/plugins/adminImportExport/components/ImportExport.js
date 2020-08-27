@@ -23,7 +23,7 @@ import { appContext } from "ractf";
 import http from "@ractf/http";
 import { Button, PageHead, Card, Row, Modal, Select, Badge, FormGroup, Input, Form, H6, Column } from "@ractf/ui-kit";
 import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
-import { useCategories, useExperiement } from "@ractf/util/hooks";
+import { useCategories, useExperiment } from "@ractf/util/hooks";
 
 
 const PackCreator = ({ close }) => {
@@ -97,7 +97,7 @@ export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
     const categories = useCategories();
-    const [importEntire] = useExperiement("importEntire");
+    const [importEntire] = useExperiment("importEntire");
 
     const stripKeys = (orig, keys) => (
         Object.keys(orig).filter(

@@ -27,7 +27,7 @@ import { appContext } from "ractf";
 import http from "@ractf/http";
 import { useSelector, useDispatch } from "react-redux";
 import { setImpersonationToken } from "actions";
-import { useExperiement } from "@ractf/util/hooks";
+import { useExperiment } from "@ractf/util/hooks";
 
 
 export default () => {
@@ -116,7 +116,7 @@ export default () => {
         setState(prevState => ({ ...prevState, advSearch: false }));
     }, []);
 
-    const [advSearch] = useExperiement("advSearch");
+    const [advSearch] = useExperiment("advSearch");
 
     return <>
         {state.advSearch && (
