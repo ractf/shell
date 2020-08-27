@@ -27,6 +27,7 @@ import { appContext } from "ractf";
 import http from "@ractf/http";
 import { useSelector, useDispatch } from "react-redux";
 import { setImpersonationToken } from "actions";
+import { useExperiement } from "@ractf/util/hooks";
 
 
 export default () => {
@@ -115,6 +116,8 @@ export default () => {
         setState(prevState => ({ ...prevState, advSearch: false }));
     }, []);
 
+    const [advSearch] = useExperiement("advSearch");
+
     return <>
         {state.advSearch && (
             <ModalForm header={"Advanced Member Search"} okayLabel={"Search"}
@@ -134,7 +137,7 @@ export default () => {
             <Form handle={doSearch} locked={state.loading}>
                 <Row>
                     <InputButton submit name={"username"} placeholder={"Search for Username"} button={"Search"} />
-                    <Button disabled onClick={openAdvSearch}>Advanced Search</Button>
+                    {advSearch && <Button onClick={openAdvSearch}>Advanced Search</Button>}
                 </Row>
                 {state.error && <FormError>{state.error}</FormError>}
             </Form>

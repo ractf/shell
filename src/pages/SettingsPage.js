@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 
 import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
-import { usePreferences } from "@ractf/util/hooks";
+import { usePreferences, useExperiement } from "@ractf/util/hooks";
 import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 import {
@@ -139,6 +139,9 @@ export default () => {
         { "name": "all_solves", "description": "A team scores a flag" },
     ];
 
+    const [accDeletion] = useExperiement("accDeletion");
+    const [accOauth] = useExperiement("accOauth");
+
     return <Page title={t("settings.for", { name: user.username })}>
         <PageHead>
             {t("settings.for", { name: user.username })}
@@ -171,10 +174,12 @@ export default () => {
                             limit={36} placeholder={t("username")} button={t("save")} submit />
                     </FormGroup>
                 </Form>
-                <Row centre>
-                    <Button disabled lesser>Link Google account</Button>
-                    <Button disabled lesser>Link RACTF passport</Button>
-                </Row>
+                {accOauth && (
+                    <Row centre>
+                        <Button disabled lesser>Link Google account</Button>
+                        <Button disabled lesser>Link RACTF passport</Button>
+                    </Row>
+                )}
             </Card>
             <Card header={t("settings.cards.change_password")}>
                 <Form action={ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
@@ -280,14 +285,16 @@ export default () => {
                     </Row>
                 </Form>
             </Card>
-            <Card danger framed header={t("settings.cards.danger")}>
-                <Form action={""} method={"POST"} validator={deleteValidator}>
-                    <FormGroup htmlFor={"password"} label={t("curr_pass")}>
-                        <Input name={"password"} label={t("curr_pass")} placeholder={t("curr_pass")} submit />
-                    </FormGroup>
-                    <Button danger submit>Delete my account</Button>
-                </Form>
-            </Card>
+            {accDeletion && (
+                <Card danger framed header={t("settings.cards.danger")}>
+                    <Form action={""} method={"POST"} validator={deleteValidator}>
+                        <FormGroup htmlFor={"password"} label={t("curr_pass")}>
+                            <Input name={"password"} label={t("curr_pass")} placeholder={t("curr_pass")} submit />
+                        </FormGroup>
+                        <Button danger submit>Delete my account</Button>
+                    </Form>
+                </Card>
+            )}
         </Column>
     </Page>;
 };

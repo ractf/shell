@@ -23,7 +23,7 @@ import { appContext } from "ractf";
 import http from "@ractf/http";
 import { Button, PageHead, Card, Row, Modal, Select, Badge, FormGroup, Input, Form, H6, Column } from "@ractf/ui-kit";
 import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
-import { useCategories } from "@ractf/util/hooks";
+import { useCategories, useExperiement } from "@ractf/util/hooks";
 
 
 const PackCreator = ({ close }) => {
@@ -97,6 +97,7 @@ export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
     const categories = useCategories();
+    const [importEntire] = useExperiement("importEntire");
 
     const stripKeys = (orig, keys) => (
         Object.keys(orig).filter(
@@ -425,7 +426,7 @@ export default () => {
             <Row>
                 <Card header={t("admin.import")}>
                     <Row centre>
-                        <Button disabled danger>{t("admin.import_ctf")}</Button>
+                        {importEntire && <Button disabled danger>{t("admin.import_ctf")}</Button>}
                         <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
                         <Button onClick={importChal}>{t("admin.import_chal")}</Button>
                     </Row>
@@ -434,7 +435,7 @@ export default () => {
             <Row>
                 <Card header={t("admin.export")}>
                     <Row centre>
-                        <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>
+                        {importEntire && <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>}
                         <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
                         <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
                         <Button onClick={createPack}>Create challenge pack</Button>

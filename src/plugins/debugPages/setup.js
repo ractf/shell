@@ -21,10 +21,25 @@ import LoadingPage from "../../pages/LoadingPage";
 export default () => {
     const wsTester = dynamicLoad(() => import(/* webpackChunkName: "ws-tester" */ "./components/WSTester"));
     const debug = dynamicLoad(() => import(/* webpackChunkName: "debug" */ "./components/Debug"));
+    const experiments = dynamicLoad(() => import(/* webpackChunkName: "experiments" */ "./components/Experiments"));
+    const state = dynamicLoad(() => import(/* webpackChunkName: "state" */ "./components/State"));
+    const ui = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "./components/UI"));
 
+    registerPlugin("page", "/debug/experiments", {
+        title: "Experiments",
+        component: experiments
+    });
+    registerPlugin("page", "/debug/state", {
+        title: "State Download",
+        component: state
+    });
     registerPlugin("page", "/debug/ws", {
         title: "WebSocket Debugger",
         component: wsTester
+    });
+    registerPlugin("page", "/debug/ui", {
+        title: "UI",
+        component: ui
     });
     registerPlugin("page", "/debug/loading", {
         title: "LoadingPage",

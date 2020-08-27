@@ -17,21 +17,18 @@
 
 import React from "react";
 
-import {
-    Page, HR, TextBlock, Row, PageHead, Column
-} from "@ractf/ui-kit";
-import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
+import { Page, Button, PageHead } from "@ractf/ui-kit";
+import { downloadJSON } from "@ractf/util/download";
+import { store } from "store";
 
 
 export default () => {
-    const [backendVersion] = useApi(ENDPOINTS.VERSION);
+    const exportData = () => {
+        downloadJSON(store.getState(), "ractf.redux");
+    };
 
     return <Page>
-        <PageHead>Debug Versions</PageHead>
-        <Column>
-            <Row><code>ractf/shell</code> version: <code>{__COMMIT_HASH__}</code></Row>
-            <Row><code>ractf/backend</code> version: <code>{backendVersion && backendVersion.commit_hash}</code></Row>
-        </Column>
+        <PageHead>State Download</PageHead>
+        <Button onClick={exportData}>Export debug data</Button>
     </Page>;
 };

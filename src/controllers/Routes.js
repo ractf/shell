@@ -41,7 +41,6 @@ const AdminPage = dynamicLoad(() => import(/* webpackChunkName: "admin-page" */ 
 const Campaign = dynamicLoad(() => import(/* webpackChunkName: "campaign" */ "../pages/Campaign"));
 const Profile = dynamicLoad(() => import(/* webpackChunkName: "profile" */ "../pages/Profile"));
 const TwoFA = dynamicLoad(() => import(/* webpackChunkName: "2fa" */ "../pages/TwoFA"));
-const UI = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "../pages/UI"));
 
 
 class ErrorBoundary extends React.PureComponent {
@@ -180,10 +179,6 @@ const Routes = () => {
 
         <Route exact path={"/leaderboard"}>
             <Page title={"Leaderboard"} C={Leaderboard} />
-        </Route>
-
-        <Route exact path={"/ui"}>
-            <Page title={"UI"} C={UI} />
         </Route>
 
         <Redirect path={"/team"} to={"/team/me"} exact />

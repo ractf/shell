@@ -77,3 +77,7 @@ export const usePreferences = () => {
     }, [dispatch, preferences]);
     return [preferences || {}, setPreferences];
 };
+
+export const useExperiement = (experimentName) => {
+    return usePreference("experiment." + experimentName, false);
+};

@@ -27,7 +27,7 @@ import {
 import Header from "./Header";
 
 import { iteratePlugins } from "@ractf/plugins";
-import { useCategories } from "@ractf/util/hooks";
+import { useCategories, useExperiement } from "@ractf/util/hooks";
 import { useConfig } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
 
@@ -139,6 +139,7 @@ const SideBarNav_ = ({ children }) => {
             submenu: iteratePlugins("adminPage").map(({ key, plugin }) => [plugin.sidebar, "/admin/" + key])
         });
     }
+    const [showDev] = useExperiement("showDev");
 
     const header = <Wordmark />;
     const footer = <>
@@ -154,11 +155,18 @@ const SideBarNav_ = ({ children }) => {
             {t("footer.privacy")}
         </Link> - <Link to="/conduct">
             {t("footer.terms")}
-        </Link><br /><Link to="/ui">
-            UI Framework
-        </Link> - <Link to="/debug">
-            Debug
-        </Link>
+        </Link>{showDev && <>
+            <br /><Link to="/debug">
+                Debug Versions
+            </Link> - <Link to="/debug/ui">
+                UI Framework
+            </Link>
+            <br /><Link to="/debug/state">
+                State Export
+            </Link> - <Link to="/debug/experiements">
+                Experiements
+            </Link>
+        </>}
     </>;
 
     return <>
@@ -171,6 +179,7 @@ const SideBarNav_ = ({ children }) => {
 const SideBarNav = React.memo(SideBarNav_);
 
 const SiteNav = ({ children }) => {    
+    const [showDev] = useExperiement("showDev");
     if (USE_HEAD_NAV)
         return <SiteWrap>
             <HeaderNav />
@@ -182,10 +191,14 @@ const SiteNav = ({ children }) => {
                         <FootLink to={"/privacy"}>Privacy Policy</FootLink>
                         <FootLink to={"/conduct"}>Terms of Use</FootLink>
                     </FootCol>
-                    <FootCol title={"For Developers"}>
-                        <FootLink to={"/ui"}>UI Framework</FootLink>
-                        <FootLink to={"/debug"}>Debug</FootLink>
-                    </FootCol>
+                    {showDev && (
+                        <FootCol title={"For Developers"}>
+                            <FootLink to={"/debug"}>Debug Versions</FootLink>
+                            <FootLink to={"/debug/ui"}>UI Framework</FootLink>
+                            <FootLink to={"/debug/state"}>State Export</FootLink>
+                            <FootLink to={"/debug/experiments"}>Experiments</FootLink>
+                        </FootCol>
+                    )}
                 </FootRow>
                 <FootRow center slim darken column>
                     <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
