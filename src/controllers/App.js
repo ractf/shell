@@ -175,6 +175,7 @@ const App = React.memo(() => {
 
     const promptConfirm = (body, inputs = 0) => {
         if (inputs === 0) inputs = [];
+        if (!body.message) body = { message: body, small: true };
 
         return new Promise((resolveOuter, rejectOuter) => {
             const innerPromise = new Promise((resolve, reject) => {

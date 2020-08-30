@@ -17,7 +17,7 @@
 
 import React, { useCallback } from "react";
 
-import { Form, Page, Select, Column, Row, PageHead, FormGroup } from "@ractf/ui-kit";
+import { Form, Page, Select, Column, PageHead, FormGroup } from "@ractf/ui-kit";
 import { usePreferences } from "@ractf/util/hooks";
 import { setPreference } from "actions";
 import { store } from "store";
@@ -55,7 +55,7 @@ const Experiments = () => {
                 store.dispatch(setPreference("experiment." + i, changes[i]));
             }
         }
-    });
+    }, [prefs]);
 
     return <Page>
         <PageHead>Experiments</PageHead>

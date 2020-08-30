@@ -18,13 +18,13 @@
 import React from "react";
 
 import {
-    Page, HR, TextBlock, Row, PageHead, Column
+    Page, Row, PageHead, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
 
 
-export default () => {
+const Debug = () => {
     const [backendVersion] = useApi(ENDPOINTS.VERSION);
 
     return <Page>
@@ -35,3 +35,4 @@ export default () => {
         </Column>
     </Page>;
 };
+export default Debug;

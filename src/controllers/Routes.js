@@ -25,7 +25,7 @@ import Countdown from "../pages/Countdown";
 import TeamPage from "../pages/TeamPage";
 
 import { TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
-import { iteratePlugins, PluginComponent } from "@ractf/plugins";
+import { iteratePlugins, PluginComponent, getPlugin } from "@ractf/plugins";
 import { dynamicLoad } from "ractf";
 import { useConfig } from "@ractf/util";
 import { logout } from "@ractf/api";
@@ -75,7 +75,7 @@ class ErrorBoundary extends React.PureComponent {
 }
 
 
-let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
+const Page_ = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     const user = useSelector(state => state.user);
     const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
     //if (!process.env.REACT_APP_NO_SITE_LOCK) {
@@ -90,14 +90,14 @@ let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
         document.title = title || window.env.siteName;
 
     if (auth && !user) return <Redirect to={"/login"} />;
-    if (noAuth && user) return <Redirect to={"/home"} />;
-    if (admin && (!user || !user.is_staff)) return <Redirect to={"/home"} />;
+    if (noAuth && user) return <Redirect to={"/"} />;
+    if (admin && (!user || !user.is_staff)) return <Redirect to={"/"} />;
 
     return <ErrorBoundary>
         {C ? <C /> : children}
     </ErrorBoundary>;
 };
-Page = React.memo(Page);
+export const Page = React.memo(Page_);
 
 const URIHandler = () => {
     return <Redirect to={decodeURIComponent(window.location.search).split(":", 2)[1]} />;
@@ -115,14 +115,16 @@ const Logout = () => {
     useEffect(() => {
         logout();
     }, []);
-    return <Redirect to={"/home"} />;
+    return <Redirect to={"/"} />;
 };
 
 
 const Routes = () => {
+    const notFoundPage = getPlugin("errorPage", "404")?.component;
+
     return <Switch>
         {iteratePlugins("page").map(({ key: url, plugin: page }) =>
-            <Route exact path={url} key={url}>
+            <Route exact={!page.noExact} path={url} key={url}>
                 <Page title={page.title} auth={page.auth} countdown={page.countdown}
                     admin={page.admin} noAuth={page.noAuth} C={page.component} />
             </Route>
@@ -130,8 +132,7 @@ const Routes = () => {
 
         <Route exact path={"/uri"} component={URIHandler} />
 
-        <Redirect exact path={"/"} to={"/home"} />
-        <Route exact path={"/home"}>
+        <Route exact path={"/"}>
             <Page countdown={"registration_open"} auth>
                 <Redirect to={"/campaign"} />
             </Page>
@@ -186,9 +187,11 @@ const Routes = () => {
             <Page title={"Team"} auth C={TeamPage} />
         </Route>
 
-        <Route>
-            <Page title={"Error"} C={NotFound} />
-        </Route>
+        {notFoundPage ? <Route component={notFoundPage} /> : (
+            <Route>
+                <Page title={"Error"} C={NotFound} />
+            </Route>
+        )}
     </Switch>;
 };
 export default React.memo(Routes);

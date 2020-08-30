@@ -84,7 +84,7 @@ const SideBarNav_ = ({ children }) => {
     menu.push({
         name: t("sidebar.brand"),
         submenu: [
-            [t("sidebar.home"), "/home"],
+            [t("sidebar.home"), "/"],
             [t("user_plural"), "/users"],
             hasTeams ? [t("team_plural"), "/teams"] : null,
             [t("leaderboard"), "/leaderboard"]
@@ -187,7 +187,7 @@ const SiteNav = ({ children }) => {
             <Footer>
                 <FootRow main>
                     <FootCol title={window.env.siteName}>
-                        <FootLink to={"/home"}>Home</FootLink>
+                        <FootLink to={"/"}>Home</FootLink>
                         <FootLink to={"/privacy"}>Privacy Policy</FootLink>
                         <FootLink to={"/conduct"}>Terms of Use</FootLink>
                     </FootCol>
