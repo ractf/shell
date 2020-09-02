@@ -60,6 +60,7 @@ export default class Challenge {
         for (const i of this)
             if (i !== "category")
                 ret[i] = this[i];
+        ret.tags = ret.tags.map(i => (typeof i === "object") ? i : ({ type: "tag", text: i }));
         return ret;
     }
 
