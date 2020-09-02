@@ -27,7 +27,9 @@ import Challenge from "./Challenge.js";
 
 
 export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, showLocked }) => {
-    const { showSolved, filter, search } = useSelector(state => state.jeopardySearch);
+    const showSolved = useSelector(state => state.jeopardySearch.showSolved);
+    const filter = useSelector(state => state.jeopardySearch.filter);
+    const search = useSelector(state => state.jeopardySearch.search);
     const dispatch = useDispatch();
 
     const tags = {};
@@ -89,7 +91,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
         const newFilter = { ...filter };
         let changed = false;
         for (const i in filter) {
-            if (!Object.hasOwnProperty(tags, i)) {
+            if ((typeof tags[i]) === "undefined") {
                 if (filter[i]) {
                     delete newFilter[i];
                     changed = true;
