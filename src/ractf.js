@@ -50,6 +50,7 @@ const plugins = {
     challengeMatcher: {},
     flagType: {},
     countdownBackdrop: {},
+    topLevelPage: {},
 };
 export const _plugins = plugins;
 
