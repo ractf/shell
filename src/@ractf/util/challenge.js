@@ -44,7 +44,7 @@ export default class Challenge {
     }
 
     get url() {
-        return `${this.category.url}/challenge/${this.id}`;
+        return `${this.category.url}/${this.id}`;
     }
 
     get tags() {

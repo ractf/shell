@@ -156,7 +156,7 @@ const Routes = () => {
             <Page title={"Settings"} auth C={TwoFA} />
         </Route>
 
-        <Route exact path={"/campaign/:tabId/challenge/:chalId"}>
+        <Route exact path={"/campaign/:tabId/:chalId"}>
             <Page countdown={"countdown_timestamp"} title={"Challenges"} auth C={ChallengePage} />
         </Route>
         <Route exact path={"/campaign"}>

@@ -47,7 +47,7 @@ export default () => {
     class SluggedChallenge extends getClass(Challenge) {
         get url() {
             const id = this.challenge_metadata?.challenge_slug || this.id;
-            return `${this.category.url}/challenge/${id}`;
+            return `${this.category.url}/${id}`;
         }
     };
     registerSubclass(Challenge, SluggedChallenge);

@@ -191,7 +191,7 @@ export default () => {
 
     const showEditor = (challenge) => {
         return () => {
-            dispatch(push(challenge.category.url + "/challenge/new#" + encodeURIComponent(JSON.stringify(challenge))));
+            dispatch(push(challenge.category.url + "/new#" + encodeURIComponent(JSON.stringify(challenge))));
         };
     };
 
