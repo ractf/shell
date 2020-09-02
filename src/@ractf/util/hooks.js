@@ -14,6 +14,7 @@ export const useCategories = () => {
 
 export const useCategory = (id) => {
     const categories = useSelector(state => state.challenges?.categories) || [];
+    if (typeof id === "undefined") return null;
 
     for (const { plugin: matcher } of iteratePlugins("categoryMatcher")) {
         const cat = matcher(categories, id);
@@ -33,6 +34,7 @@ export const useChallenge = (category, challengeId) => {
     if (!category) {
         return null;
     }
+    if (typeof challengeId === "undefined") return null;
 
     for (const { plugin: matcher } of iteratePlugins("challengeMatcher")) {
         const challenge = matcher(category, challengeId);

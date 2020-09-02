@@ -52,52 +52,54 @@ export default ({ challenge, category, embedded, rightComponent }) => {
     if (rightComponent)
         rightSide = React.createElement(rightComponent, { challenge: challenge });
 
-    const chalContent = <Column noGutter={embedded}>
-        {challengeMods}
-        <Row>
-            <TextBlock>
-                <Markdown source={challenge.description} />
-            </TextBlock>
-        </Row>
+    const chalContent = <>
+        <Column noGutter={embedded}>
+            {challengeMods}
+            <Row>
+                <TextBlock>
+                    <Markdown source={challenge.description} />
+                </TextBlock>
+            </Row>
 
-        {challenge.files && !!challenge.files.length && <Row>
-            {challenge.files.map(file => file && (
-                <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} tiny={embedded} />
-            ))}
-        </Row>}
-        {user.team && challenge.hints && !!challenge.hints.length && <Row>
-            {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                return <Hint {...hint} key={hint.id} tiny={embedded} />;
-            })}
-        </Row>}
+            {challenge.files && !!challenge.files.length && <Row>
+                {challenge.files.map(file => file && (
+                    <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} tiny={embedded} />
+                ))}
+            </Row>}
+            {user.team && challenge.hints && !!challenge.hints.length && <Row>
+                {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
+                    return <Hint {...hint} key={hint.id} tiny={embedded} />;
+                })}
+            </Row>}
 
-        {challenge.solved && challenge.post_score_explanation && <Row>
-            <Card header={t("challenge.post_score_explanation")}>
-                <Markdown source={challenge.post_score_explanation} />
-            </Card>
-        </Row>}
-        {user.team
-            ? (
-                <Row>
-                    {embedded && (
-                        <Button to={challenge.url}>Open challenge page</Button>
-                    )}
-                    <FlagForm challenge={challenge} submitRef={submitFlag}
-                        onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
-                </Row>
-            ) : (
-                <>
+            {challenge.solved && challenge.post_score_explanation && <Row>
+                <Card header={t("challenge.post_score_explanation")}>
+                    <Markdown source={challenge.post_score_explanation} />
+                </Card>
+            </Row>}
+            {user.team
+                ? (
                     <Row>
-                        <FlashText danger>{t("challenge.no_team")}</FlashText>
+                        {embedded && (
+                            <Button to={challenge.url}>Open challenge page</Button>
+                        )}
+                        <FlagForm challenge={challenge} submitRef={submitFlag}
+                            onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
                     </Row>
-                    <Row>
-                        <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
-                        <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
-                    </Row>
-                </>
-            )
-        }
-    </Column>;
+                ) : (
+                    <>
+                        <Row>
+                            <FlashText danger>{t("challenge.no_team")}</FlashText>
+                        </Row>
+                        <Row>
+                            <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
+                            <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
+                        </Row>
+                    </>
+                )
+            }
+        </Column>
+    </>;
 
     const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
 

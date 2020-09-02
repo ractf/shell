@@ -16,7 +16,6 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 //export const DOMAIN = "https://staging-ephemeral.ractf.co.uk";
-//export const DOMAIN = "https://api-elite.ractf.co.uk";
 export const DOMAIN = window.env.apiDomain;
 export const API_BASE = window.env.apiBase;
 export const BASE_URL = DOMAIN + API_BASE;
