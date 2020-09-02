@@ -190,7 +190,9 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                         <FormGroup htmlFor={"challenge_type"} label={t("editor.chal_type")}>
                             <Select options={iteratePlugins("challengeType").map(({ key }) => ({ key, value: key }))}
                                 initial={
-                                    iteratePlugins("challengeType").map(i => i.key).indexOf(challenge.challenge_type)
+                                    iteratePlugins("challengeType")
+                                        .map(i => i.key)
+                                        .indexOf(challenge.challenge_type || "default")
                                 }
                                 name={"challenge_type"} />
                         </FormGroup>
@@ -202,7 +204,9 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                     ({ key, plugin: { name } }) => ({ key, value: name || key })
                                 )}
                                 initial={
-                                    iteratePlugins("flagType").map(i => i.key).indexOf(challenge.flag_type)
+                                    iteratePlugins("flagType")
+                                        .map(i => i.key)
+                                        .indexOf(challenge.flag_type || "plaintext")
                                 }
                                 name={"flag_type"} />
                         </FormGroup>
