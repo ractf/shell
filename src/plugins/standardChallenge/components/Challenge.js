@@ -129,9 +129,11 @@ export default ({ challenge, category, embedded, rightComponent }) => {
             back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
             title={challenge.name} tags={tags}
         />
-        <Row style={{ position: "absolute", top: 16, right: 32 }} right>
-            <Button to="#edit" danger>{t("edit")}</Button>
-        </Row>
+        {user.is_staff && (
+            <Row style={{ position: "absolute", top: 16, right: 32 }} right>
+                <Button to="#edit" danger>{t("edit")}</Button>
+            </Row>
+        )}
         {chalContent}
     </Page>;
 
