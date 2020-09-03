@@ -88,9 +88,10 @@ const Profile = () => {
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
-                {(userData.is_staff || userData.is_verified) && <Row tight>
+                {(userData.is_staff || userData.is_verified || userData.state_actor) && <Row tight>
                     {userData.is_staff && <Badge danger pill>Admin</Badge>}
                     {userData.is_verified && <Badge warning pill>Staff</Badge>}
+                    {userData.state_actor && <Badge primary pill>State Actor</Badge>}
                 </Row>}
                 <div>{t("point_count", { count: userData.leaderboard_points })}</div>
                 <div className={"userJoined"}>Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment></div>
