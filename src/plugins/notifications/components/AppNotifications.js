@@ -30,7 +30,7 @@ const PopupMessage = ({ data }) => {
 
     return <div onClick={onClick}>
         <div>{data.title}</div>
-        <div><Markdown>{data.body}</Markdown></div>
+        <div><Markdown source={data.body} /></div>
     </div>;
 };
 

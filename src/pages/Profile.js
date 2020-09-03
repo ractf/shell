@@ -70,7 +70,7 @@ const Profile = () => {
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (1 || !userData) return <LoadingPage title={"Users"} />;
+    if (!userData) return <LoadingPage title={"Users"} />;
 
     const categoryValues = {};
     const uData = userData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
