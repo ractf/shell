@@ -140,7 +140,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
     const { t } = useTranslation();
 
     const editTransformer = useCallback((data) => {
-        return { ...data, tags: data.tags.map(i => ({ type: "tag", text: i })) };
+        return { ...data, tags: data.tags ? data.tags.map(i => ({ type: "tag", text: i })) : [] };
     }, []);
 
     const body = (
@@ -149,18 +149,19 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                 <Column lgWidth={6} mdWidth={12}>
                     <Card header={"Basic settings"} collapsible>
                         <FormGroup htmlFor={"name"} label={t("editor.chal_name")}>
-                            <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} />
+                            <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} required />
                         </FormGroup>
                         <FormGroup htmlFor={"score"} label={t("editor.chal_points")}>
                             <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined}
-                                name={"score"} placeholder={t("editor.chal_points")} format={NUMBER_RE} />
+                                name={"score"} placeholder={t("editor.chal_points")} format={NUMBER_RE} required />
                         </FormGroup>
                         <FormGroup htmlFor={"author"} label={t("editor.chal_author")}>
-                            <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")} />
+                            <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")}
+                                required />
                         </FormGroup>
                         <FormGroup htmlFor={"description"} label={t("editor.chal_brief")}>
                             <Input rows={5} val={challenge.description} name={"description"}
-                                placeholder={t("editor.chal_brief")} />
+                                placeholder={t("editor.chal_brief")} required />
                         </FormGroup>
                         <FormGroup htmlFor={"tags"} label={t("editor.tags")}>
                             <InputTags name={"tags"} val={challenge.tags} />
