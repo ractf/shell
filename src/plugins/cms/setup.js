@@ -17,15 +17,13 @@
 
 import React, { useEffect, useContext, useState, useRef } from "react";
 
-import { registerPlugin, registerReducer, appContext } from "ractf";
-import { NotFound } from "pages/ErrorPages";
+import { registerPlugin, registerReducer, appContext, registerMount } from "ractf";
 import http from "@ractf/http";
-import { useReactRouter } from "@ractf/util";
 import { useSelector, useDispatch } from "react-redux";
 import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup, Link } from "@ractf/ui-kit";
 import { FaPencilAlt, FaTrash, FaPlus } from "react-icons/fa";
-import { Page as RoutesPage } from "controllers/Routes";
-import { Redirect } from "react-router-dom";
+import { Route } from "react-router-dom";
+import { store } from "store";
 
 const INITIAL = {
     pages: [],
@@ -50,18 +48,6 @@ const CMSPage = React.memo(({ page }) => {
     </Page>;
 });
 CMSPage.displayName = "CMSPage";
-
-const CMSErrorPage = React.memo(() => {
-    const { location } = useReactRouter();
-    const pages = useSelector(state => state.cms.pages);
-    for (const i of pages) {
-        if (i.url === location.pathname) {
-            return <CMSPage page={i} />;
-        }
-    }
-    return <NotFound />;
-});
-CMSErrorPage.displayName = "CMSErrorPage";
 
 const setPages = (pages) => {
     return { type: "SET_CMS_PAGES", payload: pages };
@@ -111,11 +97,18 @@ const CMSAdmin = () => {
             dispatch(setPages(pages.map(i => i.id === resp.id ? resp : i)));
         setEditingPage(false);
     };
+    const validator = ({ url }) => {
+        return new Promise((resolve, reject) => {
+            if (/^[/]*admin/.test(url))
+                return reject({ url: "Overwriting admin pages is forbidden." });
+            resolve();
+        });
+    };
 
     return <Page>
         {editingPage !== false ?
             <Modal header={"Editing Page"} onClose={() => setEditingPage(false)} onConfirm={() => formSubmit.current()}>
-                <Form onChange={onEditChange} postSubmit={postSubmit}
+                <Form onChange={onEditChange} postSubmit={postSubmit} validator={validator}
                     action={(typeof editingPage.id !== "undefined") ? `/pages/${editingPage.id}/` : "/pages/"}
                     method={(typeof editingPage.id !== "undefined") ? "PATCH" : "POST"} submitRef={formSubmit}
                 >
@@ -145,32 +138,22 @@ const CMSAdmin = () => {
     </Page>;
 };
 
-const HomeComponent = () => {
-    const pages = useSelector(state => state.cms.pages);
-    for (const i of pages) {
-        if (i.url === "/") {
-            return <CMSPage page={i} />;
-        }
-    }
-
-    return <RoutesPage countdown={"registration_open"} auth>
-        <Redirect to={"/campaign"} />
-    </RoutesPage>;
+const cmsRoutes = () => {
+    const pages = store.getState().cms.pages;
+    return pages.map(i => (
+        <Route key={i.url} path={i.url} exact>
+            <CMSPage page={i} />
+        </Route>
+    ));
 };
 
 export default () => {
-    registerPlugin("errorPage", "404", {
-        component: CMSErrorPage,
-    });
-    registerPlugin("page", "/", {
-        component: HomeComponent
-    });
-    registerPlugin("mountWithinApp", "cms", {
-        component: CMSLoader
-    });
     registerPlugin("adminPage", "cms", {
         component: CMSAdmin,
         sidebar: "Pages",
     });
     registerReducer("cms", cmsReducer);
+    
+    registerMount("app", "cms", CMSLoader);
+    registerMount("routes", "cms", cmsRoutes, { isComponent: false });
 };

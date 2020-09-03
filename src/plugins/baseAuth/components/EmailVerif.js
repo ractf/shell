@@ -44,16 +44,17 @@ export const EmailVerif = () => {
     if (!(secret && id)) return <Redirect to={"/login"} />;
 
     return <Wrap>
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
             {verif === 0 ? <>
                 <div>Verifying your account...</div>
+                <br />
                 <Spinner />
             </> : verif === 1 ? <>
                 <FormError>Account verification failed!</FormError>
                 <br />
                 <FormError>{message}</FormError>
             </> : verif === 2 ? <>
-                <Redirect to={"/noteam"} />
+                <Redirect to={"/welcome"} />
             </> : null}
         </div>
     </Wrap>;
@@ -62,7 +63,7 @@ export const EmailVerif = () => {
 
 export const EmailMessage = () => {
     return <Wrap>
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
             Thank you for registering!
             <br /><br />
             Please check your inbox for a verification link.

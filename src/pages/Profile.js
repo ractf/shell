@@ -22,12 +22,13 @@ import { useTranslation } from "react-i18next";
 import { transparentize } from "polished";
 import { BrokenShards } from "./ErrorPages";
 
-import { useReactRouter } from "@ractf/util";
+import { useReactRouter, useConfig } from "@ractf/util";
 import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Row, Column
+    FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
+import LoadingPage from "./LoadingPage";
 
 import admin from "static/img/admin.png";
 import donor from "static/img/donor_large.png";
@@ -63,12 +64,13 @@ const Profile = () => {
     const user = match.params.user;
     const categories = useCategories();
     const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
+    const hasTeams = useConfig("enable_teams");
 
     if (error) return <Page title={"Users"} centre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (!userData) return <Page title={"Users"} centre><Row><Spinner /></Row></Page>;
+    if (1 || !userData) return <LoadingPage title={"Users"} />;
 
     const categoryValues = {};
     const uData = userData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
@@ -124,9 +126,11 @@ const Profile = () => {
                             <FaDiscord /><span>{userData.discord}</span>
                         </span>)}
 
-                {userData.team && <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
-                    <FaUsers /> {userData.team_name}
-                </Link>}
+                {hasTeams && userData.team && (
+                    <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
+                        <FaUsers /> {userData.team_name}
+                    </Link>
+                )}
                 {Object.keys(categoryValues).length !== 0 && <>
                     <div className={"profilePieWrap"}>
                         <div className={"ppwHead"}>Solve attempts</div>

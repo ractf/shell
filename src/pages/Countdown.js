@@ -22,7 +22,7 @@ import { recheckCountdowns } from "@ractf/api";
 import { useInterval } from "@ractf/util";
 
 import style from "./Countdown.module.scss";
-import { iteratePlugins } from "@ractf/plugins";
+import { mountPoint } from "@ractf/plugins";
 
 
 export default ({ cdKey }) => {
@@ -64,9 +64,7 @@ export default ({ cdKey }) => {
     }, []);
 
     return <div className={style.lockWrap}>
-        {iteratePlugins("countdownBackdrop").map(({ key, plugin }) => (
-            React.createElement(plugin.component, { key })
-        ))}
+        {mountPoint("countdown")}
 
         <div className={style.lockTitle}>Site Locked!</div>
         <div className={style.siteCountdown}>{countdownText ? "Unlock in " + countdownText : ""}</div>

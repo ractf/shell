@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
 import { usePreferences, useExperiment } from "@ractf/util/hooks";
-import { NUMBER_RE } from "@ractf/util";
+import { NUMBER_RE, useConfig } from "@ractf/util";
 import http from "@ractf/http";
 import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,
@@ -77,6 +77,7 @@ export default () => {
     const team = useSelector(state => state.team);
     const dispatch = useDispatch();
     const [preferences, setPreferences] = usePreferences();
+    const hasTeams = useConfig("enable_teams");
 
     const passwordValidator = useCallback(({ old_password, password, new2 }) => {
         return new Promise((resolve, reject) => {
@@ -136,7 +137,7 @@ export default () => {
     const teamOwner = (team ? team.owner === user.id : null);
 
     const notificationGroups = [
-        { "name": "all_solves", "description": "A team scores a flag" },
+        { "name": "all_solves", "description": hasTeams ? "A team scores a flag" : "A player scores a flag" },
     ];
 
     const [accDeletion] = useExperiment("accDeletion");
@@ -232,44 +233,46 @@ export default () => {
             </Card>
         </Column>
         <Column lgWidth={6} mdWidth={12}>
-            <Card header={t("settings.cards.team")}>
-                {team ? <>
-                    <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
-                        locked={!teamOwner}>
-                        <FormGroup htmlFor={"name"} label={t("team_name")}>
-                            <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />
-                        </FormGroup>
-                        <FormGroup htmlFor={"desc"} label={t("team_desc")}>
-                            <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
-                        </FormGroup>
-                        <FormGroup htmlFor={"password"} label={t("team_secret")}>
-                            <Input val={team.password} name={"password"} password placeholder={t("team_secret")} />
-                            <SubtleText>{t("team_secret_warn")}</SubtleText>
-                        </FormGroup>
+            {hasTeams && <>
+                <Card header={t("settings.cards.team")}>
+                    {team ? <>
+                        <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
+                            locked={!teamOwner}>
+                            <FormGroup htmlFor={"name"} label={t("team_name")}>
+                                <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />
+                            </FormGroup>
+                            <FormGroup htmlFor={"desc"} label={t("team_desc")}>
+                                <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
+                            </FormGroup>
+                            <FormGroup htmlFor={"password"} label={t("team_secret")}>
+                                <Input val={team.password} name={"password"} password placeholder={t("team_secret")} />
+                                <SubtleText>{t("team_secret_warn")}</SubtleText>
+                            </FormGroup>
 
-                        {teamOwner && <Row>
-                            <Button submit>{t("settings.modify_team")}</Button>
-                        </Row>}
-                    </Form>
-                </> : <div>
-                        {t("settings.not_in_team")}
-                        <br /><br />
-                        {t("settings.team_prompt")}
-                        <HR />
-                        <Row>
-                            <Button to={"/team/join"}>{t("join_a_team")}</Button>
-                            <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                        </Row>
-                    </div>}
-            </Card>
-            {team && (
-                <Card header={t("settings.cards.members")}>
-                    {team.members.map((i, n) => (
-                        <TeamMember key={n} team={team} app={app}
-                            isCaptain={i.id === team.owner} isOwner={teamOwner} member={i} />
-                    ))}
+                            {teamOwner && <Row>
+                                <Button submit>{t("settings.modify_team")}</Button>
+                            </Row>}
+                        </Form>
+                    </> : <div>
+                            {t("settings.not_in_team")}
+                            <br /><br />
+                            {t("settings.team_prompt")}
+                            <HR />
+                            <Row>
+                                <Button to={"/team/join"}>{t("join_a_team")}</Button>
+                                <Button to={"/team/new"}>{t("create_a_team")}</Button>
+                            </Row>
+                        </div>}
                 </Card>
-            )}
+                {team && (
+                    <Card header={t("settings.cards.members")}>
+                        {team.members.map((i, n) => (
+                            <TeamMember key={n} team={team} app={app}
+                                isCaptain={i.id === team.owner} isOwner={teamOwner} member={i} />
+                        ))}
+                    </Card>
+                )}
+            </>}
             <Card header={t("settings.cards.notifications")}>
                 <Form handle={saveNotificationPrefs}>
                     <FormGroup label={t("settings.notifications.send_options")}>
