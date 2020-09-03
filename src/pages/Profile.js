@@ -19,7 +19,6 @@ import React from "react";
 import Moment from "react-moment";
 import { useTranslation } from "react-i18next";
 
-import { transparentize } from "polished";
 import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter, useConfig } from "@ractf/util";
