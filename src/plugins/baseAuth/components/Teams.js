@@ -59,7 +59,7 @@ export const JoinTeam = () => {
     };
 
     return <Wrap>{success ?
-        <>
+        <div style={{textAlign: "center"}}>
             <H2>{t("team_wiz.joined")}</H2>
             <HR />
             <div>{t("team_wiz.next")}</div>
@@ -68,22 +68,21 @@ export const JoinTeam = () => {
                 <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
                 <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
             </Row>
-        </> : <>
-            <H2>{t("join_a_team")}</H2>
-            <SubtleText>
-                {t("team_wiz.did_you_want_to")}
-                <Link to={"/team/new"}>{t("team_wiz.create_a_team")}</Link>
-                {t("team_wiz.instead")}
-            </SubtleText>
-
+        </div> : <>
             <Form locked={locked} handle={doJoinTeam}>
+                <H2>{t("join_a_team")}</H2>
                 <FormGroup>
-                    <Input autofill={"off"} name={"name"} placeholder={t("team_name")} />
-                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
+                    <Input autofill={"off"} name={"name"} placeholder={t("team_name")} required />
+                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} required password />
                 </FormGroup>
 
                 {message && <FormError>{message}</FormError>}
 
+                <SubtleText>
+                    {t("team_wiz.did_you_want_to")}
+                    <Link to={"/team/new"}>{t("team_wiz.create_a_team")}</Link>
+                    {t("team_wiz.instead")}
+                </SubtleText>
                 <Row right>
                     <Button large submit>{t("team_wiz.join")}</Button>
                 </Row>
@@ -122,7 +121,7 @@ export const CreateTeam = () => {
     };
 
     return <Wrap>{success ?
-        <>
+        <div style={{textAlign: "center"}}>
             <H2>{t("team_wiz.created")}</H2>
             <HR />
             <div>{t("team_wiz.next")}</div>
@@ -131,23 +130,22 @@ export const CreateTeam = () => {
                 <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
                 <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
             </Row>
-        </> : <>
-            <H2>{t("create_a_team")}</H2>
-            <SubtleText>
-                {t("team_wiz.did_you_want_to")}
-                <Link to={"/team/join"}>{t("team_wiz.join_a_team")}</Link>
-                {t("team_wiz.instead")}
-            </SubtleText>
-
+        </div> : <>
             <Form locked={locked} handle={doCreateTeam}>
+                <H2>{t("create_a_team")}</H2>
                 <FormGroup>
-                    <Input autofill={"off"} name={"name"} limit={36} placeholder={t("team_name")} />
-                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} password />
-                    <div style={{ opacity: .5 }}>{t("team_secret_warn")}</div>
+                    <Input autofill={"off"} name={"name"} limit={36} placeholder={t("team_name")} required />
+                    <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} required password />
+                    <SubtleText>{t("team_secret_warn")}</SubtleText>
                 </FormGroup>
 
                 {message && <FormError>{message}</FormError>}
 
+                <SubtleText>
+                    {t("team_wiz.did_you_want_to")}
+                    <Link to={"/team/join"}>{t("team_wiz.join_a_team")}</Link>
+                    {t("team_wiz.instead")}
+                </SubtleText>
                 <Row right>
                     <Button large submit>{t("team_wiz.create")}</Button>
                 </Row>

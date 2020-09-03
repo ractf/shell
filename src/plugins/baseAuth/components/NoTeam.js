@@ -35,13 +35,15 @@ const NoTeam = () => {
     if (team) return <Redirect to={"/team"} />;
 
     return <Wrap>
-        <H2>{t("auth.welcome")}</H2>
-        <br />
-        <div>{t("auth.next")}</div>
-        <Row>
-            <Button to={"/team/new"}>{t("create_a_team")}</Button>
-            <Button to={"/team/join"}>{t("join_a_team")}</Button>
-        </Row>
+        <div style={{textAlign: "center"}}>
+            <H2>{t("auth.welcome")}</H2>
+            <br />
+            <div>{t("auth.next")}</div>
+            <Row centre>
+                <Button to={"/team/new"}>{t("create_a_team")}</Button>
+                <Button to={"/team/join"}>{t("join_a_team")}</Button>
+            </Row>
+        </div>
     </Wrap>;
 };
 export default NoTeam;
