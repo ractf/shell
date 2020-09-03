@@ -167,7 +167,8 @@ export default () => {
                 <FormGroup label={"Rights"}>
                     <Row left>
                         <Checkbox val={state.member.is_active} name={"is_active"}>Active</Checkbox>
-                        <Checkbox val={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
+                        <Checkbox val={state.member.is_staff} name={"is_staff"}>Admin</Checkbox>
+                        <Checkbox val={state.member.is_verified} name={"is_verified"}>Staff</Checkbox>
                         <Checkbox val={state.member.is_visible} name={"is_visible"}>Visible</Checkbox>
                     </Row>
                 </FormGroup>

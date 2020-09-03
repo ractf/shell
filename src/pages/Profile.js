@@ -24,28 +24,18 @@ import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter, useConfig } from "@ractf/util";
 import {
-    FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Column
+    FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
 import LoadingPage from "./LoadingPage";
 
-import admin from "static/img/admin.png";
-import donor from "static/img/donor_large.png";
-import beta from "static/img/beta.png";
 import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
 import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
 import { useCategories } from "@ractf/util/hooks";
 
-
-const UserSpecial = ({ children, col, ico }) => (
-    <div className={"userSpecial"} style={{ backgroundColor: transparentize(.7, col) }}>
-        <div style={{ backgroundImage: "url(" + ico + ")" }} />
-        {children}
-    </div>
-);
 
 const UserSolve = ({ challenge_name, points }) => {
     const { t } = useTranslation();
@@ -99,6 +89,10 @@ const Profile = () => {
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <div className={"userMeta"}>
                 <div className={"userName"}>{userData.username}</div>
+                {(userData.is_staff || userData.is_verified) && <Row tight>
+                    {userData.is_staff && <Badge danger pill>Admin</Badge>}
+                    {userData.is_verified && <Badge warning pill>Staff</Badge>}
+                </Row>}
                 <div>{t("point_count", { count: userData.leaderboard_points })}</div>
                 <div className={"userJoined"}>Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment></div>
                 <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
@@ -143,13 +137,6 @@ const Profile = () => {
         </Column>
         <Column xlWidth={9} lgWidth={8} mdWidth={12}>
             <div className={"userSolves"}>
-                {userData.is_beta &&
-                    <UserSpecial col={"#66bb66"} ico={beta}>Beta Tester</UserSpecial>}
-                {userData.is_donor &&
-                    <UserSpecial col={"#bbbb33"} ico={donor}>Donor</UserSpecial>}
-                {userData.is_staff &&
-                    <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
-
                 {(!userData.solves || userData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
                     {t("profile.no_solves", { name: userData.username })}
                 </div> : <TabbedView>
