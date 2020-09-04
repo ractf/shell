@@ -25,7 +25,7 @@ import { ToggleTab } from "@ractf/ui-kit";
 
 
 const EventCountdown = ({ cdKey = "competition_end" }) => {
-    const { offset: countdown_offset, dates: countdown_dates } = useSelector(state => state.countdowns) || {};
+    const { dates: countdown_dates } = useSelector(state => state.countdowns) || {};
     const [countdown, setCountdown] = useState(null);
 
     const pad = n => (n < 10 ? "0" : "") + n;
@@ -34,7 +34,7 @@ const EventCountdown = ({ cdKey = "competition_end" }) => {
             return setCountdown(null);
         }
 
-        const now = (new Date()) - (-countdown_offset);
+        const now = new Date();
         let delta = ((new Date(countdown_dates[cdKey])) - now) / 1000;
         if (delta < 0) return setCountdown(null);
 

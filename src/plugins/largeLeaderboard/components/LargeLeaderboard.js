@@ -25,7 +25,7 @@ import { ENDPOINTS } from "@ractf/api";
 
 
 const LargeLeaderboard = () => {
-    const { offset: countdown_offset, dates: countdown_dates } = useSelector(state => state.countdowns) || {};
+    const { dates: countdown_dates } = useSelector(state => state.countdowns) || {};
     const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
     const [countdownText, setCountdownText] = useState("");
 
@@ -35,9 +35,7 @@ const LargeLeaderboard = () => {
             return setCountdownText("");
         }
 
-        // This double negative is intentional.
-        // If "+" is used, JS concatinates the int to the date as a string.
-        const now = (new Date()) - (-countdown_offset);
+        const now = new Date();
         let delta = ((new Date(countdown_dates.competition_end)) - now) / 1000;
         delta = Math.max(0, delta);
         const days = Math.floor(delta / 86400);
