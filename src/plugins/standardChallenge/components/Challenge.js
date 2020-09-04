@@ -63,12 +63,12 @@ export default ({ challenge, category, embedded, rightComponent }) => {
 
             {challenge.files && !!challenge.files.length && <Row>
                 {challenge.files.map(file => file && (
-                    <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} tiny={embedded} />
+                    <File key={file.id} {...file} tiny />
                 ))}
             </Row>}
             {user.team && challenge.hints && !!challenge.hints.length && <Row>
                 {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                    return <Hint {...hint} key={hint.id} tiny={embedded} />;
+                    return <Hint {...hint} key={hint.id} tiny />;
                 })}
             </Row>}
 

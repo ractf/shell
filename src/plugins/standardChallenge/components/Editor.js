@@ -85,7 +85,7 @@ const HintEditor = ({ challenge }) => {
         <Row>
             <Grid headings={["Name", "Cost", "Message", "Actions"]} data={challenge.hints.map(hint => [
                 hint.name, hint.penalty, hint.text.length > 100 ? hint.text.substring(0, 100) + "\u2026" : hint.text,
-                <Hint key={hint.id} points={hint.penalty} name={hint.name} id={hint.id} body={hint.text} isEdit />
+                <Hint key={hint.id} {...hint} isEdit />
             ])} />
         </Row>
         <Row>
@@ -117,7 +117,7 @@ const FileEditor = ({ challenge }) => {
         <Row>
             <Grid headings={["Name", "URL", "Size", "Actions"]} data={challenge.files.map(file => [
                 file.name, <Link to={file.url}>{file.url}</Link>, file.size,
-                <File key={file.id} name={file.name} url={file.url} id={file.id} size={file.size} isEdit />
+                <File key={file.id} {...file} isEdit />
             ])} />
         </Row>
         <Row>
