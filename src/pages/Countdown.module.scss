@@ -31,10 +31,6 @@
     left: 0;
     top: 0;
 
-    @media (max-width: 800px) {
-        height: calc(100vh - 60px);
-    }
-
     .lockTitle {
         font-family: $titleStack;
         font-size: 3em;
