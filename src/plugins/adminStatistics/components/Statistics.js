@@ -84,7 +84,7 @@ const Statistics = () => {
                     <Large><b>{stats.ips.toString()}</b> unique IPs</Large>
                     <HR />
                     <Large><b>{maxPoints.toString()}</b> total possible points</Large>
-                    <Large><b>{stats.total_points.toString()}</b> total points scored</Large>
+                    <Large><b>{(stats.total_points || 0).toString()}</b> total points scored</Large>
                     {maxChallenge && (
                         <Large><b>{maxChallenge.name}</b> has the most solves, at {maxChallenge.solve_count}</Large>
                     )}
