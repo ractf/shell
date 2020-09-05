@@ -1,0 +1,96 @@
+@import "@ractf/ui-kit/Colours.scss";
+
+.tile {
+    background-color: rgba($back-lift, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: px(24);
+
+    width: 100%;
+
+    transition: transform 200ms ease;
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &.solved {
+        .title {
+            color: map-get($colours, "green");
+        }
+        border: 2px solid map-get($colours, "green");
+    }
+
+    .tileHead {
+        line-height: 1;
+        font-family: $titleStack;
+        display: flex;
+        .headMain {
+            flex-grow: 1;
+            margin-right: px(16);
+        }
+        .title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .subtitle {
+            margin-top: px(8);
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+
+            &.blue {
+                color: map-get($colours, "blue");
+            }
+            &.green {
+                color: map-get($colours, "green");
+            }
+            &.orange {
+                color: map-get($colours, "orange");
+            }
+            &.red {
+                color: map-get($colours, "red");
+            }
+            &.purple {
+                color: map-get($colours, "purple");
+            }
+        }
+        .points {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .pointsSub {
+            text-align: right;
+            font-size: 0.65rem;
+        }
+        .dots {
+            display: flex;
+        }
+        .dot {
+            opacity: 0.5;
+            width: px(8);
+            height: px(8);
+            background-color: currentColor;
+            border-radius: px(4);
+            margin-right: px(4);
+            &:last-child {
+                margin-right: px(8);
+            }
+        }
+    }
+    .tileBody {
+        margin-top: px(8);
+        max-height: 4rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0.6;
+    }
+}
+
+.tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    grid-gap: 2rem;
+}
