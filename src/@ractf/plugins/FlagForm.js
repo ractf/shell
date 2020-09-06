@@ -10,6 +10,7 @@ import http from "@ractf/http";
 import { appContext } from "ractf";
 import { editChallenge } from "actions";
 import { useDispatch } from "react-redux";
+import Link from "components/Link";
 
 
 const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
@@ -134,7 +135,7 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
             {challenge.post_score_explanation && <>
                 Here's a little extra the challenge author had to say:
                 <HR />
-                <Markdown source={challenge.post_score_explanation} />
+                <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
                 <HR />
             </>}
             <H6>Rate this challenge:</H6>

@@ -25,13 +25,14 @@ import { useReactRouter } from "@ractf/util";
 import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
-    Button, Row, Input, Form, FormError, PageHead, Card, Link,
-    FlashText, Leader, Modal, Page, TabbedView, Tab, fromJson, Select, FormGroup, Column
+    Button, Row, Input, Form, FormError, PageHead, Card, FlashText, Leader, Modal,
+    Page, TabbedView, Tab, fromJson, Select, FormGroup, Column
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
 import { appContext } from "ractf";
 import http from "@ractf/http";
+import Link from "components/Link";
 
 import "./Campaign.scss";
 import { useSelector } from "react-redux";
@@ -148,12 +149,14 @@ const CategoryList = () => {
             {categories.map(i => {
                 const solved = i.challenges.filter(j => j.solved).length;
 
-                return <Leader key={i.id} link={i.url} green={solved === i.challenges.length}
-                    sub={solved === i.challenges.length ? t("categories.finished") :
-                        solved === 0 ? t("categories.none") :
-                            t("categories.some", { count: i.challenges.length, total: solved })}>
-                    {i.name}
-                </Leader>;
+                return (<Link to={i.url}>
+                    <Leader key={i.id} green={solved === i.challenges.length}
+                        sub={solved === i.challenges.length ? t("categories.finished") :
+                            solved === 0 ? t("categories.none") :
+                                t("categories.some", { count: i.challenges.length, total: solved })}>
+                        {i.name}
+                    </Leader>
+                </Link>);
             })}
         </Column>
     </Page>;
@@ -210,16 +213,20 @@ export default () => {
                 <Button key={"edD"} onClick={() => setAnc(tab)}>
                     {t("edit_details")}
                 </Button>
-                <Button key={"edS"} to={"#"} danger lesser>
-                    {t("edit_stop")}
-                </Button>
+                <Link to={"#"}>
+                    <Button key={"edS"} danger lesser>
+                        {t("edit_stop")}
+                    </Button>
+                </Link>
             </> : <>
                     <Button key={"edAll"} onClick={toggleShowLocked} lesser={!showLocked}>
                         {showLocked ? t("editor.hide_locked") : t("editor.show_locked")}
                     </Button>
-                    <Button key={"edE"} to={"#edit"} danger lesser>
-                        {t("edit")}
-                    </Button>
+                    <Link to={"#edit"}>
+                        <Button key={"edE"} danger lesser>
+                            {t("edit")}
+                        </Button>
+                    </Link>
                 </>}
         </Row>}
         {!user.team && (

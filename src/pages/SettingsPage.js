@@ -32,6 +32,7 @@ import {
 import * as actions from "actions";
 
 import "./SettingsPage.scss";
+import Link from "components/Link";
 
 
 const makeOwner = (team, app, member, t) => {
@@ -155,18 +156,22 @@ export default () => {
                         <SubtleText>{t("settings.2fa.prompt")}</SubtleText>
                     </Row>
                     <Row left>
-                        <Button warning to={"/settings/2fa"}>{t("settings.2fa.enable")}</Button>
+                        <Link to={"/settings/2fa"}>
+                            <Button warning>{t("settings.2fa.enable")}</Button>
+                        </Link>
                     </Row>
                 </Card>
             ) : (<Card header={t("settings.cards.2fa")}>
-                    <Row>
-                        <p>{t("settings.2fa.enabled")}</p>
-                    </Row>
-                    <Row left>
-                        <Button to={"/settings/2fa"}>{t("settings.2fa.disable")}</Button>
-                    </Row>
-                </Card>
-            )}
+                <Row>
+                    <p>{t("settings.2fa.enabled")}</p>
+                </Row>
+                <Row left>
+                    <Link to={"/settings/2fa"}>
+                        <Button>{t("settings.2fa.disable")}</Button>
+                    </Link>
+                </Row>
+            </Card>
+                )}
             <Card header={t("settings.cards.identity")}>
                 <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
                     postSubmit={usernameChanged}>
@@ -259,8 +264,12 @@ export default () => {
                             {t("settings.team_prompt")}
                             <HR />
                             <Row>
-                                <Button to={"/team/join"}>{t("join_a_team")}</Button>
-                                <Button to={"/team/new"}>{t("create_a_team")}</Button>
+                                <Link to={"/team/join"}>
+                                    <Button>{t("join_a_team")}</Button>
+                                </Link>
+                                <Link to={"/team/new"}>
+                                    <Button>{t("create_a_team")}</Button>
+                                </Link>
                             </Row>
                         </div>}
                 </Card>

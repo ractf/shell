@@ -23,11 +23,12 @@ import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter, useConfig } from "@ractf/util";
 import {
-    FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
+    FormError, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
 import LoadingPage from "./LoadingPage";
+import { useApi } from "ractf";
+import Link from "components/Link";
 
 import colours from "@ractf/ui-kit/Colours.scss";
 

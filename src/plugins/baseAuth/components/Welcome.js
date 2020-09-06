@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { H2, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
 import { useConfig } from "@ractf/util";
+import Link from "components/Link";
 
 
 const NoTeam = () => {
@@ -28,17 +29,25 @@ const NoTeam = () => {
     const hasTeams = useConfig("enable_teams");
 
     return <Wrap>
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
             <H2>{t("auth.welcome")}</H2>
             <div>{t("auth.next")}</div>
             <br />
             <Row centre>
                 {hasTeams ? <>
-                    <Button to={"/team/new"}>{t("create_a_team")}</Button>
-                    <Button to={"/team/join"}>{t("join_a_team")}</Button>
+                    <Link to={"/team/new"}>
+                        <Button>{t("create_a_team")}</Button>
+                    </Link>
+                    <Link to={"/team/join"}>
+                        <Button>{t("join_a_team")}</Button>
+                    </Link>
                 </> : <>
-                    <Button to={"/campaign"}>{t("challenge_plural")}</Button>
-                    <Button to={"/settings"}>{t("setting_plural")}</Button>
+                    <Link to={"/campaign"}>
+                        <Button>{t("challenge_plural")}</Button>
+                    </Link>
+                    <Link to={"/settings"}>
+                        <Button>{t("setting_plural")}</Button>
+                    </Link>
                 </>}
             </Row>
         </div>

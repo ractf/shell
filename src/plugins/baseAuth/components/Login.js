@@ -19,13 +19,14 @@ import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Row, FormGroup, Link, H2, FormError, SubtleText
+    Form, Input, Button, Row, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
 import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
 import { appContext } from "ractf";
 import { EMAIL_RE } from "@ractf/util";
 import http from "@ractf/http";
 import { Wrap } from "./Parts";
+import Link from "components/Link";
 
 
 const BasicLogin = () => {

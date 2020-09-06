@@ -21,6 +21,7 @@ import { Markdown } from "@ractf/ui-kit";
 
 import style from "./ChallengeTile.module.scss";
 import { makeClass } from "@ractf/util";
+import Link from "components/Link";
 
 
 const DIFFICULTIES = [
@@ -62,7 +63,7 @@ const ChallengeTile = ({ setChallenge, challenge }) => {
             </div>
         </div>
         <div className={style.tileBody}>
-            <Markdown source={challenge.description} />
+            <Markdown LinkElem={Link} source={challenge.description} />
         </div>
     </div>;
 };

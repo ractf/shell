@@ -25,6 +25,7 @@ import {
 } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
+import Link from "components/Link";
 
 
 export default () => {
@@ -56,7 +57,7 @@ export default () => {
                     if (resp.valid) {
                         await reloadAll();
                         setPage(3);
-                    } else {setMessage(t("2fa.validation_fail"));}
+                    } else { setMessage(t("2fa.validation_fail")); }
                 }).catch(e => {
                     console.error(e);
                     setMessage(t("2fa.validation_fail"));
@@ -78,7 +79,7 @@ export default () => {
     };
 
     return <Page title={t("2fa.2fa")} vCentre>
-        <Column style={{height: "100%", justifyContent: "center"}}>
+        <Column style={{ height: "100%", justifyContent: "center" }}>
             {page === 0 ? <>
                 <Row centre>
                     {user.has_2fa ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
@@ -88,7 +89,9 @@ export default () => {
                 </Row>
                 <br />
                 <Row centre>
-                    <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
+                    <Link to={"/settings"}>
+                        <Button lesser>{t("2fa.nevermind")}</Button>
+                    </Link>
                     <Button onClick={startFlow}>{t("2fa.enable_2fa")}</Button>
                 </Row>
             </> : page === 1 ? <>
@@ -133,7 +136,9 @@ export default () => {
                 </Row>
                 <br />
                 <Row centre>
-                    <Button to={"/"}>Yay!</Button>
+                    <Link to={"/"}>
+                        <Button>Yay!</Button>
+                    </Link>
                 </Row>
             </> : <>
                 <Row centre>
@@ -141,7 +146,9 @@ export default () => {
                 </Row>
                 <br />
                 <Row centre>
-                    <Button to={"/settings"} lesser>{t("2fa.back_to_settings")}</Button>
+                    <Link to={"/settings"}>
+                        <Button lesser>{t("2fa.back_to_settings")}</Button>
+                    </Link>
                     <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
                 </Row>
             </>}

@@ -20,9 +20,10 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
-    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card, Column
+    Button, TextBlock, PageHead, Row, FlashText, Markdown, Badge, Page, Card, Column
 } from "@ractf/ui-kit";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
+import Link from "components/Link";
 
 import Split from "./Split";
 import File from "./File";
@@ -57,7 +58,7 @@ export default ({ challenge, category, embedded, rightComponent }) => {
             {challengeMods}
             <Row>
                 <TextBlock>
-                    <Markdown source={challenge.description} />
+                    <Markdown LinkElem={Link} source={challenge.description} />
                 </TextBlock>
             </Row>
 
@@ -74,14 +75,16 @@ export default ({ challenge, category, embedded, rightComponent }) => {
 
             {challenge.solved && challenge.post_score_explanation && <Row>
                 <Card header={t("challenge.post_score_explanation")}>
-                    <Markdown source={challenge.post_score_explanation} />
+                    <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
                 </Card>
             </Row>}
             {user.team
                 ? (
                     <Row>
                         {embedded && (
-                            <Button to={challenge.url}>Open challenge page</Button>
+                            <Link to={challenge.url}>
+                                <Button>Open challenge page</Button>
+                            </Link>
                         )}
                         <FlagForm challenge={challenge} submitRef={submitFlag}
                             onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
@@ -92,8 +95,12 @@ export default ({ challenge, category, embedded, rightComponent }) => {
                             <FlashText danger>{t("challenge.no_team")}</FlashText>
                         </Row>
                         <Row>
-                            <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
-                            <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
+                            <Link to={"/team/join"}>
+                                <Button danger>{t("join_a_team")}</Button>
+                            </Link>
+                            <Link to={"/team/new"}>
+                                <Button danger>{t("create_a_team")}</Button>
+                            </Link>
                         </Row>
                     </>
                 )
@@ -131,7 +138,9 @@ export default ({ challenge, category, embedded, rightComponent }) => {
         />
         {user.is_staff && (
             <Row style={{ position: "absolute", top: 16, right: 32 }} right>
-                <Button to="#edit" danger>{t("edit")}</Button>
+                <Link to={"#edit"}>
+                    <Button danger>{t("edit")}</Button>
+                </Link>
             </Row>
         )}
         {chalContent}
