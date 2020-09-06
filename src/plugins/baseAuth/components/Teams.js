@@ -21,13 +21,13 @@ import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import {
-    Form, FormError, HR, Input, Button, Row,
-    SubtleText, Link, FormGroup, H2
+    Form, FormError, HR, Input, Button, Row, SubtleText, FormGroup, H2
 } from "@ractf/ui-kit";
 import { joinTeam, createTeam, reloadAll } from "@ractf/api";
+import { useConfig } from "@ractf/util";
 import { Wrap } from "./Parts";
 import http from "@ractf/http";
-import { useConfig } from "@ractf/util";
+import Link from "components/Link";
 
 
 export const JoinTeam = () => {
@@ -59,14 +59,18 @@ export const JoinTeam = () => {
     };
 
     return <Wrap>{success ?
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
             <H2>{t("team_wiz.joined")}</H2>
             <HR />
             <div>{t("team_wiz.next")}</div>
 
             <Row>
-                <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
-                <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
+                <Link to={"/campaign"}>
+                    <Button large >{t("challenge_plural")}</Button>
+                </Link>
+                <Link to={"/settings"}>
+                    <Button large lesser>{t("setting_plural")}</Button>
+                </Link>
             </Row>
         </div> : <>
             <Form locked={locked} handle={doJoinTeam}>
@@ -121,14 +125,18 @@ export const CreateTeam = () => {
     };
 
     return <Wrap>{success ?
-        <div style={{textAlign: "center"}}>
+        <div style={{ textAlign: "center" }}>
             <H2>{t("team_wiz.created")}</H2>
             <HR />
             <div>{t("team_wiz.next")}</div>
 
             <Row>
-                <Button large to={"/campaign"}>{t("challenge_plural")}</Button>
-                <Button large lesser to={"/settings"}>{t("setting_plural")}</Button>
+                <Link to={"/campaign"}>
+                    <Button large>{t("challenge_plural")}</Button>
+                </Link>
+                <Link to={"/settings"}>
+                    <Button large lesser>{t("setting_plural")}</Button>
+                </Link>
             </Row>
         </div> : <>
             <Form locked={locked} handle={doCreateTeam}>

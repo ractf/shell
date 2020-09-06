@@ -19,7 +19,7 @@ import React, { useContext, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Row, Checkbox, Button, Select, PageHead, Link, InputTags,
+    Form, Input, Row, Checkbox, Button, Select, PageHead, InputTags,
     FlashText, FormGroup, fromJson, Page, Column, Card, Grid
 } from "@ractf/ui-kit";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
@@ -27,6 +27,7 @@ import { newHint, newFile } from "@ractf/api";
 import { appContext } from "ractf";
 import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
+import Link from "components/Link";
 
 import File from "./File";
 import Hint from "./Hint";

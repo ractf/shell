@@ -20,15 +20,11 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
-    Link, SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
-    FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
-    NavMenu, Wordmark
+    SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
+    Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem
 } from "@ractf/ui-kit";
-<<<<<<< HEAD
 import Header from "./Header";
-=======
 import Link from "./Link";
->>>>>>> 23253f8... Integrate mobile header bar into sidebar tabs
 
 import { iteratePlugins } from "@ractf/plugins";
 import { useCategories, useExperiment } from "@ractf/util/hooks";
@@ -44,30 +40,32 @@ const HeaderNav_ = () => {
     const categories = useCategories();
 
     return <NavBar primary>
-        <NavBrand><NavLink to={"/"}><b>{window.env.siteName}</b></NavLink></NavBrand>
+        <NavBrand><Link to={"/"}><b>{window.env.siteName}</b></Link></NavBrand>
         <NavCollapse>
-            <NavLink to={"/users"}>Users</NavLink>
-            {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
-            <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
+            <NavItem><Link to={"/users"}>Users</Link></NavItem>
+            {hasTeams && <NavItem><Link to={"/teams"}>Teams</Link></NavItem>}
+            <NavItem><Link to={"/leaderboard"}>Leaderboard</Link></NavItem>
             {categories.length === 1 ? (
-                <NavLink to={categories[0].url}>Challenges</NavLink>
+                <NavItem><Link to={categories[0].url}>Challenges</Link></NavItem>
             ) : (
-                <NavLink to={"/campaign"}>Challenges</NavLink>
+                <NavItem><Link to={"/campaign"}>Challenges</Link></NavItem>
             )}
-            {user && user.is_staff && <NavLink to={"/campaign/new"}>Add Category</NavLink>}
+            {user && user.is_staff && <NavItem>
+                <Link to={"/campaign/new"}>Add Category</Link>
+            </NavItem>}
             <NavGap />
             {user ? <>
-                <NavLink to={"/profile/me"}>Profile</NavLink>
-                {hasTeams && <NavLink to={"/team/me"}>Team</NavLink>}
-                <NavLink to={"/settings"}>Settings</NavLink>
-                <NavLink to={"/logout"}>Logout</NavLink>
+                <NavItem><Link to={"/profile/me"}>Profile</Link></NavItem>
+                {hasTeams && <NavItem><Link to={"/team/me"}>Team</Link></NavItem>}
+                <NavItem><Link to={"/settings"}>Settings</Link></NavItem>
+                <NavItem><Link to={"/logout"}>Logout</Link></NavItem>
             </> : <>
-                    <NavLink to={"/login"}>Login</NavLink>
-                    <NavLink to={"/register"}>Register</NavLink>
+                <NavItem><Link to={"/login"}>Login</Link></NavItem>
+                <NavItem><Link to={"/register"}>Register</Link></NavItem>
                 </>}
             {user && user.is_staff && <NavMenu name={"Admin"}>
                 {iteratePlugins("adminPage").map(({ key, plugin }) => (
-                    <NavMenuLink key={key} to={"/admin/" + key}>{plugin.sidebar}</NavMenuLink>
+                    <Link key={key} to={"/admin/" + key}>{plugin.sidebar}</Link>
                 ))}
             </NavMenu>}
         </NavCollapse>
@@ -174,12 +172,8 @@ const SideBarNav_ = ({ children }) => {
     </>;
 
     return <>
-<<<<<<< HEAD
         <Header />
         <SideNav ractfSidebar header={header} footer={footer} items={menu}>
-=======
-        <SideNav ractfSidebar header={header} footer={footer} items={menu} LinkElem={Link}>
->>>>>>> 23253f8... Integrate mobile header bar into sidebar tabs
             {children}
         </SideNav>
     </>;
@@ -195,16 +189,16 @@ const SiteNav = ({ children }) => {
             <Footer>
                 <FootRow main>
                     <FootCol title={window.env.siteName}>
-                        <FootLink to={"/"}>Home</FootLink>
-                        <FootLink to={"/privacy"}>Privacy Policy</FootLink>
-                        <FootLink to={"/conduct"}>Terms of Use</FootLink>
+                        <Link to={"/"}>Home</Link>
+                        <Link to={"/privacy"}>Privacy Policy</Link>
+                        <Link to={"/conduct"}>Terms of Use</Link>
                     </FootCol>
                     {showDev && (
                         <FootCol title={"For Developers"}>
-                            <FootLink to={"/debug"}>Debug Versions</FootLink>
-                            <FootLink to={"/debug/ui"}>UI Framework</FootLink>
-                            <FootLink to={"/debug/state"}>State Export</FootLink>
-                            <FootLink to={"/debug/experiments"}>Experiments</FootLink>
+                            <Link to={"/debug"}>Debug Versions</Link>
+                            <Link to={"/debug/ui"}>UI Framework</Link>
+                            <Link to={"/debug/state"}>State Export</Link>
+                            <Link to={"/debug/experiments"}>Experiments</Link>
                         </FootCol>
                     )}
                 </FootRow>

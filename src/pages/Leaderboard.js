@@ -19,12 +19,13 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Button, Row, Graph, URLTabbedView, Tab, Table, Page, PageHead, Column
+    Button, Row, Graph, Tab, Table, Page, PageHead, Column
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "ractf";
 import { ENDPOINTS } from "@ractf/api";
 import { useConfig } from "@ractf/util";
-
+import URLTabbedView from "components/URLTabbedView";
+import Link from "components/Link";
 
 const LeaderboardPage = () => {
     const [userGraphData, setUserGraphData] = useState([]);
@@ -90,10 +91,18 @@ const LeaderboardPage = () => {
     }, [graph, start_time, hasTeams]);
 
     const userData = (lbdata) => {
-        return lbdata.map((i, n) => [n + 1, i.username, i.leaderboard_points, { link: "/profile/" + i.id }]);
+        return lbdata.map((i, n) => [
+            <Link to={`/profile/${i.id}`}>{n + 1}</Link>,
+            <Link to={`/profile/${i.id}`}>{i.username}</Link>,
+            <Link to={`/profile/${i.id}`}>{i.leaderboard_points}</Link>
+        ]);
     };
     const teamData = (lbdata) => {
-        return lbdata.map((i, n) => [n + 1, i.name, i.leaderboard_points, { link: "/team/" + i.id }]);
+        return lbdata.map((i, n) => [
+            <Link to={`/team/${i.id}`}>{n + 1}</Link>,
+            <Link to={`/team/${i.id}`}>{i.name}</Link>,
+            <Link to={`/team/${i.id}`}>{i.leaderboard_points}</Link>
+        ]);
     };
 
     const teamTab = <>

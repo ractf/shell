@@ -22,44 +22,45 @@ import {
     Select, Spinner, TabbedView, Tab, Table, ToggleButton, FlashText, Tree,
     TreeWrap, TreeValue, Checkbox, InputButton, Leader, FormGroup, Card,
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
-    NavBrand, NavGap, NavLink, NavMenu, NavMenuLink, NavItem, NavCollapse,
-    Footer, FootRow, FootCol, FootLink, Column, Breadcrumbs, Crumb, Form,
+    NavBrand, NavGap, NavMenu, NavItem, NavCollapse,
+    Footer, FootRow, FootCol, Column, Breadcrumbs, Crumb, Form,
     BareForm, ItemStack
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
+import Link from "components/Link";
 
 
 const Inner = () => (<NavCollapse>
-    <NavLink to={"#"}>Home</NavLink>
-    <NavLink to={"#"}>About</NavLink>
-    <NavLink to={"#"}>Get Started</NavLink>
-    <NavLink to={"#"}>API Reference</NavLink>
+    <NavItem><Link to={"#"}>Home</Link></NavItem>
+    <NavItem><Link to={"#"}>About</Link></NavItem>
+    <NavItem><Link to={"#"}>Get Started</Link></NavItem>
+    <NavItem><Link to={"#"}>API Reference</Link></NavItem>
 
     <NavGap />
 
     <NavMenu name={"More"}>
-        <NavMenuLink to={"#"}>Test</NavMenuLink>
-        <NavMenuLink to={"#"}>Test</NavMenuLink>
-        <NavMenuLink to={"#"}>Test</NavMenuLink>
+        <Link to={"#"}>Test</Link>
+        <Link to={"#"}>Test</Link>
+        <Link to={"#"}>Test</Link>
 
         <NavMenu name={"More"}>
-            <NavMenuLink to={"#"}>Test</NavMenuLink>
-            <NavMenuLink to={"#"}>Test</NavMenuLink>
+            <Link to={"#"}>Test</Link>
+            <Link to={"#"}>Test</Link>
             <NavMenu name={"More"}>
-                <NavMenuLink to={"#"}>Test</NavMenuLink>
+                <Link to={"#"}>Test</Link>
 
                 <NavMenu name={"More"}>
-                    <NavMenuLink to={"#"}>Test</NavMenuLink>
-                    <NavMenuLink to={"#"}>Test</NavMenuLink>
-                    <NavMenuLink to={"#"}>Test</NavMenuLink>
+                    <Link to={"#"}>Test</Link>
+                    <Link to={"#"}>Test</Link>
+                    <Link to={"#"}>Test</Link>
                 </NavMenu>
 
-                <NavMenuLink to={"#"}>Test</NavMenuLink>
-                <NavMenuLink to={"#"}>Test</NavMenuLink>
+                <Link to={"#"}>Test</Link>
+                <Link to={"#"}>Test</Link>
             </NavMenu>
 
-            <NavMenuLink to={"#"}>Test</NavMenuLink>
+            <Link to={"#"}>Test</Link>
         </NavMenu>
     </NavMenu>
 </NavCollapse>);
@@ -90,10 +91,10 @@ const UIPage = () => <Page><Row left>
     <NavBar>
         <NavBrand>RACTF/<b>UI-KIT</b></NavBrand>
         <NavCollapse>
-            <NavLink to={"#"}>Home</NavLink>
-            <NavLink to={"#"}>About</NavLink>
-            <NavLink to={"#"}>Get Started</NavLink>
-            <NavLink to={"#"}>API Reference</NavLink>
+            <Link to={"#"}>Home</Link>
+            <Link to={"#"}>About</Link>
+            <Link to={"#"}>Get Started</Link>
+            <Link to={"#"}>API Reference</Link>
 
             <NavGap />
             <NavItem>This is some text</NavItem>
@@ -444,15 +445,15 @@ const UIPage = () => <Page><Row left>
                 </p>
             </FootCol>
             <FootCol title={"RACTF"}>
-                <FootLink to={"#"}>Home</FootLink>
-                <FootLink to={"#"}>About</FootLink>
-                <FootLink to={"#"}>Get Started</FootLink>
-                <FootLink to={"#"}>API Reference</FootLink>
+                <Link to={"#"}>Home</Link>
+                <Link to={"#"}>About</Link>
+                <Link to={"#"}>Get Started</Link>
+                <Link to={"#"}>API Reference</Link>
             </FootCol>
             <FootCol title={"Get in Touch"}>
-                <FootLink to={"#"}>Twitter</FootLink>
-                <FootLink to={"#"}>Email</FootLink>
-                <FootLink to={"#"}>Discord</FootLink>
+                <Link to={"#"}>Twitter</Link>
+                <Link to={"#"}>Email</Link>
+                <Link to={"#"}>Discord</Link>
             </FootCol>
         </FootRow>
         <FootRow center slim darken>

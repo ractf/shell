@@ -54,7 +54,9 @@ export default ({ name, url, size, id, isEdit, ...props }) => {
         </Row>;
     }
 
-    return <Button to={url} Icon={FaFile} tooltip={formatBytes(size)} externalLink {...props}>
-        {name}
-    </Button>;
+    return <a href={url} target={"_blank"} rel={"noopener noreferrer"}>
+        <Button Icon={FaFile} tooltip={formatBytes(size)} {...props}>
+            {name}
+        </Button>
+    </a>;
 };

@@ -26,6 +26,7 @@ import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 
 import "./Challenge.scss";
+import Link from "components/Link";
 
 
 export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) => {
@@ -52,7 +53,7 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) =>
     const showHint = (content) => {
         app.alert(<>
             <b>{name}</b><br />
-            <Markdown source={content} />
+            <Markdown LinkElem={Link} source={content} />
         </>);
     };
 

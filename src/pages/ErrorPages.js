@@ -18,9 +18,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Link } from "@ractf/ui-kit";
-
 import broken from "static/broken.png";
+import Link from "components/Link";
+
 import "./ErrorPages.scss";
 
 

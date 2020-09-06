@@ -16,14 +16,15 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useEffect, useContext, useState, useRef } from "react";
+import { FaPencilAlt, FaTrash, FaPlus } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { Route } from "react-router-dom";
 
 import { registerPlugin, registerReducer, appContext, registerMount } from "ractf";
-import http from "@ractf/http";
-import { useSelector, useDispatch } from "react-redux";
-import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup, Link } from "@ractf/ui-kit";
-import { FaPencilAlt, FaTrash, FaPlus } from "react-icons/fa";
-import { Route } from "react-router-dom";
+import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup } from "@ractf/ui-kit";
 import { store } from "store";
+import http from "@ractf/http";
+import Link from "components/Link";
 
 const INITIAL = {
     pages: [],
@@ -44,7 +45,7 @@ const CMSPage = React.memo(({ page }) => {
         document.title = page.title;
 
     return <Page>
-        <Markdown source={page.content} />
+        <Markdown LinkElem={Link} source={page.content} />
     </Page>;
 });
 CMSPage.displayName = "CMSPage";
@@ -124,7 +125,7 @@ const CMSAdmin = () => {
                     </FormGroup>
 
                     <HR />
-                    <Markdown source={editContent} />
+                    <Markdown LinkElem={Link} source={editContent} />
                 </Form>
             </Modal> : null
         }
