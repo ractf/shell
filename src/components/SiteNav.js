@@ -23,7 +23,6 @@ import {
     SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
     Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem
 } from "@ractf/ui-kit";
-import Header from "./Header";
 import Link from "./Link";
 
 import { iteratePlugins } from "@ractf/plugins";
@@ -172,7 +171,6 @@ const SideBarNav_ = ({ children }) => {
     </>;
 
     return <>
-        <Header />
         <SideNav ractfSidebar header={header} footer={footer} items={menu} LinkElem={Link}>
             {children}
         </SideNav>
