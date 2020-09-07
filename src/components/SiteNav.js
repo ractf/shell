@@ -24,7 +24,11 @@ import {
     FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
     NavMenu, Wordmark
 } from "@ractf/ui-kit";
+<<<<<<< HEAD
 import Header from "./Header";
+=======
+import Link from "./Link";
+>>>>>>> 23253f8... Integrate mobile header bar into sidebar tabs
 
 import { iteratePlugins } from "@ractf/plugins";
 import { useCategories, useExperiment } from "@ractf/util/hooks";
@@ -170,8 +174,12 @@ const SideBarNav_ = ({ children }) => {
     </>;
 
     return <>
+<<<<<<< HEAD
         <Header />
         <SideNav ractfSidebar header={header} footer={footer} items={menu}>
+=======
+        <SideNav ractfSidebar header={header} footer={footer} items={menu} LinkElem={Link}>
+>>>>>>> 23253f8... Integrate mobile header bar into sidebar tabs
             {children}
         </SideNav>
     </>;
