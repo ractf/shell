@@ -15,4 +15,4 @@ FROM caddy:2.1.1-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=0 /site /site
 
-EXPOSE 8000
+EXPOSE 80
