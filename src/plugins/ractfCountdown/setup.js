@@ -17,7 +17,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 
-import { registerPlugin } from "ractf";
+import { registerMount } from "ractf";
 
 import lockImg from "static/spine.png";
 
@@ -186,5 +186,5 @@ const RACTFCountdown = () => {
 
 
 export default () => {
-    registerPlugin("countdownBackdrop", "ractf", { component: RACTFCountdown });
+    registerMount("countdown", "ractf", RACTFCountdown);
 };

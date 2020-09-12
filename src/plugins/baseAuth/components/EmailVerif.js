@@ -44,26 +44,31 @@ export const EmailVerif = () => {
     if (!(secret && id)) return <Redirect to={"/login"} />;
 
     return <Wrap>
-        {verif === 0 ? <>
-            <div>Verifying your account...</div>
-            <Spinner />
-        </> : verif === 1 ? <>
-            <FormError>Account verification failed!</FormError>
-            <br />
-            <FormError>{message}</FormError>
-        </> : verif === 2 ? <>
-            <Redirect to={"/noteam"} />
-        </> : null}
+        <div style={{ textAlign: "center" }}>
+            {verif === 0 ? <>
+                <div>Verifying your account...</div>
+                <br />
+                <Spinner />
+            </> : verif === 1 ? <>
+                <FormError>Account verification failed!</FormError>
+                <br />
+                <FormError>{message}</FormError>
+            </> : verif === 2 ? <>
+                <Redirect to={"/welcome"} />
+            </> : null}
+        </div>
     </Wrap>;
 };
 
 
 export const EmailMessage = () => {
     return <Wrap>
-        Thank you for registering!
-        <br /><br />
-        Please check your inbox for a verification link.
-        <br /><br />
-        Make sure to check your spam folder if you can't find it!
+        <div style={{ textAlign: "center" }}>
+            Thank you for registering!
+            <br /><br />
+            Please check your inbox for a verification link.
+            <br /><br />
+            Make sure to check your spam folder if you can't find it!
+        </div>
     </Wrap>;
 };

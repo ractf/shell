@@ -15,41 +15,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-@import "@ractf/ui-kit/Colours.scss";
+import { registerPlugin, dynamicLoad } from "ractf";
 
-.lockWrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: absolute;
-    flex-grow: 1;
-    padding: 32px;
-    text-align: center;
-    height: 100%;
-    width: 100%;
-    left: 0;
-    top: 0;
 
-    .lockTitle {
-        font-family: $titleStack;
-        font-size: 3em;
-        font-weight: 600;
-    }
+export default () => {
+    const largeLeaderboard = dynamicLoad(() => import(
+        /* webpackChunkName: "largeLeaderboard" */ "./components/LargeLeaderboard"
+    ));
 
-    .siteCountdown {
-        margin-top: .5em;
-        font-size: 1.5em;
-        font-weight: 400;
-    }
-
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-
-        z-index: -1;
-    }
-}
+    registerPlugin("topLevelPage", "/largeLeaderboard", {
+        title: "Leaderboard",
+        component: largeLeaderboard
+    });
+};

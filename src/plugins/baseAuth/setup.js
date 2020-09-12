@@ -21,7 +21,7 @@ import { push } from "connected-react-router";
 import { EmailVerif, EmailMessage } from "./components/EmailVerif";
 import { JoinTeam, CreateTeam } from "./components/Teams";
 import PasswordReset from "./components/PasswordReset";
-import NoTeam from "./components/NoTeam";
+import Welcome from "./components/Welcome";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 
@@ -48,12 +48,12 @@ export default () => {
             if (categories.length)
                 store.dispatch(push("/campaign"));
             else store.dispatch(push("/"));
-        else store.dispatch(push("/noteam"));
+        else store.dispatch(push("/welcome"));
     });
 
-    registerPlugin("page", "/noteam", {
-        title: "Where next?",
-        component: NoTeam,
+    registerPlugin("page", "/welcome", {
+        title: "Welcome",
+        component: Welcome,
     });
     registerPlugin("page", "/password_reset", {
         title: "Reset Password",

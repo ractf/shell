@@ -25,6 +25,7 @@ import colours from "@ractf/ui-kit/Colours.scss";
 import style from "./Statistics.module.scss";
 import { useApi } from "controllers/UseAPI";
 import { useCategories } from "@ractf/util/hooks";
+import { useConfig } from "@ractf/util";
 
 
 const minMaxFunction = (data, mapper) => {
@@ -48,6 +49,7 @@ const Statistics = () => {
     const [stats] = useApi("/stats/full");
     const categories = useCategories();
     const challenges = categories.flatMap(i => i.challenges);
+    const hasTeams = useConfig("enable_teams");
 
     if (!stats) return <>
         <PageHead title={"Statistics"} />
@@ -75,14 +77,14 @@ const Statistics = () => {
         <Row>
             <Column lgWidth={6} mdWidth={12}>
                 <Card header={"Quick breakdown"}>
-                    <Large><b>{stats.users.all}</b> registered users (
-                        <b>{stats.users.all - stats.users.confirmed}</b> pending confirmation
+                    <Large><b>{stats.users.all.toString()}</b> registered users (
+                        <b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation
                     )</Large>
-                    <Large><b>{stats.teams}</b> registered teams</Large>
-                    <Large><b>{stats.ips}</b> unique IPs</Large>
+                    {hasTeams && <Large><b>{stats.teams.toString()}</b> registered teams</Large>}
+                    <Large><b>{stats.ips.toString()}</b> unique IPs</Large>
                     <HR />
-                    <Large><b>{maxPoints}</b> total possible points</Large>
-                    <Large><b>{stats.total_points}</b> total points scored</Large>
+                    <Large><b>{maxPoints.toString()}</b> total possible points</Large>
+                    <Large><b>{(stats.total_points || 0).toString()}</b> total points scored</Large>
                     {maxChallenge && (
                         <Large><b>{maxChallenge.name}</b> has the most solves, at {maxChallenge.solve_count}</Large>
                     )}

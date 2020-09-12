@@ -29,6 +29,7 @@ export const appContext = AppContext;
 import(/* webpackChunkName: "zxcvbn" */ "zxcvbn").then(zx => window.__zxcvbn = zx.default);
 export const zxcvbn = () => (window.__zxcvbn || null);
 
+const mounts = {};
 const plugins = {
     categoryType: {},
     challengeMod: {},
@@ -45,13 +46,13 @@ const plugins = {
     registrationProvider: {},
     postLogin: {},
     errorHandler: {},
-    mountWithinApp: {},
     categoryMatcher: {},
     challengeMatcher: {},
     flagType: {},
-    countdownBackdrop: {},
+    topLevelPage: {},
 };
 export const _plugins = plugins;
+export const _mounts = mounts;
 
 export const getLocalConfig = (key, fallback) => {
     const preferenceValue = (store.getState().preferences || {})[key];
@@ -78,6 +79,10 @@ export const registerPlugin = (type, key, handler) => {
 };
 export const registerReducer = (name, reducer) => {
     injectReducer(store, name, reducer);
+};
+export const registerMount = (mountPoint, key, component, options = { isComponent: true }) => {
+    if (!mounts[mountPoint]) mounts[mountPoint] = {};
+    mounts[mountPoint][key] = { component, isComponent: options.isComponent };
 };
 
 const _fastClick = e => {

@@ -25,7 +25,7 @@ import Countdown from "../pages/Countdown";
 import TeamPage from "../pages/TeamPage";
 
 import { TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
-import { iteratePlugins, PluginComponent, getPlugin } from "@ractf/plugins";
+import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
 import { dynamicLoad } from "ractf";
 import { useConfig } from "@ractf/util";
 import { logout } from "@ractf/api";
@@ -123,6 +123,7 @@ const Routes = () => {
     const notFoundPage = getPlugin("errorPage", "404")?.component;
 
     return <Switch>
+        {mountPoint("routes")}
         {iteratePlugins("page").map(({ key: url, plugin: page }) =>
             <Route exact={!page.noExact} path={url} key={url}>
                 <Page title={page.title} auth={page.auth} countdown={page.countdown}
@@ -156,7 +157,7 @@ const Routes = () => {
             <Page title={"Settings"} auth C={TwoFA} />
         </Route>
 
-        <Route exact path={"/campaign/:tabId/challenge/:chalId"}>
+        <Route exact path={"/campaign/:tabId/:chalId"}>
             <Page countdown={"countdown_timestamp"} title={"Challenges"} auth C={ChallengePage} />
         </Route>
         <Route exact path={"/campaign"}>

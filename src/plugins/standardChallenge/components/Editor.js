@@ -85,7 +85,7 @@ const HintEditor = ({ challenge }) => {
         <Row>
             <Grid headings={["Name", "Cost", "Message", "Actions"]} data={challenge.hints.map(hint => [
                 hint.name, hint.penalty, hint.text.length > 100 ? hint.text.substring(0, 100) + "\u2026" : hint.text,
-                <Hint key={hint.id} points={hint.penalty} name={hint.name} id={hint.id} body={hint.text} isEdit />
+                <Hint key={hint.id} {...hint} isEdit />
             ])} />
         </Row>
         <Row>
@@ -117,7 +117,7 @@ const FileEditor = ({ challenge }) => {
         <Row>
             <Grid headings={["Name", "URL", "Size", "Actions"]} data={challenge.files.map(file => [
                 file.name, <Link to={file.url}>{file.url}</Link>, file.size,
-                <File key={file.id} name={file.name} url={file.url} id={file.id} size={file.size} isEdit />
+                <File key={file.id} {...file} isEdit />
             ])} />
         </Row>
         <Row>
@@ -140,7 +140,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
     const { t } = useTranslation();
 
     const editTransformer = useCallback((data) => {
-        return { ...data, tags: data.tags.map(i => ({ type: "tag", text: i })) };
+        return { ...data, tags: data.tags ? data.tags.map(i => ({ type: "tag", text: i })) : [] };
     }, []);
 
     const body = (
@@ -149,18 +149,19 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                 <Column lgWidth={6} mdWidth={12}>
                     <Card header={"Basic settings"} collapsible>
                         <FormGroup htmlFor={"name"} label={t("editor.chal_name")}>
-                            <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} />
+                            <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} required />
                         </FormGroup>
                         <FormGroup htmlFor={"score"} label={t("editor.chal_points")}>
                             <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined}
-                                name={"score"} placeholder={t("editor.chal_points")} format={NUMBER_RE} />
+                                name={"score"} placeholder={t("editor.chal_points")} format={NUMBER_RE} required />
                         </FormGroup>
                         <FormGroup htmlFor={"author"} label={t("editor.chal_author")}>
-                            <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")} />
+                            <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")}
+                                required />
                         </FormGroup>
                         <FormGroup htmlFor={"description"} label={t("editor.chal_brief")}>
                             <Input rows={5} val={challenge.description} name={"description"}
-                                placeholder={t("editor.chal_brief")} />
+                                placeholder={t("editor.chal_brief")} required />
                         </FormGroup>
                         <FormGroup htmlFor={"tags"} label={t("editor.tags")}>
                             <InputTags name={"tags"} val={challenge.tags} />
@@ -182,7 +183,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             <Checkbox val={!!challenge.hidden} name={"hidden"}>
                                 {t("editor.hide_challenge")}
                             </Checkbox>
-                            <Checkbox val={!!challenge.auto_unlock} name={"auto_unlock"}>
+                            <Checkbox val={isCreator || !!challenge.auto_unlock} name={"auto_unlock"}>
                                 {t("editor.auto_unlock")}
                             </Checkbox>
                         </Row>
@@ -190,7 +191,9 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                         <FormGroup htmlFor={"challenge_type"} label={t("editor.chal_type")}>
                             <Select options={iteratePlugins("challengeType").map(({ key }) => ({ key, value: key }))}
                                 initial={
-                                    iteratePlugins("challengeType").map(i => i.key).indexOf(challenge.challenge_type)
+                                    iteratePlugins("challengeType")
+                                        .map(i => i.key)
+                                        .indexOf(challenge.challenge_type || "default")
                                 }
                                 name={"challenge_type"} />
                         </FormGroup>
@@ -202,7 +205,9 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                     ({ key, plugin: { name } }) => ({ key, value: name || key })
                                 )}
                                 initial={
-                                    iteratePlugins("flagType").map(i => i.key).indexOf(challenge.flag_type)
+                                    iteratePlugins("flagType")
+                                        .map(i => i.key)
+                                        .indexOf(challenge.flag_type || "plaintext")
                                 }
                                 name={"flag_type"} />
                         </FormGroup>

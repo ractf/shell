@@ -16,7 +16,6 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
 
 import { Card } from "@ractf/ui-kit";
 
@@ -28,22 +27,21 @@ import ChallengePage from "pages/ChallengePage";
 
 
 const Challenge = ({ challenge }) => {
-    const openCards = useSelector(state => state.jeopardySearch.openCards) || {};
-    const dispatch = useDispatch();
+    const startOpen = (store.getState().jeopardySearch?.openCards[challenge.id]) || false;
 
     const onOpenToggle = useCallback((open) => {
         const newOpenCards = {...store.getState().jeopardySearch.openCards};
         if (open) newOpenCards[challenge.id] = true;
         else delete newOpenCards[challenge.id];
-        dispatch(setJeopardyOpenCards(newOpenCards));
-    }, [challenge.id, dispatch]);
+        store.dispatch(setJeopardyOpenCards(newOpenCards));
+    }, [challenge.id]);
 
     return <Card
         header={`${challenge.name} (${challenge.score} points)`} framed
-        collapsible startClosed open={openCards[challenge.id]} onOpenToggle={onOpenToggle}
+        collapsible startClosed={!startOpen} onOpenToggle={onOpenToggle}
         success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden} 
     >
         <ChallengePage tabId={challenge.category.id} chalId={challenge.id} embedded />
     </Card>;
 };
-export default Challenge;
+export default React.memo(Challenge);

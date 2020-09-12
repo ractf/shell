@@ -17,8 +17,6 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 import { H2, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
@@ -27,21 +25,23 @@ import { useConfig } from "@ractf/util";
 
 const NoTeam = () => {
     const { t } = useTranslation();
-    const team = useSelector(state => state.team);
     const hasTeams = useConfig("enable_teams");
 
-    if (!hasTeams) return <Redirect to={"/"} />;
-
-    if (team) return <Redirect to={"/team"} />;
-
     return <Wrap>
-        <H2>{t("auth.welcome")}</H2>
-        <br />
-        <div>{t("auth.next")}</div>
-        <Row>
-            <Button to={"/team/new"}>{t("create_a_team")}</Button>
-            <Button to={"/team/join"}>{t("join_a_team")}</Button>
-        </Row>
+        <div style={{textAlign: "center"}}>
+            <H2>{t("auth.welcome")}</H2>
+            <div>{t("auth.next")}</div>
+            <br />
+            <Row centre>
+                {hasTeams ? <>
+                    <Button to={"/team/new"}>{t("create_a_team")}</Button>
+                    <Button to={"/team/join"}>{t("join_a_team")}</Button>
+                </> : <>
+                    <Button to={"/campaign"}>{t("challenge_plural")}</Button>
+                    <Button to={"/settings"}>{t("setting_plural")}</Button>
+                </>}
+            </Row>
+        </div>
     </Wrap>;
 };
 export default NoTeam;

@@ -124,28 +124,6 @@
         justify-content: space-around;
     }
 }
-.userSpecial {
-    padding: 0 16px;
-    height: 42px;
-    border-radius: 21px;
-    margin-bottom: 8px;
-    width: 100%;
-    text-align: left;
-    display: flex;
-    align-items: center;
-
-    & > div:first-child {
-        width: 42px;
-        height: 42px;
-        border-radius: 21px;
-        background-color: #fff3;
-        margin: -12px -16px;
-        margin-right: 8px;
-
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-}
 .userSolve {
     padding: 12px 16px;
     background-color: $back_lift;

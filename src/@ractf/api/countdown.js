@@ -51,18 +51,14 @@ export const getCountdown = () => http.get(ENDPOINTS.COUNTDOWN).then(data => {
     const offset = serverTime - (new Date());
 
     const countdown = {
-        offset: offset,
         dates: {},
         passed: {},
     };
     Object.entries(data).forEach(([key, value]) => {
         if (key === "server_timestamp") return;
-        countdown.dates[key] = new Date(value * 1000) - offset;
-        countdown.passed[key] = countdown.dates[key] - serverTime < 0;
+        countdown.dates[key] = value * 1000 - offset;
+        countdown.passed[key] = (countdown.dates[key] + offset) - serverTime < 0;
     });
 
-    //let ct = new Date(data.countdown_timestamp * 1000);
-
-    //let countdown = { time: ct, offset: st - now };
     store.dispatch(actions.setCountdowns(countdown));
 });

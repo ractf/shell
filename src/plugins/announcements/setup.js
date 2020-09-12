@@ -1,4 +1,4 @@
-import { registerPlugin, registerReducer } from "ractf";
+import { registerPlugin, registerReducer, registerMount } from "ractf";
 import { store } from "store";
 
 import announcementsReducer from "./reducers/announcementsReducer";
@@ -16,9 +16,7 @@ export default () => {
         component: AdminAnnouncements,
         sidebar: "Announcements",
     });
-    registerPlugin("mountWithinApp", "announcements", {
-        component: AppAnnouncements,
-    });
+    registerMount("app", "announcements", AppAnnouncements);
     
     registerPlugin("wsMessage", WS_ANNOUNCEMENT, (data) => {
         store.dispatch(showAnnouncement(data));

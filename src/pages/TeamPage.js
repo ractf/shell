@@ -25,7 +25,7 @@ import { BrokenShards } from "./ErrorPages";
 
 import { useReactRouter, useConfig } from "@ractf/util";
 import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
+    FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
@@ -34,6 +34,7 @@ import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
 import { useCategories } from "@ractf/util/hooks";
+import LoadingPage from "./LoadingPage";
 
 
 const TeamPage = () => {
@@ -54,13 +55,13 @@ const TeamPage = () => {
     const hasTeams = useConfig("enable_teams");
 
     if (!hasTeams) return <Redirect to={"/"} />;
-    if (user.team === null && team === "me") return <Redirect to={"/noteam"} />;
+    if (user.team === null && team === "me") return <Redirect to={"/welcome"} />;
 
     if (error) return <Page title={t("teams.teams")} centre>
         <FormError>{error}</FormError>
         <BrokenShards />
     </Page>;
-    if (!teamData) return <Page title={t("teams.teams")} centre><Row><Spinner /></Row></Page>;
+    if (!teamData) return <LoadingPage title={t("teams.teams")} />;
 
     const UserSolve = ({ solved_by_name, challenge_name, points }) => <div className={"userSolve"}>
         <div>{challenge_name}</div>

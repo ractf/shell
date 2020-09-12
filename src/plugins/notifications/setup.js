@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getLocalConfig, registerPlugin, registerReducer } from "ractf";
+import { getLocalConfig, registerPlugin, registerReducer, registerMount } from "ractf";
 import { store } from "store";
 
 import { notificationReducer } from "./reducers";
@@ -34,9 +34,7 @@ const WS_TEAM_JOIN = 4;
 export default () => {
     registerReducer("notifications", notificationReducer);
 
-    registerPlugin("mountWithinApp", "notifications", {
-        component: AppNotifications,
-    });
+    registerMount("app", "notifications", AppNotifications);
 
     const addNotification = (title, body) => {
         const id = getUUID();

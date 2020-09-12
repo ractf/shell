@@ -19,7 +19,7 @@ import React, { useState, useContext } from "react";
 import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
-import { FlashText, Button, Row, Form, InputButton } from "@ractf/ui-kit";
+import { FlashText, Form, InputButton, Modal } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 
 import "./ClickableMap.scss";
@@ -27,6 +27,44 @@ import "./ClickableMap.scss";
 
 const PROVIDER_URL = process.env.REACT_APP_MAP_PROVIDER;
 const LAT_LON_RE = /(-?\d+(?:\.\d+)?),\s*?(-?\d+(?:\.\d+)?)/;
+
+const round = (num) => {
+    return Math.round(num * 1000000) / 1000000;
+};
+
+const fillTemplate = (templateString, templateVars) => {
+    Object.entries(templateVars).forEach(([key, val]) => {
+        templateString = templateString.split("{{" + key + "}}").join(val);
+    });
+    return templateString;
+};
+
+const provider = (x, y, z, dpr) => {
+    // Fallback to a free provider
+    if (!PROVIDER_URL)
+        return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? "@2x" : ""}.png`;
+    return fillTemplate(PROVIDER_URL, { x: x, y: y, z: z, dpr: dpr });
+};
+
+const toDMS = (decimal) => {
+    const degrees = Math.floor(decimal);
+    const minutes = Math.floor(60 * (decimal - degrees));
+    const seconds = Math.floor(3600 * (decimal - degrees) - 60 * minutes);
+    return `${degrees}°${minutes}'${seconds}"`;
+};
+
+const toDMSPair = (lat, lon) => {
+    lat = toDMS(lat);
+    if (lat.charAt(0) === "-")
+        lat = lat.slice(1) + " S";
+    else lat += " N";
+
+    lon = toDMS(lon);
+    if (lon.charAt(0) === "-")
+        lon = lon.slice(1) + " W";
+    else lon += " E";
+    return `${lat} ${lon}`;
+};
 
 export default ({ challenge, submitFlag, onFlagResponse }) => {
     const minZoomLevel = challenge.challenge_metadata.minimum_zoom_level || 10;
@@ -42,20 +80,6 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
         Alternatively, enter a URL from Google Maps.
     </>;
 
-    const fillTemplate = (templateString, templateVars) => {
-        Object.entries(templateVars).forEach(([key, val]) => {
-            templateString = templateString.split("{{" + key + "}}").join(val);
-        });
-        return templateString;
-    };
-
-    const provider = (x, y, z, dpr) => {
-        // Fallback to a free provider
-        if (!PROVIDER_URL)
-            return `https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}${dpr >= 2 ? "@2x" : ""}.png`;
-        return fillTemplate(PROVIDER_URL, { x: x, y: y, z: z, dpr: dpr });
-    };
-
     const click = (e) => {
         if (hasValidZoom) {
             setSelectedLongLat(e.latLng);
@@ -67,10 +91,6 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const onMapMove = (e) => {
         setCurrentMapCenter(e.center);
         setHasValidZoom(e.zoom > minZoomLevel);
-    };
-
-    const round = (num) => {
-        return Math.round(num * 1000000) / 1000000;
     };
 
     const jumpToLongLat = ({ jumpTo }) => {
@@ -105,20 +125,17 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
         <div className={"mapWrap"}>
             <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>
-                {selectedLongLat && <Marker paylod={1} anchor={selectedLongLat} />}
+                {selectedLongLat && <Marker payload={1} anchor={selectedLongLat} />}
             </Map>
 
-            {selectedLongLat &&
-                <div className={"submitOverlay"}>
-                    <div className={"soInner"}>
-                        <div className={"soText"}>Location selected. Submit as flag?</div>
-                        <Row>
-                            <Button onClick={() => setSelectedLongLat(null)} lesser>Cancel</Button>
-                            <Button onClick={() => submitFlag.current({ flag: selectedLongLat })}>Submit</Button>
-                        </Row>
-                    </div>
-                </div>
-            }
+            {selectedLongLat && (
+                <Modal small okayLabel={"Submit"}
+                    onClose={() => setSelectedLongLat(null)}
+                    onConfirm={() => submitFlag.current({ flag: selectedLongLat })}
+                >
+                    {toDMSPair(...selectedLongLat)} selected. Submit as flag?
+                </Modal>
+            )}
         </div>
         <Form handle={jumpToLongLat}>
             <InputButton format={LAT_LON_RE} name={"jumpTo"} button={"Jump"}

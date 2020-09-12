@@ -32,12 +32,13 @@ import Routes from "./Routes";
 import WS from "./WS";
 
 import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
-import { iteratePlugins, PluginComponent } from "@ractf/plugins";
+import { iteratePlugins, PluginComponent, mountPoint } from "@ractf/plugins";
 import http from "@ractf/http";
 
 import lockImg from "static/spine.png";
 import "./App.scss";
 import { store } from "store";
+import { Switch, Route } from "react-router-dom";
 
 
 const LOADING_TIMEOUT = 5000;
@@ -253,9 +254,18 @@ const App = React.memo(() => {
                 Functionality will be limited until service is restored.
         </div> : null*/}
 
-            <SiteNav>
-                <Routes />
-            </SiteNav>
+            <Switch>
+                {iteratePlugins("topLevelPage").map(({ key: url, plugin: page }) =>
+                    <Route exact={!page.noExact} path={url} key={url}>
+                        {React.createElement(page.component)}
+                    </Route>
+                )}
+                <Route>
+                    <SiteNav>
+                        <Routes />
+                    </SiteNav>
+                </Route>
+            </Switch>
 
             {currentPrompt ? <ModalPrompt
                 body={currentPrompt.body}
@@ -276,9 +286,8 @@ const App = React.memo(() => {
             <WSSpine />
 
             <FirstLoader />
-            {iteratePlugins("mountWithinApp").map(({ key, plugin }) => (
-                React.createElement(plugin.component, { key })
-            ))}
+            {mountPoint("app")}
+
             <ToggleTabHolder>
                 {iteratePlugins("toggleTabs").map(({ key, plugin }) => (
                     React.createElement(plugin.component, { key })

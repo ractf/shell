@@ -28,7 +28,7 @@ import http from "@ractf/http";
 import "./Challenge.scss";
 
 
-export default ({ name, text, penalty, used, isEdit, onClick, id, body, ...props }) => {
+export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) => {
     const app = useContext(appContext);
     const { t } = useTranslation();
 
@@ -36,12 +36,12 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, body, ...props
         app.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
             [{ name: "name", placeholder: "Hint name", val: name, label: "Name" },
             { name: "cost", placeholder: "Hint cost", val: penalty.toString(), label: "Cost", format: NUMBER_RE },
-            { name: "body", placeholder: "Hint text", val: body, label: "Message", rows: 5 }]
-        ).then(({ name, cost, body }) => {
+            { name: "text", placeholder: "Hint text", val: text, label: "Message", rows: 5 }]
+        ).then(({ name, cost, text }) => {
 
             if (!cost.toString().match(NUMBER_RE)) return app.alert("Invalid hint const!");
 
-            editHint(id, name, cost, body).then(() =>
+            editHint(id, name, cost, text).then(() =>
                 app.alert("Hint edited!")
             ).catch(e =>
                 app.alert("Error editing hint:\n" + http.getError(e))
@@ -64,8 +64,8 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, body, ...props
                 This hint will deduct {penalty} points from this challenge.
         </>;
         app.promptConfirm({ message: msg, small: true }).then(() => {
-            useHint(id).then(body => {
-                showHint(body.text);
+            useHint(id).then(hint => {
+                showHint(hint.text);
             }).catch(e =>
                 app.alert("Error using hint:\n" + http.getError(e))
             );

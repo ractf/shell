@@ -44,7 +44,7 @@ export default class Challenge {
     }
 
     get url() {
-        return `${this.category.url}/challenge/${this.id}`;
+        return `${this.category.url}/${this.id}`;
     }
 
     get tags() {
@@ -60,6 +60,12 @@ export default class Challenge {
         for (const i of this)
             if (i !== "category")
                 ret[i] = this[i];
+
+        if (!ret.tags)
+            ret.tags = [];
+        else
+            ret.tags = ret.tags.map(i => (typeof i === "object") ? i : ({ type: "tag", text: i }));
+
         return ret;
     }
 
