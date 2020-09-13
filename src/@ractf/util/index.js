@@ -34,7 +34,7 @@ export const getHeight = (...children) => {
     let height = 0;
     children.forEach(child => {
         const styles = window.getComputedStyle(child);
-        height += child.offsetHeight;
+        height += child.getBoundingClientRect().height;
         height += parseFloat(styles["marginTop"]);
         height += parseFloat(styles["marginBottom"]);
     });

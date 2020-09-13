@@ -81,65 +81,6 @@ const SideBarNav_ = ({ children }) => {
     const user = useSelector(state => state.user);
     const categories = useCategories();
 
-    const menu = [];
-    menu.push({
-        name: t("sidebar.brand"),
-        submenu: [
-            [t("sidebar.home"), "/"],
-            [t("user_plural"), "/users"],
-            hasTeams ? [t("team_plural"), "/teams"] : null,
-            [t("leaderboard"), "/leaderboard"]
-        ],
-        startOpen: true
-    });
-
-    if (user) {
-        if (user.is_staff || categories.length) {
-            const submenu = categories.map(i => [i.name, i.url]);
-            if (user.is_staff) {
-                submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
-            }
-            if (user.is_staff || submenu.length !== 1) {
-                menu.push({
-                    name: t("challenge_plural"),
-                    submenu: submenu,
-                    startOpen: true
-                });
-            } else {
-                menu.push({
-                    name: t("challenge_plural"),
-                    link: categories[0].url,
-                });
-            }
-        }
-
-        menu.push({
-            name: user.username,
-            submenu: [
-                [t("sidebar.profile"), "/profile/me"],
-                hasTeams ? [t("team"), "/team/me"] : null,
-                [t("setting_plural"), "/settings"],
-                [t("sidebar.logout"), "/logout"],
-            ]
-        });
-    } else if (login || registration) {
-        const submenu = [];
-        if (login)
-            submenu.push([t("login"), "/login"]);
-        if (registration)
-            submenu.push([t("register"), "/register"]);
-        menu.push({
-            name: t("login"),
-            submenu: submenu,
-            startOpen: true
-        });
-    }
-    if (user && user.is_staff) {
-        menu.push({
-            name: t("sidebar.admin"),
-            submenu: iteratePlugins("adminPage").map(({ key, plugin }) => [plugin.sidebar, "/admin/" + key])
-        });
-    }
     const [showDev] = useExperiment("showDev");
 
     const header = <Wordmark />;
@@ -170,8 +111,52 @@ const SideBarNav_ = ({ children }) => {
         </>}
     </>;
 
+    const items = <>
+        <SideNav.UncontrolledSubMenu name={window.env.siteName} startOpen>
+            <Link to={"/"}><SideNav.Item>{t("sidebar.home")}</SideNav.Item></Link>
+            <Link to={"/users"}><SideNav.Item>{t("user_plural")}</SideNav.Item></Link>
+            {hasTeams && <Link to={"/teams"}><SideNav.Item>{t("team_plural")}</SideNav.Item></Link>}
+            <Link to={"/leaderboard"}><SideNav.Item>{t("leaderboard")}</SideNav.Item></Link>
+        </SideNav.UncontrolledSubMenu>
+        {user ? <>
+            {(user.is_staff || categories.length > 1) && (
+                <SideNav.UncontrolledSubMenu name={t("challenge_plural")} startOpen>
+                    {categories.map(i => (
+                        <Link key={i.id} to={i.url}><SideNav.Item>{i.name}</SideNav.Item></Link>
+                    ))}
+                    {user.is_staff && (
+                        <Link to={"/campaign/new"}><SideNav.Item>+ {t("challenge.new_cat")}</SideNav.Item></Link>
+                    )}
+                </SideNav.UncontrolledSubMenu>
+            )}
+            {(!user.is_staff && categories.length === 1) && (
+                <Link to={categories[0].url}><SideNav.Item>{t("challenge_plural")}</SideNav.Item></Link>
+            )}
+            <SideNav.UncontrolledSubMenu name={user.username}>
+                <Link to={"/profile/me"}><SideNav.Item>{t("sidebar.profile")}</SideNav.Item></Link>
+                {hasTeams && <Link to={"/team/me"}><SideNav.Item>{t("sidebar.profile")}</SideNav.Item></Link>}
+                <Link to={"/settings"}><SideNav.Item>{t("setting_plural")}</SideNav.Item></Link>
+                <Link to={"/logout"}><SideNav.Item>{t("sidebar.logout")}</SideNav.Item></Link>
+            </SideNav.UncontrolledSubMenu>
+            {user.is_staff && (
+                <SideNav.UncontrolledSubMenu name={t("sidebar.admin")}>
+                    {iteratePlugins("adminPage").map(({ key, plugin }) => (
+                        <Link to={`/admin/${key}`} key={key}><SideNav.Item>{plugin.sidebar}</SideNav.Item></Link>
+                    ))}
+                </SideNav.UncontrolledSubMenu>
+            )}
+        </> : <>
+            {(login || registration) && (
+                <SideNav.UncontrolledSubMenu name={t("login")} startOpen>
+                    {login && <Link to={"/login"}><SideNav.Item>{t("login")}</SideNav.Item></Link>}
+                    {registration && <Link to={"/register"}><SideNav.Item>{t("register")}</SideNav.Item></Link>}
+                </SideNav.UncontrolledSubMenu>
+            )}
+        </>}
+    </>;
+
     return <>
-        <SideNav ractfSidebar header={header} footer={footer} items={menu}>
+        <SideNav ractfSidebar header={header} footer={footer} items={items}>
             {children}
         </SideNav>
     </>;
