@@ -1,10 +1,9 @@
-:80
+:80 {
+    root * /site
 
-root * /site
+    file_server
+    templates
+    encode gzip
 
-file_server
-templates
-encode gzip
-
-reverse_proxy /api/v2/* backend:8000
-reverse_proxy /api/v2/ws/* sockets:8000
+    try_files {path} /index.html
+}
