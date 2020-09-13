@@ -8,11 +8,3 @@ encode gzip
 
 reverse_proxy /api/v2/* backend:8000
 reverse_proxy /api/v2/ws/* sockets:8000
-
-handle_errors {
-    expression {http.error.status_code} == '404' {
-        rewrite @200 /index.html
-        templates
-        file_server
-    }
-}
