@@ -27,6 +27,7 @@ import { ENDPOINTS } from "@ractf/api";
 import { usePaginated } from "ractf";
 import { useConfig } from "@ractf/util";
 import { Redirect } from "react-router-dom";
+import Link from "components/Link";
 
 
 export const TeamsList = () => {
@@ -49,7 +50,10 @@ export const TeamsList = () => {
             <BrokenShards />
         </> : <Column>
             <Table headings={[t("team"), t("members")]} data={
-                state.data.map(x => [x.name, x.members, { link: "/team/" + x.id }])
+                state.data.map(x => [
+                    <Link to={`/team/${x.id}`}>{x.name}</Link>,
+                    <Link to={`/team/${x.id}`}>{x.members}</Link>,
+                ])
             } />
             {state.hasMore && <Row>
                 <Button disabled={state.loading} onClick={next}>Load More</Button>
@@ -76,7 +80,8 @@ export const UsersList = () => {
         </> : <Column>
             <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
                 state.data.map(x => [
-                    x.username, hasTeams && x.team_name, { link: "/profile/" + x.id }
+                    <Link to={`/profile/${x.id}`}>{x.username}</Link>,
+                    hasTeams && <Link to={`/profile/${x.id}`}>{x.team_name}</Link>
                 ].filter(i => i !== false))
             } />
             {state.hasMore && <Row>

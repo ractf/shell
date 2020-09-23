@@ -44,7 +44,7 @@ export default ({ challenge, category, embedded, rightComponent }) => {
     iteratePlugins("challengeMod").forEach(({ key, plugin }) => {
         if (!plugin.check || plugin.check(challenge, category)) {
             challengeMods.push(React.createElement(plugin.component, {
-                challenge: challenge, category: category, key: key,
+                challenge, category, embedded, key,
             }));
         }
     });

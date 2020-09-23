@@ -134,7 +134,7 @@ const SideBarNav_ = ({ children }) => {
             )}
             <SideNav.UncontrolledSubMenu name={user.username}>
                 <Link to={"/profile/me"}><SideNav.Item>{t("sidebar.profile")}</SideNav.Item></Link>
-                {hasTeams && <Link to={"/team/me"}><SideNav.Item>{t("sidebar.profile")}</SideNav.Item></Link>}
+                {hasTeams && <Link to={"/team/me"}><SideNav.Item>{t("team")}</SideNav.Item></Link>}
                 <Link to={"/settings"}><SideNav.Item>{t("setting_plural")}</SideNav.Item></Link>
                 <Link to={"/logout"}><SideNav.Item>{t("sidebar.logout")}</SideNav.Item></Link>
             </SideNav.UncontrolledSubMenu>

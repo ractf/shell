@@ -15,11 +15,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 
-import { FlashText, Spinner, Button, Row } from "@ractf/ui-kit";
-import { registerPlugin, useApi } from "ractf";
+import { FlashText, Spinner, Button, Row, Modal, FormGroup, Form, Input } from "@ractf/ui-kit";
+import { registerPlugin, useApi, appContext } from "ractf";
 import http from "@ractf/http";
+import { store } from "store";
+import { NUMBER_RE } from "@ractf/util";
 
 const ChallengeServer = ({ challenge }) => {
     const [state, setState] = useState({});
@@ -57,6 +59,78 @@ const ChallengeServer = ({ challenge }) => {
 };
 
 
+const AddCSJob = ({ challenge, embedded }) => {
+    const [isOpen, setOpen] = useState(false);
+    const submitRef = useRef();
+    const app = useContext(appContext);
+
+    const submit = useCallback(() => {
+        submitRef.current();
+    }, []);
+    const open = useCallback(() => {
+        setOpen(true);
+    }, []);
+    const close = useCallback(() => {
+        setOpen(false);
+    }, []);
+
+    const handle = useCallback((data) => {
+        http.post("/challengeserver/submit_job/", data).then(() => {
+            app.alert("Added job!");
+            setOpen(false);
+        }).catch(e => {
+            app.alert(`Failed to add job:\n${http.getError(e)}`);
+        });
+    }, [app]);
+
+    if (embedded) return null;
+
+    return <>
+        {isOpen && (
+            <Modal header={"Add Job"} onClose={close} onConfirm={submit}>
+                <Form submitRef={submitRef} handle={handle}>
+                    <Input name={"challenge_id"} hidden val={challenge.id} />
+
+                    <FormGroup label={"Name"}>
+                        <Input name={"job_spec.name"} required />
+                    </FormGroup>
+                    <FormGroup label={"Port"}>
+                        <Input name={"job_spec.port"} format={/\d+/} required />
+                    </FormGroup>
+                    <Row>
+                        <FormGroup label={"Replicas"}>
+                            <Input name={"job_spec.replicas"} val={10} format={/\d+/} required />
+                        </FormGroup>
+                        <FormGroup label={"Max Memory (Bytes)"}>
+                            <Input name={"job_spec.resources.memory"} val={1073741824} format={NUMBER_RE} required />
+                        </FormGroup>
+                        <FormGroup label={"CPUs"}>
+                            <Input name={"job_spec.resources.cpus"} val={0.2} format={NUMBER_RE} required />
+                        </FormGroup>
+                    </Row>
+                    <FormGroup label={"Image path"}>
+                        <Input name={"job_spec.image"} required />
+                    </FormGroup>
+                    <Row>
+                        <FormGroup label={"Registry Username"}>
+                            <Input name={"job_spec.registryAuth.username"} />
+                        </FormGroup>
+                        <FormGroup label={"Registry Password"}>
+                            <Input name={"job_spec.registryAuth.password"} password />
+                        </FormGroup>
+                    </Row>
+                </Form>
+            </Modal>
+        )}
+        <Row>
+            <Button onClick={open} info style={{ width: "100%" }}>
+                Add challenge server job
+            </Button>
+        </Row>
+    </>;
+};
+
+
 export default () => {
     registerPlugin("challengeMetadata", "challengeServer", {
         fields: [
@@ -70,5 +144,9 @@ export default () => {
     registerPlugin("challengeMod", "challengeServer", {
         component: ChallengeServer,
         check: (challenge) => !!challenge.challenge_metadata.cserv_name
+    });
+    registerPlugin("challengeMod", "challengeServerJobAdder", {
+        component: AddCSJob,
+        check: () => store.getState().user?.is_staff
     });
 };
