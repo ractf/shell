@@ -99,7 +99,7 @@ const AddCSJob = ({ challenge, embedded }) => {
                     </FormGroup>
                     <Row>
                         <FormGroup label={"Replicas"}>
-                            <Input name={"job_spec.replicas"} val={10} format={/\d+/} required />
+                            <Input name={"job_spec.replicas"} val={5} format={/\d+/} required />
                         </FormGroup>
                         <FormGroup label={"Max Memory (Bytes)"}>
                             <Input name={"job_spec.resources.memory"} val={1073741824} format={NUMBER_RE} required />
