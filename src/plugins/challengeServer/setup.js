@@ -82,13 +82,28 @@ const AddCSJob = ({ challenge, embedded }) => {
             app.alert(`Failed to add job:\n${http.getError(e)}`);
         });
     }, [app]);
+    const transformer = useCallback((data) => {
+        return {
+            ...data,
+            job_spec: {
+                ...data.job_spec,
+                port: parseInt(data.job_spec.port, 10),
+                replicas: parseInt(data.job_spec.replicas, 10),
+                resources: {
+                    ...data.job_spec.resources,
+                    memory: parseInt(data.job_spec.resources.memory, 10),
+                    cpus: parseFloat(data.job_spec.resources.cpus),
+                }
+            }
+        };
+    }, []);
 
     if (embedded) return null;
 
     return <>
         {isOpen && (
             <Modal header={"Add Job"} onClose={close} onConfirm={submit}>
-                <Form submitRef={submitRef} handle={handle}>
+                <Form submitRef={submitRef} handle={handle} transformer={transformer}>
                     <Input name={"challenge_id"} hidden val={challenge.id} />
 
                     <FormGroup label={"Name"}>
@@ -102,7 +117,7 @@ const AddCSJob = ({ challenge, embedded }) => {
                             <Input name={"job_spec.replicas"} val={5} format={/\d+/} required />
                         </FormGroup>
                         <FormGroup label={"Max Memory (Bytes)"}>
-                            <Input name={"job_spec.resources.memory"} val={1073741824} format={NUMBER_RE} required />
+                            <Input name={"job_spec.resources.memory"} val={1073741824} format={/\d+/} required />
                         </FormGroup>
                         <FormGroup label={"CPUs"}>
                             <Input name={"job_spec.resources.cpus"} val={0.2} format={NUMBER_RE} required />
