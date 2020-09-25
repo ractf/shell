@@ -340,6 +340,7 @@
         "blank": "A required field was not provided.",
         "max_length": "One your submissions was too long.",
         "challenge_not_solved": "Challenge not yet solved.",
-        "required": "A required field was missing."
+        "required": "A required field was missing.",
+        "invalid_team_or_password": "Incorrect team name or password."
     }
 }
