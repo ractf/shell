@@ -92,7 +92,7 @@ const AddCSJob = ({ challenge, embedded }) => {
                 resources: {
                     ...data.job_spec.resources,
                     memory: parseInt(data.job_spec.resources.memory, 10),
-                    cpus: parseFloat(data.job_spec.resources.cpus),
+                    cpus: parseFloat(data.job_spec.resources.cpus).toString(),
                 }
             }
         };
