@@ -12,7 +12,9 @@ RUN cp -r build /site
 
 FROM caddy:2.1.1-alpine
 
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY Caddyfile.development /etc/caddy/Caddyfile.development
+COPY Caddyfile.production /etc/caddy/Caddyfile
+
 COPY --from=0 /site /site
 
 EXPOSE 80
