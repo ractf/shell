@@ -1,9 +1,0 @@
-:80 {
-    root * /site
-
-    file_server
-    templates
-    encode gzip
-
-    try_files {path} /index.html
-}
