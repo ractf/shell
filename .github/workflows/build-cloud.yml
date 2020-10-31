@@ -18,17 +18,16 @@
 name: Build (Cloud)
 
 on:
-  - repository_dispatch:
+  repository_dispatch:
     types: [production_build_deploy]
-  - workflow_dispatch
-
-inputs:
-  domain:
-    description: "The domain to deploy to"
-    required: true
-  apiDomain:
-    description: "The domain where the API is hosted"
-    required: true
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: "The domain to deploy to"
+        required: true
+      apiDomain:
+        description: "The domain where the API is hosted"
+        required: true
 
 jobs:
   build:
