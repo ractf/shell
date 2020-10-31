@@ -18,8 +18,9 @@
 name: Build (Cloud)
 
 on:
-  repository_dispatch:
+  - repository_dispatch:
     types: [production_build_deploy]
+  - workflow_dispatch
 
 inputs:
   domain:
