@@ -20,6 +20,7 @@ name: Build (Elite)
 on:
   repository_dispatch:
     types: [elite_build_deploy]
+  workflow_dispatch: null
 
 jobs:
   build:

@@ -20,6 +20,7 @@ name: Build (Elite)
 on:
   repository_dispatch:
     types: [bsides_build_deploy]
+  workflow_dispatch: null
 
 jobs:
   build:

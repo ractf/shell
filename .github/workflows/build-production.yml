@@ -20,6 +20,7 @@ name: Build (Production)
 on:
   repository_dispatch:
     types: [production_build_deploy]
+  workflow_dispatch: null
 
 jobs:
   build:
