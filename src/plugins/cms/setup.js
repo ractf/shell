@@ -140,7 +140,7 @@ const CMSAdmin = () => {
 };
 
 const cmsRoutes = () => {
-    const pages = store.getState().cms.pages;
+    const pages = store.getState().cms.pages || [];
     return pages.map(i => (
         <Route key={i.url} path={i.url} exact>
             <CMSPage page={i} />
@@ -154,7 +154,7 @@ export default () => {
         sidebar: "Pages",
     });
     registerReducer("cms", cmsReducer);
-    
+
     registerMount("app", "cms", CMSLoader);
     registerMount("routes", "cms", cmsRoutes, { isComponent: false });
 };

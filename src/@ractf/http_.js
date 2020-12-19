@@ -52,16 +52,25 @@ export const getError = e => {
     if (e) {
         if (e.response && e.response.data) {
             // We got a response from the server, but it wasn't happy with something
-            if (e.response.data.m) {
+            if (e.response.data.m || e.response.data.d) {
                 let error = e.response.data.m;
-                const translated = i18next.t("api." + error);
-                if (translated !== error && (typeof translated) !== "object") error = translated;
+                if (error) {
+                    const translated_m = i18next.t("api." + error);
+                    if (translated_m !== error && (typeof translated_m) !== "object")
+                        error = translated_m;
+                }
 
-                if (typeof e.response.data.d === "string")
-                    if (e.response.data.d.length > 0)
-                        error += "\n" + e.response.data.d;
+                if (typeof e.response.data.d === "string") {
+                    if (e.response.data.d.length > 0) {
+                        let error_d = e.response.data.d;
+                        const translated_d = i18next.t("api." + error_d);
+                        if (translated_d !== error && (typeof translated_d) !== "object")
+                            error_d = translated_d;
+                        error += "\n" + error_d;
+                    }
+                }
 
-                return error;
+                return error.trim();
             }
             return e.response.data.toString();
         } else if (e.message) {

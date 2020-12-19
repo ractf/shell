@@ -29,7 +29,7 @@ const DIFFICULTIES = [
     [50, "Trivial", "blue"],
     [100, "Easy", "green"],
     [200, "Medium", "orange"],
-    [500, "Had", "red"],
+    [500, "Hard", "red"],
     [1000, "Insane", "purple"],
 ];
 
