@@ -60,7 +60,7 @@ const ANC = ({ hide, anc, modal }) => {
             : createGroup(cname, cdesc, ctype)).then(async resp => {
                 if (hide)
                     hide();
-                app.alert(t("campaign.edit_success"));
+                app.alert(t(anc.id ? "campaign.edit_success" : "campaign.create_success"));
             }).catch(e => {
                 setError(http.getError(e));
                 setLocked(false);

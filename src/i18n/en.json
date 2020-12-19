@@ -251,6 +251,7 @@
     },
     "campaign": {
         "no_team": "You are not in a team. You will be unable to submit flags until you join a team.",
+        "create_success": "Created category successfully.",
         "edit_success": "Edited category successfully."
     },
     "setting_plural": "Settings",
