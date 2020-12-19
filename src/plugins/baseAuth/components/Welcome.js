@@ -17,6 +17,8 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 import { H2, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
@@ -27,6 +29,10 @@ import Link from "components/Link";
 const NoTeam = () => {
     const { t } = useTranslation();
     const hasTeams = useConfig("enable_teams");
+    const user = useSelector(state => state.user);
+
+    if (hasTeams && user.team !== null)
+        return <Redirect to={"/campaign"} />;
 
     return <Wrap>
         <div style={{ textAlign: "center" }}>
