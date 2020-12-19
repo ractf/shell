@@ -84,6 +84,7 @@ const ANC = ({ hide, anc, modal }) => {
             dispatch(push("/campaign"));
             app.alert("Category removed!");
         }).catch(e => {
+            console.error(e);
             app.alert("Something went wrong removing the category:\n" + http.getError(e));
         });
         hide();

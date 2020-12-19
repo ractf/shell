@@ -48,6 +48,7 @@ const makeOwner = (team, app, member, t) => {
                 app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 reloadAll();
             }).catch(e => {
+                console.error(e);
                 app.promptConfirm({ message: t("error") + http.getError(e), noCancel: true, small: true });
             });
         }).catch(() => {
