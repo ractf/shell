@@ -23,7 +23,7 @@ import { setPreference } from "actions";
 import { store } from "store";
 
 
-const EXPERIMENTS = {
+export const EXPERIMENTS = {
     "showDev": {
         name: "Show developer links in navigations",
         options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
@@ -51,8 +51,8 @@ const Experiments = () => {
 
     const onChange = useCallback((changes) => {
         for (const i in changes) {
-            if (changes[i] !== prefs["experiment." + i]) {
-                store.dispatch(setPreference("experiment." + i, changes[i]));
+            if (changes[i] !== prefs[`experiment.${i}`]) {
+                store.dispatch(setPreference(`experiment.${i}`, changes[i]));
             }
         }
     }, [prefs]);
@@ -63,7 +63,7 @@ const Experiments = () => {
             <Form onChange={onChange}>
                 {Object.keys(EXPERIMENTS).map(i => {
                     const exp = EXPERIMENTS[i];
-                    let state = prefs["experiment." + i];
+                    let state = prefs[`experiment.${i}`];
                     if (typeof state === "undefined") state = false;
                     return <FormGroup key={exp.name} label={exp.name}>
                         <Select

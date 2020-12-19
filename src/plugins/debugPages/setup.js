@@ -15,8 +15,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin, dynamicLoad } from "ractf";
+import { registerPlugin, registerPreferences, dynamicLoad } from "ractf";
 import LoadingPage from "../../pages/LoadingPage";
+
+import { EXPERIMENTS } from "./components/Experiments";
 
 export default () => {
     const wsTester = dynamicLoad(() => import(/* webpackChunkName: "ws-tester" */ "./components/WSTester"));
@@ -24,6 +26,8 @@ export default () => {
     const experiments = dynamicLoad(() => import(/* webpackChunkName: "experiments" */ "./components/Experiments"));
     const state = dynamicLoad(() => import(/* webpackChunkName: "state" */ "./components/State"));
     const ui = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "./components/UI"));
+
+    registerPreferences(Object.keys(EXPERIMENTS).map(i => ({ name: `experiment.${i}`, initial: false })));
 
     registerPlugin("page", "/debug/experiments", {
         title: "Experiments",
