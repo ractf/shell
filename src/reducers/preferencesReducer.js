@@ -15,10 +15,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import { registeredPreferences } from "ractf";
+
 const preferencesReducer = (state = {}, { type, payload }) => {
     switch (type) {
         case "SET_PREFERENCES":
             return { ...state, ...payload };
+        case "INIT_STATE":
+            const newState = { ...state };
+            registeredPreferences.forEach(({ name, initial }) => {
+                if (!newState.hasOwnProperty(name))
+                    newState[name] = initial;
+            });
+            return newState;
         default:
             return state;
     }

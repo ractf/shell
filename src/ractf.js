@@ -51,6 +51,7 @@ const plugins = {
     flagType: {},
     topLevelPage: {},
 };
+export const registeredPreferences = [];
 export const _plugins = plugins;
 export const _mounts = mounts;
 
@@ -83,6 +84,9 @@ export const registerReducer = (name, reducer) => {
 export const registerMount = (mountPoint, key, component, options = { isComponent: true }) => {
     if (!mounts[mountPoint]) mounts[mountPoint] = {};
     mounts[mountPoint][key] = { component, isComponent: options.isComponent };
+};
+export const registerPreferences = (preferences) => {
+    registeredPreferences.push(...preferences);
 };
 
 const _fastClick = e => {
