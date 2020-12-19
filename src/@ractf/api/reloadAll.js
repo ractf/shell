@@ -23,30 +23,54 @@ import http from "@ractf/http";
 import { ENDPOINTS } from "./consts";
 
 
+export const reloadSelf = async (shouldUpdate = true) => {
+    let userData = null;
+
+    try {
+        userData = await http.get(ENDPOINTS.USER + "self");
+    } catch (e) {
+        if (e.response && e.response.data) {
+            logout(true, http.getError(e));
+            return undefined;
+        }
+    }
+    if (!shouldUpdate)
+        return userData;
+    store.dispatch(actions.setUser(userData));
+};
+
+export const reloadTeam = async (shouldUpdate = true) => {
+    let teamData = null;
+
+    try {
+        teamData = await http.get(ENDPOINTS.TEAM + "self");
+    } catch (e) {
+        if (e.request && e.request.status === 404) {
+            teamData = null;
+        } else {
+            if (e.response && e.response.data) {
+                logout(true, http.getError(e));
+                return undefined;
+            }
+        }
+    }
+    if (!shouldUpdate)
+        return teamData;
+    store.dispatch(actions.setTeam(teamData));
+};
+
 export const reloadAll = async (minimal, noChallenges) => {
     const hasTeams = (store.getState().config || {}).enable_teams;
     const token = store.getState().token?.token;
 
     let userData = null, teamData = null, challenges = undefined;
     if (token && !minimal) {
-        try {
-            userData = await http.get(ENDPOINTS.USER + "self");
-        } catch (e) {
-            if (e.response && e.response.data)
-                return logout(true, http.getError(e));
-        }
+        if (typeof (userData = await reloadSelf(false)) === "undefined")
+            return;
 
         if (hasTeams && userData && userData.team !== null) {
-            try {
-                teamData = await http.get(ENDPOINTS.TEAM + "self");
-            } catch (e) {
-                if (e.request && e.request.status === 404) {
-                    teamData = null;
-                } else {
-                    if (e.response && e.response.data)
-                        return logout(true, http.getError(e));
-                }
-            }
+            if (typeof (teamData = await reloadTeam(false)) === "undefined")
+                return;
         } else teamData = null;
     }
 

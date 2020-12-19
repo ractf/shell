@@ -20,7 +20,7 @@ import { store } from "store";
 
 import { notificationReducer } from "./reducers";
 import AppNotifications from "./components/AppNotifications";
-import { reloadAll } from "@ractf/api";
+import { reloadAll, reloadTeam } from "@ractf/api";
 import * as actions from "./actions";
 import { getUUID } from "@ractf/util";
 
@@ -81,6 +81,7 @@ export default () => {
     registerPlugin("wsMessage", WS_TEAM_JOIN, (data) => {
         // TODO: Hookup settings
         addNotification("Team join", `**${data.username}** joined your team!`);
+        reloadTeam();
     });
 
 };
