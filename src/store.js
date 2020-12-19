@@ -42,6 +42,7 @@ const store = createStore(
         ? compose(appliedMiddleware, window.__REDUX_DEVTOOLS_EXTENSION__())
         : appliedMiddleware,
 );
+window.__ractf_store = store;
 store.asyncReducers = { named: {}, anon: [] };
 const injectReducer = (store, name, asyncReducer) => {
     if (name)
