@@ -23,8 +23,8 @@ import "./Parts.scss";
 
 
 export const Wrap = ({ children }) => {
-    return <Page>
-        <Column style={{ justifyContent: "center", height: "100%" }}>
+    return <Page centre>
+        <Column style={{ justifyContent: "center", width: "100%", height: "100%" }}>
             <Row className={"authWrap"}>
                 {children}
             </Row>

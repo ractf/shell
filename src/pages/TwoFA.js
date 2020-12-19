@@ -78,8 +78,8 @@ export default () => {
         );
     };
 
-    return <Page title={t("2fa.2fa")} vCentre>
-        <Column style={{ height: "100%", justifyContent: "center" }}>
+    return <Page title={t("2fa.2fa")} centre>
+        <Column style={{ height: "100%", width: "100%", justifyContent: "center" }}>
             {page === 0 ? <>
                 <Row centre>
                     {user.has_2fa ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
