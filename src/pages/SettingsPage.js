@@ -283,11 +283,11 @@ export default () => {
                 )}
             </>}
             <Card header={t("settings.cards.notifications")}>
-                <Form handle={saveNotificationPrefs}>
+                <Form handle={saveNotificationPrefs} disableDotExpansion>
                     <FormGroup label={t("settings.notifications.send_options")}>
                         {notificationGroups.map((group) =>
-                            <Checkbox key={"notifs." + group.name} name={"notifs." + group.name}
-                                val={preferences["notifs." + group.name]}>
+                            <Checkbox key={`notifs.${group.name}`} name={`notifs.${group.name}`}
+                                val={preferences[`notifs.${group.name}`]}>
                                 {group.description}
                             </Checkbox>
                         )}

@@ -341,6 +341,7 @@
         "max_length": "One your submissions was too long.",
         "challenge_not_solved": "Challenge not yet solved.",
         "required": "A required field was missing.",
-        "invalid_team_or_password": "Incorrect team name or password."
+        "invalid_team_or_password": "Incorrect team name or password.",
+        "unique": "Something already exists with that name"
     }
 }
