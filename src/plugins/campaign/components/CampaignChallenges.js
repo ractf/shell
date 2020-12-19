@@ -50,6 +50,11 @@ export const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked 
     let maxX = 0;
     chals.forEach(chal => {
         const { x, y } = chal.challenge_metadata;
+        if (typeof x === "undefined" || typeof y === "undefined") {
+            // TODO: Handle this more gracefully;
+            return;
+        }
+
         while (rows.length <= y) rows.push([]);
         while (rows[y].length <= x) rows[y].push(null);
 
