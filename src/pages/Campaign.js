@@ -71,7 +71,7 @@ const ANC = ({ hide, anc, modal }) => {
                 setError(http.getError(e));
                 setLocked(false);
             });
-    }, [anc, app, hide, t]);
+    }, [anc, app, hide, t, dispatch]);
     const removeCategory = useCallback(() => {
         app.promptConfirm({
             message: "Are you sure you want to remove the category:\n" + anc.name,
