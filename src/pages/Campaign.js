@@ -29,7 +29,8 @@ import {
     Page, TabbedView, Tab, fromJson, Select, FormGroup, Column
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
-import { getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
+import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
+import Category from "@ractf/util/category";
 import { appContext } from "ractf";
 import http from "@ractf/http";
 import Link from "components/Link";
@@ -61,6 +62,11 @@ const ANC = ({ hide, anc, modal }) => {
                 if (hide)
                     hide();
                 app.alert(t(anc.id ? "campaign.edit_success" : "campaign.create_success"));
+                if (!anc.id) {
+                    // Redirect to newly created category
+                    const created = getClass(Category).fromJSON(resp);
+                    dispatch(push(created.url));
+                }
             }).catch(e => {
                 setError(http.getError(e));
                 setLocked(false);
