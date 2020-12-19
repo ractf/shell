@@ -20,6 +20,7 @@ import { store } from "store";
 import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
+import { reloadAll } from "./reloadAll";
 
 
 export const modifyTeam = (teamId, data) => http.patch(ENDPOINTS.TEAM + teamId, data);
@@ -40,6 +41,15 @@ export const joinTeam = (name, password) => {
             const team = await http.get("/team/self");
             store.dispatch(actions.setTeam(team));
             resolve(data);
+        }).catch(reject);
+    });
+};
+
+export const leaveTeam = () => {
+    return new Promise((resolve, reject) => {
+        http.post(ENDPOINTS.TEAM_LEAVE).then(async () => {
+            await reloadAll();
+            resolve();
         }).catch(reject);
     });
 };

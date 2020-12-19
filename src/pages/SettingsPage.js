@@ -21,7 +21,7 @@ import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from "react-i18next";
 
 import { appContext, zxcvbn } from "ractf";
-import { ENDPOINTS, modifyTeam, reloadAll } from "@ractf/api";
+import { ENDPOINTS, leaveTeam, modifyTeam, reloadAll } from "@ractf/api";
 import { usePreferences, useExperiment } from "@ractf/util/hooks";
 import { NUMBER_RE, useConfig } from "@ractf/util";
 import http from "@ractf/http";
@@ -51,8 +51,7 @@ const makeOwner = (team, app, member, t) => {
                 console.error(e);
                 app.promptConfirm({ message: t("error") + http.getError(e), noCancel: true, small: true });
             });
-        }).catch(() => {
-        });
+        }).catch(() => { });
     };
 };
 
@@ -135,6 +134,18 @@ const SettingsPage = () => {
         setPreferences(args);
         app.alert(t("settings.notifications.success"));
     }, [app, setPreferences, t]);
+
+    const doLeaveTeam = useCallback(() => {
+        app.promptConfirm({
+            message: t("settings.team_leave_confirm"), small: true
+        }).then(() => {
+            leaveTeam().then(() => {
+                app.alert(t("settings.left_team"));
+            }).catch(e => {
+                app.alert(t("settings.no_leave_team") + ": " + http.getError(e));
+            });
+        }).catch(() => { });
+    });
 
     const teamOwner = (team ? team.owner === user.id : null);
 
@@ -262,6 +273,9 @@ const SettingsPage = () => {
                                 <Button submit>{t("settings.modify_team")}</Button>
                             </Row>}
                         </Form>
+                        <Button onClick={doLeaveTeam} danger lesser>
+                            {t("settings.leave_team")}
+                        </Button>
                     </> : <div>
                             {t("settings.not_in_team")}
                             <br /><br />

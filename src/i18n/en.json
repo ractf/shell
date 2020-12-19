@@ -77,7 +77,11 @@
             "disabled": "2-factor authentication is disabled for your account.",
             "enabled": "2-factor authentication is enabled for your account.",
             "disable": "Disable 2-factor authentication"
-        }
+        },
+        "leave_team": "Leave team",
+        "team_leave_confirm": "Are you sure you want to leave your current team?",
+        "left_team": "Left team successfully",
+        "no_leave_team": "Could not leave team"
     },
     "lists": {
         "all_teams": "All Teams",
@@ -343,6 +347,9 @@
         "challenge_not_solved": "Challenge not yet solved.",
         "required": "A required field was missing.",
         "invalid_team_or_password": "Incorrect team name or password.",
-        "unique": "Something already exists with that name"
+        "unique": "Something already exists with that name.",
+        "leave_disabled": "This event does not allow leaving teams.",
+        "challenge_solved": "You cannot leave a team after solving a challenge for them.",
+        "cannot_leave_team_ownerless": "You are the owner of this team and it has other members."
     }
 }
