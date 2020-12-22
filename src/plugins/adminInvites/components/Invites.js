@@ -78,7 +78,7 @@ const Invites = () => {
 
     return <>
         <Modal header={"Generated Invites:"} fullHeight={invites.length > 20} show={invites.length}
-            key={invites[0]} noCancel>
+            key={invites[0]} cancel={false}>
             {invites.map(i => <React.Fragment key={i}><code>{i}</code><br /></React.Fragment>)}
         </Modal>
 

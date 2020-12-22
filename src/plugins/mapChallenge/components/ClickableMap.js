@@ -129,7 +129,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             </Map>
 
             {selectedLongLat && (
-                <Modal small okayLabel={"Submit"}
+                <Modal small okay={"Submit"}
                     onClose={() => setSelectedLongLat(null)}
                     onConfirm={() => submitFlag.current({ flag: selectedLongLat })}
                 >

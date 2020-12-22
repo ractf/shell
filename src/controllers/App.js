@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import SiteNav from "components/SiteNav";
 
 import {
-    ProgressBar, Scrollbar, Modal, ModalPrompt, ToggleTabHolder
+    Scrollbar, ModalPrompt, ToggleTabHolder, ProgressModal
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
@@ -278,10 +278,7 @@ const App = React.memo(() => {
                 {popupsEl}
             </div>
 
-            {progressBar && <Modal small>
-                {progressBar.text}
-                <ProgressBar progress={progressBar.progress} />
-            </Modal>}
+            {progressBar && <ProgressModal {...progressBar} />}
 
             <WSSpine />
 

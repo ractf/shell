@@ -67,8 +67,7 @@ const PackCreator = ({ close }) => {
 
     return <Modal header={"Create Challenge Pack"} buttons={<>
         <Button onClick={close} lesser warning>Cancel</Button>
-        <Button onClick={create}>Download Pack</Button>
-    </>} onClose={close}>
+    </>} onClose={close} okay={"Download Pack"} onOkay={create} cancel={false}>
         <H6>Settings:</H6>
         <Form valuesRef={formValues}>
             <FormGroup htmlFor={"name"} label={"Name"}>

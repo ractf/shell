@@ -139,7 +139,7 @@ const ANC = ({ hide, anc, modal }) => {
             <div style={{ flexGrow: 1 }} />
             <Button onClick={hide}>{t("cancel")}</Button>
             <Button onClick={doSubmit}>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
-        </>}>
+        </>} okay={false} cancel={false}>
             {body}
         </Modal>;
     return body;

@@ -120,7 +120,7 @@ export default () => {
 
     return <>
         {state.advSearch && (
-            <ModalForm header={"Advanced Member Search"} okayLabel={"Search"}
+            <ModalForm header={"Advanced Member Search"} okay={"Search"}
                 onClose={closeAdvSearch} handle={doSearch}>
                 <FormGroup label={"Username"} for={"username"}>
                     <Input name={"username"} placeholder={"Username"} />
@@ -152,7 +152,7 @@ export default () => {
                 </> : <p>No results found</p>}
             </Row>}
         </Column>
-        {state.member && <Modal onClose={close} onConfirm={submit} extraButtons={<>
+        {state.member && <Modal onClose={close} onConfirm={submit} buttons={<>
             <Button lesser onClick={impersonate} warning>Impersonate user</Button>
         </>}>
             <Form handle={saveMember(state.member)} locked={state.loading} submitRef={submitRef}>

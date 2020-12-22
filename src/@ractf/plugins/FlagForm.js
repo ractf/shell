@@ -129,9 +129,10 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
     }
 
     return <>
-        {correct && <Modal onClose={rateNone} noCancel transparent header={"Flag correct!"} buttons={<>
-            <Button onClick={rateNone} lesser>No thanks</Button>
-        </>}>
+        {correct && <Modal onClose={rateNone} cancel={false} okay={false} transparent
+            header={"Flag correct!"} buttons={<>
+                <Button onClick={rateNone} lesser>No thanks</Button>
+            </>}>
             {challenge.post_score_explanation && <>
                 Here's a little extra the challenge author had to say:
                 <HR />
@@ -144,9 +145,10 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 <Button onClick={() => vote(false)} danger Icon={FaThumbsDown}>Not great</Button>
             </Row>
         </Modal>}
-        {feedback && <Modal onClose={rateNone} noCancel transparent header={"Rate this challenge:"} buttons={<>
-            <Button onClick={rateNone} lesser>No thanks</Button>
-        </>}>
+        {feedback && <Modal onClose={rateNone} cancel={false} okay={false} transparent
+            header={"Rate this challenge:"} buttons={<>
+                <Button onClick={rateNone} lesser>No thanks</Button>
+            </>}>
             <Row centre>
                 <Button onClick={() => vote(true)} success Icon={FaThumbsUp} lesser={challenge.votes?.self === false}>
                     Awesome

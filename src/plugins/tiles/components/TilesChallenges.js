@@ -94,8 +94,8 @@ export const TilesChallenges = ({ challenges: category, showEditor, isEdit, show
 
     return <Column>
         {challenge && (
-            <Modal transparent onClose={() => setChallenge(null)} noCancel header={challenge.title}
-                okayLabel={"Back"} onConfirm={() => setChallenge(null)}
+            <Modal transparent onClose={() => setChallenge(null)} cancel={false} header={challenge.title}
+                okay={"Back"} onConfirm={() => setChallenge(null)}
             >
                 <ChallengePage tabId={category.id} chalId={challenge.id} />
             </Modal>
