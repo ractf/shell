@@ -24,7 +24,7 @@ import { TeamsList, UsersList } from "../pages/Lists";
 import Countdown from "../pages/Countdown";
 import TeamPage from "../pages/TeamPage";
 
-import { TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
+import { TextBlock, Page as BasePage, H1, H2, SubtleText } from "@ractf/ui-kit";
 import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
 import { dynamicLoad } from "ractf";
 import { useConfig } from "@ractf/util";
@@ -46,11 +46,11 @@ const TwoFA = dynamicLoad(() => import(/* webpackChunkName: "2fa" */ "../pages/T
 class ErrorBoundary extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = { error: null };
+        this.state = { error: null, showDetails: false };
     }
 
     static getDerivedStateFromError(error) {
-        return { error: error };
+        return { error, showDetails: false };
     }
 
     componentDidCatch(error, errorInfo) {
@@ -60,13 +60,47 @@ class ErrorBoundary extends React.PureComponent {
         });
     }
 
+    showDetails = () => {
+        this.setState({ showDetails: true });
+    }
+
+    copyDetails = () => {
+        const text = document.createElement("input");
+        text.style.opacity = "0";
+        text.style.position = "absolute";
+        text.style.left = "0";
+        text.style.top = "0";
+        document.body.append(text);
+        text.value = this.state.error.stack;
+        text.select();
+        text.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        document.body.removeChild(text);
+        try {
+            window.__ractf_alert("Details copied to clipboard");
+        } catch (e) {
+            // The error we're debugging might be due to alerts in the first place!
+            alert("Details copied to clipboard");
+        }
+    }
+
     render() {
         if (this.state.error) {
             return <BasePage centre>
                 <BrokenShards />
                 <H1>This page failed to load.</H1>
                 <H2>Please report this!</H2>
-                <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
+                {this.state.showDetails ? (
+                    <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
+                ) : (
+                    <SubtleText>
+                        <span className={"linkStyle"} onClick={this.copyDetails}>
+                            Copy details
+                        </span> - <span className={"linkStyle"} onClick={this.showDetails}>
+                            View details
+                        </span>
+                    </SubtleText>
+                )}
             </BasePage>;
         }
 
