@@ -247,7 +247,7 @@ b {
 .spinningSpine {
     position: fixed;
     bottom: 16px;
-    left: 16px;
+    right: 16px;
     opacity: .7;
     display: flex;
     z-index: 1000;
@@ -258,7 +258,7 @@ b {
     }
     &>span {
         margin-top: 9px;
-        margin-left: 12px;
+        margin-right: 12px;
     }
 }
 @keyframes spineSpin {

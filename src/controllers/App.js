@@ -45,8 +45,8 @@ const LOADING_TIMEOUT = 5000;
 
 
 let SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
-    <img alt={""} src={lockImg} />
     <span>{text}</span>
+    <img alt={""} src={lockImg} />
 </div>;
 SpinningSpine = React.memo(SpinningSpine);
 
