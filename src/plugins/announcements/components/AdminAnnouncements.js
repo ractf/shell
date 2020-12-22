@@ -41,9 +41,10 @@ export default () => {
 
     const add = ({ title, body }) => {
         setLocked(true);
-        addAnnouncement(title, body).then(() => {
+        addAnnouncement(title, body).then(data => {
             setLocked(false);
             app.alert("Announcement posted");
+            setLocalA(oldLocalA => [...oldLocalA, data]);
         }).catch(e => {
             setLocked(false);
             app.alert(http.getError(e));
