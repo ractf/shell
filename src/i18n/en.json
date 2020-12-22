@@ -350,6 +350,8 @@
         "unique": "Something already exists with that name.",
         "leave_disabled": "This event does not allow leaving teams.",
         "challenge_solved": "You cannot leave a team after solving a challenge for them.",
-        "cannot_leave_team_ownerless": "You are the owner of this team and it has other members."
+        "cannot_leave_team_ownerless": "You are the owner of this team and it has other members.",
+        "invalid_team": "No team with this name was found.",
+        "invalid_team_password": "Password incorrect."
     }
 }

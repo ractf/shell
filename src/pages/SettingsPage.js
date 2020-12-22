@@ -145,7 +145,7 @@ const SettingsPage = () => {
                 app.alert(t("settings.no_leave_team") + ": " + http.getError(e));
             });
         }).catch(() => { });
-    });
+    }, [app, t]);
 
     const teamOwner = (team ? team.owner === user.id : null);
 
