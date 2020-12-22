@@ -18,48 +18,47 @@
 @import "@ractf/ui-kit/Colours.scss";
 
 .notif {
-    background-color: $background;
-    padding: 16px 24px;
-    border: 1px solid $back_lift;
-    font-size: 1.2em;
+    background-color: map-get(map-get($types, "primary"), "bg");
+    color: map-get(map-get($types, "primary"), "fg");
+    border-radius: px(4);
+    padding: px(12) px(16);
+    box-shadow: 0 0 8px #0005;
     margin: 8px;
-    box-shadow: 0 1px 5px -1px #0005;
-    transition: 200ms ease box-shadow;
     cursor: pointer;
-    opacity: 0.95;
+    transition: 200ms ease opacity;
+    opacity: 1;
 
     &:hover {
-        box-shadow: 0 1px 5px 1px #0009;
+        opacity: .8;
     }
 
     .notifTitle {
-        margin-bottom: 4px;
+        font-weight: 700;
     }
     .notifBody {
-        font-size: 0.9em;
-        opacity: 0.7;
+        float: left;
     }
     .notifTime {
-        opacity: 0.5;
-        font-size: 0.8em;
-        margin-top: 4px;
+        float: right;
+        opacity: .5;
+        font-size: 0.6em;
+        margin-top: px(2);
     }
 }
 
 .announcementsWrap {
     position: fixed;
-    top: 16px;
-    right: 50%;
-    transform: translateX(50%);
+    top: 8px;
+    right: 8px;
     display: flex;
     max-height: 80vh;
     overflow-y: hidden;
     z-index: 200;
-    min-width: 50vw;
-    width: auto !important;
+    max-width: calc(100% - 16px);
+    width: 450px;
     flex-direction: column-reverse;
 
     @media (max-width: 800px) {
-        width: 100% !important;
+        width: 100%;
     }
 }
