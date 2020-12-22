@@ -54,6 +54,7 @@ export default () => {
     registerPlugin("page", "/welcome", {
         title: "Welcome",
         component: Welcome,
+        auth: true,
     });
     registerPlugin("page", "/password_reset", {
         title: "Reset Password",
