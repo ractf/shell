@@ -23,20 +23,22 @@ import {
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "ractf";
 import { ENDPOINTS } from "@ractf/api";
-import { useConfig } from "@ractf/util";
+import { useConfig, useInterval } from "@ractf/util";
 import URLTabbedView from "components/URLTabbedView";
 import Link from "components/Link";
+import { usePreference } from "@ractf/util/hooks";
 
-const LeaderboardPage = () => {
+const Leaderboard = React.memo(() => {
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
     const { t } = useTranslation();
 
-    const [graph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
-    const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
-    const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
+    const [graph, , , refreshGraph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
+    const [uState, uNext, uRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
+    const [tState, tNext, tRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
     const start_time = useConfig("start_time");
     const hasTeams = useConfig("enable_teams");
+    const liveReload = usePreference("experiment.leaderboardReload");
 
     useEffect(() => {
         if (!graph) return;
@@ -90,6 +92,13 @@ const LeaderboardPage = () => {
         );
     }, [graph, start_time, hasTeams]);
 
+    useInterval(() => {
+        if (!liveReload) return;
+        refreshGraph();
+        uRefresh();
+        tRefresh();
+    }, 10000);
+
     const userData = (lbdata) => {
         return lbdata.map((i, n) => [
             <Link to={`/profile/${i.id}`}>{n + 1}</Link>,
@@ -124,20 +133,28 @@ const LeaderboardPage = () => {
         </Row>}
     </>;
 
+    if (hasTeams) return (
+        <URLTabbedView center initial={1}>
+            <Tab label={t("team_plural")} index={"team"}>
+                {teamTab}
+            </Tab>
+
+            <Tab label={t("user_plural")} index={"user"}>
+                {userTab}
+            </Tab>
+        </URLTabbedView>
+    );
+    return userTab;
+});
+Leaderboard.displayName = "Leaderboard";
+
+const LeaderboardPage = () => {
+    const { t } = useTranslation();
+
     return <Page title={t("leaderboard")}>
         <PageHead>{t("leaderboard")}</PageHead>
         <Column>
-            {hasTeams ? (
-                <URLTabbedView center initial={1}>
-                    <Tab label={t("team_plural")} index={"team"}>
-                        {teamTab}
-                    </Tab>
-
-                    <Tab label={t("user_plural")} index={"user"}>
-                        {userTab}
-                    </Tab>
-                </URLTabbedView>
-            ) : userTab}
+            <Leaderboard />
         </Column>
     </Page>;
 };

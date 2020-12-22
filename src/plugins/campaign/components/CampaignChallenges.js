@@ -22,7 +22,7 @@ import { linkChallenges } from "@ractf/api";
 
 import { Node, AddNode } from "./Node";
 import Row from "./Row";
-//import "./Spacer.scss";
+import "./Spacer.scss";
 import { Column } from "@ractf/ui-kit";
 import { useSelector } from "react-redux";
 

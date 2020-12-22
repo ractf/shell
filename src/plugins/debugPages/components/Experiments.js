@@ -47,7 +47,11 @@ export const EXPERIMENTS = {
     "newCampaign": {
         name: "Campaign Layout",
         options: [{ key: false, value: "Old Layout" }, { key: true, value: "New Layout" }]
-    }
+    },
+    "leaderboardReload": {
+        name: "Live Leaderboard Reload",
+        options: [{ key: false, value: "Disabled" }, { key: true, value: "Enabled" }]
+    },
 };
 
 const Experiments = () => {

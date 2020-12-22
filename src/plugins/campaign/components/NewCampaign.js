@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Column, Row } from "@ractf/ui-kit";
+import { Column } from "@ractf/ui-kit";
 import Link from "components/Link";
 
 import { FaCheck, FaLockOpen, FaEyeSlash, FaLock } from "react-icons/fa";
@@ -114,7 +114,7 @@ const MAX_WIDTH = 3;
 
 const log = window.console.log.bind(window.console, "%c[Campaign]", "color: #d3d");
 
-const automaticLayout = (width, height, app, challenges) => {
+const automaticLayout = (width, height, challenges) => {
     const challenge_grid = new Array(width).fill(null).map(() => new Array(height).fill(null));
     const off_grid = [];
     challenges.forEach(challenge => {
@@ -145,12 +145,13 @@ const automaticLayout = (width, height, app, challenges) => {
             }
         });
     }
-}
+};
 
 export const Campaign = ({ category, isEdit, showLocked }) => {
     const { challenges } = category;
     let width = Math.max(...challenges.map(i => i.challenge_metadata?.x || 0)) + 1;
     let height = Math.max(...challenges.map(i => i.challenge_metadata?.y || 0)) + 1;
+    width = Math.max(1, width); height = Math.max(1, height);
 
     if (isEdit) {
         width = MAX_WIDTH;
@@ -171,7 +172,7 @@ export const Campaign = ({ category, isEdit, showLocked }) => {
     // We absolutely must only call this once per category, as otherwise we will instantly
     // overwhelm the browser!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => automaticLayout(width, height, app, challenges), [
+    useEffect(() => automaticLayout(width, height, challenges), [
         category.id
     ]);
 

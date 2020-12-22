@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 import http from "@ractf/http";
 
@@ -25,20 +25,24 @@ export const useApi = route => {
     const [error, setError] = useState(null);
     const abortRequest = useRef();
 
-    useEffect(() => {
+    const refresh = useCallback(() => {
         const [request, ar] = http.abortableGet(route);
         abortRequest.current = ar;
         request.then(data => {
             setData(data);
         }).catch(e => setError(http.getError(e)));
     }, [route]);
+
+    useEffect(() => {
+        refresh();
+    }, [refresh]);
     useEffect(() => {
         return () => {
             if (abortRequest.current) abortRequest.current();
         };
     }, []);
 
-    return [data, error, () => abortRequest.current()];
+    return [data, error, () => abortRequest.current(), refresh];
 };
 
 
@@ -59,7 +63,7 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
         localLimit.current = limit;
     }, [limit]);
 
-    const next = () => {
+    const next = useCallback(() => {
         if (inFlight.current) return;
         const path = nextPage.current || route;
 
@@ -86,7 +90,18 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
             }));
         });
         setState(prevState => ({ ...prevState, loading: true }));
-    };
+    }, [route]);
+    const refresh = useCallback(() => {
+        nextPage.current = null;
+        setState({
+            loading: true,
+            data: [],
+            hasMore: true,
+            total: 0,
+            error: null
+        });
+        next();
+    }, [next]);
 
     useEffect(() => {
         if (route !== lastRoute.current) {
@@ -109,7 +124,7 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [route]);
 
-    return [state, next];
+    return [state, next, refresh];
 };
 
 
