@@ -17,7 +17,7 @@
 
 import React from "react";
 
-import "./NodeLink.scss";
+//import "./NodeLink.scss";
 
 
 const NodeLink = (props) => {

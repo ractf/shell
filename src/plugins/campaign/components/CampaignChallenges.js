@@ -22,8 +22,11 @@ import { linkChallenges } from "@ractf/api";
 
 import { Node, AddNode } from "./Node";
 import Row from "./Row";
-import "./Spacer.scss";
+//import "./Spacer.scss";
 import { Column } from "@ractf/ui-kit";
+import { useSelector } from "react-redux";
+
+import NewCampaign from "./NewCampaign";
 
 
 const emptyChallenge = (challenges, x, y) => ({
@@ -42,6 +45,11 @@ const emptyChallenge = (challenges, x, y) => ({
 
 export const CampaignChallenges = ({ challenges, showEditor, isEdit, showLocked }) => {
     const [reRender, setReRender] = useState(0);
+
+    const useNew = useSelector(state => state.preferences["experiment.newCampaign"]);
+    if (useNew)
+        return <NewCampaign category={challenges} isEdit={isEdit}
+            showEditor={showEditor} showLocked={showLocked} />;
 
     const chals = challenges.challenges || [];
 

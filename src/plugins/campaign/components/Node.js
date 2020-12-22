@@ -22,7 +22,7 @@ import Link from "components/Link";
 
 import NodeLink from "./NodeLink";
 
-import "./Node.scss";
+//import "./Node.scss";
 
 
 export const Node = ({

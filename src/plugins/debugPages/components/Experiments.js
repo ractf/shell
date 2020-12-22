@@ -44,6 +44,10 @@ export const EXPERIMENTS = {
         name: "Advanced Team/Member Search",
         options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
     },
+    "newCampaign": {
+        name: "Campaign Layout",
+        options: [{ key: false, value: "Old Layout" }, { key: true, value: "New Layout" }]
+    }
 };
 
 const Experiments = () => {

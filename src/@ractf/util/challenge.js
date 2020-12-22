@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import { editChallenge } from "@ractf/api";
+
 export default class Challenge {
     constructor(category, data) {
         if ("toJSON" in data && (typeof data.toJSON) === "function")
@@ -33,6 +35,19 @@ export default class Challenge {
         for (const i of Object.keys(this._data)) {
             yield i;
         }
+    }
+
+    edit(changes) {
+        return editChallenge({ ...this._data, ...changes });
+    }
+
+    editMetadata(changes) {
+        return this.edit({
+            ...this._data, challenge_metadata: {
+                ...this._data.challenge_metadata,
+                ...changes
+            }
+        });
     }
 
     get category() {

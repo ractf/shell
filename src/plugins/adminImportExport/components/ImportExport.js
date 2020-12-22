@@ -332,6 +332,7 @@ export default () => {
             author: data.author,
             score: data.score,
             flag_metadata: data.flag_metadata,
+            tags: data.tags || []
         }).then(async (chal) => {
             await Promise.all([
                 ...data.hints.map(hint => hint.text && newHint(
