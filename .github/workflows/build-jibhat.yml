@@ -59,7 +59,7 @@ jobs:
         CI: "false"
         RACTF_API_DOMAIN: https://api-jibhat.ractf.co.uk
         RACTF_API_BASE: /api/v2
-        RACTF_WSS_URL: wss://api-2020.jibhat.co.uk/api/v2/ws/
+        RACTF_WSS_URL: wss://api-jibhat.ractf.co.uk/api/v2/ws/
         RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
         RACTF_GA_UA: XXX
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
