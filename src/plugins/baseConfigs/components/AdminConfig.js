@@ -105,10 +105,10 @@ const AdminConfig = () => {
         <Form handle={updateConfig}>
             <Row>
                 <Column lgWidth={6} mdWidth={12}>
-                    {fields.filter((_, i) => i%2===1)}
+                    {fields.filter((_, i) => (i % 2) === 0)}
                 </Column>
                 <Column lgWidth={6} mdWidth={12}>
-                    {fields.filter((_, i) => i%2===0)}
+                    {fields.filter((_, i) => (i % 2) === 1)}
                 </Column>
             </Row>
             <Row>
