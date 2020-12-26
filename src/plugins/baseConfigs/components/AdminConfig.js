@@ -69,31 +69,42 @@ const AdminConfig = () => {
     if (adminConfig !== null) {
         iteratePlugins("config").forEach(({ plugin }) => {
             Object.keys(plugin).forEach((key) => {
+                const fieldTypes = {};
+                plugin[key].forEach((i) => {
+                    fieldTypes[i[2]] ? fieldTypes[i[2]].push(i) : fieldTypes[i[2]] = [i];
+                });
                 fields.push(
                     <Card header={key}>
-                        {plugin[key].map(([key, name, type, extra], i) => {
-                            switch (type) {
-                                case "string":
-                                case "int":
-                                case "float":
-                                    const format = (
-                                        (type === "string") ? null : (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
-                                    );
-                                    return <FormGroup key={i} label={name}>
-                                        <Input placeholder={name} val={adminConfig[key]} format={format} name={key} />
-                                    </FormGroup>;
-                                case "date":
-                                    return <FormGroup key={i} label={name}>
-                                        <DatePick initial={adminConfig[key]} configSet={configSet} configKey={key} />
-                                    </FormGroup>;
-                                case "boolean":
-                                    return <Checkbox key={i} name={key} val={adminConfig[key]}>
-                                        {name}
-                                    </Checkbox>;
-                                default:
-                                    return <></>;
-                            }
-                        })}
+                        {Object.values(fieldTypes).map((fields) => 
+                            <Row>
+                                {fields.map(([key, name, type, extra], i) => {
+                                    switch (type) {
+                                        case "string":
+                                        case "int":
+                                        case "float":
+                                            const format = (
+                                                (type === "string") ? null : 
+                                                    (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
+                                            );
+                                            return <FormGroup key={i} label={name}>
+                                                <Input placeholder={name} val={adminConfig[key]}
+                                                    format={format} name={key} />
+                                            </FormGroup>;
+                                        case "date":
+                                            return <FormGroup key={i} label={name}>
+                                                <DatePick initial={adminConfig[key]} configSet={configSet}
+                                                    configKey={key} />
+                                            </FormGroup>;
+                                        case "boolean":
+                                            return <Checkbox key={i} name={key} val={adminConfig[key]}>
+                                                {name}
+                                            </Checkbox>;
+                                        default:
+                                            return <></>;
+                                    }
+                                })}
+                            </Row>
+                        )}
                     </Card>
                 );
             });
