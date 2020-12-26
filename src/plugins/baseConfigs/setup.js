@@ -23,8 +23,10 @@ import AdminConfig from "./components/AdminConfig";
 export default () => {
     registerPlugin("adminPage", "config", {
         component: AdminConfig,
-        sidebar: "    registerPlugin("config", "baseConfig", [
-            registerPlugin("config", "baseConfig", {
+        sidebar: "Configuration",
+    });
+
+    registerPlugin("config", "baseConfig", {
         "Dates and Times": [
             ["register_start_time", "Register Start Time", "date"],
             ["register_end_time", "Register End Time", "date"],
@@ -33,7 +35,7 @@ export default () => {
         ],
 
         "Security": [
-            ["enable_force_admin_2fa", "Force 2FA for admins", "boolean"],
+            ["enable_force_admin_2fa ", "Force 2FA for admins", "boolean"],
             ["enable_maintenance_mode", "Enable Maintanance Mode", "boolean"],
         ],
         
@@ -47,7 +49,7 @@ export default () => {
             ["invite_required", "Invites required to join", "boolean"],
         ],
 
-        "Limit Site Access": [
+        "Limit Site Access" : [
             ["enable_flag_submission", "Enable Flag Submission", "boolean"],
             ["enable_login", "Enable Login", "boolean"],
             ["enable_registration", "Enable Registration", "boolean"],
@@ -71,5 +73,6 @@ export default () => {
             ["enable_ctftime", "Enable CTFTime", "boolean"],
             ["login_provider", "Login provider", "string"],
             ["registration_provider", "Registration provider", "string"],
-        ],
+        ]
     });
+};
