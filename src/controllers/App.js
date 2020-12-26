@@ -53,7 +53,7 @@ SpinningSpine = React.memo(SpinningSpine);
 
 const VimDiv = () => {
     const [scrollback, setScrollback] = useState(`[www-data@ractfhost1 shell]$ npm run build
-[www-data@ractfhost1 shell]$ python3.7 -m http.server --directory build 80
+[www-data@ractfhost1 shell]$ python3.9 -m http.server --directory build 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 
 Keyboard interrupt received, exiting.
