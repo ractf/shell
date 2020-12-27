@@ -19,8 +19,8 @@ import React, { useCallback, useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Row, HR, FormGroup, Checkbox, DatePick, PageHead,
-    Column
+    Form, Input, Button, Row, FormGroup, Checkbox, DatePick, PageHead,
+    Column, Card
 } from "@ractf/ui-kit";
 import { appContext, useApi } from "ractf";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
@@ -29,7 +29,7 @@ import { NUMBER_RE } from "@ractf/util";
 import http from "@ractf/http";
 
 
-export default () => {
+const AdminConfig = () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
     const [adminConfig, setAdminConfig] = useState(null);
@@ -65,62 +65,49 @@ export default () => {
     }, [adminConfig, app, configSet]);
 
     const fields = [];
-    let stack = [];
-    let stack2 = [];
-
-    const flushStack = () => {
-        if (stack.length) {
-            stack2.push(<Row left key={stack2.length}>{stack.map(i => i[0])}</Row>);
-            stack = [];
-        }
-    };
-    const flushStack2 = () => {
-        if (stack2.length) {
-            fields.push(<Column key={fields.length} width={6}>{stack2}</Column>);
-            stack2 = [];
-        }
-    };
 
     if (adminConfig !== null) {
         iteratePlugins("config").forEach(({ plugin }) => {
-            plugin.forEach(([key, name, type, extra]) => {
-                if (key === "" || (stack.length && type !== stack[0][1]))
-                    flushStack();
-                if (key === "") {
-                    if (fields.length)
-                        stack2.push(<HR key={stack2.length} />);
-                    flushStack2();
-                    if (name)
-                        stack2.push(<div key={stack2.length}>{name}</div>);
-                    return;
-                }
-                switch (type) {
-                    case "string":
-                    case "int":
-                    case "float":
-                        const format = (
-                            (type === "string") ? null : (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
-                        );
-                        stack.push([<FormGroup key={stack.length} label={name}>
-                            <Input placeholder={name} val={adminConfig[key]} format={format} name={key} />
-                        </FormGroup>, type]);
-                        break;
-                    case "date":
-                        stack.push([<FormGroup key={stack.length} label={name}>
-                            <DatePick initial={adminConfig[key]} configSet={configSet} configKey={key} />
-                        </FormGroup>, type]);
-                        break;
-                    case "boolean":
-                        stack.push([<Checkbox key={stack.length} name={key} val={adminConfig[key]}>
-                            {name}
-                        </Checkbox>, type]);
-                        break;
-                    default:
-                        break;
-                }
+            Object.keys(plugin).forEach((key) => {
+                const fieldTypes = {};
+                plugin[key].forEach((i) => {
+                    fieldTypes[i[2]] ? fieldTypes[i[2]].push(i) : fieldTypes[i[2]] = [i];
+                });
+                fields.push(
+                    <Card header={key}>
+                        {Object.values(fieldTypes).map((fields) => 
+                            <Row>
+                                {fields.map(([key, name, type, extra], i) => {
+                                    switch (type) {
+                                        case "string":
+                                        case "int":
+                                        case "float":
+                                            const format = (
+                                                (type === "string") ? null : 
+                                                    (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
+                                            );
+                                            return <FormGroup key={i} label={name}>
+                                                <Input placeholder={name} val={adminConfig[key]}
+                                                    format={format} name={key} />
+                                            </FormGroup>;
+                                        case "date":
+                                            return <FormGroup key={i} label={name}>
+                                                <DatePick initial={adminConfig[key]} configSet={configSet}
+                                                    configKey={key} />
+                                            </FormGroup>;
+                                        case "boolean":
+                                            return <Checkbox key={i} name={key} val={adminConfig[key]}>
+                                                {name}
+                                            </Checkbox>;
+                                        default:
+                                            return <></>;
+                                    }
+                                })}
+                            </Row>
+                        )}
+                    </Card>
+                );
             });
-            flushStack();
-            flushStack2();
         });
     }
 
@@ -128,7 +115,12 @@ export default () => {
         <PageHead title={t("admin.configuration")} />
         <Form handle={updateConfig}>
             <Row>
-                {fields}
+                <Column lgWidth={6} mdWidth={12}>
+                    {fields.filter((_, i) => (i % 2) === 0)}
+                </Column>
+                <Column lgWidth={6} mdWidth={12}>
+                    {fields.filter((_, i) => (i % 2) === 1)}
+                </Column>
             </Row>
             <Row>
                 <Button submit>Save</Button>
@@ -136,3 +128,5 @@ export default () => {
         </Form>
     </>;
 };
+
+export default AdminConfig;
