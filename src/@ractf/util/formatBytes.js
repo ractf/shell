@@ -1,4 +1,4 @@
-export default bytes => {
+export default (bytes, decimals = 2) => {
     if (bytes === 0) return "0 Bytes";
 
     const k = 1024;
@@ -6,5 +6,5 @@ export default bytes => {
 
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + " " + sizes[i];
 };
