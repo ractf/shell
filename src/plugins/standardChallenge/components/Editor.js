@@ -15,22 +15,31 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useCallback } from "react";
+import React, { useContext, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 
 import {
     Form, Input, Row, Checkbox, Button, Select, PageHead, InputTags,
-    FlashText, FormGroup, fromJson, Page, Column, Card, Grid
+    FlashText, FormGroup, fromJson, Page, Column, Card, Grid, Modal,
+    FileUpload, TabbedView, Tab, SubtleText
 } from "@ractf/ui-kit";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
-import { newHint, newFile } from "@ractf/api";
+import { NUMBER_RE, formatBytes } from "@ractf/util";
+import { newHint } from "@ractf/api";
 import { appContext } from "ractf";
-import { NUMBER_RE } from "@ractf/util";
+import * as actions from "actions";
 import http from "@ractf/http";
 import Link from "components/Link";
 
 import File from "./File";
 import Hint from "./Hint";
+import { useRef } from "react";
+
+
+const UPLOAD_SPEED_HISTORY = 5;
+const SUPPORTED_FILE_SIZE = 104857600;  // 100 MB
+const LARGE_FILE_SIZE = 52428800;  // 50 MB
 
 
 const MetadataEditor = ({ challenge, category, save }) => {
@@ -71,8 +80,7 @@ const HintEditor = ({ challenge }) => {
             { name: "cost", placeholder: "Hint cost", label: "Cost", format: NUMBER_RE },
             { name: "body", placeholder: "Hint text", label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
-
-            if (!cost.match(NUMBER_RE)) return app.alert("Invalid file size!");
+            if (!cost.match(NUMBER_RE)) return app.alert("Invalid hint cost!");
 
             newHint(challenge.id, name, cost, body).then(() =>
                 app.alert("New hint added!")
@@ -97,24 +105,120 @@ const HintEditor = ({ challenge }) => {
 
 const FileEditor = ({ challenge }) => {
     const app = useContext(appContext);
+    const [modalOpen, setModalOpen] = useState(true);
+    const [activeTab, setActiveTab] = useState("upload");
+    const submitUpRef = useRef();
+    const submitAddRef = useRef();
+    const modalSubmit = useCallback(() => {
+        if (activeTab === "upload") {
+            uploadSpeedLog.current = [];
+            submitUpRef.current();
+        } else {
+            submitAddRef.current();
+        }
+    }, [activeTab]);
+    const uploadSpeedLog = useRef();
 
     const addFile = useCallback(() => {
-        app.promptConfirm({ message: "New file", },
-            [{ name: "name", placeholder: "File name", label: "Name" },
-            { name: "url", placeholder: "File URL", label: "URL" },
-            { name: "size", placeholder: "File size", label: "Size (bytes)", format: NUMBER_RE }]
-        ).then(({ name, url, size }) => {
-            if (!size.match(NUMBER_RE)) return app.alert("Invalid file size!");
+        setModalOpen(true);
+    }, []);
+    const onClose = useCallback(() => {
+        setModalOpen(false);
+    }, []);
+    const dispatch = useDispatch();
+    const postSubmit = useCallback(({ resp }) => {
+        dispatch(actions.addFile(challenge.id, resp));
+        setModalOpen(false);
+        app.alert("New file added");
+    }, [dispatch, challenge.id, app]);
+    const onUploadProgress = useCallback((event) => {
+        uploadSpeedLog.current.push([event.loaded, new Date()]);
+        while (uploadSpeedLog.current.length > UPLOAD_SPEED_HISTORY)
+            uploadSpeedLog.current.shift();
 
-            newFile(challenge.id, name, url, size).then((id) => {
-                app.alert("New file added!");
-            }).catch(e =>
-                app.alert("Error creating new file:\n" + http.getError(e))
+        let speed = null;
+        if (uploadSpeedLog.current.length > 1) {
+            const deltaBytes = (
+                uploadSpeedLog.current[uploadSpeedLog.current.length - 1][0]
+                - uploadSpeedLog.current[0][0]
             );
+            const deltaTime = (
+                uploadSpeedLog.current[uploadSpeedLog.current.length - 1][1]
+                - uploadSpeedLog.current[0][1]
+            );
+            speed = deltaBytes / (deltaTime / 1000);
+        }
+
+        app.showProgress(
+            `Uploaded ${formatBytes(event.loaded, 1)}/${formatBytes(event.total, 1)}`
+            + (speed !== null ? ` (${formatBytes(speed, 1)}/s)` : ""),
+            event.loaded / event.total
+        );
+    }, [app]);
+    const uploadFailed = useCallback(({ error }) => {
+        app.alert("Upload failed: " + http.getError(error));
+    }, [app]);
+    const validator = useCallback(({ upload }) => {
+        return new Promise((resolve, reject) => {
+            const size = formatBytes(upload.size, 1);
+            if (upload.size > SUPPORTED_FILE_SIZE)
+                app.promptConfirm({
+                    message: `You are about to upload a file larger than officially supported (${size}). `
+                        + "Are you sure you wish to proceed?",
+                    small: true,
+                    okay: "Abort",
+                    cancel: "Proceed",
+                }).catch(clickedButton => clickedButton ? resolve() : reject()).then(reject);
+            else if (upload.size > LARGE_FILE_SIZE)
+                app.promptConfirm({
+                    message: `You are about to upload a large file (${size}). `
+                        + "Are you sure you wish to proceed?",
+                    small: true,
+                    okay: "Abort",
+                    cancel: "Proceed",
+                }).catch(clickedButton => clickedButton ? resolve() : reject()).then(reject);
+            else resolve();
         });
-    }, [app, challenge.id]);
+    }, [app]);
+
+    const modal = <Modal header={"New file"} onClose={onClose} onConfirm={modalSubmit}
+        okay={activeTab === "upload" ? "Upload File" : "Add File"}>
+        <TabbedView active={activeTab} setActive={setActiveTab} neverUnmount>
+            <Tab label={"Upload File"} index={"upload"}>
+                <Form multipart method={"POST"} action={"/challenges/files/"}
+                    postSubmit={postSubmit} submitRef={submitUpRef} onUploadProgress={onUploadProgress}
+                    onError={uploadFailed} validator={validator}>
+                    <Input hidden val={challenge.id} name={"challenge"} />
+                    <FormGroup label={"Choose file"} htmlFor={"upload"}>
+                        <FileUpload required name={"upload"} globalDrag />
+                        <label><SubtleText>
+                            Uploading files larger than {formatBytes(SUPPORTED_FILE_SIZE)} is not
+                            officially supported. You may wish to instead upload files this large
+                            to an alternative hosting provider and link the file instead.
+                        </SubtleText></label>
+                    </FormGroup>
+                </Form>
+            </Tab>
+            <Tab label={"Link File"} index={"link"}>
+                <Form multipart method={"POST"} action={"/challenges/files/"}
+                    postSubmit={postSubmit} submitRef={submitAddRef} >
+                    <FormGroup label={"File name"} htmlFor={"name"}>
+                        <Input required name={"name"} placeholder={"File name"} />
+                    </FormGroup>
+                    <FormGroup label={"File URL"} htmlFor={"url"}>
+                        <Input required name={"url"} placeholder={"File URL"} />
+                    </FormGroup>
+                    <FormGroup label={"File size (in bytes)"} htmlFor={"size"}>
+                        <Input required name={"size"} placeholder={"File Size"} format={/\d+/} />
+                    </FormGroup>
+                    <Input hidden val={challenge.id} name={"challenge"} />
+                </Form>
+            </Tab>
+        </TabbedView>
+    </Modal>;
 
     return <>
+        {modalOpen && modal}
         <Row>
             <Grid headings={["Name", "URL", "Size", "Actions"]} data={challenge.files.map(file => [
                 file.name, <Link to={file.url}>{file.url}</Link>, file.size,
@@ -223,7 +327,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                 val={JSON.stringify(challenge.flag_metadata)} />
                             </FormGroup>*/}
                     </Card>
-                    <Card header={"Files"} collapsible startClosed>
+                    <Card header={"Files"} collapsible startClosed={false}>
                         {isCreator
                             ? <FlashText danger>Cannot add files to non-existent challenge.</FlashText>
                             : <FileEditor challenge={challenge} />}
@@ -247,7 +351,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
     return <Page>
         <PageHead
             title={isCreator ? <>New challenge</> : <>Editing: {challenge.name}</>}
-            back={<Link className={"backToChals"} to={"..#edit"}>{t("back_to_chal")}</Link>}
+            back={<Link className={"backToChals"} to={category.url + "#edit"}>{t("back_to_chal")}</Link>}
         />
         {body}
     </Page>;

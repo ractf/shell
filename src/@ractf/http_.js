@@ -99,14 +99,24 @@ export const abortableGet = (url, params) => {
     }), source.cancel];
 };
 
-export const makeRequest = (method, url, data, headers, params) => {
+export const makeRequest = (method, url, data, headers, params, multipart, onUploadProgress) => {
+    const localHeaders = { ...headers };
+    let localData = data;
+    if (multipart) {
+        localData = new FormData();
+        Object.keys(data).forEach(i => {
+            localData.append(i, data[i]);
+        });
+        localHeaders["Content-Type"] = "multipart/form-data";
+    }
     return new Promise((resolve, reject) => {
         axios({
             url: appendSlash(prefixBase(url)),
             params: params,
             method: method,
-            data: data,
-            headers: _getHeaders(headers),
+            data: localData,
+            headers: _getHeaders(localHeaders),
+            onUploadProgress: onUploadProgress,
         }).then(response => {
             resolve(response.data.d);
         }).catch(reject);

@@ -274,6 +274,7 @@ b {
         top: 50%;
         height: 25vh;
         transform: translate(-50%, -50%);
+        justify-content: center;
         filter: invert(79%) sepia(79%) saturate(1676%) hue-rotate(333deg) brightness(96%) contrast(91%);
 
         img {

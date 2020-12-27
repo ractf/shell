@@ -63,7 +63,7 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
         localLimit.current = limit;
     }, [limit]);
 
-    const next = useCallback(() => {
+    const next = useCallback((isRefresh = false) => {
         if (inFlight.current) return;
         const path = nextPage.current || route;
 
@@ -77,7 +77,7 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
             nextPage.current = data.next;
             setState(prevState => ({
                 ...prevState, loading: false,
-                data: [...prevState.data, ...data.results],
+                data: isRefresh ? data.results : [...prevState.data, ...data.results],
                 total: data.total,
                 hasMore: !!data.next
             }));
@@ -93,14 +93,7 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
     }, [route]);
     const refresh = useCallback(() => {
         nextPage.current = null;
-        setState({
-            loading: true,
-            data: [],
-            hasMore: true,
-            total: 0,
-            error: null
-        });
-        next();
+        next(true);
     }, [next]);
 
     useEffect(() => {
