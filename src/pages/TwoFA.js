@@ -107,14 +107,18 @@ export default () => {
                     <H2>{t("2fa.finalise")}</H2>
                 </Row>
                 <Row centre>
-                    {t("2fa.please_scan_qr")}
+                    <span>
+                        {t("2fa.please_scan_qr")}
+                    </span>
                 </Row>
                 <Row centre>
-                    <QRCode renderAs={"svg"} size={128} fgColor={"#161422"}
+                    <QRCode renderAs={"svg"} size={200} fgColor={"#161422"}
                         value={buildURI(secret)} includeMargin />
                 </Row>
                 <Row centre>
-                    {t("2fa.unable_to_qr")}
+                    <span>
+                        {t("2fa.unable_to_qr")}
+                    </span>
                 </Row>
                 <Row centre>
                     <TextBlock>
@@ -122,9 +126,12 @@ export default () => {
                     </TextBlock>
                 </Row>
 
-                {message && <Row><FormError>{message}</FormError></Row>}
+                {message && <Row centre><FormError>{message}</FormError></Row>}
 
                 <Row centre>
+                    <Link to={"/settings/2fa"}>
+                        <Button lesser>{t("cancel")}</Button>
+                    </Link>
                     <Button onClick={faPrompt}>{t("2fa.got_it")}</Button>
                 </Row>
             </> : page === 3 ? <>
@@ -141,17 +148,17 @@ export default () => {
                     </Link>
                 </Row>
             </> : <>
-                <Row centre>
-                    {t("2fa.error")}
-                </Row>
-                <br />
-                <Row centre>
-                    <Link to={"/settings"}>
-                        <Button lesser>{t("2fa.back_to_settings")}</Button>
-                    </Link>
-                    <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
-                </Row>
-            </>}
+                                <Row centre>
+                                    {t("2fa.error")}
+                                </Row>
+                                <br />
+                                <Row centre>
+                                    <Link to={"/settings"}>
+                                        <Button lesser>{t("2fa.back_to_settings")}</Button>
+                                    </Link>
+                                    <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
+                                </Row>
+                            </>}
         </Column>
     </Page>;
 };

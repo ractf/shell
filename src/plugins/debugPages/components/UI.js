@@ -68,15 +68,6 @@ const Inner = () => (<NavCollapse>
 const UIPage = () => <Page><Row left>
     <H1>Really Awesome UI Framework</H1>
     <HR />
-    <HR />
-
-    <ItemStack>
-        <ItemStack.Item>Some</ItemStack.Item>
-        <ItemStack.Item>Item</ItemStack.Item>
-        <ItemStack.Item>Here!</ItemStack.Item>
-    </ItemStack>
-
-    <HR />
     <Card noPad>
         <ItemStack>
             <ItemStack.Item warning label={5}>Some</ItemStack.Item>
@@ -91,10 +82,10 @@ const UIPage = () => <Page><Row left>
     <NavBar>
         <NavBrand>RACTF/<b>UI-KIT</b></NavBrand>
         <NavCollapse>
-            <Link to={"#"}>Home</Link>
-            <Link to={"#"}>About</Link>
-            <Link to={"#"}>Get Started</Link>
-            <Link to={"#"}>API Reference</Link>
+            <NavItem><Link to={"#"}>Home</Link></NavItem>
+            <NavItem><Link to={"#"}>About</Link></NavItem>
+            <NavItem><Link to={"#"}>Get Started</Link></NavItem>
+            <NavItem><Link to={"#"}>API Reference</Link></NavItem>
 
             <NavGap />
             <NavItem>This is some text</NavItem>
@@ -265,8 +256,8 @@ const UIPage = () => <Page><Row left>
                 <InputGroup name="dig" left={
                     <InputHint>@</InputHint>
                 } right={<>
-                    <Button success>Add New</Button>
-                    <Button danger>Remove</Button>
+                    <Button disabled success>Add New</Button>
+                    <Button disabled danger>Remove</Button>
                 </>} />
             </FormGroup>
         </Form>
