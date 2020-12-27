@@ -105,7 +105,7 @@ const HintEditor = ({ challenge }) => {
 
 const FileEditor = ({ challenge }) => {
     const app = useContext(appContext);
-    const [modalOpen, setModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("upload");
     const submitUpRef = useRef();
     const submitAddRef = useRef();
