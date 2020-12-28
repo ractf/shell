@@ -29,7 +29,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      run: git checkout d561616a67a2cfeadb81f0edbf6304b53d60cb5b
+    - run: git checkout d561616a67a2cfeadb81f0edbf6304b53d60cb5b
 
     - name: Checkout submodules
       uses: textbook/git-checkout-submodule-action@master
