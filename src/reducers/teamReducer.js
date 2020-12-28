@@ -20,6 +20,8 @@ const teamReducer = (state = null, { type, payload }) => {
         case "SET_TEAM":
             return payload;
         case "INIT_STATE":
+            if (typeof payload.team === "undefined")
+                return state;
             return payload.team;
         case "LOGOUT":
             return null;

@@ -63,7 +63,7 @@ export const reloadAll = async (minimal, noChallenges) => {
     const hasTeams = (store.getState().config || {}).enable_teams;
     const token = store.getState().token?.token;
 
-    let userData = null, teamData = null, challenges = undefined;
+    let userData = undefined, teamData = undefined, challenges = undefined;
     if (token && !minimal) {
         if (typeof (userData = await reloadSelf(false)) === "undefined")
             return;

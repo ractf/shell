@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import {
     Form, Input, Button, Row, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
-import { ENDPOINTS, postLogin, requestPasswordReset } from "@ractf/api";
+import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
 import { appContext } from "ractf";
 import { EMAIL_RE } from "@ractf/util";
 import http from "@ractf/http";
@@ -42,7 +42,11 @@ const BasicLogin = () => {
             requestPasswordReset(email).then(() => {
                 app.alert(t("auth.email_sent"));
             }).catch(e => {
-                app.alert(http.getError(e));
+                if (e === "permission_denied")
+                    // We're already logged in
+                    reloadAll();
+                else
+                    app.alert(http.getError(e));
             });
         });
     }, [app, t]);

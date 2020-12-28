@@ -22,6 +22,8 @@ const userReducer = (state = null, { type, payload }) => {
         case "EDIT_USER":
             return { ...state, ...payload };
         case "INIT_STATE":
+            if (typeof payload.user === "undefined")
+                return state;
             return payload.user;
         case "LOGOUT":
             return null;
