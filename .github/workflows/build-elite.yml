@@ -29,6 +29,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        ref: 11d2e4e920ad4883f4b4391282ba57328d017047
 
     - name: Checkout submodules
       uses: textbook/git-checkout-submodule-action@master
@@ -57,11 +59,11 @@ jobs:
       run: npm run build
       env:
         CI: "false"
-        RACTF_API_DOMAIN: https://api-elite.ractf.co.uk
-        RACTF_API_BASE: /api/v2
-        RACTF_WSS_URL: wss://api-elite.ractf.co.uk/api/v2/ws/
-        RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
-        RACTF_GA_UA: UA-167342912-2
+        REACT_APP_API_DOMAIN: https://api-elite.ractf.co.uk
+        REACT_APP_API_BASE: /api/v2
+        REACT_APP_WSS_URL: wss://api-elite.ractf.co.uk/api/v2/ws/
+        REACT_APP_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
+        REACT_APP_GA_UA: UA-167342912-2
         RACTF_UI_KIT_THEME: csa
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
         REACT_APP_SITE_NAME: "CS:Awesome"
