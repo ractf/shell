@@ -18,8 +18,8 @@
 @import "@ractf/ui-kit/Colours.scss";
 
 .notif {
-    background-color: map-get(map-get($types, "primary"), "bg");
-    color: map-get(map-get($types, "primary"), "fg");
+    background-color: var(--type-primary-bg);
+    color: var(--type-primary-fg);
     border-radius: px(4);
     padding: px(12) px(16);
     box-shadow: 0 0 8px #0005;

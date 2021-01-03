@@ -156,14 +156,14 @@ const SideBarNav_ = ({ children }) => {
     </>;
 
     return <>
-        <SideNav ractfSidebar header={header} footer={footer} items={items}>
+        <SideNav sidebarType header={header} footer={footer} items={items}>
             {children}
         </SideNav>
     </>;
 };
 const SideBarNav = React.memo(SideBarNav_);
 
-const SiteNav = ({ children }) => {    
+const SiteNav = ({ children }) => {
     const [showDev] = useExperiment("showDev");
     if (USE_HEAD_NAV)
         return <SiteWrap>

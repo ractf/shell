@@ -89,10 +89,10 @@
             cursor: pointer;
 
             &.run {
-                color: map-get($colours, "green");
+                color: var(--col-green);
             }
             &.warn {
-                color: map-get($colours, "red");
+                color: var(--col-red);
             }
         }
     }

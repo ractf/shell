@@ -15,40 +15,33 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-@import "@ractf/ui-kit/Colours.scss";
-
-.networkOuter {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    position: absolute;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-
-    padding: 2rem;
-
-    @media (max-width: 1200px) {
-        padding: 1rem 1.5rem;
-    }
-
-    @media (max-width: 800px) {
-        padding: 0.5rem;
-    }
-}
-
-.network {
-    border: 2px solid var(--col-back-lift);
-
-    flex-grow: 1;
-    position: relative;
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    > div {
-        flex-grow: 1;
-        height: auto !important;
-    }
-}
+export const setTheme = (theme) => {
+    return {
+        type: "SET_THEME",
+        payload: theme
+    };
+};
+export const setColours = (colours) => {
+    return {
+        type: "SET_THEME_COLOURS",
+        payload: colours
+    };
+};
+export const setTypes = (types) => {
+    return {
+        type: "SET_THEME_TYPES",
+        payload: types
+    };
+};
+export const setColour = (colour, value) => {
+    return {
+        type: "SET_THEME_COLOURS",
+        payload: { [colour]: value }
+    };
+};
+export const setType = (type, value) => {
+    return {
+        type: "SET_THEME_TYPES",
+        payload: { [type]: value }
+    };
+};

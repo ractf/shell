@@ -1,0 +1,30 @@
+.sample {
+    width: 0;
+    height: 0;
+    padding: 14px;
+    position: relative;
+    border-radius: 50%;
+
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        box-sizing: border-box;
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        border-radius: 50%;
+        border: 2px solid #fff3;
+        background-color: inherit;
+    }
+
+    > * {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 4px);
+        z-index: 2;
+        box-shadow: 0 0 16px #0004;
+    }
+}

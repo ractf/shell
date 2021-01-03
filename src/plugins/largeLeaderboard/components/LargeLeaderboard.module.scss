@@ -9,7 +9,7 @@ $font: monospace;
     flex-grow: 1;
     height: 100%;
     position: relative;
-    
+
     &::after {
         content: "";
         display: block;
@@ -34,12 +34,12 @@ $font: monospace;
     padding: px(32) 0;
     color: $color;
     font-family: $font;
-    
+
     .header {
         border: px(2) solid $accent;
         display: flex;
         padding: px(16);
-        
+
         .siteName {
             font-size: 1.2em;
             flex-grow: 1;

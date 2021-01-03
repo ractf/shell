@@ -24,11 +24,12 @@ import {
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavMenu, NavItem, NavCollapse,
     Footer, FootRow, FootCol, Column, Breadcrumbs, Crumb, Form,
-    BareForm, ItemStack
+    BareForm, ItemStack, ColourPicker, PalettePicker
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
 import Link from "components/Link";
+import { FaInfo } from "react-icons/fa";
 
 
 const Inner = () => (<NavCollapse>
@@ -66,17 +67,12 @@ const Inner = () => (<NavCollapse>
 </NavCollapse>);
 
 const UIPage = () => <Page><Row left>
+    <ColourPicker />
+    <PalettePicker />
+    <HR />
+    <HR />
+    <HR />
     <H1>Really Awesome UI Framework</H1>
-    <HR />
-    <Card noPad>
-        <ItemStack>
-            <ItemStack.Item warning label={5}>Some</ItemStack.Item>
-            <ItemStack.Item success active>Item</ItemStack.Item>
-            <ItemStack.Item primary>Here!</ItemStack.Item>
-            <ItemStack.Item>Here!</ItemStack.Item>
-        </ItemStack>
-    </Card>
-    <HR />
     <HR />
     <H2>Nav Bars</H2>
     <NavBar>
@@ -132,6 +128,14 @@ const UIPage = () => <Page><Row left>
     <H4>Heading 4</H4>
     <H5>Heading 5</H5>
     <H6>Heading 6</H6>
+    <HR />
+
+    <Row left>
+        {TYPES.map(type => (
+            <Button Icon={FaInfo} tooltip={`This is a ${type} button`} {...{ [type]: true }} key={type}>{type}</Button>
+        ))}
+    </Row>
+
     <HR />
     <H2>Badges</H2>
     <Column lgWidth={6} mdWidth={12}>
@@ -417,6 +421,14 @@ const UIPage = () => <Page><Row left>
     <Leader sub={"but this time with a subtitle!"}>This leads you on somewhere</Leader>
     <p>This is text with <code>an inline snippet of code</code> inside it.</p>
     <SubtleText>Subtle text</SubtleText>
+    <Card noPad>
+        <ItemStack>
+            <ItemStack.Item warning label={5}>Some</ItemStack.Item>
+            <ItemStack.Item success active>Item</ItemStack.Item>
+            <ItemStack.Item primary>Here!</ItemStack.Item>
+            <ItemStack.Item>Here!</ItemStack.Item>
+        </ItemStack>
+    </Card>
     <HR />
     <H2>Footer</H2>
     <Footer>

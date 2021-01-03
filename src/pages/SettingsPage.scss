@@ -47,13 +47,13 @@
             opacity: 1;
         }
     }
-    
+
     &.bad {
-        color: map-get($colours, "red");
+        color: var(--col-red);
     }
     &.active {
         opacity: 1;
         cursor: default;
-        color: map-get($colours, "green");
+        color: var(--col-green);
     }
 }

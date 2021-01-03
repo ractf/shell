@@ -32,7 +32,7 @@
     }
     .teamMemberico {
         font-size: 0.9em;
-        color: $color;
+        color: var(--col-color);
 
         svg {
             margin-bottom: -0.125em;
@@ -50,7 +50,7 @@
         display: flex;
         align-items: center;
         margin: 8px 0;
-        color: $color;
+        color: var(--col-color);
         transition: 150ms color ease;
         opacity: .8;
         cursor: pointer;
@@ -63,7 +63,7 @@
             font-size: 0.9em;
         }
         &:hover {
-            color: $color;
+            color: var(--col-color);
             text-decoration: none;
             opacity: 1;
         }
@@ -126,7 +126,7 @@
 }
 .userSolve {
     padding: 12px 16px;
-    background-color: $back_lift;
+    background-color: var(--col-back-lift);
     margin-bottom: 4px;
     width: 100%;
     text-align: left;

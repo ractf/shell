@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import SiteNav from "components/SiteNav";
 
 import {
-    Scrollbar, ModalPrompt, ToggleTabHolder, ProgressModal
+    Scrollbar, ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
@@ -40,15 +40,17 @@ import "./App.scss";
 import { store } from "store";
 import { Switch, Route } from "react-router-dom";
 
+import RACTF_THEME from "@ractf/ui-kit/themes/ractf.json";
+
 
 const LOADING_TIMEOUT = 5000;
 
 
-let SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
+const SpinningSpine_ = ({ text }) => <div className={"spinningSpine"}>
     <span>{text}</span>
     <img alt={""} src={lockImg} />
 </div>;
-SpinningSpine = React.memo(SpinningSpine);
+const SpinningSpine = React.memo(SpinningSpine_);
 
 
 const VimDiv = () => {
@@ -106,14 +108,14 @@ Keyboard interrupt received, exiting.
     </div>;
 };
 
-let WSSpine = () => {
+const WSSpine_ = () => {
     const ws = useSelector(state => state.websocket) || {};
     if (ws.connected) return null;
 
     return <SpinningSpine
         text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
 };
-WSSpine = React.memo(WSSpine);
+const WSSpine = React.memo(WSSpine_);
 
 class FirstLoader extends React.Component {
     componentDidMount() {
@@ -294,7 +296,15 @@ const App = React.memo(() => {
     </div></Scrollbar>;
 });
 
+const AppThemeLoader = () => {
+    const { colours, types } = useSelector(state => state.theme);
+    return <>
+        <ThemeLoader theme={RACTF_THEME} colours={{...colours}} types={types} global />
+    </>;
+};
+
 const AppWrap = () => <ConnectedRouter history={history}>
+    <AppThemeLoader />
     <App />
 </ConnectedRouter>;
 export default AppWrap;

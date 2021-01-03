@@ -7,7 +7,7 @@
     width: 56px;
     height: 24px;
     border-radius: 12px;
-    background-color: $back-lift;
+    background-color: var(--col-back-lift);
     transition: 200ms all ease;
     cursor: pointer;
 
@@ -20,7 +20,7 @@
         left: 2px;
         top: 2px;
         border-radius: 10px;
-        background-color: $back-lift-x2;
+        background-color: var(--col-back-lift);
 
         transition: 200ms all ease;
     }

@@ -15,40 +15,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-@import "@ractf/ui-kit/Colours.scss";
+const INITIAL = { colours: {}, types: {} };
 
-.networkOuter {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    position: absolute;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-
-    padding: 2rem;
-
-    @media (max-width: 1200px) {
-        padding: 1rem 1.5rem;
+const themeReducer = (state = INITIAL, { type, payload }) => {
+    switch (type) {
+        case "SET_THEME":
+            return { ...state, ...payload };
+        case "SET_THEME_COLOURS":
+            return { ...state, colours: { ...state.colours, ...payload } };
+        case "SET_THEME_TYPES":
+            return { ...state, colours: { ...state.colours, ...payload } };
+        default:
+            return state;
     }
-
-    @media (max-width: 800px) {
-        padding: 0.5rem;
-    }
-}
-
-.network {
-    border: 2px solid var(--col-back-lift);
-
-    flex-grow: 1;
-    position: relative;
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    > div {
-        flex-grow: 1;
-        height: auto !important;
-    }
-}
+};
+export default themeReducer;

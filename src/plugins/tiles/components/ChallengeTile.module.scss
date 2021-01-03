@@ -1,7 +1,7 @@
 @import "@ractf/ui-kit/Colours.scss";
 
 .tile {
-    background-color: rgba($back-lift, 0.1);
+    // background-color: rgba($back-lift, 0.1);
     border-radius: 8px;
     cursor: pointer;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -16,9 +16,9 @@
 
     &.solved {
         .title {
-            color: map-get($colours, "green");
+            color: var(--col-green);
         }
-        border: 2px solid map-get($colours, "green");
+        border: 2px solid var(--col-green);
     }
 
     .tileHead {
@@ -41,19 +41,19 @@
             font-weight: 600;
 
             &.blue {
-                color: map-get($colours, "blue");
+                color: var(--col-blue);
             }
             &.green {
-                color: map-get($colours, "green");
+                color: var(--col-green);
             }
             &.orange {
-                color: map-get($colours, "orange");
+                color: var(--col-orange);
             }
             &.red {
-                color: map-get($colours, "red");
+                color: var(--col-red);
             }
             &.purple {
-                color: map-get($colours, "purple");
+                color: var(--col-purple);
             }
         }
         .points {

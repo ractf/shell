@@ -26,9 +26,14 @@ export default () => {
     const experiments = dynamicLoad(() => import(/* webpackChunkName: "experiments" */ "./components/Experiments"));
     const state = dynamicLoad(() => import(/* webpackChunkName: "state" */ "./components/State"));
     const ui = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "./components/UI"));
+    const theme = dynamicLoad(() => import(/* webpackChunkName: "theme" */ "./components/Theme"));
 
     registerPreferences(Object.keys(EXPERIMENTS).map(i => ({ name: `experiment.${i}`, initial: false })));
 
+    registerPlugin("page", "/debug/theme", {
+        title: "Theme",
+        component: theme
+    });
     registerPlugin("page", "/debug/experiments", {
         title: "Experiments",
         component: experiments

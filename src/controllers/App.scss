@@ -52,8 +52,8 @@ html {
 }
 body {
     font-family: $fontStack;
-    background-color: $background;
-    color: $color;
+    background-color: var(--col-background);
+    color: var(--col-color);
     height: 100%;
     width: 100%;
     margin: 0;
@@ -64,7 +64,7 @@ body {
 
 code {
     text-align: left;
-    background-color: $back_lift;
+    background-color: var(--col-back-lift);
     font-family: $monoStack;
     padding: .2em .4em;
     margin: 0 2px;
@@ -125,7 +125,7 @@ b {
     vertical-align: middle;
 }
 .redacted::after {
-    background: map-get($colours, "black");
+    background: var(--col-black);
     border-radius: 0.1em;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
     content: " ";
@@ -199,8 +199,8 @@ b {
 }
 
 .eventPopup {
-    background-color: $background;
-    border: 1px solid $back_lift;
+    background-color: var(--col-background);
+    border: 1px solid var(--col-back-lift);
     display: inline-block;
     width: 300px;
     margin-top: 16px;
@@ -217,8 +217,8 @@ b {
     z-index: 10000;
 
     &>div {
-        background-color: $background;
-        border: 1px solid $back_lift;
+        background-color: var(--col-background);
+        border: 1px solid var(--col-back-lift);
         display: inline-block;
         width: 300px;
         margin-top: 16px;
@@ -239,7 +239,7 @@ b {
 
         & b {
             font-weight: 700;
-            color: map-get($colours, "green");
+            color: var(--col-green);
         }
     }
 }
@@ -291,7 +291,7 @@ b {
         left: 50%;
         transform: translate(-50%, -50%);
         padding: px(15);
-        background-color: $back_lift;
+        background-color: var(--col-back-lift);
         border-radius: px(4);
         max-width: 100vw;
         word-wrap: break-word;
@@ -322,11 +322,11 @@ b {
     border-radius: 2px;
     display: flex;
     align-items: center;
-    background-color: map-get($colours, "red");
+    background-color: var(--col-red);
     &.less {
-        background-color: map-get($colours, "yellow");
+        background-color: var(--col-yellow);
     }
-    color: map-get($colours, "black");
+    color: var(--col-black);
     font-weight: 600;
     font-size: 18px;
     cursor: default;
