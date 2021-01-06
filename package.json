@@ -8,7 +8,7 @@
     "@hot-loader/react-dom": "^16.13.0",
     "@sentry/browser": "^5.15.4",
     "@svgr/webpack": "4.1.0",
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "babel-eslint": "10.0.1",
     "babel-loader": "8.0.5",
     "babel-plugin-named-asset-import": "^0.3.5",
