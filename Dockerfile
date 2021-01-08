@@ -1,9 +1,9 @@
 FROM node:14.7.0-alpine
 
-COPY . /app
 WORKDIR /app
-
 RUN apk add git
+
+COPY . /app
 
 ENV RACTF_USING_CADDY=true
 
