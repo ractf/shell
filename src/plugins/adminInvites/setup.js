@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { registerPlugin } from "ractf";
+import { FiKey } from "react-icons/fi";
 
 import Invites from "./components/Invites";
 
@@ -24,5 +25,6 @@ export default () => {
     registerPlugin("adminPage", "invites", {
         component: Invites,
         sidebar: "Invites",
+        Icon: FiKey
     });
 };

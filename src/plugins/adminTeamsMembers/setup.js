@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { registerPlugin } from "ractf";
+import { FiUser, FiUsers } from "react-icons/fi";
 
 import MembersList from "./components/MembersList";
 import TeamsList from "./components/TeamsList";
@@ -25,9 +26,11 @@ export default () => {
     registerPlugin("adminPage", "members", {
         component: MembersList,
         sidebar: "Members",
+        Icon: FiUsers,
     });
     registerPlugin("adminPage", "teams", {
         component: TeamsList,
         sidebar: "Teams",
+        Icon: FiUser,
     });
 };

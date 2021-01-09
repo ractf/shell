@@ -31,7 +31,7 @@ export default () => {
 
     registerPreferences(Object.keys(EXPERIMENTS).map(i => ({ name: `experiment.${i}`, initial: false })));
 
-    registerMount("appSibling", "themeEditor", themeEditor);
+    // registerMount("appSibling", "themeEditor", themeEditor);
 
     registerPlugin("page", "/debug/theme", {
         title: "Theme",

@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { registerPlugin } from "ractf";
+import { FiSettings } from "react-icons/fi";
 
 import AdminConfig from "./components/AdminConfig";
 
@@ -24,6 +25,7 @@ export default () => {
     registerPlugin("adminPage", "config", {
         component: AdminConfig,
         sidebar: "Configuration",
+        Icon: FiSettings,
     });
 
     registerPlugin("config", "baseConfig", {
@@ -38,11 +40,11 @@ export default () => {
             ["enable_force_admin_2fa ", "Force 2FA for admins", "boolean"],
             ["enable_maintenance_mode", "Enable Maintanance Mode", "boolean"],
         ],
-        
+
         "Event Configuration": [
             ["flag_prefix", "Flag Prefix", "string"],
         ],
-        
+
         "Registration Restrictions": [
             ["email_domain", "Email Domain", "string"],
             ["email_regex", "Email Regex", "string"],

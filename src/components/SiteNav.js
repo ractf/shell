@@ -27,8 +27,10 @@ import Link from "./Link";
 
 import { iteratePlugins } from "@ractf/plugins";
 import { useCategories, useExperiment } from "@ractf/util/hooks";
-import { useConfig } from "@ractf/util";
+import { useConfig, useReactRouter } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
+import wordmark from "../static/wordmark.svg";
+import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
 
 const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
 
@@ -72,6 +74,18 @@ const HeaderNav_ = () => {
 };
 const HeaderNav = React.memo(HeaderNav_);
 
+
+const SideNavLink = ({ to, Icon, active, name }) => {
+    const { location: {pathname}} = useReactRouter();
+    return (
+        <Link to={to}>
+            <SideNav.Item active={active || pathname === to} Icon={Icon}>
+                {name}
+            </SideNav.Item>
+        </Link>
+    );
+};
+
 const SideBarNav_ = ({ children }) => {
     const { t } = useTranslation();
 
@@ -87,7 +101,7 @@ const SideBarNav_ = ({ children }) => {
     const footer = <>
         <footer>
             <img alt={""} src={footerLogo} />
-            &copy; Really Awesome Technology Ltd 2020
+            <p>&copy; Really Awesome Technology Ltd 2021</p>
         </footer>
         <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
         {window.env.footerText && <p>{window.env.footerText}</p>}
@@ -111,21 +125,24 @@ const SideBarNav_ = ({ children }) => {
         </>}
     </>;
 
+    const { location: { pathname } } = useReactRouter();
+
     const items = <>
-        <SideNav.UncontrolledSubMenu name={window.env.siteName} startOpen>
-            <Link to={"/"}><SideNav.Item>{t("sidebar.home")}</SideNav.Item></Link>
-            <Link to={"/users"}><SideNav.Item>{t("user_plural")}</SideNav.Item></Link>
-            {hasTeams && <Link to={"/teams"}><SideNav.Item>{t("team_plural")}</SideNav.Item></Link>}
-            <Link to={"/leaderboard"}><SideNav.Item>{t("leaderboard")}</SideNav.Item></Link>
-        </SideNav.UncontrolledSubMenu>
+        <SideNavLink to={"/"} Icon={FiHome} name={t("sidebar.home")} />
+        <SideNavLink to={"/users"} Icon={FiUser} name={t("user_plural")} />
+        {hasTeams && (
+            <SideNavLink to={"/teams"} Icon={FiUsers} name={t("team_plural")} />
+        )}
+        <SideNavLink to={"/leaderboard"} Icon={FiBarChart2} name={t("leaderboard")} />
+
         {user ? <>
             {(user.is_staff || categories.length > 1) && (
                 <SideNav.UncontrolledSubMenu name={t("challenge_plural")} startOpen>
                     {categories.map(i => (
-                        <Link key={i.id} to={i.url}><SideNav.Item>{i.name}</SideNav.Item></Link>
-                    ))}
+                        <SideNavLink key={i.id} to={i.url} name={i.name} />
+                        ))}
                     {user.is_staff && (
-                        <Link to={"/campaign/new"}><SideNav.Item>+ {t("challenge.new_cat")}</SideNav.Item></Link>
+                        <SideNavLink to={"/campaign/new"} name={t("challenge.new_cat")} Icon={FiPlus} />
                     )}
                 </SideNav.UncontrolledSubMenu>
             )}
@@ -133,23 +150,36 @@ const SideBarNav_ = ({ children }) => {
                 <Link to={categories[0].url}><SideNav.Item>{t("challenge_plural")}</SideNav.Item></Link>
             )}
             <SideNav.UncontrolledSubMenu name={user.username}>
-                <Link to={"/profile/me"}><SideNav.Item>{t("sidebar.profile")}</SideNav.Item></Link>
-                {hasTeams && <Link to={"/team/me"}><SideNav.Item>{t("team")}</SideNav.Item></Link>}
-                <Link to={"/settings"}><SideNav.Item>{t("setting_plural")}</SideNav.Item></Link>
-                <Link to={"/logout"}><SideNav.Item>{t("sidebar.logout")}</SideNav.Item></Link>
+                <SideNavLink to={"/profile/me"} Icon={FiUser} name={t("sidebar.profile")} />
+                {hasTeams && (
+                    <SideNavLink to={"/team/me"} Icon={FiUsers} name={t("team")} />
+                )}
+                <SideNavLink to={"/settings"} Icon={FiSettings} name={t("setting_plural")} />
+                <SideNavLink to={"/logout"} Icon={FiLogOut} name={t("sidebar.logout")} />
             </SideNav.UncontrolledSubMenu>
             {user.is_staff && (
                 <SideNav.UncontrolledSubMenu name={t("sidebar.admin")}>
                     {iteratePlugins("adminPage").map(({ key, plugin }) => (
-                        <Link to={`/admin/${key}`} key={key}><SideNav.Item>{plugin.sidebar}</SideNav.Item></Link>
+                        <SideNavLink
+                            to={`/admin/${key}`} key={key}
+                            Icon={plugin.Icon} name={plugin.sidebar}
+                        />
                     ))}
                 </SideNav.UncontrolledSubMenu>
             )}
         </> : <>
                 {(login || registration) && (
-                    <SideNav.UncontrolledSubMenu name={t("login")} startOpen>
-                        {login && <Link to={"/login"}><SideNav.Item>{t("login")}</SideNav.Item></Link>}
-                        {registration && <Link to={"/register"}><SideNav.Item>{t("register")}</SideNav.Item></Link>}
+                    <SideNav.UncontrolledSubMenu name={t("account")} startOpen>
+                        {login && <Link to={"/login"}>
+                            <SideNav.Item active={pathname === "/login"} Icon={FiLogIn}>
+                                {t("login")}
+                            </SideNav.Item>
+                        </Link>}
+                        {registration && <Link to={"/register"}>
+                            <SideNav.Item active={pathname === "/register"}>
+                                {t("register")}
+                            </SideNav.Item>
+                        </Link>}
                     </SideNav.UncontrolledSubMenu>
                 )}
             </>}
@@ -189,7 +219,7 @@ const SiteNav = ({ children }) => {
                         </FootRow>
                         <FootRow center slim darken column>
                             <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
-                            <p>&copy; Really Awesome Technology Ltd 2020</p>
+                            <p>&copy; Really Awesome Technology Ltd 2021</p>
                             {window.env.footerText && <p>{window.env.footerText}</p>}
                         </FootRow>
                     </Footer>

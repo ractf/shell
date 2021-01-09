@@ -27,7 +27,7 @@ import TeamPage from "../pages/TeamPage";
 import { TextBlock, Page as BasePage, H1, H2, SubtleText } from "@ractf/ui-kit";
 import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
 import { dynamicLoad } from "ractf";
-import { useConfig } from "@ractf/util";
+import { useConfig, useReactRouter } from "@ractf/util";
 import { logout } from "@ractf/api";
 
 const Route = React.memo(Route_);
@@ -93,14 +93,14 @@ class ErrorBoundary extends React.PureComponent {
                 {this.state.showDetails ? (
                     <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
                 ) : (
-                    <SubtleText>
-                        <span className={"linkStyle"} onClick={this.copyDetails}>
-                            Copy details
+                        <SubtleText>
+                            <span className={"linkStyle"} onClick={this.copyDetails}>
+                                Copy details
                         </span> - <span className={"linkStyle"} onClick={this.showDetails}>
-                            View details
+                                View details
                         </span>
-                    </SubtleText>
-                )}
+                        </SubtleText>
+                    )}
             </BasePage>;
         }
 
@@ -155,8 +155,10 @@ const Logout = () => {
 
 const Routes = () => {
     const notFoundPage = getPlugin("errorPage", "404")?.component;
+    const { location: { pathname } } = useReactRouter();
 
     return <Switch>
+        <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
         {mountPoint("routes")}
         {iteratePlugins("page").map(({ key: url, plugin: page }) =>
             <Route exact={!page.noExact} path={url} key={url}>

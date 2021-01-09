@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { registerPlugin } from "ractf";
+import { FiShare2 } from "react-icons/fi";
 
 import ChallengeGraph from "./components/ChallengeGraph";
 
@@ -24,5 +25,6 @@ export default () => {
     registerPlugin("adminPage", "graph", {
         component: ChallengeGraph,
         sidebar: "Challenge Graph",
+        Icon: FiShare2,
     });
 };

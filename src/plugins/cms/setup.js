@@ -25,6 +25,7 @@ import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, Fo
 import { store } from "store";
 import http from "@ractf/http";
 import Link from "components/Link";
+import { FiFileText } from "react-icons/fi";
 
 const INITIAL = {
     pages: [],
@@ -152,6 +153,7 @@ export default () => {
     registerPlugin("adminPage", "cms", {
         component: CMSAdmin,
         sidebar: "Pages",
+        Icon: FiFileText,
     });
     registerReducer("cms", cmsReducer);
 

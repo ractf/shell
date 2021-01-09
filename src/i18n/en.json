@@ -292,6 +292,7 @@
     "team_secret": "Team Secret",
     "team_secret_warn": "In order to display the secret for you above, we store it un-hashed. Don't put sensitive things like your bank details here.",
     "bio": "Bio",
+    "account": "Account",
     "login": "Login",
     "register": "Register",
     "okay": "Okay",

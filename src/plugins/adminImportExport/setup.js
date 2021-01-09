@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { registerPlugin } from "ractf";
+import { FiDownloadCloud } from "react-icons/fi";
 
 import ImportExport from "./components/ImportExport";
 
@@ -24,5 +25,6 @@ export default () => {
     registerPlugin("adminPage", "port", {
         component: ImportExport,
         sidebar: "Import/Export",
+        Icon: FiDownloadCloud,
     });
 };
