@@ -76,7 +76,7 @@ const Statistics = () => {
         <PageHead title={"Statistics"} />
         <Row>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Quick breakdown"}>
+                <Card lesser header={"Quick breakdown"}>
                     <Large><b>{stats.users.all.toString()}</b> registered users (
                         <b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation
                     )</Large>
@@ -94,7 +94,7 @@ const Statistics = () => {
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Solve count per challenge"}>
+                <Card lesser header={"Solve count per challenge"}>
                     <Bar className={style.smallChart} yLabel={"Solves"} data={Object.fromEntries(
                         challenges.map(
                             challenge => [challenge.name, challenge.solve_count]
@@ -103,12 +103,12 @@ const Statistics = () => {
                 </Card>
             </Column>
             <Column lgWidth={12}>
-                <Card header={"Score distribution"}>
+                <Card lesser header={"Score distribution"}>
                     <Bar className={style.chart} yLabel={"Solves"} data={stats.team_point_distribution} />
                 </Card>
             </Column>
             <Column lgWidth={12}>
-                <Card header={"Solve percentage per challenge"}>
+                <Card lesser header={"Solve percentage per challenge"}>
                     <Bar className={style.chart} yLabel={"Percentage of teams"} yMax={100}
                         data={Object.fromEntries(
                             challenges.map(
@@ -118,7 +118,7 @@ const Statistics = () => {
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Solve accuracy"}>
+                <Card lesser header={"Solve accuracy"}>
                     <Pie className={style.chart}
                         data={[
                             totalCorrect / (totalCorrect + totalIncorrect) * 100,
@@ -129,19 +129,19 @@ const Statistics = () => {
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Accuracy per category"}>
+                <Card lesser header={"Accuracy per category"}>
                     <Pie className={style.chart} data={Object.values(accuracyPerCategory)}
                         labels={Object.keys(accuracyPerCategory)} percent />
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Challenges per category"}>
+                <Card lesser header={"Challenges per category"}>
                     <Pie className={style.chart} data={Object.values(challengesPerCategory)}
                         labels={Object.keys(challengesPerCategory)} />
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Solves per category"}>
+                <Card lesser header={"Solves per category"}>
                     <Pie className={style.chart} data={Object.values(solvesPerCategory)}
                         labels={Object.keys(solvesPerCategory)} />
                 </Card>

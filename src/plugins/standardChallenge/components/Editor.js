@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 
 import {
     Form, Input, Row, Checkbox, Button, Select, PageHead, InputTags,
-    FlashText, FormGroup, fromJson, Page, Column, Card, Grid, Modal,
+    FormGroup, fromJson, Page, Column, Card, Grid, Modal,
     FileUpload, TabbedView, Tab, SubtleText
 } from "@ractf/ui-kit";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
@@ -252,7 +252,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
         <Form handle={saveEdit} transformer={editTransformer}>
             <Row left>
                 <Column lgWidth={6} mdWidth={12}>
-                    <Card header={"Basic settings"} collapsible>
+                    <Card lesser header={"Basic settings"} collapsible>
                         <FormGroup htmlFor={"name"} label={t("editor.chal_name")}>
                             <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} required />
                         </FormGroup>
@@ -272,18 +272,18 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             <InputTags name={"tags"} val={challenge.tags} />
                         </FormGroup>
                     </Card>
-                    <Card header={"Advanced settings"} collapsible startClosed>
+                    <Card lesser header={"Advanced settings"} collapsible startClosed>
                         <FormGroup htmlFor={"post_score_explanation"} label={t("editor.post_score_explanation")}>
                             <Input rows={3} val={challenge.post_score_explanation} name={"post_score_explanation"}
                                 placeholder={t("editor.post_score_explanation")} />
                         </FormGroup>
                     </Card>
-                    <Card header={"Metadata"} collapsible startClosed>
+                    <Card lesser header={"Metadata"} collapsible startClosed>
                         <MetadataEditor category={category} challenge={challenge} save={saveEdit} />
                     </Card>
                 </Column>
                 <Column lgWidth={6} mdWidth={12}>
-                    <Card header={"Display settings"} collapsible>
+                    <Card lesser header={"Display settings"} collapsible>
                         <Row>
                             <Checkbox val={!!challenge.hidden} name={"hidden"}>
                                 {t("editor.hide_challenge")}
@@ -303,7 +303,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                 name={"challenge_type"} />
                         </FormGroup>
                     </Card>
-                    <Card header={"Flag"} collapsible>
+                    <Card lesser header={"Flag"} collapsible>
                         <FormGroup htmlFor={"flag_type"} label={t("editor.chal_flag_type")}>
                             <Select
                                 options={iteratePlugins("flagType").map(
@@ -327,14 +327,14 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                 val={JSON.stringify(challenge.flag_metadata)} />
                             </FormGroup>*/}
                     </Card>
-                    <Card header={"Files"} collapsible startClosed={false}>
+                    <Card lesser header={"Files"} collapsible startClosed={false}>
                         {isCreator
-                            ? <FlashText danger>Cannot add files to non-existent challenge.</FlashText>
+                            ? <Card slim danger>Cannot add files to non-existent challenge.</Card>
                             : <FileEditor challenge={challenge} />}
                     </Card>
-                    <Card header={"Hints"} collapsible startClosed>
+                    <Card lesser header={"Hints"} collapsible startClosed>
                         {isCreator
-                            ? <FlashText danger>Cannot add hints to non-existent challenge.</FlashText>
+                            ? <Card slim danger>Cannot add hints to non-existent challenge.</Card>
                             : <HintEditor challenge={challenge} />}
                     </Card>
 

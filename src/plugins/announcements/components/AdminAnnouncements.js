@@ -65,7 +65,7 @@ export default () => {
         <PageHead title={t("admin.announce.head")} />
         <Column lgWidth={6} mdWidth={12}>
             <Row>
-                <Card header={t("admin.announce.active")}>
+                <Card lesser header={t("admin.announce.active")}>
                     <Form>{localA ?
                         localA.length ? (
                             localA.map(i => <Row key={i.id}>
@@ -81,7 +81,7 @@ export default () => {
         </Column>
         <Column lgWidth={6} mdWidth={12}>
             <Row>
-                <Card header={t("admin.announce.add")}>
+                <Card lesser header={t("admin.announce.add")}>
                     <Form handle={add} locked={locked}>
                         <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
                             <Input name={"title"} />

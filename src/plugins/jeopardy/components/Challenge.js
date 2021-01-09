@@ -37,9 +37,9 @@ const Challenge = ({ challenge }) => {
     }, [challenge.id]);
 
     return <Card
-        header={`${challenge.name} (${challenge.score} points)`} framed
+        header={`${challenge.name} (${challenge.score} points)`} lesser
         collapsible startClosed={!startOpen} onOpenToggle={onOpenToggle}
-        success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden} 
+        success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden}
     >
         <ChallengePage tabId={challenge.category.id} chalId={challenge.id} embedded />
     </Card>;

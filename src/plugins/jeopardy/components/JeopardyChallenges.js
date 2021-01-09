@@ -108,7 +108,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
 
     return <>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
-            <Card>
+            <Card lesser>
                 <FormGroup>
                     <Input onChange={searchChanged} value={search}
                         name={"search"} placeholder={"Search challenges"} val={search} managed />
@@ -118,7 +118,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
                 </Checkbox>
             </Card>
             {sortedTags.length !== 0 && (
-                <Card noPad header={"Filter"} collapsible>
+                <Card lesser noPad header={"Filter"} collapsible>
                     <ItemStack>
                         {sortedTags.map(([tag, tagCount]) => (
                             <ItemStack.Item
@@ -134,7 +134,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
         </Column>
         <Column xlWidth={9} lgWidth={8} mdWidth={12}>
             {isEdit && (
-                <Card info header={"Add new challenge"} startClosed collapsible framed>
+                <Card lesser info header={"Add new challenge"} startClosed collapsible lesser>
                     <ChallengePage tabId={category.id} chalId={"new"} />
                 </Card>
             )}

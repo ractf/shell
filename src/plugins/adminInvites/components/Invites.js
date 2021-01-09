@@ -85,14 +85,14 @@ const Invites = () => {
         <PageHead title={"Invites"} />
         <Column lgWidth={6} mdWidth={12}>
             <Row>
-                <Card header={"Quick Generation"}>
+                <Card lesser header={"Quick Generation"}>
                     <Row centre>
                         <Button onClick={generate1} disabled={locked}>Generate 1 Invite</Button>
                         <Button onClick={generate10} disabled={locked}>Generate 10 Invites</Button>
                         <Button onClick={generate100} disabled={locked}>Generate 100 Invites</Button>
                     </Row>
                 </Card>
-                <Card header={"Generate Invites"}>
+                <Card lesser header={"Generate Invites"}>
                     <Form handle={formCallback} validator={numValidator} action={GENERATE_INVITES} locked={locked}>
                         <InputButton name={"amount"} format={NUMBER_RE}
                             placeholder={"Number of invites"} button={"Generate"} />
@@ -102,7 +102,7 @@ const Invites = () => {
         </Column>
         <Column lgWidth={6} mdWidth={12}>
             <Row>
-                <Card header={"Generate Single Invite"} >
+                <Card lesser header={"Generate Single Invite"} >
                     <Form locked={locked}>
                         <FormGroup label={"Auto-join team ID"}>
                             <Input name={"team"} placeholder={"Auto-join team ID"} />
@@ -120,7 +120,7 @@ const Invites = () => {
         </Column>
         <Column lgWidth={12}>
             <Row>
-                <Card header={"View existing invites"}>
+                <Card lesser header={"View existing invites"}>
                     <Form>
                         <Row vCentre>
                             <Checkbox onChange={toggleUnused} name={"Unused"}>Only show unused codes</Checkbox>

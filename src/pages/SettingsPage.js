@@ -165,7 +165,7 @@ const SettingsPage = () => {
         </PageHead>
         <Column lgWidth={6} mdWidth={12}>
             {!user.has_2fa ? (
-                <Card warning framed header={t("settings.cards.2fa")}>
+                <Card warning lesser header={t("settings.cards.2fa")}>
                     <Row>
                         <H6>{t("settings.2fa.disabled")}</H6>
                         <SubtleText>{t("settings.2fa.prompt")}</SubtleText>
@@ -176,7 +176,7 @@ const SettingsPage = () => {
                         </Link>
                     </Row>
                 </Card>
-            ) : (<Card header={t("settings.cards.2fa")}>
+            ) : (<Card lesser header={t("settings.cards.2fa")}>
                 <Row>
                     <p>{t("settings.2fa.enabled")}</p>
                 </Row>
@@ -187,7 +187,7 @@ const SettingsPage = () => {
                 </Row>
             </Card>
                 )}
-            <Card header={t("settings.cards.identity")}>
+            <Card lesser header={t("settings.cards.identity")}>
                 <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
                     postSubmit={usernameChanged}>
                     <FormGroup htmlFor={"username"} label={t("username")}>
@@ -202,7 +202,7 @@ const SettingsPage = () => {
                     </Row>
                 )}
             </Card>
-            <Card header={t("settings.cards.change_password")}>
+            <Card lesser header={t("settings.cards.change_password")}>
                 <Form action={ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
                     postSubmit={passwordChanged}>
                     <FormGroup>
@@ -215,7 +215,7 @@ const SettingsPage = () => {
                     </Row>
                 </Form>
             </Card>
-            <Card header={t("settings.cards.profile")}>
+            <Card lesser header={t("settings.cards.profile")}>
                 <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
                     <FormGroup htmlFor={"discord"} label={<>
                         {t("settings.profile.discord")} <Hint>
@@ -254,7 +254,7 @@ const SettingsPage = () => {
         </Column>
         <Column lgWidth={6} mdWidth={12}>
             {hasTeams && <>
-                <Card header={t("settings.cards.team")}>
+                <Card lesser header={t("settings.cards.team")}>
                     {team ? <>
                         <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
                             locked={!teamOwner}>
@@ -292,7 +292,7 @@ const SettingsPage = () => {
                         </div>}
                 </Card>
                 {team && (
-                    <Card header={t("settings.cards.members")}>
+                    <Card lesser header={t("settings.cards.members")}>
                         {team.members.map((i, n) => (
                             <TeamMember key={n} team={team} app={app}
                                 isCaptain={i.id === team.owner} isOwner={teamOwner} member={i} />
@@ -300,7 +300,7 @@ const SettingsPage = () => {
                     </Card>
                 )}
             </>}
-            <Card header={t("settings.cards.notifications")}>
+            <Card lesser header={t("settings.cards.notifications")}>
                 <Form handle={saveNotificationPrefs} disableDotExpansion>
                     <FormGroup label={t("settings.notifications.send_options")}>
                         {notificationGroups.map((group) =>
@@ -316,7 +316,7 @@ const SettingsPage = () => {
                 </Form>
             </Card>
             {accDeletion && (
-                <Card danger framed header={t("settings.cards.danger")}>
+                <Card lesser danger lesser header={t("settings.cards.danger")}>
                     <Form action={""} method={"POST"} validator={deleteValidator}>
                         <FormGroup htmlFor={"password"} label={t("curr_pass")}>
                             <Input name={"password"} label={t("curr_pass")} placeholder={t("curr_pass")} submit />

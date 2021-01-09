@@ -19,7 +19,7 @@ import React, { useState, useContext } from "react";
 import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
-import { FlashText, Form, InputButton, Modal } from "@ractf/ui-kit";
+import { Card, Form, InputButton, Modal } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 
 import "./ClickableMap.scss";
@@ -111,7 +111,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     };
 
     return <>
-        <FlashText danger={!hasValidZoom && !selectedLongLat}>
+        <Card slim danger={!hasValidZoom && !selectedLongLat}>
             {selectedLongLat ? <>
                 <div className="highlight">
                     Selected location: {round(selectedLongLat[0])}, {round(selectedLongLat[1])}
@@ -121,7 +121,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             </> : <>
                         <div className="highlight">Zoom in closer to make a selection!</div>
                     </>}
-        </FlashText>
+        </Card>
         <div className={"mapWrap"}>
             <Map className={"clickableMapMap"} center={currentMapCenter} provider={provider}
                 defaultZoom={4} onClick={click} onBoundsChanged={onMapMove}>

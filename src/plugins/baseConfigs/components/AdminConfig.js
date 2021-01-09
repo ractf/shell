@@ -74,8 +74,8 @@ const AdminConfig = () => {
                     fieldTypes[i[2]] ? fieldTypes[i[2]].push(i) : fieldTypes[i[2]] = [i];
                 });
                 fields.push(
-                    <Card header={key}>
-                        {Object.values(fieldTypes).map((fields) => 
+                    <Card  lesser header={key}>
+                        {Object.values(fieldTypes).map((fields) =>
                             <Row>
                                 {fields.map(([key, name, type, extra], i) => {
                                     switch (type) {
@@ -83,7 +83,7 @@ const AdminConfig = () => {
                                         case "int":
                                         case "float":
                                             const format = (
-                                                (type === "string") ? null : 
+                                                (type === "string") ? null :
                                                     (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
                                             );
                                             return <FormGroup key={i} label={name}>

@@ -19,12 +19,12 @@ import React from "react";
 
 import {
     Page, HR, Row, Button, Input, TextBlock, ProgressBar, Radio, Scrollbar,
-    Select, Spinner, TabbedView, Tab, Table, ToggleButton, FlashText, Tree,
+    Select, Spinner, TabbedView, Tab, Table, ToggleButton, Tree,
     TreeWrap, TreeValue, Checkbox, InputButton, Leader, FormGroup, Card,
     H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavMenu, NavItem, NavCollapse,
     Footer, FootRow, FootCol, Column, Breadcrumbs, Crumb, Form,
-    BareForm, ItemStack, ColourPicker, PalettePicker
+    BareForm, ItemStack, /* ColourPicker, PalettePicker */
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
@@ -67,8 +67,8 @@ const Inner = () => (<NavCollapse>
 </NavCollapse>);
 
 const UIPage = () => <Page><Row left>
-    <ColourPicker />
-    <PalettePicker />
+    {/* <ColourPicker />
+    <PalettePicker /> */}
     <HR />
     <HR />
     <HR />
@@ -382,46 +382,22 @@ const UIPage = () => <Page><Row left>
         <Card header={"Card header"} title={"Card title"} warning>Hi there!</Card>
         <Card header={"Card header"} title={"Card title"} danger>Hi there!</Card>
     </Row>
-    <HR />
-    <H2>Alerts</H2>
     <Row>
-        <FlashText>This is a message for the user</FlashText>
-    </Row>
-    <Row>
-        <FlashText primary>This is a <b>primary</b> message for the user</FlashText>
-        <FlashText secondary>This is a <b>secondary</b> message for the user</FlashText>
-        <FlashText success>This is a <b>succesful</b> message for the user</FlashText>
-    </Row>
-    <Row>
-        <FlashText info>This is an <b>info</b> message for the user</FlashText>
-        <FlashText warning>This is a <b>warning</b> message for the user</FlashText>
-        <FlashText danger>This is a <b>danger</b> message for the user</FlashText>
-    </Row>
-
-    <Row>
-        <FlashText title={"Hi there!"}>This is a message for the user</FlashText>
-    </Row>
-    <Row>
-        <FlashText primary title={"Primary"}>This is a <b>primary</b> message for the user</FlashText>
-        <FlashText secondary title={"Secondary"}>This is a <b>secondary</b> message for the user</FlashText>
-        <FlashText success title={"Success"}>This is a <b>succesful</b> message for the user</FlashText>
-    </Row>
-    <Row>
-        <FlashText info title={"Info"}>This is an <b>info</b> message for the user</FlashText>
-        <FlashText warning title={"Warning"}>This is a <b>warning</b> message for the user</FlashText>
-        <FlashText danger title={"Danger"}>This is a <b>danger</b> message for the user</FlashText>
+        <Card lesser header={"Card header"} title={"Card title"} info>Hi there!</Card>
+        <Card lesser header={"Card header"} title={"Card title"} warning>Hi there!</Card>
+        <Card lesser header={"Card header"} title={"Card title"} danger>Hi there!</Card>
     </Row>
     <HR />
     <H2>Misc</H2>
     <TextBlock>Text block</TextBlock>
-    <Row>
+    <Row centre>
         <Spinner />
     </Row>
     <Leader>This leads you on somewhere</Leader>
     <Leader sub={"but this time with a subtitle!"}>This leads you on somewhere</Leader>
     <p>This is text with <code>an inline snippet of code</code> inside it.</p>
     <SubtleText>Subtle text</SubtleText>
-    <Card noPad>
+    <Card lesser noPad>
         <ItemStack>
             <ItemStack.Item warning label={5}>Some</ItemStack.Item>
             <ItemStack.Item success active>Item</ItemStack.Item>

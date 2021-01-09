@@ -424,7 +424,7 @@ export default () => {
 
         <Column>
             <Row>
-                <Card header={t("admin.import")}>
+                <Card lesser header={t("admin.import")}>
                     <Row centre>
                         {importEntire && <Button disabled danger>{t("admin.import_ctf")}</Button>}
                         <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
@@ -433,7 +433,7 @@ export default () => {
                 </Card>
             </Row>
             <Row>
-                <Card header={t("admin.export")}>
+                <Card lesser header={t("admin.export")}>
                     <Row centre>
                         {importEntire && <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>}
                         <Button onClick={exportCat}>{t("admin.export_cat")}</Button>

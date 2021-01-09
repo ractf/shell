@@ -25,7 +25,7 @@ import { useReactRouter } from "@ractf/util";
 import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
-    Button, Row, Input, Form, FormError, PageHead, Card, FlashText, Leader, Modal,
+    Button, Row, Input, Form, FormError, PageHead, Card, Leader, Modal,
     Page, TabbedView, Tab, fromJson, Select, FormGroup, Column
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
@@ -186,7 +186,7 @@ export default () => {
     if (tabId === "new" && user.is_staff)
         return <Page>
             <Row>
-                <Card header={t("challenge.new_cat")}>
+                <Card lesser header={t("challenge.new_cat")}>
                     <ANC anc={true} />
                 </Card>
             </Row>
@@ -237,9 +237,9 @@ export default () => {
                 </>}
         </Row>}
         {!user.team && (
-            <Column>
-                <FlashText danger>{t("campaign.no_team")}</FlashText>
-            </Column>
+            <Row>
+                <Card slim danger>{t("campaign.no_team")}</Card>
+            </Row>
         )}
         <PluginComponent type={"categoryType"} name={tab.contained_type} challenges={tab}
             showEditor={showEditor} isEdit={edit} showLocked={showLocked} />

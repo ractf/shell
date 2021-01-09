@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
-    Button, TextBlock, PageHead, Row, FlashText, Markdown, Badge, Page, Card, Column
+    Button, TextBlock, PageHead, Row, Markdown, Badge, Page, Card, Column
 } from "@ractf/ui-kit";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
 import Link from "components/Link";
@@ -74,7 +74,7 @@ export default ({ challenge, category, embedded, rightComponent }) => {
             </Row>}
 
             {challenge.solved && challenge.post_score_explanation && <Row>
-                <Card header={t("challenge.post_score_explanation")}>
+                <Card lesser header={t("challenge.post_score_explanation")}>
                     <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
                 </Card>
             </Row>}
@@ -92,7 +92,7 @@ export default ({ challenge, category, embedded, rightComponent }) => {
                 ) : (
                     <>
                         <Row>
-                            <FlashText danger>{t("challenge.no_team")}</FlashText>
+                            <Card slim danger>{t("challenge.no_team")}</Card>
                         </Row>
                         <Row>
                             <Link to={"/team/join"}>

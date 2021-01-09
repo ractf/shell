@@ -17,7 +17,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 
-import { FlashText, Spinner, Button, Row, Modal, FormGroup, Form, Input } from "@ractf/ui-kit";
+import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card } from "@ractf/ui-kit";
 import { registerPlugin, useApi, appContext } from "ractf";
 import http from "@ractf/http";
 import { store } from "store";
@@ -46,7 +46,7 @@ const ChallengeServer = ({ challenge }) => {
     </Button>;
 
     return <Row>
-        <FlashText danger={!!state.error} button={button}>
+        <Card slim danger={!!state.error} button={button}>
             {state.error ? <div>Failed to request instance: {state.error}</div>
                 : state.instance ? <div>Challenge instance ready at <code>
                     {state.instance.ip}:{state.instance.port}
@@ -54,7 +54,7 @@ const ChallengeServer = ({ challenge }) => {
                         <div>Requesting challenge instance...</div>
                         <Spinner />
                     </>}
-        </FlashText>
+        </Card>
     </Row>;
 };
 

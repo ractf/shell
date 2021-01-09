@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, FlashText, Column
+    Checkbox, PageHead, Modal, Column, Card
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
@@ -101,7 +101,7 @@ export default () => {
     }, []);
 
     if (!hasTeams) {
-        return <FlashText danger>Teams are not enabled for this event.</FlashText>;
+        return <Card slim danger>Teams are not enabled for this event.</Card>;
     }
 
     return <>
