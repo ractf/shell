@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 
 import {
     SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
-    Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem
+    Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem, Scrollbar
 } from "@ractf/ui-kit";
 import Link from "./Link";
 
@@ -47,8 +47,8 @@ const HeaderNav_ = () => {
             {categories.length === 1 ? (
                 <NavItem><Link to={categories[0].url}>Challenges</Link></NavItem>
             ) : (
-                <NavItem><Link to={"/campaign"}>Challenges</Link></NavItem>
-            )}
+                    <NavItem><Link to={"/campaign"}>Challenges</Link></NavItem>
+                )}
             {user && user.is_staff && <NavItem>
                 <Link to={"/campaign/new"}>Add Category</Link>
             </NavItem>}
@@ -59,8 +59,8 @@ const HeaderNav_ = () => {
                 <NavItem><Link to={"/settings"}>Settings</Link></NavItem>
                 <NavItem><Link to={"/logout"}>Logout</Link></NavItem>
             </> : <>
-                <NavItem><Link to={"/login"}>Login</Link></NavItem>
-                <NavItem><Link to={"/register"}>Register</Link></NavItem>
+                    <NavItem><Link to={"/login"}>Login</Link></NavItem>
+                    <NavItem><Link to={"/register"}>Register</Link></NavItem>
                 </>}
             {user && user.is_staff && <NavMenu name={"Admin"}>
                 {iteratePlugins("adminPage").map(({ key, plugin }) => (
@@ -146,13 +146,13 @@ const SideBarNav_ = ({ children }) => {
                 </SideNav.UncontrolledSubMenu>
             )}
         </> : <>
-            {(login || registration) && (
-                <SideNav.UncontrolledSubMenu name={t("login")} startOpen>
-                    {login && <Link to={"/login"}><SideNav.Item>{t("login")}</SideNav.Item></Link>}
-                    {registration && <Link to={"/register"}><SideNav.Item>{t("register")}</SideNav.Item></Link>}
-                </SideNav.UncontrolledSubMenu>
-            )}
-        </>}
+                {(login || registration) && (
+                    <SideNav.UncontrolledSubMenu name={t("login")} startOpen>
+                        {login && <Link to={"/login"}><SideNav.Item>{t("login")}</SideNav.Item></Link>}
+                        {registration && <Link to={"/register"}><SideNav.Item>{t("register")}</SideNav.Item></Link>}
+                    </SideNav.UncontrolledSubMenu>
+                )}
+            </>}
     </>;
 
     return <>
@@ -167,30 +167,34 @@ const SiteNav = ({ children }) => {
     const [showDev] = useExperiment("showDev");
     if (USE_HEAD_NAV)
         return <SiteWrap>
-            <HeaderNav />
-            <Container children={children} />
-            <Footer>
-                <FootRow main>
-                    <FootCol title={window.env.siteName}>
-                        <Link to={"/"}>Home</Link>
-                        <Link to={"/privacy"}>Privacy Policy</Link>
-                        <Link to={"/conduct"}>Terms of Use</Link>
-                    </FootCol>
-                    {showDev && (
-                        <FootCol title={"For Developers"}>
-                            <Link to={"/debug"}>Debug Versions</Link>
-                            <Link to={"/debug/ui"}>UI Framework</Link>
-                            <Link to={"/debug/state"}>State Export</Link>
-                            <Link to={"/debug/experiments"}>Experiments</Link>
-                        </FootCol>
-                    )}
-                </FootRow>
-                <FootRow center slim darken column>
-                    <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
-                    <p>&copy; Really Awesome Technology Ltd 2020</p>
-                    {window.env.footerText && <p>{window.env.footerText}</p>}
-                </FootRow>
-            </Footer>
+            <Scrollbar style={{ height: "100vh" }} primary>
+                <SiteWrap>
+                    <HeaderNav />
+                    <Container children={children} />
+                    <Footer>
+                        <FootRow main>
+                            <FootCol title={window.env.siteName}>
+                                <Link to={"/"}>Home</Link>
+                                <Link to={"/privacy"}>Privacy Policy</Link>
+                                <Link to={"/conduct"}>Terms of Use</Link>
+                            </FootCol>
+                            {showDev && (
+                                <FootCol title={"For Developers"}>
+                                    <Link to={"/debug"}>Debug Versions</Link>
+                                    <Link to={"/debug/ui"}>UI Framework</Link>
+                                    <Link to={"/debug/state"}>State Export</Link>
+                                    <Link to={"/debug/experiments"}>Experiments</Link>
+                                </FootCol>
+                            )}
+                        </FootRow>
+                        <FootRow center slim darken column>
+                            <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
+                            <p>&copy; Really Awesome Technology Ltd 2020</p>
+                            {window.env.footerText && <p>{window.env.footerText}</p>}
+                        </FootRow>
+                    </Footer>
+                </SiteWrap>
+            </Scrollbar>
         </SiteWrap>;
     return <SideBarNav children={children} />;
 };

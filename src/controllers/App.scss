@@ -306,7 +306,7 @@ b {
     width: 100vw;
     min-height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 
     > * {
         flex-grow: 1;

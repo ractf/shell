@@ -97,7 +97,6 @@ const Editor = () => {
     }, [dispatch]);
     const reset = useCallback(() => {
         dispatch(setTheme({ colours: {}, types: {} }));
-        window.location.reload();
     }, [dispatch]);
 
     const tlProps = {
@@ -108,13 +107,13 @@ const Editor = () => {
         <ThemeLoader {...tlProps} />
         <Row>
             <FormGroup label={"Background"}>
-                <PaletteSample stateRef={coloursRef} colour={"background"} tlProps={tlProps} palette />
+                <PaletteSample stateRef={coloursRef} colour={"background"} tlProps={tlProps} />
             </FormGroup>
             <FormGroup label={"Foreground"}>
-                <PaletteSample stateRef={coloursRef} colour={"color"} tlProps={tlProps} palette />
+                <PaletteSample stateRef={coloursRef} colour={"color"} tlProps={tlProps} />
             </FormGroup>
             <FormGroup label={"Accent Colour"}>
-                <PaletteSample stateRef={coloursRef} colour={"accent"} tlProps={tlProps} palette />
+                <PaletteSample stateRef={coloursRef} colour={"accent"} tlProps={tlProps} />
             </FormGroup>
         </Row>
         <Row>

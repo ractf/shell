@@ -353,5 +353,25 @@
         "cannot_leave_team_ownerless": "You are the owner of this team and it has other members.",
         "invalid_team": "No team with this name was found.",
         "invalid_team_password": "Password incorrect."
+    },
+    "colours": {
+        "backCol": "Background colour",
+        "accentCol": "Accent colour",
+        "textCol": "Text colour",
+        "green": "Green",
+        "teal": "Teal",
+        "cyan": "Cyan",
+        "blue": "Blue",
+        "indigo": "Indigo",
+        "purple": "Purple",
+        "pink": "Pink",
+        "red": "Red",
+        "orange": "Orange",
+        "yellow": "Yellow",
+        "black": "Black",
+        "darkGrey": "Dark Grey",
+        "grey": "Grey",
+        "lightGrey": "Light Grey",
+        "white": "White"
     }
 }

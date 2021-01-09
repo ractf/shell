@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import SiteNav from "components/SiteNav";
 
 import {
-    Scrollbar, ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader
+    ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader
 } from "@ractf/ui-kit";
 
 import { AppContext } from "./Contexts";
@@ -245,7 +245,7 @@ const App = React.memo(() => {
     }).reverse();
 
     window.__ractf_alert = showAlert;
-    return <Scrollbar primary><div className={"bodyScroll"}>
+    return (
         <AppContext.Provider value={{
             promptConfirm: promptConfirm, alert: showAlert,
             showProgress: showProgress
@@ -293,18 +293,21 @@ const App = React.memo(() => {
                 ))}
             </ToggleTabHolder>
         </AppContext.Provider>
-    </div></Scrollbar>;
+    );
 });
 
 const AppThemeLoader = () => {
     const { colours, types } = useSelector(state => state.theme);
     return <>
-        <ThemeLoader theme={RACTF_THEME} colours={{...colours}} types={types} global />
+        <ThemeLoader theme={RACTF_THEME} colours={{ ...colours }} types={types} global />
     </>;
 };
 
 const AppWrap = () => <ConnectedRouter history={history}>
     <AppThemeLoader />
-    <App />
+    <div className={"bodyScroll"}>
+        {mountPoint("appSibling")}
+        <App />
+    </div>
 </ConnectedRouter>;
 export default AppWrap;

@@ -41,7 +41,7 @@ export const setColour = (colour, value) => {
 };
 export const setType = (type, value) => {
     return {
-        type: "SET_THEME_TYPES",
-        payload: { [type]: value }
+        type: "SET_THEME_TYPE",
+        payload: { type: type, value }
     };
 };

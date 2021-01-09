@@ -24,7 +24,15 @@ const themeReducer = (state = INITIAL, { type, payload }) => {
         case "SET_THEME_COLOURS":
             return { ...state, colours: { ...state.colours, ...payload } };
         case "SET_THEME_TYPES":
-            return { ...state, colours: { ...state.colours, ...payload } };
+            return { ...state, types: { ...state.types, ...payload } };
+        case "SET_THEME_TYPE":
+            return {
+                ...state, types: {
+                    ...state.types, [payload.type]: {
+                        ...state.types[payload.type], ...payload.value
+                    }
+                }
+            };
         default:
             return state;
     }

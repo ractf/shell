@@ -114,21 +114,32 @@ export const mergeObjInto = (a, b) => {
     });
 };
 
-const memoize = (factory, ctx) => {
-    var cache = {};
-    return key => {
-        if (!(key in cache))
-            cache[key] = factory.call(ctx, key);
-        return cache[key];
-    };
-};
-
 export const colourToRGBA = (() => {
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 1;
     const ctx = canvas.getContext("2d");
 
+    const VAR_RE = /^(?:var\()?(--[a-zA-Z-]+)\)?$/;
+
+    const memoize = (factory, ctx) => {
+        var cache = {};
+        return key => {
+            if (VAR_RE.test(key))
+                return factory.call(ctx, key);
+
+            if (!(key in cache))
+                cache[key] = factory.call(ctx, key);
+            return cache[key];
+        };
+    };
+
     return memoize(function (col) {
+        if (!col) return [0, 0, 0, 0];
+
+        let var_;
+        if ((var_ = VAR_RE.exec(col)))
+            col = getComputedStyle(document.documentElement).getPropertyValue(var_[1]);
+
         ctx.clearRect(0, 0, 1, 1);
         ctx.fillStyle = "#000";
         ctx.fillStyle = col;
