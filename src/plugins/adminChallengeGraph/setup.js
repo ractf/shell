@@ -15,11 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { dynamicLoad, registerPlugin } from "ractf";
 import { FiShare2 } from "react-icons/fi";
 
-import ChallengeGraph from "./components/ChallengeGraph";
-
+const ChallengeGraph = dynamicLoad(() => (
+    import(/* webpackChunkName: "challenge-graph" */ "./components/ChallengeGraph")
+));
 
 export default () => {
     registerPlugin("adminPage", "graph", {

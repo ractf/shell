@@ -26,21 +26,20 @@ import TeamPage from "../pages/TeamPage";
 
 import { TextBlock, Page as BasePage, H1, H2, SubtleText } from "@ractf/ui-kit";
 import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
-import { dynamicLoad } from "ractf";
 import { useConfig, useReactRouter } from "@ractf/util";
 import { logout } from "@ractf/api";
+
+import ChallengePage from "../pages/ChallengePage";
+import SettingsPage from "../pages/SettingsPage";
+import Leaderboard from "../pages/Leaderboard";
+import AdminPage from "../pages/AdminPage";
+import Campaign from "../pages/Campaign";
+import Profile from "../pages/Profile";
+import TwoFA from "../pages/TwoFA";
 
 const Route = React.memo(Route_);
 const Switch = React.memo(Switch_);
 const Redirect = React.memo(Redirect_);
-
-const ChallengePage = dynamicLoad(() => import(/* webpackChunkName: "challenge-page" */ "../pages/ChallengePage"));
-const SettingsPage = dynamicLoad(() => import(/* webpackChunkName: "settings-page" */ "../pages/SettingsPage"));
-const Leaderboard = dynamicLoad(() => import(/* webpackChunkName: "leaderboard" */ "../pages/Leaderboard"));
-const AdminPage = dynamicLoad(() => import(/* webpackChunkName: "admin-page" */ "../pages/AdminPage"));
-const Campaign = dynamicLoad(() => import(/* webpackChunkName: "campaign" */ "../pages/Campaign"));
-const Profile = dynamicLoad(() => import(/* webpackChunkName: "profile" */ "../pages/Profile"));
-const TwoFA = dynamicLoad(() => import(/* webpackChunkName: "2fa" */ "../pages/TwoFA"));
 
 
 class ErrorBoundary extends React.PureComponent {

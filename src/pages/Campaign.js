@@ -25,8 +25,8 @@ import { useReactRouter } from "@ractf/util";
 import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
-    Button, Row, Input, Form, FormError, PageHead, Card, Leader, Modal,
-    Page, TabbedView, Tab, fromJson, Select, FormGroup, Column
+    Button, Row, Input, Form, FormError, PageHead, Card, Modal,
+    Page, TabbedView, Tab, fromJson, Select, FormGroup, LayoutGrid
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
@@ -152,20 +152,23 @@ const CategoryList = () => {
 
     return <Page>
         <PageHead subTitle={t("categories.pick")} title={t("categories.all")} />
-        <Column>
+        <LayoutGrid>
             {categories.map(i => {
                 const solved = i.challenges.filter(j => j.solved).length;
 
                 return (<Link to={i.url}>
-                    <Leader key={i.id} green={solved === i.challenges.length}
-                        sub={solved === i.challenges.length ? t("categories.finished") :
+                    <Card key={i.id} lesser
+                        success={solved === i.challenges.length}
+                        subtitle={solved === i.challenges.length ? t("categories.finished") :
                             solved === 0 ? t("categories.none") :
-                                t("categories.some", { count: i.challenges.length, total: solved })}>
-                        {i.name}
-                    </Leader>
+                                t("categories.some", { count: i.challenges.length, total: solved })}
+                        header={i.name}
+                    >
+                        {i.description}
+                    </Card>
                 </Link>);
             })}
-        </Column>
+        </LayoutGrid>
     </Page>;
 };
 

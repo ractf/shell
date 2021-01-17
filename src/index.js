@@ -20,7 +20,6 @@ import "promise-polyfill/src/polyfill";
 import React from "react";
 import i18next from "i18next";
 import ReactDOM from "react-dom";
-//import Loadable from "react-loadable";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { AppContainer } from "react-hot-loader";
@@ -47,7 +46,7 @@ const ENABLE_SERVICE_WORKER = false;
 const gft = i18next.getFixedT.bind(i18next);
 i18next.getFixedT = (lng, ns) => {
     const t = gft(lng, ns);
-    
+
     const fixedT = (key, opts, ...rest) => {
         const tl = t(key, opts, ...rest);
         if (tl === key)
