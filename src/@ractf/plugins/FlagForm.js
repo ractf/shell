@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 
 import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6 } from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
@@ -141,8 +141,8 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
             </>}
             <H6>Rate this challenge:</H6>
             <Row centre>
-                <Button onClick={() => vote(true)} success Icon={FaThumbsUp}>Awesome</Button>
-                <Button onClick={() => vote(false)} danger Icon={FaThumbsDown}>Not great</Button>
+                <Button onClick={() => vote(true)} success Icon={FiThumbsUp}>Awesome</Button>
+                <Button onClick={() => vote(false)} danger Icon={FiThumbsDown}>Not great</Button>
             </Row>
         </Modal>}
         {feedback && <Modal onClose={rateNone} cancel={false} okay={false} transparent
@@ -150,10 +150,10 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 <Button onClick={rateNone} lesser>No thanks</Button>
             </>}>
             <Row centre>
-                <Button onClick={() => vote(true)} success Icon={FaThumbsUp} lesser={challenge.votes?.self === false}>
+                <Button onClick={() => vote(true)} success Icon={FiThumbsUp} lesser={challenge.votes?.self === false}>
                     Awesome
                 </Button>
-                <Button onClick={() => vote(false)} danger Icon={FaThumbsDown} lesser={challenge.votes?.self === true}>
+                <Button onClick={() => vote(false)} danger Icon={FiThumbsDown} lesser={challenge.votes?.self === true}>
                     Not great
                 </Button>
             </Row>

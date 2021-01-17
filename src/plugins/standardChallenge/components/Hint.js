@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { FaInfoCircle, FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FiHelpCircle, FiEdit2, FiTrash } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 
 import { removeHint, editHint, useHint } from "@ractf/api";
@@ -75,12 +75,12 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) =>
 
     if (isEdit) {
         return <Row>
-            <Button tiny warning Icon={FaPencilAlt} onClick={edit} />
-            <Button tiny danger Icon={FaTrash} onClick={() => removeHint(id)} />
+            <Button tiny warning Icon={FiEdit2} onClick={edit} />
+            <Button tiny danger Icon={FiTrash} onClick={() => removeHint(id)} />
         </Row>;
     }
 
-    return <Button onClick={promptHint} Icon={FaInfoCircle} {...props}
+    return <Button onClick={promptHint} Icon={FiHelpCircle} {...props}
         tooltip={penalty === 0 ? "Free" : "-" + t("point_count", { count: penalty })} success={used}>
         {name}
     </Button>;

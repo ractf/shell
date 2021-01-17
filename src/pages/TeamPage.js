@@ -16,7 +16,9 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
+import { FaRedditAlien } from "react-icons/fa";
+import { SiDiscord } from "react-icons/si";
+import { FiTwitter, FiUser, FiUsers } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -112,7 +114,7 @@ const TeamPage = () => {
     return <Page title={teamData.name}>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <div className={"userMeta"}>
-                <div className={"userName"}><FaUsers /> {teamData.name}</div>
+                <div className={"userName"}><FiUsers /> {teamData.name}</div>
                 <div>{t("point_count", { count: teamData.leaderboard_points })}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
                     ? " noBio" : "")}>
@@ -123,7 +125,7 @@ const TeamPage = () => {
                     {teamData.twitter && teamData.twitter.length !== 0 &&
                         <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://twitter.com/" + encodeURIComponent(teamData.twitter)}>
-                            <FaTwitter /><span>@{teamData.twitter}</span>
+                            <FiTwitter /><span>@{teamData.twitter}</span>
                         </a>}
                     {teamData.reddit && teamData.reddit.length !== 0 &&
                         <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
@@ -135,15 +137,15 @@ const TeamPage = () => {
                             ? <a target={"_blank"} rel={"noopener noreferrer"}
                                 href={"https://discordapp.com/users/" + encodeURIComponent(teamData.discordid)}
                                 className={"userSocial"}>
-                                <FaDiscord /><span>{teamData.discord}</span>
+                                <SiDiscord /><span>{teamData.discord}</span>
                             </a>
                             : <span className={"userSocial"}>
-                                <FaDiscord /><span>{teamData.discord}</span>
+                                <SiDiscord /><span>{teamData.discord}</span>
                             </span>)}
                 </>}
 
                 {teamData.members.map((i, n) => <><Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
-                    <FaUser /> {i.username}
+                    <FiUser /> {i.username}
                 </Link><br /></>)}
             </div>
         </Column>

@@ -76,7 +76,7 @@ const HeaderNav = React.memo(HeaderNav_);
 
 
 const SideNavLink = ({ to, Icon, active, name }) => {
-    const { location: {pathname}} = useReactRouter();
+    const { location: { pathname } } = useReactRouter();
     return (
         <Link to={to}>
             <SideNav.Item active={active || pathname === to} Icon={Icon}>
@@ -140,7 +140,7 @@ const SideBarNav_ = ({ children }) => {
                 <SideNav.UncontrolledSubMenu name={t("challenge_plural")} startOpen>
                     {categories.map(i => (
                         <SideNavLink key={i.id} to={i.url} name={i.name} />
-                        ))}
+                    ))}
                     {user.is_staff && (
                         <SideNavLink to={"/campaign/new"} name={t("challenge.new_cat")} Icon={FiPlus} />
                     )}

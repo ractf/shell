@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Column } from "@ractf/ui-kit";
 import Link from "components/Link";
 
-import { FaCheck, FaLockOpen, FaEyeSlash, FaLock } from "react-icons/fa";
+import { FiUnlock, FiLock, FiEyeOff, FiCheck } from "react-icons/fi";
 
 
 import style from "./NewCampaign.module.scss";
@@ -53,24 +53,24 @@ const Node = ({
         }
 
         {linksR && <div className={makeClass(style.lock, style.right)}>
-            {solvedRight ? <FaCheck /> : unlockedRight ? <FaLockOpen /> : <FaLock />}
+            {solvedRight ? <FiCheck /> : unlockedRight ? <FiUnlock /> : <FiLock />}
         </div>}
         {linksD && <div className={makeClass(style.lock, style.down)}>
-            {solvedDown ? <FaCheck /> : unlockedDown ? <FaLockOpen /> : <FaLock />}
+            {solvedDown ? <FiCheck /> : unlockedDown ? <FiUnlock /> : <FiLock />}
         </div>}
 
         <TileLink
             onClick={toggle("left")} isEdit={isEdit} show={linksL} left
-            done={solved} unlocked={unlocked} />
+            solved={solved} unlocked={unlocked} />
         <TileLink
             onClick={toggle("right")} isEdit={isEdit} show={linksR} right
-            done={solved} unlocked={unlocked} />
+            solved={solved} unlocked={unlocked} />
         <TileLink
             onClick={toggle("up")} isEdit={isEdit} show={linksU} up
-            done={solved} unlocked={unlocked} />
+            solved={solved} unlocked={unlocked} />
         <TileLink
             onClick={toggle("down")} isEdit={isEdit} show={linksD} down
-            done={solved} unlocked={unlocked} />
+            solved={solved} unlocked={unlocked} />
     </>;
 
     const myClick = useCallback(() => {
@@ -88,7 +88,7 @@ const Node = ({
         {inner}
     </Link>;
 };
-export const AddNode = props => <Node name="+" largeName orange unlocked {...props} />;
+export const AddNode = ({ text, ...props }) => <Node name={text} largeName orange unlocked {...props} />;
 
 
 const TileLink = (props) => {
@@ -205,7 +205,7 @@ export const Campaign = ({ category, isEdit, showLocked }) => {
             if (!challenge) {
                 if (isEdit) {
                     row.push(
-                        <AddNode key={`add_${x}_${y}`} x={x} y={y} onClick={addNodeClick} />
+                        <AddNode text={selected ? "" : "+"} key={`add_${x}_${y}`} x={x} y={y} onClick={addNodeClick} />
                     );
                 } else {
                     row.push(<div className={style.campaignSpacer} key={`spacer_${x}_${y}`} />);
@@ -264,9 +264,9 @@ export const Campaign = ({ category, isEdit, showLocked }) => {
 
                 name={
                     challenge.hidden && !(isEdit || showLocked) ? (
-                        <FaEyeSlash />
+                        <FiEyeOff />
                     ) : !unlocked && !showLocked ? (
-                        <FaLock />
+                        <FiLock />
                     ) : (
                                 challenge.name
                             )

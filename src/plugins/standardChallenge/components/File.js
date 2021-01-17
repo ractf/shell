@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { FaFile, FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FiFile, FiEdit2, FiTrash } from "react-icons/fi";
 
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { removeFile, editFile } from "@ractf/api";
@@ -49,13 +49,13 @@ export default ({ name, url, size, id, isEdit, ...props }) => {
 
     if (isEdit) {
         return <Row>
-            <Button tiny warning Icon={FaPencilAlt} onClick={edit} />
-            <Button tiny danger Icon={FaTrash} onClick={() => removeFile(id)} />
+            <Button tiny warning Icon={FiEdit2} onClick={edit} />
+            <Button tiny danger Icon={FiTrash} onClick={() => removeFile(id)} />
         </Row>;
     }
 
     return <a href={url} target={"_blank"} rel={"noopener noreferrer"}>
-        <Button Icon={FaFile} tooltip={formatBytes(size)} {...props}>
+        <Button Icon={FiFile} tooltip={formatBytes(size)} {...props}>
             {name}
         </Button>
     </a>;

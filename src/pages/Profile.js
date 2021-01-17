@@ -33,7 +33,9 @@ import Link from "components/Link";
 import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
-import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
+import { FaDiscord, FaRedditAlien } from "react-icons/fa";
+import { SiDiscord } from "react-icons/si";
+import { FiTwitter, FiUsers } from "react-icons/fi";
 import { useCategories } from "@ractf/util/hooks";
 
 
@@ -102,7 +104,7 @@ const Profile = () => {
                 {userData.twitter && userData.twitter.length !== 0 &&
                     <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                         href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
-                        <FaTwitter /><span>@{userData.twitter}</span>
+                        <FiTwitter /><span>@{userData.twitter}</span>
                     </a>}
                 {userData.reddit && userData.reddit.length !== 0 &&
                     <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
@@ -114,15 +116,15 @@ const Profile = () => {
                         ? <a target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
                             className={"userSocial"}>
-                            <FaDiscord /><span>{userData.discord}</span>
+                            <SiDiscord /><span>{userData.discord}</span>
                         </a>
                         : <span className={"userSocial"}>
-                            <FaDiscord /><span>{userData.discord}</span>
+                            <SiDiscord /><span>{userData.discord}</span>
                         </span>)}
 
                 {hasTeams && userData.team && (
                     <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
-                        <FaUsers /> {userData.team_name}
+                        <FiUsers /> {userData.team_name}
                     </Link>
                 )}
                 {Object.keys(categoryValues).length !== 0 && <>

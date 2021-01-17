@@ -29,7 +29,7 @@ import {
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "ractf";
 import Link from "components/Link";
-import { FaInfo } from "react-icons/fa";
+import { FiHelpCircle } from "react-icons/fi";
 
 
 const Inner = () => (<NavCollapse>
@@ -132,7 +132,7 @@ const UIPage = () => <Page><Row left>
 
     <Row left>
         {TYPES.map(type => (
-            <Button Icon={FaInfo} tooltip={`This is a ${type} button`} {...{ [type]: true }} key={type}>{type}</Button>
+            <Button Icon={FiHelpCircle} tooltip={`This is a ${type} button`} {...{ [type]: true }} key={type}>{type}</Button>
         ))}
     </Row>
 

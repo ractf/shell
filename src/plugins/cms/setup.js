@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useEffect, useContext, useState, useRef } from "react";
-import { FaPencilAlt, FaTrash, FaPlus } from "react-icons/fa";
+import { FiEdit2, FiTrash, FiPlus } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { Route } from "react-router-dom";
 
@@ -133,10 +133,10 @@ const CMSAdmin = () => {
         <PageHead>Custom Site Pages</PageHead>
         <Grid headings={["Title", "URL", "Actions"]} data={[...pages.map(i => [
             i.title, <Link to={i.url}>{i.url}</Link>, <Row>
-                <Button tiny warning Icon={FaPencilAlt} onClick={() => editPage(i)} />
-                <Button tiny danger Icon={FaTrash} onClick={() => removePage(i)} />
+                <Button tiny warning Icon={FiEdit2} onClick={() => editPage(i)} />
+                <Button tiny danger Icon={FiTrash} onClick={() => removePage(i)} />
             </Row>
-        ]), [<Button tiny Icon={FaPlus} onClick={addNew}>Add page</Button>, null, null]]} />
+        ]), [<Button tiny Icon={FiPlus} onClick={addNew}>Add page</Button>, null, null]]} />
     </Page>;
 };
 

@@ -32,13 +32,9 @@ $lock_color: (
 
 .row {
     height: 100%;
-    margin: auto;
     width: 100%;
     max-width: 600px;
-
-    &:last-child > div {
-        margin-bottom: 0;
-    }
+    margin: 0 auto !important;
 
     > div {
         display: flex;
@@ -274,11 +270,11 @@ $lock_color: (
         }
     }
 
-    &.unlockedRight > .lock.right > svg
+    &.unlockedRight > .lock.right > svg,
     &.unlockedDown > .lock.down > svg {
         color: map-get($lock_color, "unlocked");
     }
-    &.solvedRight > .lock.right > svg
+    &.solvedRight > .lock.right > svg,
     &.solvedDown > .lock.down > svg {
         color: map-get($lock_color, "solved");
     }
