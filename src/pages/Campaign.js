@@ -107,9 +107,7 @@ const ANC = ({ hide, anc, modal }) => {
                 </FormGroup>
                 <FormGroup htmlFor={"ctype"} label={t("challenge.cat_type")}>
                     <Select options={iteratePlugins("categoryType").map(({ key }) => ({ key, value: key }))}
-                        initial={
-                            iteratePlugins("categoryType").map(i => i.key).indexOf(anc.contained_type)
-                        } name={"ctype"} />
+                        initial={anc.contained_type} name={"ctype"} />
                 </FormGroup>
 
                 {error && <FormError>{error}</FormError>}

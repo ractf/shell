@@ -149,7 +149,6 @@ const TypeEditor = ({ controlsType, controlsDetail, name }) => {
         setPicker(old => !old);
     }, []);
     const onChange = (colour) => {
-        console.log(colour);
         // const hex = rgb2hex(r, g, b, a);
         setStateColour(colour);
         dispatch(setType(controlsType, { [controlsDetail]: colour }));

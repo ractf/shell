@@ -84,7 +84,6 @@ const Profile = () => {
         scorePlotData.x.push(new Date(solve.timestamp));
         scorePlotData.y.push(score);
     });
-    console.log(scorePlotData);
 
     return <Page title={userData.username}>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>

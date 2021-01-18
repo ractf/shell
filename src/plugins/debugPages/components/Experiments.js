@@ -76,7 +76,7 @@ const Experiments = () => {
                     return <FormGroup key={exp.name} label={exp.name}>
                         <Select
                             options={exp.options} name={i}
-                            initial={exp.options.map(j => j.key).indexOf(state)} />
+                            initial={state} />
                     </FormGroup>;
                 })}
             </Form>
