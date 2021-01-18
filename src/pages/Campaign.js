@@ -26,7 +26,7 @@ import { useCategory, useCategories, usePreference } from "@ractf/util/hooks";
 
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Modal,
-    Page, TabbedView, Tab, fromJson, Select, FormGroup, LayoutGrid
+    Page, TabbedView, Tab, fromJson, Select, FormGroup, Masonry
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
@@ -152,7 +152,7 @@ const CategoryList = () => {
 
     return <Page>
         <PageHead subTitle={t("categories.pick")} title={t("categories.all")} />
-        <LayoutGrid>
+        <Masonry>
             {categories.map(i => {
                 const solved = i.challenges.filter(j => j.solved).length;
 
@@ -168,7 +168,7 @@ const CategoryList = () => {
                     </Card>
                 </Link>);
             })}
-        </LayoutGrid>
+        </Masonry>
     </Page>;
 };
 

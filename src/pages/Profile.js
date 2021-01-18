@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import { BrokenShards } from "./ErrorPages";
 
-import { useReactRouter, useConfig } from "@ractf/util";
+import { useReactRouter, useConfig, cssVar } from "@ractf/util";
 import {
     FormError, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
 } from "@ractf/ui-kit";
@@ -29,8 +29,6 @@ import { ENDPOINTS } from "@ractf/api";
 import LoadingPage from "./LoadingPage";
 import { useApi } from "ractf";
 import Link from "components/Link";
-
-import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
 import { FaRedditAlien } from "react-icons/fa";
@@ -86,6 +84,7 @@ const Profile = () => {
         scorePlotData.x.push(new Date(solve.timestamp));
         scorePlotData.y.push(score);
     });
+    console.log(scorePlotData);
 
     return <Page title={userData.username}>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
@@ -132,7 +131,7 @@ const Profile = () => {
                         <div className={"ppwHead"}>Solve attempts</div>
                         <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
                             labels={["Correct", "Incorrect"]}
-                            colors={[colours.green, colours.red]} />
+                            colors={[cssVar("--col-green"), cssVar("--col-red")]} />
                     </div>
                 </>}
             </div>
@@ -152,7 +151,7 @@ const Profile = () => {
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Solve attempts</div>
                                     <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
-                                        colors={[colours.green, colours.red]}
+                                        colors={[cssVar("--col-green"), cssVar("--col-red")]}
                                         labels={["Correct", "Incorrect"]} height={300} />
                                 </div>
                                 <div className={"profilePieWrap"}>

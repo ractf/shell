@@ -114,6 +114,10 @@ export const mergeObjInto = (a, b) => {
     });
 };
 
+export const cssVar = (name) => (
+    getComputedStyle(document.documentElement).getPropertyValue(name)
+);
+
 export const colourToRGBA = (() => {
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 1;
@@ -138,7 +142,7 @@ export const colourToRGBA = (() => {
 
         let var_;
         if ((var_ = VAR_RE.exec(col)))
-            col = getComputedStyle(document.documentElement).getPropertyValue(var_[1]);
+            col = cssVar(var_[1]);
 
         ctx.clearRect(0, 0, 1, 1);
         ctx.fillStyle = "#000";

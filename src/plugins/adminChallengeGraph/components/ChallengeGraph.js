@@ -20,10 +20,9 @@ import React from "react";
 import { Network, Node, Edge } from "react-vis-network";
 import { PageHead } from "@ractf/ui-kit";
 
-import colours from "@ractf/ui-kit/Colours.scss";
-
 import style from "./ChallengeGraph.module.scss";
 import { useCategories } from "@ractf/util/hooks";
+import { cssVar } from "@ractf/util";
 
 const ChallengeGraph = () => {
     const categories = useCategories();
@@ -46,7 +45,7 @@ const ChallengeGraph = () => {
                     id={`category_${category.id}`}
                     key={`category_${category.id}`}
                     label={category.name}
-                    color={colours.blue}
+                    color={cssVar("--col-blue")}
                     widthConstraint={{ maximum: 100 }}
                 />)}
                 {categories.flatMap(category => category.challenges.flatMap(challenge => [
@@ -54,7 +53,7 @@ const ChallengeGraph = () => {
                         id={`challenge_${challenge.id}`}
                         key={`challenge_${challenge.id}`}
                         label={challenge.name}
-                        color={challenge.hidden ? colours.red : colours.green}
+                        color={challenge.hidden ? cssVar("--col-red") : cssVar("--col-greem")}
                         shape={"box"} widthConstraint={{ maximum: 150 }}
                     />,
                     challenge.auto_unlock ? (

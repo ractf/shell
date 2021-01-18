@@ -20,12 +20,11 @@ import React from "react";
 import {
     PageHead, Row, Column, Card, Large, HR, Bar, Pie, Spinner
 } from "@ractf/ui-kit";
-import colours from "@ractf/ui-kit/Colours.scss";
 
 import style from "./Statistics.module.scss";
 import { useApi } from "controllers/UseAPI";
 import { useCategories } from "@ractf/util/hooks";
-import { useConfig } from "@ractf/util";
+import { cssVar, useConfig } from "@ractf/util";
 
 
 const minMaxFunction = (data, mapper) => {
@@ -125,7 +124,7 @@ const Statistics = () => {
                             totalIncorrect / (totalCorrect + totalIncorrect) * 100
                         ]}
                         labels={["Correct", "Incorrect"]}
-                        colors={[colours.green, colours.red]} percent />
+                        colors={[cssVar("--col-green"), cssVar("--col-red")]} percent />
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>

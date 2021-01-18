@@ -25,14 +25,13 @@ import { Redirect } from "react-router-dom";
 
 import { BrokenShards } from "./ErrorPages";
 
-import { useReactRouter, useConfig } from "@ractf/util";
+import { useReactRouter, useConfig, cssVar } from "@ractf/util";
 import {
     FormError, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "ractf";
-import colours from "@ractf/ui-kit/Colours.scss";
 import Link from "components/Link";
 
 import "./Profile.scss";
@@ -165,7 +164,7 @@ const TeamPage = () => {
                                     <div className={"ppwHead"}>Solve attempts</div>
                                     <Pie data={[teamData.solves.filter(Boolean).length, teamData.incorrect_solves]}
                                         labels={["Correct", "Incorrect"]}
-                                        colors={[colours.green, colours.red]} />
+                                        colors={[cssVar("--col-green"), cssVar("--col-red")]} />
                                 </div>
                                 <div className={"profilePieWrap"}>
                                     <div className={"ppwHead"}>Category Breakdown</div>
