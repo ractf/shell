@@ -73,7 +73,7 @@ const TeamPage = () => {
     const categoryValues = {};
     const userValues = {};
     const tData = teamData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    const scorePlotData = { data: [], label: "Score" };
+    const scorePlotData = { data: [] };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.data.push({ x: api.config.start_time, y: 0 });
     tData.forEach(solve => {

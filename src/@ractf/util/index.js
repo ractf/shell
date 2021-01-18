@@ -117,6 +117,10 @@ export const mergeObjInto = (a, b) => {
 export const cssVar = (name) => (
     getComputedStyle(document.documentElement).getPropertyValue(name)
 );
+export const transparentize = (colour, alpha) => {
+    const [r, g, b] = colourToRGBA(colour);
+    return rgb2hex(r, g, b, alpha * 255);
+};
 
 export const colourToRGBA = (() => {
     const canvas = document.createElement("canvas");

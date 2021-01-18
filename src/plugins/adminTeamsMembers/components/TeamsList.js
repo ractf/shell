@@ -19,8 +19,8 @@ import React, { useContext, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Column, Card
+    Form, Input, Row, FormGroup, InputButton, FormError, Leader,
+    Checkbox, PageHead, Modal, Column, Card, ModalSpinner
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
@@ -106,6 +106,7 @@ export default () => {
 
     return <>
         <PageHead title={t("admin.teams")} />
+        {state.loading && <ModalSpinner />}
         <Column>
             <Row>
                 <Form handle={doSearch} locked={state.loading}>
@@ -113,7 +114,6 @@ export default () => {
                     {state.error && <FormError>{state.error}</FormError>}
                 </Form>
             </Row>
-            {state.loading && <Row><Spinner /></Row>}
             {state.results && <Row>
                 {state.results.length ? <>
                     {state.more && <p>

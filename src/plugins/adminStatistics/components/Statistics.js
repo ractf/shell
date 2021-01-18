@@ -18,7 +18,7 @@
 import React from "react";
 
 import {
-    PageHead, Row, Column, Card, Large, HR, Bar, Pie, Spinner
+    PageHead, Row, Column, Card, Large, HR, Bar, Pie, Spinner, ModalSpinner
 } from "@ractf/ui-kit";
 
 import style from "./Statistics.module.scss";
@@ -52,7 +52,7 @@ const Statistics = () => {
 
     if (!stats) return <>
         <PageHead title={"Statistics"} />
-        <Spinner />
+        <ModalSpinner />
     </>;
 
     const add = (x, y) => x + y;
@@ -76,20 +76,24 @@ const Statistics = () => {
         <Row>
             <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={"Quick breakdown"}>
-                    <Large><b>{stats.users.all.toString()}</b> registered users (
-                        <b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation
-                    )</Large>
-                    {hasTeams && <Large><b>{stats.teams.toString()}</b> registered teams</Large>}
-                    <Large><b>{stats.ips.toString()}</b> unique IPs</Large>
+                    <Large>
+                        <b>{stats.users.all.toString()}</b> registered users (
+                            <b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation
+                        )
+                        {hasTeams && <><br /><b>{stats.teams.toString()}</b> registered teams</>}
+                        <br /><b>{stats.ips.toString()}</b> unique IPs
+                    </Large>
                     <HR />
-                    <Large><b>{maxPoints.toString()}</b> total possible points</Large>
-                    <Large><b>{(stats.total_points || 0).toString()}</b> total points scored</Large>
-                    {maxChallenge && (
-                        <Large><b>{maxChallenge.name}</b> has the most solves, at {maxChallenge.solve_count}</Large>
-                    )}
-                    {minChallenge && (
-                        <Large><b>{minChallenge.name}</b> has the fewest solves, at {minChallenge.solve_count}</Large>
-                    )}
+                    <Large>
+                        <b>{maxPoints.toString()}</b> total possible points
+                        <br /><b>{(stats.total_points || 0).toString()}</b> total points scored
+                        {maxChallenge && (
+                            <><br /><b>{maxChallenge.name}</b> has the most solves, at {maxChallenge.solve_count}</>
+                        )}
+                        {minChallenge && (
+                            <><br /><b>{minChallenge.name}</b> has the fewest solves, at {minChallenge.solve_count}</>
+                        )}
+                    </Large>
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
