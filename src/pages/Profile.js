@@ -33,7 +33,7 @@ import Link from "components/Link";
 import colours from "@ractf/ui-kit/Colours.scss";
 
 import "./Profile.scss";
-import { FaDiscord, FaRedditAlien } from "react-icons/fa";
+import { FaRedditAlien } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
 import { FiTwitter, FiUsers } from "react-icons/fi";
 import { useCategories } from "@ractf/util/hooks";

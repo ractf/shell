@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Column } from "@ractf/ui-kit";
+import { Card, Column } from "@ractf/ui-kit";
 import Link from "components/Link";
 
 import { FiUnlock, FiLock, FiEyeOff, FiCheck } from "react-icons/fi";
@@ -46,7 +46,7 @@ const Node = ({
         ...Object.keys(classes).map(i => classes[i] && style[i]).filter(Boolean)
     );
 
-    const inner = <>
+    const inner = <Card>
         <div className={style.name}>{name}</div>
         {unlocked &&
             <div className={style.points}>{score}</div>
@@ -71,7 +71,7 @@ const Node = ({
         <TileLink
             onClick={toggle("down")} isEdit={isEdit} show={linksD} down
             solved={solved} unlocked={unlocked} />
-    </>;
+    </Card>;
 
     const myClick = useCallback(() => {
         if ((solved || unlocked) && onClick)

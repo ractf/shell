@@ -17,7 +17,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { Column, Row, Input, FormGroup, Button, Modal } from "@ractf/ui-kit";
+import { Column, Row, Input, Button, Modal, Masonry } from "@ractf/ui-kit";
 
 import ChallengePage from "pages/ChallengePage.js";
 import ChallengeTile from "./ChallengeTile.js";
@@ -94,37 +94,34 @@ export const TilesChallenges = ({ challenges: category, showEditor, isEdit, show
 
     return <Column>
         {challenge && (
-            <Modal transparent onClose={() => setChallenge(null)} cancel={false} header={challenge.title}
+            <Modal transparent onClose={() => setChallenge(null)}
+                cancel={false} header={challenge.name}
                 okay={"Back"} onConfirm={() => setChallenge(null)}
             >
                 <ChallengePage tabId={category.id} chalId={challenge.id} />
             </Modal>
         )}
-        <FormGroup>
+        <Row>
             <Input onChange={setSearch} value={search}
                 name={"search"} placeholder={"Search challenges"} val={search} managed />
-        </FormGroup>
-        <FormGroup>
-            {sortedTags.length !== 0 && (
-                <Row>
-                    {sortedTags.map(([tag, tagCount]) => (
-                        <Button key={tag}
-                            Icon={props => <span {...props}>{tagCount}</span>}
-                            onClick={toggleFilter(tag)} success={filter[tag]}
-                        >{tag}</Button>
-                    ))}
-                </Row>
+        </Row>
+        {sortedTags.length !== 0 && (
+            <Row>
+                {sortedTags.map(([tag, tagCount]) => (
+                    <Button key={tag}
+                        Icon={props => <span {...props}>{tagCount}</span>}
+                        onClick={toggleFilter(tag)} success={filter[tag]}
+                    >{tag}</Button>
+                ))}
+            </Row>
+        )}
+        <Masonry>
+            {category.challenges.sort((x, y) => x.score - y.score).map(
+                i => (shouldShow(i) ? <ChallengeTile
+                    category={category} key={i.id} challenge={i}
+                    setChallenge={setChallenge}
+                /> : null)
             )}
-        </FormGroup>
-        <FormGroup>
-            <div className={style.tiles}>
-                {category.challenges.sort((x, y) => x.score - y.score).map(
-                    i => (shouldShow(i) ? <ChallengeTile
-                        category={category} key={i.id} challenge={i}
-                        setChallenge={setChallenge}
-                    /> : null)
-                )}
-            </div>
-        </FormGroup>
+        </Masonry>
     </Column>;
 };

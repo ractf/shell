@@ -316,7 +316,7 @@ const SettingsPage = () => {
                 </Form>
             </Card>
             {accDeletion && (
-                <Card lesser danger lesser header={t("settings.cards.danger")}>
+                <Card lesser danger header={t("settings.cards.danger")}>
                     <Form action={""} method={"POST"} validator={deleteValidator}>
                         <FormGroup htmlFor={"password"} label={t("curr_pass")}>
                             <Input name={"password"} label={t("curr_pass")} placeholder={t("curr_pass")} submit />

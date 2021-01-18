@@ -132,7 +132,8 @@ const UIPage = () => <Page><Row left>
 
     <Row left>
         {TYPES.map(type => (
-            <Button Icon={FiHelpCircle} tooltip={`This is a ${type} button`} {...{ [type]: true }} key={type}>{type}</Button>
+            <Button Icon={FiHelpCircle} tooltip={`This is a ${type} button`}
+                {...{ [type]: true }} key={type}>{type}</Button>
         ))}
     </Row>
 

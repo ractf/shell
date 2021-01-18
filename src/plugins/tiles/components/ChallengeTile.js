@@ -17,7 +17,7 @@
 
 import React, { useCallback } from "react";
 
-import { Markdown } from "@ractf/ui-kit";
+import { Card, Markdown } from "@ractf/ui-kit";
 
 import style from "./ChallengeTile.module.scss";
 import { makeClass } from "@ractf/util";
@@ -44,27 +44,25 @@ const ChallengeTile = ({ setChallenge, challenge }) => {
         setChallenge(challenge);
     }, [setChallenge, challenge]);
 
-    return <div className={makeClass(style.tile, challenge.solved && style.solved)} onClick={onClick}>
-        <div className={style.tileHead}>
-            <div className={style.headMain}>
-                <div className={style.title}>{challenge.name}</div>
-                <div className={makeClass(style.subtitle, style[DIFFICULTIES[difficulty][2]])}>
-                    <div className={style.dots}>
-                        {([...new Array(difficulty)]).map((i, n) => (
-                            <div className={style.dot} key={n} />
-                        ))}
-                    </div>
-                    <span>{DIFFICULTIES[difficulty][1]}</span>
-                </div>
+    return <Card
+    header={challenge.name}
+    subtitleClass={style[DIFFICULTIES[difficulty][2]]}
+    subtitle={<>
+            <div className={style.dots}>
+                {([...new Array(difficulty)]).map((i, n) => (
+                    <div className={style.dot} key={n} />
+                    ))}
             </div>
-            <div>
-                <div className={style.points}>{challenge.score}</div>
-                <div className={style.pointsSub}>points</div>
-            </div>
-        </div>
-        <div className={style.tileBody}>
-            <Markdown LinkElem={Link} source={challenge.description} />
-        </div>
-    </div>;
+            <span>{DIFFICULTIES[difficulty][1]}</span>
+        </>} callout={<>
+            <div className={style.points}>{challenge.score}</div>
+            <div className={style.pointsSub}>points</div>
+        </>}
+        success={challenge.solved} lesser
+        maxHeight={undefined} className={style.tile}
+        onClick={onClick} collapsible
+    >
+        <Markdown LinkElem={Link} source={challenge.description} />
+    </Card>;
 };
 export default React.memo(ChallengeTile);

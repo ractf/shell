@@ -134,7 +134,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
         </Column>
         <Column xlWidth={9} lgWidth={8} mdWidth={12}>
             {isEdit && (
-                <Card lesser info header={"Add new challenge"} startClosed collapsible lesser>
+                <Card lesser info header={"Add new challenge"} startClosed collapsible>
                     <ChallengePage tabId={category.id} chalId={"new"} />
                 </Card>
             )}
