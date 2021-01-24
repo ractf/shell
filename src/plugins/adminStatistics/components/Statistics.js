@@ -18,7 +18,7 @@
 import React from "react";
 
 import {
-    PageHead, Row, Column, Card, Large, HR, Bar, Pie, Spinner, ModalSpinner
+    PageHead, Row, Column, Card, Large, HR, Bar, Pie, ModalSpinner
 } from "@ractf/ui-kit";
 
 import style from "./Statistics.module.scss";

@@ -262,6 +262,8 @@
     "leaderboard": "Leaderboard",
     "point": "Point",
     "point_plural": "Points",
+    "solve": "Solve",
+    "solve_plural": "Solves",
     "rank": "Ranking",
     "edit": "Edit",
     "edit_stop": "Stop Editing",

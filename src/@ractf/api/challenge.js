@@ -50,16 +50,31 @@ export const editChallenge = ({
     challenge_metadata, author, challenge_type, unlocks, files, hidden, tags,
     post_score_explanation
 }) => {
-    return http.patch(ENDPOINTS.CHALLENGES + id, {
+    const categories = store.getState().challenges?.categories || [];
+    let original = null;
+    categories.forEach(i => {
+        original = i.challenges.filter(j => j.id === id)[0] || original;
+    });
+    const changes = {
         name, score, description, post_score_explanation,
         flag_type, flag_metadata,
         challenge_metadata, hidden,
         author, unlocks, files, tags,
         challenge_type: challenge_type || "default",
         auto_unlock,
-    }).then(data => {
+    };
+    // Immediate dispatch to make things feel more responsive
+    store.dispatch(actions.editChallenge({ id, ...changes }));
+
+    return http.patch(
+        ENDPOINTS.CHALLENGES + id, changes
+    ).then(data => {
         store.dispatch(actions.editChallenge(data));
         return data;
+    }).catch(e => {
+        // Rollback
+        store.dispatch(actions.editChallenge(original));
+        throw e;
     });
 };
 
@@ -83,17 +98,20 @@ export const removeChallenge = async (challenge, dumbRemove) => {
     quickRemoveChallenge(challenge).then(() => reloadAll());
 };
 
-export const linkChallenges = (chal1, chal2, linkState) => {
+export const linkChallenges = (challenge1, challenge2, linkState) => {
+    let c1unlocks = [...challenge1.unlocks];
+    let c2unlocks = [...challenge2.unlocks];
+
     if (linkState) {
-        chal1.unlocks.push(chal2.id);
-        chal2.unlocks.push(chal1.id);
+        c1unlocks.push(challenge2.id);
+        c2unlocks.push(challenge1.id);
     } else {
-        chal1.unlocks = chal1.unlocks.filter(i => i !== chal2.id);
-        chal2.unlocks = chal2.unlocks.filter(i => i !== chal1.id);
+        c1unlocks = c1unlocks.filter(i => i !== challenge2.id);
+        c2unlocks = c2unlocks.filter(i => i !== challenge1.id);
     }
     return Promise.all([
-        http.patch(ENDPOINTS.CHALLENGES + chal1.id, { unlocks: chal1.unlocks }),
-        http.patch(ENDPOINTS.CHALLENGES + chal2.id, { unlocks: chal2.unlocks })
+        challenge1.edit({ unlocks: c1unlocks }),
+        challenge2.edit({ unlocks: c2unlocks }),
     ]);
 };
 

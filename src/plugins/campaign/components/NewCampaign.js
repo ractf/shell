@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from "react";
-import { Card, Column } from "@ractf/ui-kit";
+import { useTranslation } from "react-i18next";
+import { Button, Column } from "@ractf/ui-kit";
 import Link from "components/Link";
 
-import { FiUnlock, FiLock, FiEyeOff, FiCheck } from "react-icons/fi";
+import { FiUnlock, FiLock, FiEyeOff, FiCheck, FiMove, FiEdit2 } from "react-icons/fi";
 
 
 import style from "./NewCampaign.module.scss";
@@ -11,14 +12,37 @@ import { appContext } from "ractf";
 import { useContext } from "react";
 import http from "@ractf/http";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { push } from "connected-react-router";
+import { linkChallenges } from "@ractf/api";
 
+
+const emptyChallenge = (category, x, y) => ({
+    lock: false,
+    solve: false,
+    unlocks: [],
+    files: [],
+    auto_unlock: true,
+    challenge_type: "default",
+    challenge_metadata: {
+        x: x,
+        y: y
+    },
+    category,
+});
+
+const clickBlock = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+};
 
 const Node = ({
     name, right, below, linksU, linksD, linksR, linksL, isEdit,
-    onClick, toggleLink, url, x, y, challenge, ...props
+    onClick, toggleLink, url, x, y, challenge, startMove, startEdit,
+    ...props
 }) => {
     const { unlocked } = props;
-    const { solved, score } = challenge || {};
+    const { solved, solve_count, score } = challenge || {};
     const toggle = side => {
         return e => {
             if (isEdit) {
@@ -28,6 +52,7 @@ const Node = ({
             }
         };
     };
+    const { t } = useTranslation();
 
     const solvedRight = solved && right && right.solved;
     const solvedDown = solved && below && below.solved;
@@ -45,11 +70,27 @@ const Node = ({
         style.tile,
         ...Object.keys(classes).map(i => classes[i] && style[i]).filter(Boolean)
     );
+    const doStartMove = useCallback(() => {
+        startMove(challenge, x, y);
+    }, [startMove, challenge, x, y]);
+    const doStartEdit = useCallback(() => {
+        startEdit(challenge);
+    }, [startEdit, challenge]);
 
-    const inner = <Card>
+    const inner = <>
+        <div className={style.hoverTarget} />
         <div className={style.name}>{name}</div>
-        {unlocked &&
-            <div className={style.points}>{score}</div>
+        {unlocked && (typeof score === "number") &&
+            <div className={style.points}>
+                {score}
+                <div className={style.subLabel}>{t("point", { count: score })}</div>
+            </div>
+        }
+        {unlocked && (typeof solve_count === "number") &&
+            <div className={style.solves}>
+                {solve_count}
+                <div className={style.subLabel}>{t("solve", { count: solve_count })}</div>
+            </div>
         }
 
         {linksR && <div className={makeClass(style.lock, style.right)}>
@@ -71,7 +112,12 @@ const Node = ({
         <TileLink
             onClick={toggle("down")} isEdit={isEdit} show={linksD} down
             solved={solved} unlocked={unlocked} />
-    </Card>;
+
+        <div className={style.buttons} onClick={clickBlock}>
+            <Button success onClick={doStartMove} Icon={FiMove} />
+            <Button warning onClick={doStartEdit} Icon={FiEdit2} />
+        </div>
+    </>;
 
     const myClick = useCallback(() => {
         if ((solved || unlocked) && onClick)
@@ -80,7 +126,7 @@ const Node = ({
 
     if (!url)
         return <div tabIndex={unlocked || solved ? "0" : ""}
-            onClick={myClick} className={tileClass}>
+            onMouseDown={myClick} className={tileClass}>
             {inner}
         </div>;
 
@@ -110,7 +156,7 @@ const NodeRow = ({ children }) => (
 );
 
 
-const MAX_WIDTH = 3;
+const MAX_WIDTH = 7;
 
 const log = window.console.log.bind(window.console, "%c[Campaign]", "color: #d3d");
 
@@ -147,14 +193,15 @@ const automaticLayout = (width, height, challenges) => {
     }
 };
 
-export const Campaign = ({ category, isEdit, showLocked }) => {
+export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
     const { challenges } = category;
     let width = Math.max(...challenges.map(i => i.challenge_metadata?.x || 0)) + 1;
     let height = Math.max(...challenges.map(i => i.challenge_metadata?.y || 0)) + 1;
     width = Math.max(1, width); height = Math.max(1, height);
 
     if (isEdit) {
-        width = MAX_WIDTH;
+        if (width < MAX_WIDTH)
+            width++;
         height++;
     }
 
@@ -178,23 +225,73 @@ export const Campaign = ({ category, isEdit, showLocked }) => {
 
     const [selected, setSelected] = useState(null);
 
-    const nodeClick = useCallback((challenge, x, y) => {
-        setSelected(oldSelected => {
-            if (oldSelected && oldSelected[0] === x && oldSelected[1] === y)
-                return null;
-            return [x, y, challenge];
+    const nodeMove = useCallback((challenge, x, y) => {
+        if (!selected) {
+            setSelected(oldSelected => {
+                if (oldSelected && oldSelected[0] === x && oldSelected[1] === y)
+                    return null;
+                return [x, y, challenge];
+            });
+            return;
+        }
+        selected[2].editMetadata({ x, y }).catch(e => {
+            app.alert("Error moving challenge: " + http.getError(e));
         });
-    }, []);
+        challenge.editMetadata({ x: selected[0], y: selected[1] }).catch(e => {
+            app.alert("Error moving challenge: " + http.getError(e));
+        });
+        setSelected(null);
+    }, [app, selected]);
     const addNodeClick = useCallback((_, x, y) => {
-        if (!selected) return;
+        if (!selected) {
+            showEditor(emptyChallenge(category, x, y), challenges, true)();
+            return;
+        };
         const challenge = selected[2];
 
-        // Don't wait for completion to make it feel a little faster
         setSelected(null);
         challenge.editMetadata({ x, y }).catch(e => {
             app.alert("Error moving challenge: " + http.getError(e));
         });
-    }, [app, selected]);
+    }, [app, selected, category, challenges, showEditor]);
+
+    const dispatch = useDispatch();
+    const nodeEdit = useCallback((challenge) => {
+        dispatch(push(challenge.url + "#edit"));
+    }, [dispatch]);
+
+    const toggleLink = challenge => {
+        console.log("!!")
+        const { x, y } = challenge.challenge_metadata;
+        return side => {
+            console.log("!!!", side)
+            let other;
+            switch (side) {
+                case "up":
+                    other = challenge_grid[x][y - 1];
+                    break;
+                case "down":
+                    other = challenge_grid[x][y + 1];
+                    break;
+                case "left":
+                    other = (challenge_grid[x - 1] || [])[y];
+                    break;
+                case "right":
+                    other = (challenge_grid[x + 1] || [])[y];
+                    break;
+                default:
+                    break;
+            }
+            console.log(rows, other)
+            if (other) {
+                linkChallenges(
+                    challenge, other,
+                    challenge.unlocks.indexOf(other.id) === -1
+                );
+                // setReRender(reRender + 1);
+            }
+        };
+    };
 
     const rows = [];
     for (let y = 0; y < height; y++) {
@@ -242,23 +339,29 @@ export const Campaign = ({ category, isEdit, showLocked }) => {
                 linksD = (below && challenge.unlocks.indexOf(below.id) !== -1);
 
             const isSelected = selected && (selected[0] === x && selected[1] === y);
-            const subdued = selected && (selected[0] !== x || selected[1] !== y);
+            const subdued = selected && (selected[0] === x && selected[1] === y);
             const unlocked = isEdit || (challenge.unlocked && !challenge.hidden) || challenge.solved;
 
             row.push(<Node
                 challenge={challenge}
                 key={`challenge_${challenge.id}`}
-                solved={challenge.solved} unlocked={unlocked && !subdued}
+                solved={challenge.solved} unlocked={unlocked}
                 hidden={!(isEdit || showLocked) && challenge.hidden}
                 x={x} y={y}
                 linksR={linksR} linksL={linksL}
                 linksU={linksU} linksD={linksD}
                 right={right} below={below}
                 warning={has_broken_link}
+                toggleLink={toggleLink(challenge)}
 
-                onClick={isEdit && nodeClick}
+                onClick={selected && nodeMove}
+                startEdit={nodeEdit}
+                startMove={nodeMove}
                 selected={isSelected}
+                hasButtons={isEdit && !selected}
+                hasHover={selected}
                 subdued={subdued}
+                isEdit={isEdit}
 
                 url={((unlocked || showLocked) && !isEdit) ? challenge.url : null}
 
@@ -268,8 +371,8 @@ export const Campaign = ({ category, isEdit, showLocked }) => {
                     ) : !unlocked && !showLocked ? (
                         <FiLock />
                     ) : (
-                                challenge.name
-                            )
+                        challenge.name
+                    )
                 }
             />);
         }
