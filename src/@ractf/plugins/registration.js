@@ -15,16 +15,24 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import { store, injectReducer } from "store";
+import {
+    _plugins as plugins,
+    _mounts as mounts,
+    registeredPreferences
+} from "@ractf/plugins";
 
-import { _mounts } from "@ractf/plugins";
-
-export default (mount, props) => {
-    const mounts = _mounts[mount];
-    if (!mounts) return null;
-    return Object.keys(mounts).map(key => {
-        if (mounts[key].isComponent)
-            return React.createElement(mounts[key].component, { key, mount, ...props });
-        else return mounts[key].component(mount, props);
-    });
+export const registerPlugin = (type, key, handler) => {
+    if (!plugins[type]) plugins[type] = {};
+    plugins[type][key] = handler;
+};
+export const registerReducer = (name, reducer) => {
+    injectReducer(store, name, reducer);
+};
+export const registerMount = (mountPoint, key, component, options = { isComponent: true }) => {
+    if (!mounts[mountPoint]) mounts[mountPoint] = {};
+    mounts[mountPoint][key] = { component, isComponent: options.isComponent };
+};
+export const registerPreferences = (preferences) => {
+    registeredPreferences.push(...preferences);
 };

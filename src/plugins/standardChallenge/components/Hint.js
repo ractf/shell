@@ -23,7 +23,7 @@ import { removeHint, editHint, useHint } from "@ractf/api";
 import { Button, Row, Markdown } from "@ractf/ui-kit";
 import { appContext } from "ractf";
 import { NUMBER_RE } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import "./Challenge.scss";
 import Link from "components/Link";

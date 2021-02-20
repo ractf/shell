@@ -17,7 +17,7 @@
 
 import ReactGA from "react-ga";
 
-import { registerReducer } from "ractf";
+import { registerReducer } from "@ractf/plugins";
 
 import { LOCATION_CHANGE } from "connected-react-router";
 

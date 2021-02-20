@@ -22,8 +22,6 @@ import { Column, Row, Input, Button, Modal, Masonry } from "@ractf/ui-kit";
 import ChallengePage from "pages/ChallengePage.js";
 import ChallengeTile from "./ChallengeTile.js";
 
-import style from "./ChallengeTile.module.scss";
-
 
 export const TilesChallenges = ({ challenges: category, showEditor, isEdit, showLocked }) => {
     const [challenge, setChallenge] = useState(null);

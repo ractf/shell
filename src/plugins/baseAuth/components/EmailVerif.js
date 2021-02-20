@@ -23,7 +23,7 @@ import { Spinner, FormError } from "@ractf/ui-kit";
 import { useReactRouter } from "@ractf/util";
 import { verify } from "@ractf/api";
 import { Wrap } from "./Parts";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 
 export const EmailVerif = () => {

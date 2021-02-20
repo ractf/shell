@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { registerPlugin } from "@ractf/plugins";
 
 import ConductPage from "./components/Conduct";
 import PrivacyPage from "./components/Privacy";

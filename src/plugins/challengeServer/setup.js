@@ -18,14 +18,17 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 
 import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card } from "@ractf/ui-kit";
-import { registerPlugin, useApi, appContext } from "ractf";
-import http from "@ractf/http";
+import { appContext } from "ractf";
+import { registerPlugin } from "@ractf/plugins";
+import * as http from "@ractf/util/http";
 import { store } from "store";
 import { NUMBER_RE } from "@ractf/util";
 
 const ChallengeServer = ({ challenge }) => {
     const [state, setState] = useState({});
-    const [instance_, error_, abort_] = useApi("/challengeserver/instance/" + challenge.challenge_metadata.cserv_name);
+    const [instance_, error_, abort_] = http.useApi(
+        "/challengeserver/instance/" + challenge.challenge_metadata.cserv_name
+    );
 
     useEffect(() => {
         setState({ instance: instance_, error: error_ });

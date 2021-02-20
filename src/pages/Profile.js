@@ -27,7 +27,7 @@ import {
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import LoadingPage from "./LoadingPage";
-import { useApi } from "ractf";
+import { useApi } from "@ractf/util/http";
 import Link from "components/Link";
 
 import "./Profile.scss";

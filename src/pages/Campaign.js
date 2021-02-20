@@ -32,7 +32,7 @@ import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ract
 import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
 import Category from "@ractf/util/category";
 import { appContext } from "ractf";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import Link from "components/Link";
 
 import "./Campaign.scss";

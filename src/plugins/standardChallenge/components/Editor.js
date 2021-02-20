@@ -24,12 +24,12 @@ import {
     FormGroup, fromJson, Page, Column, Card, Grid, Modal,
     FileUpload, TabbedView, Tab, SubtleText
 } from "@ractf/ui-kit";
-import { iteratePlugins, getPlugin } from "@ractf/plugins";
 import { NUMBER_RE, formatBytes } from "@ractf/util";
+import { iteratePlugins, getPlugin } from "@ractf/plugins";
 import { newHint } from "@ractf/api";
 import { appContext } from "ractf";
 import * as actions from "actions";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import Link from "components/Link";
 
 import File from "./File";
@@ -248,10 +248,16 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
         return { ...data, tags: data.tags ? data.tags.map(i => ({ type: "tag", text: i })) : [] };
     }, []);
 
+    const allChallenges = category.challenges.filter(j => j.id !== challenge.id).map(j => j.name);
+
     const body = (
         <Form handle={saveEdit} transformer={editTransformer}>
             <Row left>
                 <Column lgWidth={6} mdWidth={12}>
+                    <FormGroup label={"Unlock Requirements"} htmlFor={"name"}>
+                        <InputTags name={"Test"} limit={allChallenges} val={["The", "quick", "brow", "fox"]} />
+                    </FormGroup>
+
                     <Card lesser header={"Basic settings"} collapsible>
                         <FormGroup htmlFor={"name"} label={t("editor.chal_name")}>
                             <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} required />

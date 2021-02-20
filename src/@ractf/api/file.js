@@ -17,7 +17,7 @@
 
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { ENDPOINTS } from "./consts";
 

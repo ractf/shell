@@ -22,11 +22,12 @@ import {
     Form, Input, Button, Row, FormGroup, Checkbox, DatePick, PageHead,
     Column, Card
 } from "@ractf/ui-kit";
-import { appContext, useApi } from "ractf";
+import { appContext } from "ractf";
+import { useApi } from "@ractf/util/http";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
 import { iteratePlugins } from "@ractf/plugins";
 import { NUMBER_RE } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 
 const AdminConfig = () => {

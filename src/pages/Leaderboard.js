@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import {
     Button, Row, Graph, Tab, Table, Page, PageHead, Column
 } from "@ractf/ui-kit";
-import { useApi, usePaginated } from "ractf";
+import { useApi, usePaginated } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
 import { useConfig, useInterval } from "@ractf/util";
 import URLTabbedView from "components/URLTabbedView";

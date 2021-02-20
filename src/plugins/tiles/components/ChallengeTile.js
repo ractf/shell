@@ -20,7 +20,6 @@ import React, { useCallback } from "react";
 import { Card, Markdown } from "@ractf/ui-kit";
 
 import style from "./ChallengeTile.module.scss";
-import { makeClass } from "@ractf/util";
 import Link from "components/Link";
 
 

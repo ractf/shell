@@ -19,7 +19,7 @@ import { reloadAll } from "@ractf/api";
 import { ENDPOINTS } from "./consts";
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 export const getChallenges = () => {
     return http.get(ENDPOINTS.CATEGORIES).then(data => {
@@ -79,7 +79,7 @@ export const editChallenge = ({
 };
 
 export const quickRemoveChallenge = async (challenge) => {
-    return http.delete(ENDPOINTS.CHALLENGES + challenge.id);
+    return http.delete_(ENDPOINTS.CHALLENGES + challenge.id);
 };
 export const removeChallenge = async (challenge, dumbRemove) => {
     const categories = store.getState().challenges.categories;

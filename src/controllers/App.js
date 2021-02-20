@@ -25,7 +25,7 @@ import {
     ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader
 } from "@ractf/ui-kit";
 
-import { AppContext } from "./Contexts";
+import { appContext } from "ractf";
 import * as actions from "actions";
 import { history } from "store";
 import Routes from "./Routes";
@@ -33,7 +33,7 @@ import WS from "./WS";
 
 import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
 import { iteratePlugins, PluginComponent, mountPoint } from "@ractf/plugins";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import lockImg from "static/spine.png";
 import "./App.scss";
@@ -246,7 +246,7 @@ const App = React.memo(() => {
 
     window.__ractf_alert = showAlert;
     return (
-        <AppContext.Provider value={{
+        <appContext.Provider value={{
             promptConfirm: promptConfirm, alert: showAlert,
             showProgress: showProgress
         }}>
@@ -292,7 +292,7 @@ const App = React.memo(() => {
                     React.createElement(plugin.component, { key })
                 ))}
             </ToggleTabHolder>
-        </AppContext.Provider>
+        </appContext.Provider>
     );
 });
 

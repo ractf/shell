@@ -27,7 +27,7 @@ import { completePasswordReset } from "@ractf/api";
 import { appContext, zxcvbn } from "ractf";
 import { useReactRouter } from "@ractf/util";
 import { Wrap } from "./Parts";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 
 export default () => {

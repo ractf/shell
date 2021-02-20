@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -17,7 +17,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 
 export const useApi = route => {

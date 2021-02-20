@@ -21,7 +21,7 @@ import {
     Page, Row, PageHead, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
+import { useApi } from "@ractf/util/http";
 
 
 const Debug = () => {

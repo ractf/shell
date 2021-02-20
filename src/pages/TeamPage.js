@@ -31,11 +31,11 @@ import {
     Pie, Page, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
 import Link from "components/Link";
 
 import "./Profile.scss";
 import { useCategories } from "@ractf/util/hooks";
+import { useApi } from "@ractf/util/http";
 import LoadingPage from "./LoadingPage";
 
 

@@ -22,7 +22,7 @@ import { iteratePlugins } from "@ractf/plugins";
 import { reloadAll } from "@ractf/api";
 import { ENDPOINTS } from "./consts";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 
 export const postLogin = async token => {

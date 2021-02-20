@@ -25,7 +25,7 @@ import {
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { appContext } from "ractf";
 import { NUMBER_RE } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import { useConfig } from "@ractf/util";
 
 

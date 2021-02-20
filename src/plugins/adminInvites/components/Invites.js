@@ -21,9 +21,8 @@ import {
     Button, Column, PageHead, Card, Row, Form, FormGroup, Input, InputButton,
     Modal, Grid, Checkbox, Select, SubtleText
 } from "@ractf/ui-kit";
-import { usePaginated } from "ractf";
 import { NUMBER_RE } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { GENERATE_INVITES, INVITES, generateInvites } from "../api/invites";
 
@@ -33,7 +32,7 @@ const Invites = () => {
     const [locked, setLocked] = useState(false);
     const [onlyUnused, setOnlyUnused] = useState(false);
     const [limit, setLimit] = useState(100);
-    const [iState, iNext] = usePaginated(
+    const [iState, iNext] = http.usePaginated(
         INVITES + (onlyUnused ? "?fully_used=false" : ""),
         { limit: limit, autoLoad: false }
     );

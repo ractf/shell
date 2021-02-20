@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,21 +15,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
 
-import { registerPlugin } from "@ractf/plugins";
+export const TYPES = ["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"];
 
-import MedalPopup from "./components/MedalPopup";
-import BasePopup from "./components/BasePopup";
+export const makeClass = (...classes) => (
+    classes.filter(x => !!x).join(" ")
+);
 
-import { ReactComponent as WinnerIcon } from "./winnerMedal.svg";
+export const propsToTypeClass = (props, styles, fallback) => {
+    const className = [];
 
-
-export default () => {
-    registerPlugin("medal", "winner", {
-        name: "Winner", description: "You won a thing, good boy", icon: <><WinnerIcon /></>
-    });
-
-    registerPlugin("popup", "medal", { component: MedalPopup });
-    registerPlugin("popup", 0, { component: BasePopup });
+    let willFallback = true;
+    for (const i of Object.keys(props)) {
+        if (props[i] && styles[i]) {
+            className.push(styles[i]);
+            if (TYPES.indexOf(i) !== -1)
+                willFallback = false;
+        }
+    }
+    if (willFallback && fallback) {
+        className.push(styles[fallback]);
+    }
+    return makeClass(...className);
 };

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registeredPreferences } from "ractf";
+import { registeredPreferences } from "@ractf/plugins";
 
 const preferencesReducer = (state = {}, { type, payload }) => {
     switch (type) {

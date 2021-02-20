@@ -24,7 +24,7 @@ import {
     Page, Table, FormError, Button, Row, PageHead, Column
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { usePaginated } from "ractf";
+import { usePaginated } from "@ractf/util/http";
 import { useConfig } from "@ractf/util";
 import { Redirect } from "react-router-dom";
 import Link from "components/Link";
@@ -32,7 +32,7 @@ import Link from "components/Link";
 
 export const TeamsList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.TEAM);
-    const [state, next] = usePaginated(ENDPOINTS.TEAM); 
+    const [state, next] = usePaginated(ENDPOINTS.TEAM);
     const hasTeams = useConfig("enable_teams");
 
     const { t } = useTranslation();
@@ -65,7 +65,7 @@ export const TeamsList = () => {
 
 export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
-    const [state, next] = usePaginated(ENDPOINTS.USER); 
+    const [state, next] = usePaginated(ENDPOINTS.USER);
     const { t } = useTranslation();
     const hasTeams = useConfig("enable_teams");
 

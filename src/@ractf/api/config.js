@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { ENDPOINTS } from "./consts";
 import * as actions from "actions";

@@ -17,7 +17,7 @@
 
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -37,7 +37,7 @@ export const editHint = (id, name, cost, text) => (
 );
 
 export const removeHint = (id) => (
-    http.delete(ENDPOINTS.HINT + id).then(data => {
+    http.delete_(ENDPOINTS.HINT + id).then(data => {
         store.dispatch(actions.removeHint(id));
         return data;
     })

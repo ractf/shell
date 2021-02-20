@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
 import { appContext } from "ractf";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import { Button, PageHead, Card, Row, Modal, Select, Badge, FormGroup, Input, Form, H6, Column } from "@ractf/ui-kit";
 import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
 import { useCategories, useExperiment } from "@ractf/util/hooks";

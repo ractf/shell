@@ -18,7 +18,7 @@
 import * as actions from "actions";
 import { reloadAll } from "@ractf/api";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -32,7 +32,7 @@ export const createGroup = (name, desc, type, metadata) => {
     });
 };
 export const removeGroup = async (id) => {
-    return http.delete(ENDPOINTS.CATEGORIES + id).then(() => {
+    return http.delete_(ENDPOINTS.CATEGORIES + id).then(() => {
         return reloadAll();
     }).then(data => {
         store.dispatch(actions.removeCategory(data));

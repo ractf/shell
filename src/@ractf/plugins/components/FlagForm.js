@@ -5,7 +5,7 @@ import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6 } from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
 import { useConfig, escapeRegex } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { appContext } from "ractf";
 import { editChallenge } from "actions";

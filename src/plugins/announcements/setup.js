@@ -1,4 +1,4 @@
-import { registerPlugin, registerReducer, registerMount } from "ractf";
+import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
 import { store } from "store";
 
 import announcementsReducer from "./reducers/announcementsReducer";

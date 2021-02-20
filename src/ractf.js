@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -16,44 +16,13 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import Loadable from "react-loadable";
-import { AppContext } from "controllers/Contexts";
-import LoadingPage from "pages/LoadingPage";
-import { store, injectReducer } from "store";
+import { store } from "store";
 import * as actions from "actions";
 
-export * from "controllers/UseAPI";
-
-export const appContext = AppContext;
+export const appContext = React.createContext({});
 
 import(/* webpackChunkName: "zxcvbn" */ "zxcvbn").then(zx => window.__zxcvbn = zx.default);
 export const zxcvbn = () => (window.__zxcvbn || null);
-
-const mounts = {};
-const plugins = {
-    categoryType: {},
-    challengeMod: {},
-    challengeType: {},
-    challengeEditor: {},
-    challengeMetadata: {},
-    categoryMetadata: {},
-    page: {},
-    popup: {},
-    medals: {},
-    config: {},
-    adminPage: {},
-    loginProvider: {},
-    registrationProvider: {},
-    postLogin: {},
-    errorHandler: {},
-    categoryMatcher: {},
-    challengeMatcher: {},
-    flagType: {},
-    topLevelPage: {},
-};
-export const registeredPreferences = [];
-export const _plugins = plugins;
-export const _mounts = mounts;
 
 export const getLocalConfig = (key, fallback) => {
     const preferenceValue = (store.getState().preferences || {})[key];
@@ -61,41 +30,4 @@ export const getLocalConfig = (key, fallback) => {
 };
 export const setLocalConfig = (key, value) => {
     store.dispatch(actions.setPreference(key, value));
-};
-
-const Loading = () => <LoadingPage />;
-export const dynamicLoad = (loader) => {
-    return Loadable({
-        loader: loader,
-        loading: Loading,
-    });
-};
-
-// Export the plugins object for debugging purposes.
-window.__ractf_plugins = plugins;
-
-export const registerPlugin = (type, key, handler) => {
-    if (!plugins[type]) plugins[type] = {};
-    plugins[type][key] = handler;
-};
-export const registerReducer = (name, reducer) => {
-    injectReducer(store, name, reducer);
-};
-export const registerMount = (mountPoint, key, component, options = { isComponent: true }) => {
-    if (!mounts[mountPoint]) mounts[mountPoint] = {};
-    mounts[mountPoint][key] = { component, isComponent: options.isComponent };
-};
-export const registerPreferences = (preferences) => {
-    registeredPreferences.push(...preferences);
-};
-
-const _fastClick = e => {
-    e.target && e.target.click && e.target.click();
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-};
-export const fastClick = {
-    onMouseDown: _fastClick,
-    onTouchStart: _fastClick,
 };

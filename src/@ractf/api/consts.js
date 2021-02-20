@@ -15,9 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-export const DOMAIN = window.env.apiDomain;
-export const API_BASE = window.env.apiBase;
-export const BASE_URL = DOMAIN + API_BASE;
 export const ENDPOINTS = {
     COUNTDOWN: "/stats/countdown/",
     CONFIG: "/config/",

@@ -21,9 +21,10 @@ import { useTranslation } from "react-i18next";
 import {
     Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead, Column
 } from "@ractf/ui-kit";
-import { appContext, useApi } from "ractf";
+import { appContext } from "ractf";
+import { useApi } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { addAnnouncement, removeAnnouncement } from "../api/announcements";
 

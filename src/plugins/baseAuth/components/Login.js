@@ -24,7 +24,7 @@ import {
 import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
 import { appContext } from "ractf";
 import { EMAIL_RE } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import { Wrap } from "./Parts";
 import Link from "components/Link";
 

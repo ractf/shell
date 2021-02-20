@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { registerPlugin } from "@ractf/plugins";
 import { FiSettings } from "react-icons/fi";
 
 import AdminConfig from "./components/AdminConfig";

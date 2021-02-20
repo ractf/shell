@@ -15,9 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
-
-import { getClass, registerSubclass } from "@ractf/plugins";
+import { getClass, registerSubclass, registerPlugin } from "@ractf/plugins";
 import Challenge from "@ractf/util/challenge";
 import Category from "@ractf/util/category";
 

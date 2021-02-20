@@ -24,7 +24,7 @@ import {
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
 import { appContext } from "ractf";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import { useSelector, useDispatch } from "react-redux";
 import { setImpersonationToken } from "actions";
 import { useExperiment } from "@ractf/util/hooks";

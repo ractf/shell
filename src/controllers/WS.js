@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { registerPlugin } from "@ractf/plugins";
 import { getPlugin } from "@ractf/plugins";
 
 import * as actions from "actions";
@@ -82,7 +82,7 @@ export default class WS {
 
     onmessage = message => {
         const data = JSON.parse(message.data);
-        
+
         const plugin = getPlugin("wsMessage", data.event_code);
         if (plugin)
             plugin(data);

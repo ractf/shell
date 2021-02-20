@@ -1,6 +1,6 @@
 import React from "react";
 
-import { _plugins as plugins } from "ractf";
+import { _plugins as plugins } from "@ractf/plugins";
 
 
 export const getPlugins = (type) => {

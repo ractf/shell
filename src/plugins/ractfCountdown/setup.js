@@ -17,7 +17,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 
-import { registerMount } from "ractf";
+import { registerMount } from "@ractf/plugins";
 
 import lockImg from "static/spine.png";
 

@@ -24,7 +24,7 @@ import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, leaveTeam, modifyTeam, reloadAll } from "@ractf/api";
 import { usePreferences, useExperiment } from "@ractf/util/hooks";
 import { NUMBER_RE, useConfig } from "@ractf/util";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,
     Checkbox, FormGroup, InputButton, Card, Column, PageHead, H6

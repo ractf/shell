@@ -16,7 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import * as actions from "../actions/announcements";
 
@@ -24,7 +24,7 @@ import { ENDPOINTS } from "@ractf/api";
 
 export const addAnnouncement = (title, body) => http.post(ENDPOINTS.ANNOUNCEMENTS, { title, body });
 
-export const removeAnnouncement = ({ id }) => http.delete(ENDPOINTS.ANNOUNCEMENTS + id);
+export const removeAnnouncement = ({ id }) => http.delete_(ENDPOINTS.ANNOUNCEMENTS + id);
 
 export const getAnnouncements = () => {
     http.get(ENDPOINTS.ANNOUNCEMENTS).then(data => {

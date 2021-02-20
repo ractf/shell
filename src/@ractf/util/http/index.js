@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,6 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as http_ from "./http_";
-
-export default { ...http_, delete: http_.delete_ };
+export * from "./requests";
+export * from "./useApi";
+export * from "./util";

@@ -26,10 +26,19 @@ import { AppContainer } from "react-hot-loader";
 import * as serviceWorker from "./serviceWorker";
 import { I18nextProvider } from "react-i18next";
 
+import * as http from "@ractf/util/http";
+
 import AppWrap from "./controllers/App";
 import { store, persistor } from "store";
 
 import en from "./i18n/en.json";
+
+const DOMAIN = window.env.apiDomain;
+const API_BASE = window.env.apiBase;
+const BASE_URL = DOMAIN + API_BASE;
+http.setConfig({
+    base: BASE_URL
+});
 
 (r => r.keys().forEach(key => r(key).default()))(
     require.context("./plugins", true, __PLUGIN_REGEX__)

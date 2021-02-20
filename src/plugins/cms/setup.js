@@ -20,10 +20,11 @@ import { FiEdit2, FiTrash, FiPlus } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { Route } from "react-router-dom";
 
-import { registerPlugin, registerReducer, appContext, registerMount } from "ractf";
+import { appContext } from "ractf";
 import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup } from "@ractf/ui-kit";
+import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import Link from "components/Link";
 import { FiFileText } from "react-icons/fi";
 
@@ -75,7 +76,7 @@ const CMSAdmin = () => {
 
     const removePage = (page) => {
         app.promptConfirm(<>Are you sure you want to remove <code>{page.title}</code>?</>).then(() => {
-            http.delete("/pages/" + page.id).then(() => {
+            http.delete_("/pages/" + page.id).then(() => {
                 dispatch(setPages(pages.filter(i => i.id !== page.id)));
             }).catch(() => {
                 app.alert("Failed to remove page");

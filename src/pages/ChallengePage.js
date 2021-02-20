@@ -27,7 +27,7 @@ import { useChallenge, useCategory } from "@ractf/util/hooks";
 import { useReactRouter } from "@ractf/util";
 import { appContext } from "ractf";
 import Challenge from "@ractf/util/challenge";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 
 const EditorWrap = ({ challenge, category, isCreator, embedded }) => {

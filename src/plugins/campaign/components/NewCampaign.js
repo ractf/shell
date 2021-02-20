@@ -10,7 +10,7 @@ import style from "./NewCampaign.module.scss";
 import { makeClass } from "@ractf/util";
 import { appContext } from "ractf";
 import { useContext } from "react";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { push } from "connected-react-router";
@@ -261,10 +261,8 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
     }, [dispatch]);
 
     const toggleLink = challenge => {
-        console.log("!!")
         const { x, y } = challenge.challenge_metadata;
         return side => {
-            console.log("!!!", side)
             let other;
             switch (side) {
                 case "up":
@@ -282,7 +280,6 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
                 default:
                     break;
             }
-            console.log(rows, other)
             if (other) {
                 linkChallenges(
                     challenge, other,

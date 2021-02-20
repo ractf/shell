@@ -22,7 +22,7 @@ import {
 } from "@ractf/ui-kit";
 
 import style from "./Statistics.module.scss";
-import { useApi } from "controllers/UseAPI";
+import { useApi } from "@ractf/util/http";
 import { useCategories } from "@ractf/util/hooks";
 import { cssVar, useConfig } from "@ractf/util";
 

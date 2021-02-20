@@ -18,7 +18,7 @@
 import { getChallenges } from "@ractf/api";
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -26,7 +26,7 @@ import { ENDPOINTS } from "./consts";
 export const recheckCountdowns = (old) => {
     const oldCountdown = store.getState().countdowns;
     if (!oldCountdown) return;
-    
+
     const countdown = {
         ...(old || oldCountdown),
         passed: {},

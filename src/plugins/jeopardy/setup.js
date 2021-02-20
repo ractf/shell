@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin, registerReducer } from "ractf";
+import { registerPlugin, registerReducer } from "@ractf/plugins";
 
 import { JeopardyChallenges } from "./components/JeopardyChallenges";
 import { jeopardySearchReducer } from "./reducers";

@@ -15,7 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin, registerPreferences, dynamicLoad, /* registerMount */ } from "ractf";
+import { dynamicLoad } from "@ractf/util";
+import { registerPlugin, registerPreferences } from "@ractf/plugins";
 import LoadingPage from "../../pages/LoadingPage";
 
 import { EXPERIMENTS } from "./components/Experiments";

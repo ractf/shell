@@ -26,7 +26,7 @@ import {
 import { joinTeam, createTeam, reloadAll } from "@ractf/api";
 import { useConfig } from "@ractf/util";
 import { Wrap } from "./Parts";
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
 import Link from "components/Link";
 
 
