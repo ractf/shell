@@ -20,29 +20,28 @@ import { FiFile, FiEdit2, FiTrash } from "react-icons/fi";
 
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { removeFile, editFile } from "@ractf/api";
-import { Button, Row } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
+import { Button, Row, UiKitModals } from "@ractf/ui-kit";
 import * as http from "@ractf/util/http";
 
 import "./Challenge.scss";
 
 
 export default ({ name, url, size, id, isEdit, ...props }) => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
 
     const edit = () => {
-        app.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
+        modals.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
             [{ name: "name", placeholder: "File name", label: "Name", val: name },
             { name: "url", placeholder: "File URL", label: "URL", val: url },
             { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: NUMBER_RE }]
         ).then(({ name, url, size }) => {
 
-            if (!size.toString().match(NUMBER_RE)) return app.alert("Invalid file size!");
+            if (!size.toString().match(NUMBER_RE)) return modals.alert("Invalid file size!");
 
             editFile(id, name, url, size).then(() =>
-                app.alert("File edited!")
+                modals.alert("File edited!")
             ).catch(e =>
-                app.alert("Error editing file:\n" + http.getError(e))
+                modals.alert("Error editing file:\n" + http.getError(e))
             );
         }).catch(() => { });
     };

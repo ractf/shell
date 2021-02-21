@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-
 import { store } from "store";
 import * as actions from "actions";
 
@@ -25,8 +23,6 @@ export { default as useConfig } from "./useConfig";
 export { default as Challenge } from "./challenge";
 export { default as Category } from "./category";
 export * from "./hooks";
-
-export const appContext = React.createContext({});
 
 import(/* webpackChunkName: "zxcvbn" */ "zxcvbn").then(zx => window.__zxcvbn = zx.default);
 export const zxcvbn = () => (window.__zxcvbn || null);

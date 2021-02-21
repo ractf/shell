@@ -4,10 +4,12 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 
-import { Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6 } from "@ractf/ui-kit";
+import {
+    Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6, UiKitModals
+} from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
 import { escapeRegex } from "@ractf/util";
-import { useConfig, appContext } from "@ractf/shell-util";
+import { useConfig } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 
 import { editChallenge } from "actions";
@@ -23,7 +25,7 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
     const flag_prefix = useConfig("flag_prefix", "flag");
     const dispatch = useDispatch();
 
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
 
     const { t } = useTranslation();
 
@@ -73,7 +75,7 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 }));
                 */
             } else {
-                app.alert("Incorrect flag");
+                modals.alert("Incorrect flag");
             }
             setLocked(false);
         }).catch(e => {
@@ -83,12 +85,12 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 onFlagResponse(false, http.getError(e));
             setLocked(false);
         });
-    }, [challenge, app, onFlagResponse]);
+    }, [challenge, modals, onFlagResponse]);
     const rateNone = useCallback(() => { setCorrect(false); setFeedback(false); }, []);
     const vote = (positive) => {
         http.post("/challenges/vote", { challenge: challenge.id, positive }).catch(e => {
             console.error(e);
-            app.alert("Error submitting vote:\n" + http.getError(e));
+            modals.alert("Error submitting vote:\n" + http.getError(e));
         }).then(() => {
             const newVotes = { ...(challenge.votes || {}), self: positive };
             dispatch(editChallenge({ id: challenge.id, votes: newVotes }));

@@ -22,8 +22,10 @@ import { FiEdit2, FiTrash, FiPlus, FiFileText } from "react-icons/fi";
 
 import * as http from "@ractf/util/http";
 import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
-import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
+import {
+    Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR,
+    FormGroup, UiKitModals
+} from "@ractf/ui-kit";
 
 import Link from "components/Link";
 import { store } from "store";
@@ -70,17 +72,17 @@ const CMSLoader = () => {
 const CMSAdmin = () => {
     const dispatch = useDispatch();
     const pages = useSelector(state => state.cms.pages);
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const [editContent, setEditContent] = useState("");
     const [editingPage, setEditingPage] = useState(false);
     const formSubmit = useRef();
 
     const removePage = (page) => {
-        app.promptConfirm(<>Are you sure you want to remove <code>{page.title}</code>?</>).then(() => {
+        modals.promptConfirm(<>Are you sure you want to remove <code>{page.title}</code>?</>).then(() => {
             http.delete_("/pages/" + page.id).then(() => {
                 dispatch(setPages(pages.filter(i => i.id !== page.id)));
             }).catch(() => {
-                app.alert("Failed to remove page");
+                modals.alert("Failed to remove page");
             });
         }).catch();
     };

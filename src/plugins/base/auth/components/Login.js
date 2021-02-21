@@ -19,10 +19,9 @@ import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Row, FormGroup, H2, FormError, SubtleText
+    Form, Input, Button, Row, FormGroup, H2, FormError, SubtleText, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
-import { appContext } from "@ractf/shell-util";
 import { EMAIL_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 
@@ -32,32 +31,32 @@ import { Wrap } from "./Parts";
 
 
 const BasicLogin = () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const { t } = useTranslation();
     const [needsOtp, setNeedsOtp] = useState(false);
     const submit = useRef();
 
     const openForget = useCallback(() => {
-        app.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
+        modals.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
             [{ name: "email", placeholder: t("email"), format: EMAIL_RE }]
         ).then(({ email }) => {
             requestPasswordReset(email).then(() => {
-                app.alert(t("auth.email_sent"));
+                modals.alert(t("auth.email_sent"));
             }).catch(e => {
                 if (e === "permission_denied")
                     // We're already logged in
                     reloadAll();
                 else
-                    app.alert(http.getError(e));
+                    modals.alert(http.getError(e));
             });
         });
-    }, [app, t]);
+    }, [modals, t]);
 
     const onError = useCallback(({ resp, retry, showError }) => {
         if (resp && resp.reason === "2fa_required") {
             const faPrompt = () => {
                 setNeedsOtp(true);
-                app.promptConfirm({ message: t("2fa.required"), small: true },
+                modals.promptConfirm({ message: t("2fa.required"), small: true },
                     [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
                 ).then(({ pin }) => {
                     if (pin.length !== 6) return faPrompt();
@@ -72,7 +71,7 @@ const BasicLogin = () => {
 
             return false;
         }
-    }, [app, t]);
+    }, [modals, t]);
     const afterLogin = useCallback(({ resp: { token } }) => {
         postLogin(token);
     }, []);

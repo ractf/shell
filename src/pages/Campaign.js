@@ -21,10 +21,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import { useReactRouter } from "@ractf/util";
-import { Category, useCategory, useCategories, usePreference, appContext } from "@ractf/shell-util";
+import { Category, useCategory, useCategories, usePreference } from "@ractf/shell-util";
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Modal,
-    Page, TabbedView, Tab, fromJson, Select, FormGroup, Masonry
+    Page, TabbedView, Tab, fromJson, Select, FormGroup, Masonry, UiKitModals
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
@@ -37,7 +37,7 @@ import "./Campaign.scss";
 
 
 const ANC = ({ hide, anc, modal }) => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const [locked, setLocked] = useState(false);
     const [error, setError] = useState("");
     const { t } = useTranslation();
@@ -59,7 +59,7 @@ const ANC = ({ hide, anc, modal }) => {
             : createGroup(cname, cdesc, ctype)).then(async resp => {
                 if (hide)
                     hide();
-                app.alert(t(anc.id ? "campaign.edit_success" : "campaign.create_success"));
+                modals.alert(t(anc.id ? "campaign.edit_success" : "campaign.create_success"));
                 if (!anc.id) {
                     // Redirect to newly created category
                     const created = getClass(Category).fromJSON(resp);
@@ -69,30 +69,30 @@ const ANC = ({ hide, anc, modal }) => {
                 setError(http.getError(e));
                 setLocked(false);
             });
-    }, [anc, app, hide, t, dispatch]);
+    }, [anc, modals, hide, t, dispatch]);
     const removeCategory = useCallback(() => {
-        app.promptConfirm({
+        modals.promptConfirm({
             message: "Are you sure you want to remove the category:\n" + anc.name,
             small: true
         }).then(async () => {
-            app.showProgress("Removing challenges...", 0);
+            modals.showProgress("Removing challenges...", 0);
             let progress = 0;
             await Promise.all(anc.challenges.map(i => {
                 return quickRemoveChallenge(i).then(() => {
                     progress += 1 / anc.challenges.length;
-                    app.showProgress("Removing challenges...", progress);
+                    modals.showProgress("Removing challenges...", progress);
                 });
             }));
-            app.showProgress("Removing category...", .5);
+            modals.showProgress("Removing category...", .5);
             await removeGroup(anc.id);
             dispatch(push("/campaign"));
-            app.alert("Category removed!");
+            modals.alert("Category removed!");
         }).catch(e => {
             console.error(e);
-            app.alert("Something went wrong removing the category:\n" + http.getError(e));
+            modals.alert("Something went wrong removing the category:\n" + http.getError(e));
         });
         hide();
-    }, [anc, app, dispatch, hide]);
+    }, [anc, modals, dispatch, hide]);
 
     const body = <TabbedView neverUnmount>
         <Tab label={t("editor.cat_settings")}>

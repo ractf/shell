@@ -21,17 +21,17 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Button, ModalForm, Column, ModalSpinner
+    Checkbox, PageHead, Modal, Button, ModalForm, Column, ModalSpinner, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
 import * as http from "@ractf/util/http";
-import { appContext, useExperiment } from "@ractf/shell-util";
+import { useExperiment } from "@ractf/shell-util";
 
 import { setImpersonationToken } from "actions";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const submitRef = useRef();
     const { t } = useTranslation();
     const currentUser = useSelector(state => state.user);
@@ -72,19 +72,19 @@ export default () => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
             modifyUser(member.id, changes).then(() => {
-                app.alert("Modified user");
+                modals.alert("Modified user");
                 setState(prevState => ({ ...prevState, member: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(http.getError(e));
+                modals.alert(http.getError(e));
             });
         };
     };
     const impersonate = useCallback(() => {
         if (state.member.id === currentUser.id) {
-            return app.alert("You cannot impersonate yourself.");
+            return modals.alert("You cannot impersonate yourself.");
         }
-        app.promptConfirm({
+        modals.promptConfirm({
             small: true,
             message: <>
                 You are about to impersonate a user.<br />
@@ -97,10 +97,10 @@ export default () => {
                 dispatch(setImpersonationToken(token));
                 reloadAll();
             }).catch(e => {
-                app.alert(<>Failed to impersonate user:<br/>{http.getError(e)}</>);
+                modals.alert(<>Failed to impersonate user:<br/>{http.getError(e)}</>);
             });
         });
-    }, [app, currentUser.id, state.member, dispatch]);
+    }, [modals, currentUser.id, state.member, dispatch]);
 
     const close = useCallback(() => {
         setState(prevState => ({ ...prevState, member: null }));

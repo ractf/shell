@@ -20,8 +20,7 @@ import { useTranslation } from "react-i18next";
 import { FiHelpCircle, FiEdit2, FiTrash } from "react-icons/fi";
 
 import { removeHint, editHint, useHint } from "@ractf/api";
-import { Button, Row, Markdown } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
+import { Button, Row, Markdown, UiKitModals } from "@ractf/ui-kit";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 
@@ -30,28 +29,28 @@ import "./Challenge.scss";
 
 
 export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const { t } = useTranslation();
 
     const edit = () => {
-        app.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
+        modals.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
             [{ name: "name", placeholder: "Hint name", val: name, label: "Name" },
             { name: "cost", placeholder: "Hint cost", val: penalty.toString(), label: "Cost", format: NUMBER_RE },
             { name: "text", placeholder: "Hint text", val: text, label: "Message", rows: 5 }]
         ).then(({ name, cost, text }) => {
 
-            if (!cost.toString().match(NUMBER_RE)) return app.alert("Invalid hint const!");
+            if (!cost.toString().match(NUMBER_RE)) return modals.alert("Invalid hint const!");
 
             editHint(id, name, cost, text).then(() =>
-                app.alert("Hint edited!")
+                modals.alert("Hint edited!")
             ).catch(e =>
-                app.alert("Error editing hint:\n" + http.getError(e))
+                modals.alert("Error editing hint:\n" + http.getError(e))
             );
         }).catch(() => { });
     };
 
     const showHint = (content) => {
-        app.alert(<>
+        modals.alert(<>
             <b>{name}</b><br />
             <Markdown LinkElem={Link} source={content} />
         </>);
@@ -64,11 +63,11 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) =>
             Are you sure you want to use a hint?<br /><br />
                 This hint will deduct {penalty} points from this challenge.
         </>;
-        app.promptConfirm({ message: msg, small: true }).then(() => {
+        modals.promptConfirm({ message: msg, small: true }).then(() => {
             useHint(id).then(hint => {
                 showHint(hint.text);
             }).catch(e =>
-                app.alert("Error using hint:\n" + http.getError(e))
+                modals.alert("Error using hint:\n" + http.getError(e))
             );
         }).catch(() => { });
     };

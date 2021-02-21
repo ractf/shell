@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback, useContext } from "react";
 import { useSelector } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -24,9 +24,8 @@ import RACTF_THEME from "@ractf/ui-kit/themes/ractf.json";
 import * as http from "@ractf/util/http";
 import { iteratePlugins, PluginComponent, mountPoint } from "@ractf/plugins";
 import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
-import { appContext } from "@ractf/shell-util";
 import {
-    ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader, UiKitContext
+    ToggleTabHolder, ThemeLoader, UiKitContext, ModalMount, UiKitModals
 } from "@ractf/ui-kit";
 
 import SiteNav from "components/SiteNav";
@@ -154,12 +153,13 @@ const SiteLoading = () => {
 const App = React.memo(() => {
     useMemo(() => { new WS(); }, []);
 
+    const modals = useContext(UiKitModals);
+    window.__ractf_alert = modals.alert;
+
     const countdowns = useSelector(state => state.countdowns);
     const config = useSelector(state => state.config);
 
     const [consoleMode, setConsole] = useState(false);
-    const [currentPrompt, setCurrentPrompt] = useState(null);
-    const [progressBar, setProgressBar] = useState(null);
     const [popups, setPopups] = useState([
         /*{ type: 0, title: 'Achievement get', body: 'You got a thing!' },
         { type: 'medal', medal: 'winner' },
@@ -167,40 +167,6 @@ const App = React.memo(() => {
     ]);
     const typedText = useRef();
     if (!typedText.current) typedText.current = [];
-
-    const hideModal = () => {
-        setCurrentPrompt(null);
-    };
-
-    const promptConfirm = (body, inputs = 0) => {
-        if (inputs === 0) inputs = [];
-        if (!body.message) body = { message: body, small: true };
-
-        return new Promise((resolveOuter, rejectOuter) => {
-            const innerPromise = new Promise((resolve, reject) => {
-                setCurrentPrompt({ body: body, promise: { resolve: resolve, reject: reject }, inputs: inputs });
-            });
-
-            innerPromise.then(values => {
-                hideModal();
-                resolveOuter(values);
-            }).catch(values => {
-                hideModal();
-                rejectOuter(values);
-            });
-        });
-    };
-
-    const showAlert = (message) => {
-        setProgressBar(null);
-        return promptConfirm({ message: message, noCancel: true, small: true });
-    };
-
-    const showProgress = (text, progress) => {
-        if (text && !currentPrompt)
-            setProgressBar({ text: text, progress: progress });
-        else setProgressBar(null);
-    };
 
     useEffect(() => {
         getCountdown();
@@ -240,56 +206,41 @@ const App = React.memo(() => {
         </div>;
     }).reverse();
 
-    window.__ractf_alert = showAlert;
-    return (
-        <appContext.Provider value={{
-            promptConfirm: promptConfirm, alert: showAlert,
-            showProgress: showProgress
-        }}>
-            {/*!api.ready && loaded ? <div className={"siteWarning"}>
-                Site operating in offline mode:
-                    Failed to connect to the CTF servers!<br />
-                Functionality will be limited until service is restored.
-        </div> : null*/}
+    return (<>
+        {/*!api.ready && loaded ? <div className={"siteWarning"}>
+            Site operating in offline mode:
+                Failed to connect to the CTF servers!<br />
+            Functionality will be limited until service is restored.
+    </div> : null*/}
 
-            <Switch>
-                {iteratePlugins("topLevelPage").map(({ key: url, plugin: page }) =>
-                    <Route exact={!page.noExact} path={url} key={url}>
-                        {React.createElement(page.component)}
-                    </Route>
-                )}
-                <Route>
-                    <SiteNav>
-                        <Routes />
-                    </SiteNav>
+        <Switch>
+            {iteratePlugins("topLevelPage").map(({ key: url, plugin: page }) =>
+                <Route exact={!page.noExact} path={url} key={url}>
+                    {React.createElement(page.component)}
                 </Route>
-            </Switch>
+            )}
+            <Route>
+                <SiteNav>
+                    <Routes />
+                </SiteNav>
+            </Route>
+        </Switch>
 
-            {currentPrompt ? <ModalPrompt
-                body={currentPrompt.body}
-                promise={currentPrompt.promise}
-                inputs={currentPrompt.inputs}
-                onHide={hideModal}
-            /> : null}
+        <div className={"eventsWrap"}>
+            {popupsEl}
+        </div>
 
-            <div className={"eventsWrap"}>
-                {popupsEl}
-            </div>
+        <WSSpine />
 
-            {progressBar && <ProgressModal {...progressBar} />}
+        <FirstLoader />
+        {mountPoint("app")}
 
-            <WSSpine />
-
-            <FirstLoader />
-            {mountPoint("app")}
-
-            <ToggleTabHolder>
-                {iteratePlugins("toggleTabs").map(({ key, plugin }) => (
-                    React.createElement(plugin.component, { key })
-                ))}
-            </ToggleTabHolder>
-        </appContext.Provider>
-    );
+        <ToggleTabHolder>
+            {iteratePlugins("toggleTabs").map(({ key, plugin }) => (
+                React.createElement(plugin.component, { key })
+            ))}
+        </ToggleTabHolder>
+    </>);
 });
 
 const AppThemeLoader = () => {
@@ -302,12 +253,14 @@ const AppThemeLoader = () => {
 const AppWrap = () => {
     const { t } = useTranslation();
     return <ConnectedRouter history={history}>
-        <UiKitContext.Provider value={{t}}>
-            <AppThemeLoader />
-            <div className={"bodyScroll"}>
-                {mountPoint("appSibling")}
-                <App />
-            </div>
+        <UiKitContext.Provider value={{ t }}>
+            <ModalMount>
+                <AppThemeLoader />
+                <div className={"bodyScroll"}>
+                    {mountPoint("appSibling")}
+                    <App />
+                </div>
+            </ModalMount>
         </UiKitContext.Provider>
     </ConnectedRouter>;
 };

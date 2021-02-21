@@ -20,16 +20,16 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Column, Card, ModalSpinner
+    Checkbox, PageHead, Modal, Column, Card, ModalSpinner, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
-import { appContext, useConfig } from "@ractf/shell-util";
+import { useConfig } from "@ractf/shell-util";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const submitRef = useRef();
     const { t } = useTranslation();
     const hasTeams = useConfig("enable_teams");
@@ -65,11 +65,11 @@ export default () => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
             modifyTeam(team.id, changes).then(() => {
-                app.alert("Modified team");
+                modals.alert("Modified team");
                 setState(prevState => ({ ...prevState, team: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(http.getError(e));
+                modals.alert(http.getError(e));
             });
         };
     };
@@ -80,17 +80,17 @@ export default () => {
 
     const makeOwner = (team, member) => {
         return () => {
-            app.promptConfirm({
+            modals.promptConfirm({
                 message: `Make ${member.username} the owner of ${team.name}?`, small: true
             }).then(() => {
                 modifyTeam(team.id, { owner: member.id }).then(() => {
-                    app.alert(`Transfered ownership to ${team.name}.`);
+                    modals.alert(`Transfered ownership to ${team.name}.`);
                     setState(prevState => {
                         if (!prevState.team) return prevState;
                         return { ...prevState, team: { ...prevState.team, owner: member.id } };
                     });
                 }).catch(e => {
-                    app.alert(http.getError(e));
+                    modals.alert(http.getError(e));
                 });
             }).catch(() => { });
         };

@@ -19,9 +19,9 @@ import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead, Column
+    Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead,
+    Column, UiKitModals
 } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
 
@@ -29,7 +29,7 @@ import { addAnnouncement, removeAnnouncement } from "../api/announcements";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const [announcements] = http.useApi(ENDPOINTS.ANNOUNCEMENTS);
     const [localA, setLocalA] = useState(null);
     const [locked, setLocked] = useState(false);
@@ -43,20 +43,20 @@ export default () => {
         setLocked(true);
         addAnnouncement(title, body).then(data => {
             setLocked(false);
-            app.alert("Announcement posted");
+            modals.alert("Announcement posted");
             setLocalA(oldLocalA => [...oldLocalA, data]);
         }).catch(e => {
             setLocked(false);
-            app.alert(http.getError(e));
+            modals.alert(http.getError(e));
         });
     };
     const remove = (announcement) => {
         return () => {
             removeAnnouncement(announcement).then(() => {
-                app.alert("Removed announcement");
+                modals.alert("Removed announcement");
                 setLocalA(la => la.filter(i => i.id !== announcement.id));
             }).catch(e => {
-                app.alert(http.getError(e));
+                modals.alert(http.getError(e));
             });
         };
     };

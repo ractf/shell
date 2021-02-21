@@ -20,9 +20,8 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Button, Row, FormGroup, Checkbox, DatePick, PageHead,
-    Column, Card
+    Column, Card, UiKitModals
 } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
 import { iteratePlugins } from "@ractf/plugins";
 import { NUMBER_RE } from "@ractf/util";
@@ -30,7 +29,7 @@ import * as http from "@ractf/util/http";
 
 
 const AdminConfig = () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const { t } = useTranslation();
     const [adminConfig, setAdminConfig] = useState(null);
     const [adminConfig_] = http.useApi(ENDPOINTS.CONFIG);
@@ -48,9 +47,9 @@ const AdminConfig = () => {
             setAdminConfig(oldConf => ({ ...oldConf, key: value }));
         }).catch(e => {
             console.error(e);
-            app.alert(http.getError(e));
+            modals.alert(http.getError(e));
         });
-    }, [app]);
+    }, [modals]);
     const updateConfig = useCallback((changes) => {
         Promise.all(Object.entries(changes).map(([key, value]) => {
             if (value !== adminConfig[key])
@@ -58,11 +57,11 @@ const AdminConfig = () => {
             return new Promise(resolve => resolve());
         })).then(() => {
             setAdminConfig({ ...adminConfig, ...changes });
-            app.alert("Config updated");
+            modals.alert("Config updated");
         }).catch(() => {
-            app.alert("Failed to update config");
+            modals.alert("Failed to update config");
         });
-    }, [adminConfig, app, configSet]);
+    }, [adminConfig, modals, configSet]);
 
     const fields = [];
 

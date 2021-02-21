@@ -20,10 +20,10 @@ import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, FormError, Input, Button, FormGroup, Row, H2
+    Form, FormError, Input, Button, FormGroup, Row, H2, UiKitModals
 } from "@ractf/ui-kit";
 import { completePasswordReset } from "@ractf/api";
-import { appContext, zxcvbn } from "@ractf/shell-util";
+import { zxcvbn } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
 import * as http from "@ractf/util/http";
 
@@ -33,7 +33,7 @@ import { Wrap } from "./Parts";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const [message, setMessage] = useState("");
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();
@@ -55,7 +55,7 @@ export default () => {
 
         setLocked(true);
         completePasswordReset(id, secret, passwd1).then(() => {
-            app.alert(t("auth.pass_reset"));
+            modals.alert(t("auth.pass_reset"));
         }).catch(
             message => {
                 setMessage(http.getError(message));

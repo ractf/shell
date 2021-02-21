@@ -21,12 +21,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
 
 import { ENDPOINTS, leaveTeam, modifyTeam, reloadAll } from "@ractf/api";
-import { appContext, zxcvbn, useConfig, usePreferences, useExperiment } from "@ractf/shell-util";
+import { zxcvbn, useConfig, usePreferences, useExperiment } from "@ractf/shell-util";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,
-    Checkbox, FormGroup, InputButton, Card, Column, PageHead, H6
+    Checkbox, FormGroup, InputButton, Card, Column, PageHead, H6, UiKitModals
 } from "@ractf/ui-kit";
 
 import * as actions from "actions";
@@ -35,9 +35,9 @@ import Link from "components/Link";
 import "./SettingsPage.scss";
 
 
-const makeOwner = (team, app, member, t) => {
+const makeOwner = (team, modals, member, t) => {
     return () => {
-        app.promptConfirm({
+        modals.promptConfirm({
             message: (<>
                 {t("settings.owner_confirm", { name: member.username })}<br /><br />
                 {t("settings.stop_own_team")}
@@ -45,22 +45,23 @@ const makeOwner = (team, app, member, t) => {
         }).then(() => {
             // Kick 'em
             modifyTeam("self", { owner: member.id }).then(() => {
-                app.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
+                modals.promptConfirm({ message: t("settings.no_longer_captain"), noCancel: true, small: true });
                 reloadAll();
             }).catch(e => {
                 console.error(e);
-                app.promptConfirm({ message: t("error") + http.getError(e), noCancel: true, small: true });
+                modals.promptConfirm({ message: t("error") + http.getError(e), noCancel: true, small: true });
             });
         }).catch(() => { });
     };
 };
 
-const TeamMember = ({ team, app, member, isOwner, isCaptain }) => {
+const TeamMember = ({ team, member, isOwner, isCaptain }) => {
     const { t } = useTranslation();
+    const modals = useContext(UiKitModals);
 
     return <div className={"memberTheme"}>
         <div className={"memberIcon" + (isOwner ? " clickable" : "") + (isCaptain ? " active" : "")}
-            onClick={isOwner && !isCaptain ? makeOwner(team, app, member, t) : null}>
+            onClick={isOwner && !isCaptain ? makeOwner(team, modals, member, t) : null}>
             <GiCaptainHatProfile />
         </div>
         <div>
@@ -70,7 +71,7 @@ const TeamMember = ({ team, app, member, isOwner, isCaptain }) => {
 };
 
 const SettingsPage = () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const { t } = useTranslation();
     const user = useSelector(state => state.user);
     const team = useSelector(state => state.team);
@@ -97,8 +98,8 @@ const SettingsPage = () => {
         });
     }, [t]);
     const passwordChanged = useCallback(() => {
-        app.alert(t("settings.pass_changed"));
-    }, [app, t]);
+        modals.alert(t("settings.pass_changed"));
+    }, [modals, t]);
 
     const deleteValidator = useCallback(({ password }) => {
         return new Promise((resolve, reject) => {
@@ -116,34 +117,34 @@ const SettingsPage = () => {
         });
     }, [t, user.username]);
     const usernameChanged = useCallback(({ form: { username } }) => {
-        app.alert(t("settings.uname_changed"));
+        modals.alert(t("settings.uname_changed"));
         dispatch(actions.editUser({ username }));
-    }, [app, dispatch, t]);
+    }, [modals, dispatch, t]);
     const detailsUpdated = useCallback(() => {
-        app.alert(t("settings.details_changed"));
+        modals.alert(t("settings.details_changed"));
         reloadAll();
-    }, [app, t]);
+    }, [modals, t]);
     const teamUpdated = useCallback(() => {
-        app.alert(t("settings.team_details_changed"));
+        modals.alert(t("settings.team_details_changed"));
         reloadAll();
-    }, [app, t]);
+    }, [modals, t]);
 
     const saveNotificationPrefs = useCallback((args) => {
         setPreferences(args);
-        app.alert(t("settings.notifications.success"));
-    }, [app, setPreferences, t]);
+        modals.alert(t("settings.notifications.success"));
+    }, [modals, setPreferences, t]);
 
     const doLeaveTeam = useCallback(() => {
-        app.promptConfirm({
+        modals.promptConfirm({
             message: t("settings.team_leave_confirm"), small: true
         }).then(() => {
             leaveTeam().then(() => {
-                app.alert(t("settings.left_team"));
+                modals.alert(t("settings.left_team"));
             }).catch(e => {
-                app.alert(t("settings.no_leave_team") + ": " + http.getError(e));
+                modals.alert(t("settings.no_leave_team") + ": " + http.getError(e));
             });
         }).catch(() => { });
-    }, [app, t]);
+    }, [modals, t]);
 
     const teamOwner = (team ? team.owner === user.id : null);
 
@@ -292,7 +293,7 @@ const SettingsPage = () => {
                 {team && (
                     <Card lesser header={t("settings.cards.members")}>
                         {team.members.map((i, n) => (
-                            <TeamMember key={n} team={team} app={app}
+                            <TeamMember key={n} team={team}
                                 isCaptain={i.id === team.owner} isOwner={teamOwner} member={i} />
                         ))}
                     </Card>

@@ -17,8 +17,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 
-import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
+import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card, UiKitModals } from "@ractf/ui-kit";
 import { registerPlugin } from "@ractf/plugins";
 import * as http from "@ractf/util/http";
 import { NUMBER_RE } from "@ractf/util";
@@ -66,7 +65,7 @@ const ChallengeServer = ({ challenge }) => {
 const AddCSJob = ({ challenge, embedded }) => {
     const [isOpen, setOpen] = useState(false);
     const submitRef = useRef();
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
 
     const submit = useCallback(() => {
         submitRef.current();
@@ -80,12 +79,12 @@ const AddCSJob = ({ challenge, embedded }) => {
 
     const handle = useCallback((data) => {
         http.post("/challengeserver/submit_job/", data).then(() => {
-            app.alert("Added job!");
+            modals.alert("Added job!");
             setOpen(false);
         }).catch(e => {
-            app.alert(`Failed to add job:\n${http.getError(e)}`);
+            modals.alert(`Failed to add job:\n${http.getError(e)}`);
         });
-    }, [app]);
+    }, [modals]);
     const transformer = useCallback((data) => {
         return {
             ...data,

@@ -20,9 +20,8 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
-import { appContext } from "@ractf/shell-util";
 import {
-    Page, Row, Button, Spinner, TextBlock, FormError, H2, Column
+    Page, Row, Button, Spinner, TextBlock, FormError, H2, Column, UiKitModals
 } from "@ractf/ui-kit";
 
 import Link from "components/Link";
@@ -30,7 +29,7 @@ import QRCode from "qrcode.react";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const user = useSelector(state => state.user);
     const [page, setPage] = useState(0);
     const [secret, setSecret] = useState("");
@@ -50,7 +49,7 @@ export default () => {
     };
 
     const faPrompt = () => {
-        app.promptConfirm({ message: t("2fa.required"), small: true },
+        modals.promptConfirm({ message: t("2fa.required"), small: true },
             [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]).then(({ pin }) => {
                 if (pin.length !== 6) return faPrompt();
 

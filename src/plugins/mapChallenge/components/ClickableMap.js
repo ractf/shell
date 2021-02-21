@@ -17,8 +17,7 @@
 
 import React, { useState, useContext } from "react";
 
-import { Card, Form, InputButton, Modal } from "@ractf/ui-kit";
-import { appContext } from "@ractf/shell-util";
+import { Card, Form, InputButton, Modal, UiKitModals } from "@ractf/ui-kit";
 
 import Map from "pigeon-maps";
 import Marker from "pigeon-marker";
@@ -72,7 +71,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     const [hasValidZoom, setHasValidZoom] = useState(false);
     const [selectedLongLat, setSelectedLongLat] = useState(null);
     const [currentMapCenter, setCurrentMapCenter] = useState([45.04, -4.04]);
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
 
     const INVALID_JUMP_MESSAGE = <>
         Please enter a valid input in the form <code>longitude,latitude</code>.
@@ -96,11 +95,11 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
 
     const jumpToLongLat = ({ jumpTo }) => {
         if (!jumpTo)
-            return app.alert(INVALID_JUMP_MESSAGE);
+            return modals.alert(INVALID_JUMP_MESSAGE);
 
         const latLon = LAT_LON_RE.exec(jumpTo);
         if (!latLon)
-            return app.alert(INVALID_JUMP_MESSAGE);
+            return modals.alert(INVALID_JUMP_MESSAGE);
 
         setCurrentMapCenter([parseFloat(latLon[1]), parseFloat(latLon[2])]);
     };
@@ -108,7 +107,7 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
     onFlagResponse.current = (success, message) => {
         setSelectedLongLat(null);
         if (!success)
-            app.alert(message);
+            modals.alert(message);
     };
 
     return <>

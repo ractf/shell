@@ -20,9 +20,8 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { FiUnlock, FiLock, FiEyeOff, FiCheck, FiMove, FiEdit2 } from "react-icons/fi";
 
-import { Button, Column } from "@ractf/ui-kit";
+import { Button, Column, UiKitModals } from "@ractf/ui-kit";
 import { makeClass } from "@ractf/util";
-import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 import { linkChallenges } from "@ractf/api";
 
@@ -218,7 +217,7 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
         height++;
     }
 
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
 
     const challenge_grid = new Array(width).fill(null).map(() => new Array(height).fill(null));
     const off_grid = [];
@@ -248,13 +247,13 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
             return;
         }
         selected[2].editMetadata({ x, y }).catch(e => {
-            app.alert("Error moving challenge: " + http.getError(e));
+            modals.alert("Error moving challenge: " + http.getError(e));
         });
         challenge.editMetadata({ x: selected[0], y: selected[1] }).catch(e => {
-            app.alert("Error moving challenge: " + http.getError(e));
+            modals.alert("Error moving challenge: " + http.getError(e));
         });
         setSelected(null);
-    }, [app, selected]);
+    }, [modals, selected]);
     const addNodeClick = useCallback((_, x, y) => {
         if (!selected) {
             showEditor(emptyChallenge(category, x, y), challenges, true)();
@@ -264,9 +263,9 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
 
         setSelected(null);
         challenge.editMetadata({ x, y }).catch(e => {
-            app.alert("Error moving challenge: " + http.getError(e));
+            modals.alert("Error moving challenge: " + http.getError(e));
         });
-    }, [app, selected, category, challenges, showEditor]);
+    }, [modals, selected, category, challenges, showEditor]);
 
     const dispatch = useDispatch();
     const nodeEdit = useCallback((challenge) => {

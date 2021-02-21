@@ -22,12 +22,11 @@ import { useTranslation } from "react-i18next";
 import {
     Form, Input, Row, Checkbox, Button, Select, PageHead, InputTags,
     FormGroup, fromJson, Page, Column, Card, Grid, Modal,
-    FileUpload, TabbedView, Tab, SubtleText
+    FileUpload, TabbedView, Tab, SubtleText, UiKitModals
 } from "@ractf/ui-kit";
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
 import { newHint } from "@ractf/api";
-import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 
 import * as actions from "actions";
@@ -71,23 +70,23 @@ const MetadataEditor = ({ challenge, category, save }) => {
 };
 
 const HintEditor = ({ challenge }) => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
 
     const addHint = useCallback(() => {
-        app.promptConfirm({ message: "New hint" },
+        modals.promptConfirm({ message: "New hint" },
             [{ name: "name", placeholder: "Hint name", label: "Name" },
             { name: "cost", placeholder: "Hint cost", label: "Cost", format: NUMBER_RE },
             { name: "body", placeholder: "Hint text", label: "Message", rows: 5 }]
         ).then(({ name, cost, body }) => {
-            if (!cost.match(NUMBER_RE)) return app.alert("Invalid hint cost!");
+            if (!cost.match(NUMBER_RE)) return modals.alert("Invalid hint cost!");
 
             newHint(challenge.id, name, cost, body).then(() =>
-                app.alert("New hint added!")
+                modals.alert("New hint added!")
             ).catch(e =>
-                app.alert("Error creating new hint:\n" + http.getError(e))
+                modals.alert("Error creating new hint:\n" + http.getError(e))
             );
         });
-    }, [app, challenge.id]);
+    }, [modals, challenge.id]);
 
     return <>
         <Row>
@@ -103,7 +102,7 @@ const HintEditor = ({ challenge }) => {
 };
 
 const FileEditor = ({ challenge }) => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const [modalOpen, setModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("upload");
     const submitUpRef = useRef();
@@ -128,8 +127,8 @@ const FileEditor = ({ challenge }) => {
     const postSubmit = useCallback(({ resp }) => {
         dispatch(actions.addFile(challenge.id, resp));
         setModalOpen(false);
-        app.alert("New file added");
-    }, [dispatch, challenge.id, app]);
+        modals.alert("New file added");
+    }, [dispatch, challenge.id, modals]);
     const onUploadProgress = useCallback((event) => {
         uploadSpeedLog.current.push([event.loaded, new Date()]);
         while (uploadSpeedLog.current.length > UPLOAD_SPEED_HISTORY)
@@ -148,20 +147,20 @@ const FileEditor = ({ challenge }) => {
             speed = deltaBytes / (deltaTime / 1000);
         }
 
-        app.showProgress(
+        modals.showProgress(
             `Uploaded ${formatBytes(event.loaded, 1)}/${formatBytes(event.total, 1)}`
             + (speed !== null ? ` (${formatBytes(speed, 1)}/s)` : ""),
             event.loaded / event.total
         );
-    }, [app]);
+    }, [modals]);
     const uploadFailed = useCallback(({ error }) => {
-        app.alert("Upload failed: " + http.getError(error));
-    }, [app]);
+        modals.alert("Upload failed: " + http.getError(error));
+    }, [modals]);
     const validator = useCallback(({ upload }) => {
         return new Promise((resolve, reject) => {
             const size = formatBytes(upload.size, 1);
             if (upload.size > SUPPORTED_FILE_SIZE)
-                app.promptConfirm({
+                modals.promptConfirm({
                     message: `You are about to upload a file larger than officially supported (${size}). `
                         + "Are you sure you wish to proceed?",
                     small: true,
@@ -169,7 +168,7 @@ const FileEditor = ({ challenge }) => {
                     cancel: "Proceed",
                 }).catch(clickedButton => clickedButton ? resolve() : reject()).then(reject);
             else if (upload.size > LARGE_FILE_SIZE)
-                app.promptConfirm({
+                modals.promptConfirm({
                     message: `You are about to upload a large file (${size}). `
                         + "Are you sure you wish to proceed?",
                     small: true,
@@ -178,7 +177,7 @@ const FileEditor = ({ challenge }) => {
                 }).catch(clickedButton => clickedButton ? resolve() : reject()).then(reject);
             else resolve();
         });
-    }, [app]);
+    }, [modals]);
 
     const modal = <Modal header={"New file"} onClose={onClose} onConfirm={modalSubmit}
         okay={activeTab === "upload" ? "Upload File" : "Add File"}>

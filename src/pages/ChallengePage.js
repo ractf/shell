@@ -22,8 +22,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
 import { PluginComponent, getPlugin } from "@ractf/plugins";
-import { Challenge, useChallenge, useCategory, appContext } from "@ractf/shell-util";
+import { Challenge, useChallenge, useCategory } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
+import { UiKitModals } from "@ractf/ui-kit";
 import * as http from "@ractf/util/http";
 
 import { push } from "connected-react-router";
@@ -32,7 +33,7 @@ import { push } from "connected-react-router";
 const EditorWrap = ({ challenge, category, isCreator, embedded }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     let handler;
 
     if (challenge.challenge_type)
@@ -60,7 +61,7 @@ const EditorWrap = ({ challenge, category, isCreator, embedded }) => {
                 flag = JSON.parse(changes.flag_metadata);
             } catch (e) {
                 if (!changes.flag_metadata.length) flag = "";
-                else return app.alert(t("challenge.invalid_flag_json"));
+                else return modals.alert(t("challenge.invalid_flag_json"));
             }
         }
 
@@ -80,16 +81,16 @@ const EditorWrap = ({ challenge, category, isCreator, embedded }) => {
                 dispatch(push(category.url + "#edit"));
 
             await reloadAll();
-        }).catch(e => app.alert(http.getError(e)));
+        }).catch(e => modals.alert(http.getError(e)));
     };
 
     const doRemoveChallenge = () => {
-        app.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
+        modals.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
             removeChallenge(challenge).then(() => {
-                app.alert("Challenge removed");
+                modals.alert("Challenge removed");
                 dispatch(push(category.url));
             }).catch(e => {
-                app.alert("Error removing challenge:\n" + http.getError(e));
+                modals.alert("Error removing challenge:\n" + http.getError(e));
             });
         }).catch(() => { });
     };
