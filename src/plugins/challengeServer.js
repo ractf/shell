@@ -18,7 +18,7 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 
 import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card } from "@ractf/ui-kit";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import { registerPlugin } from "@ractf/plugins";
 import * as http from "@ractf/util/http";
 import { store } from "store";

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getLocalConfig } from "ractf";
+import { getLocalConfig } from "@ractf/shell-util";
 import { registerPreferences, registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
 import { store } from "store";
 

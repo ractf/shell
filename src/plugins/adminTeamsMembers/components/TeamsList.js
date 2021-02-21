@@ -23,10 +23,9 @@ import {
     Checkbox, PageHead, Modal, Column, Card, ModalSpinner
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
-import { appContext } from "ractf";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
-import { useConfig } from "@ractf/util";
+import { appContext, useConfig } from "@ractf/shell-util";
 
 
 export default () => {

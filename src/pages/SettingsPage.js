@@ -20,10 +20,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
 import { useTranslation } from "react-i18next";
 
-import { appContext, zxcvbn } from "ractf";
 import { ENDPOINTS, leaveTeam, modifyTeam, reloadAll } from "@ractf/api";
-import { usePreferences, useExperiment } from "@ractf/util/hooks";
-import { NUMBER_RE, useConfig } from "@ractf/util";
+import { appContext, zxcvbn, useConfig, usePreferences, useExperiment } from "@ractf/shell-util";
+import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,

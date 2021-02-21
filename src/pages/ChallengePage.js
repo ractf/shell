@@ -23,10 +23,8 @@ import { push } from "connected-react-router";
 
 import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
 import { PluginComponent, getPlugin } from "@ractf/plugins";
-import { useChallenge, useCategory } from "@ractf/util/hooks";
+import { Challenge, useChallenge, useCategory, appContext } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
-import { appContext } from "ractf";
-import Challenge from "@ractf/util/challenge";
 import * as http from "@ractf/util/http";
 
 

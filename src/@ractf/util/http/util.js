@@ -15,21 +15,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import i18next from "i18next";
-import { store } from "store";
-
 const config = {
     base: "",
+    getHeaders: null,
+    getTranslation: null,
 };
 export const setConfig = (conf) => {
     Object.keys(conf).forEach(i => config[i] = conf[i]);
 };
 
 export const _getHeaders = (extra) => {
-    const headers = extra ? { ...extra } : {};
-    const token = store.getState().token?.token;
-    if (token)
-        headers.Authorization = `Token ${token}`;
+    let headers = extra ? { ...extra } : {};
+    if (config.getHeaders)
+        headers = { ...headers, ...config.getHeaders(extra, headers) };
     return headers;
 };
 
@@ -58,7 +56,9 @@ export const getError = e => {
             if (e.response.data.m || e.response.data.d) {
                 let error = e.response.data.m;
                 if (error) {
-                    const translated_m = i18next.t("api." + error);
+                    let translated_m = error;
+                    if (config.getTranslation)
+                        translated_m = config.getTranslation("api." + error);
                     if (translated_m !== error && (typeof translated_m) !== "object")
                         error = translated_m;
                 }
@@ -66,7 +66,9 @@ export const getError = e => {
                 if (typeof e.response.data.d === "string") {
                     if (e.response.data.d.length > 0) {
                         let error_d = e.response.data.d;
-                        const translated_d = i18next.t("api." + error_d);
+                        let translated_d = error_d;
+                        if (config.getTranslation)
+                            translated_d = config.getTranslation("api." + error_d);
                         if (translated_d !== error && (typeof translated_d) !== "object")
                             error_d = translated_d;
                         error += "\n" + error_d;

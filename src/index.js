@@ -37,7 +37,14 @@ const DOMAIN = window.env.apiDomain;
 const API_BASE = window.env.apiBase;
 const BASE_URL = DOMAIN + API_BASE;
 http.setConfig({
-    base: BASE_URL
+    base: BASE_URL,
+    getHeaders: () => {
+        const token = store.getState().token?.token;
+        if (token)
+            return { Authorization: `Token ${token}` };
+        return {};
+    },
+    getTranslation: str => i18next.t(str),
 });
 
 (r => r.keys().forEach(key => r(key).default()))(
@@ -59,7 +66,7 @@ i18next.getFixedT = (lng, ns) => {
     const fixedT = (key, opts, ...rest) => {
         const tl = t(key, opts, ...rest);
         if (tl === key)
-            return <span style={{background: "#3a3"}}>{tl}</span>;
+            return <span style={{ background: "#3a3" }}>{tl}</span>;
         return tl;
     };
     fixedT.lng = t.lng;

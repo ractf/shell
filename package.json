@@ -107,6 +107,7 @@
         "warn",
         "double"
       ],
+      "import/no-duplicates": "warn",
       "react/display-name": "warn"
     }
   },

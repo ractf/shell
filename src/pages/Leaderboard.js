@@ -23,10 +23,10 @@ import {
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
-import { useConfig, useInterval } from "@ractf/util";
+import { useInterval } from "@ractf/util";
+import { useConfig, usePreference } from "@ractf/shell-util";
 import URLTabbedView from "components/URLTabbedView";
 import Link from "components/Link";
-import { usePreference } from "@ractf/util/hooks";
 
 const Leaderboard = React.memo(() => {
     const [userGraphData, setUserGraphData] = useState([]);

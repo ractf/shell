@@ -22,7 +22,7 @@ import { Redirect } from "react-router-dom";
 
 import { H2, Button, Row } from "@ractf/ui-kit";
 import { Wrap } from "./Parts";
-import { useConfig } from "@ractf/util";
+import { useConfig } from "@ractf/shell-util";
 import Link from "components/Link";
 
 

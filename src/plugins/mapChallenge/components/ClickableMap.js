@@ -20,7 +20,7 @@ import Marker from "pigeon-marker";
 import Map from "pigeon-maps";
 
 import { Card, Form, InputButton, Modal } from "@ractf/ui-kit";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 
 import "./ClickableMap.scss";
 

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 
 import {
     PageHead, FormGroup, Row, Column, ThemeLoader, Button, ColourPicker,
@@ -25,15 +25,10 @@ import { useDispatch } from "react-redux";
 import { setTheme } from "actions/theme";
 import UIPage from "./UI";
 import { BASE_COLOURS, COLOURS, BASE_TYPES, TYPES } from "@ractf/ui-kit/colours";
-import { useState } from "react";
-import { useCallback } from "react";
-import { useRef } from "react";
-import { copyObj, rgb2hex } from "@ractf/util";
+import { copyObj, rgb2hex, unmergeObj } from "@ractf/util";
 import { downloadJSON } from "@ractf/util/download";
-import { unmergeObj } from "@ractf/util";
 
 import style from "./Theme.module.scss";
-import { useEffect } from "react";
 
 
 const exportTheme = () => {

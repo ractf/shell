@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Column } from "@ractf/ui-kit";
 import Link from "components/Link";
@@ -25,10 +25,8 @@ import { FiUnlock, FiLock, FiEyeOff, FiCheck, FiMove, FiEdit2 } from "react-icon
 
 import style from "./NewCampaign.module.scss";
 import { makeClass } from "@ractf/util";
-import { appContext } from "ractf";
-import { useContext } from "react";
+import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { push } from "connected-react-router";
 import { linkChallenges } from "@ractf/api";

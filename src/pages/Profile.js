@@ -21,7 +21,8 @@ import { useTranslation } from "react-i18next";
 
 import { BrokenShards } from "./ErrorPages";
 
-import { useReactRouter, useConfig, cssVar } from "@ractf/util";
+import { cssVar, useReactRouter } from "@ractf/util";
+import { useConfig, useCategories } from "@ractf/shell-util";
 import {
     FormError, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
 } from "@ractf/ui-kit";
@@ -34,7 +35,6 @@ import "./Profile.scss";
 import { FaRedditAlien } from "react-icons/fa";
 import { SiDiscord } from "react-icons/si";
 import { FiTwitter, FiUsers } from "react-icons/fi";
-import { useCategories } from "@ractf/util/hooks";
 
 
 const UserSolve = ({ challenge_name, points }) => {

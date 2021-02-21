@@ -15,18 +15,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-
-import { forwardRef, memo, createElement } from "react";
-import { makeClass } from "./classes";
+import React, { forwardRef, memo, createElement } from "react";
 import Loadable from "react-loadable";
+
 import LoadingPage from "pages/LoadingPage";
+import { makeClass } from "./classes";
 
 export { default as useReactRouter } from "./useReactRouter";
 export { default as useWindowSize } from "./useWindowSize";
 export { default as formatBytes } from "./formatBytes";
 export { default as useInterval } from "./useInterval";
-export { default as useConfig } from "./useConfig";
 export { default as getUUID } from "./getUUID";
 export * from "./colours";
 export * from "./objects";

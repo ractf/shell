@@ -22,8 +22,7 @@ import {
     Form, Input, Button, Row, FormGroup, Checkbox, DatePick, PageHead,
     Column, Card
 } from "@ractf/ui-kit";
-import { appContext } from "ractf";
-import { useApi } from "@ractf/util/http";
+import { appContext } from "@ractf/shell-util";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
 import { iteratePlugins } from "@ractf/plugins";
 import { NUMBER_RE } from "@ractf/util";
@@ -34,7 +33,7 @@ const AdminConfig = () => {
     const app = useContext(appContext);
     const { t } = useTranslation();
     const [adminConfig, setAdminConfig] = useState(null);
-    const [adminConfig_] = useApi(ENDPOINTS.CONFIG);
+    const [adminConfig_] = http.useApi(ENDPOINTS.CONFIG);
 
     useEffect(() => {
         if (adminConfig_) {

@@ -21,17 +21,16 @@ import { useTranslation } from "react-i18next";
 import {
     Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead, Column
 } from "@ractf/ui-kit";
-import { appContext } from "ractf";
-import { useApi } from "@ractf/util/http";
-import { ENDPOINTS } from "@ractf/api";
+import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
+import { ENDPOINTS } from "@ractf/api";
 
 import { addAnnouncement, removeAnnouncement } from "../api/announcements";
 
 
 export default () => {
     const app = useContext(appContext);
-    const [announcements] = useApi(ENDPOINTS.ANNOUNCEMENTS);
+    const [announcements] = http.useApi(ENDPOINTS.ANNOUNCEMENTS);
     const [localA, setLocalA] = useState(null);
     const [locked, setLocked] = useState(false);
     const { t } = useTranslation();

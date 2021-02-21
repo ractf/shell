@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useCallback, useState } from "react";
+import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
@@ -27,14 +27,13 @@ import {
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
 import { newHint } from "@ractf/api";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import * as actions from "actions";
 import * as http from "@ractf/util/http";
 import Link from "components/Link";
 
 import File from "./File";
 import Hint from "./Hint";
-import { useRef } from "react";
 
 
 const UPLOAD_SPEED_HISTORY = 5;

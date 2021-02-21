@@ -24,10 +24,10 @@ import {
     Form, FormError, Input, Button, FormGroup, Row, H2
 } from "@ractf/ui-kit";
 import { completePasswordReset } from "@ractf/api";
-import { appContext, zxcvbn } from "ractf";
+import { appContext, zxcvbn } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
-import { Wrap } from "./Parts";
 import * as http from "@ractf/util/http";
+import { Wrap } from "./Parts";
 
 
 export default () => {

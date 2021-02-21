@@ -25,7 +25,7 @@ import {
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { usePaginated } from "@ractf/util/http";
-import { useConfig } from "@ractf/util";
+import { useConfig } from "@ractf/shell-util";
 import { Redirect } from "react-router-dom";
 import Link from "components/Link";
 

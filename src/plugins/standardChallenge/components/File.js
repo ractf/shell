@@ -21,7 +21,7 @@ import { FiFile, FiEdit2, FiTrash } from "react-icons/fi";
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { removeFile, editFile } from "@ractf/api";
 import { Button, Row } from "@ractf/ui-kit";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 
 import "./Challenge.scss";

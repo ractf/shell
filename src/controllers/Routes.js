@@ -26,7 +26,8 @@ import TeamPage from "../pages/TeamPage";
 
 import { TextBlock, Page as BasePage, H1, H2, SubtleText } from "@ractf/ui-kit";
 import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
-import { useConfig, useReactRouter } from "@ractf/util";
+import { useReactRouter } from "@ractf/util";
+import { useConfig } from "@ractf/shell-util";
 import { logout } from "@ractf/api";
 
 import ChallengePage from "../pages/ChallengePage";

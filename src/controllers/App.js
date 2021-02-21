@@ -22,12 +22,12 @@ import { useSelector } from "react-redux";
 import SiteNav from "components/SiteNav";
 
 import {
-    ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader
+    ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader, UiKitContext
 } from "@ractf/ui-kit";
 
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import * as actions from "actions";
-import { history } from "store";
+import { history, store } from "store";
 import Routes from "./Routes";
 import WS from "./WS";
 
@@ -37,10 +37,10 @@ import * as http from "@ractf/util/http";
 
 import lockImg from "static/spine.png";
 import "./App.scss";
-import { store } from "store";
 import { Switch, Route } from "react-router-dom";
 
 import RACTF_THEME from "@ractf/ui-kit/themes/ractf.json";
+import { useTranslation } from "react-i18next";
 
 
 const LOADING_TIMEOUT = 5000;
@@ -303,11 +303,16 @@ const AppThemeLoader = () => {
     </>;
 };
 
-const AppWrap = () => <ConnectedRouter history={history}>
-    <AppThemeLoader />
-    <div className={"bodyScroll"}>
-        {mountPoint("appSibling")}
-        <App />
-    </div>
-</ConnectedRouter>;
+const AppWrap = () => {
+    const { t } = useTranslation();
+    return <ConnectedRouter history={history}>
+        <UiKitContext.Provider value={{t}}>
+            <AppThemeLoader />
+            <div className={"bodyScroll"}>
+                {mountPoint("appSibling")}
+                <App />
+            </div>
+        </UiKitContext.Provider>
+    </ConnectedRouter>;
+};
 export default AppWrap;

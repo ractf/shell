@@ -25,7 +25,8 @@ import { Redirect } from "react-router-dom";
 
 import { BrokenShards } from "./ErrorPages";
 
-import { useReactRouter, useConfig, cssVar } from "@ractf/util";
+import { cssVar, useReactRouter } from "@ractf/util";
+import { useConfig, useCategories } from "@ractf/shell-util";
 import {
     FormError, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page, Column
@@ -34,7 +35,6 @@ import { ENDPOINTS } from "@ractf/api";
 import Link from "components/Link";
 
 import "./Profile.scss";
-import { useCategories } from "@ractf/util/hooks";
 import { useApi } from "@ractf/util/http";
 import LoadingPage from "./LoadingPage";
 

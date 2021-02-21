@@ -22,7 +22,7 @@ import {
     Form, Input, Button, Row, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
 import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import { EMAIL_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 import { Wrap } from "./Parts";

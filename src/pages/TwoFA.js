@@ -23,7 +23,7 @@ import QRCode from "qrcode.react";
 import {
     Page, Row, Button, Spinner, TextBlock, FormError, H2, Column
 } from "@ractf/ui-kit";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
 import Link from "components/Link";
 

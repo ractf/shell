@@ -23,8 +23,8 @@ import {
 
 import style from "./Statistics.module.scss";
 import { useApi } from "@ractf/util/http";
-import { useCategories } from "@ractf/util/hooks";
-import { cssVar, useConfig } from "@ractf/util";
+import { cssVar } from "@ractf/util";
+import { useConfig, useCategories } from "@ractf/shell-util";
 
 
 const minMaxFunction = (data, mapper) => {

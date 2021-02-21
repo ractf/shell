@@ -16,8 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { getClass, registerSubclass, registerPlugin } from "@ractf/plugins";
-import Challenge from "@ractf/util/challenge";
-import Category from "@ractf/util/category";
+import { Challenge, Category } from "@ractf/shell-util";
 
 
 export default () => {

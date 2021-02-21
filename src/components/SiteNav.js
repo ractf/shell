@@ -26,10 +26,9 @@ import {
 import Link from "./Link";
 
 import { iteratePlugins } from "@ractf/plugins";
-import { useCategories, useExperiment } from "@ractf/util/hooks";
-import { useConfig, useReactRouter } from "@ractf/util";
+import { useCategories, useExperiment, useConfig } from "@ractf/shell-util";
+import { useReactRouter } from "@ractf/util";
 import footerLogo from "../static/spine.svg";
-import wordmark from "../static/wordmark.svg";
 import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
 
 const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;

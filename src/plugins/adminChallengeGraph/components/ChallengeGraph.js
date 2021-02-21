@@ -21,7 +21,7 @@ import { Network, Node, Edge } from "react-vis-network";
 import { PageHead } from "@ractf/ui-kit";
 
 import style from "./ChallengeGraph.module.scss";
-import { useCategories } from "@ractf/util/hooks";
+import { useCategories } from "@ractf/shell-util";
 import { cssVar } from "@ractf/util";
 
 const ChallengeGraph = () => {

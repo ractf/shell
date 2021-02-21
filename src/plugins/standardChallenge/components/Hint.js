@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import { removeHint, editHint, useHint } from "@ractf/api";
 import { Button, Row, Markdown } from "@ractf/ui-kit";
-import { appContext } from "ractf";
+import { appContext } from "@ractf/shell-util";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 

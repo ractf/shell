@@ -27,7 +27,7 @@ import {
     BareForm, ItemStack, /* ColourPicker, PalettePicker */
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
-import { zxcvbn } from "ractf";
+import { zxcvbn } from "@ractf/shell-util";
 import Link from "components/Link";
 import { FiHelpCircle } from "react-icons/fi";
 

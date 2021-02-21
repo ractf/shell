@@ -24,9 +24,9 @@ import qs from "query-string";
 import {
     Form, Input, Button, Row, Checkbox, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
-import { EMAIL_RE, useReactRouter, useConfig, escapeRegex } from "@ractf/util";
+import { useConfig, zxcvbn } from "@ractf/shell-util";
+import { EMAIL_RE, escapeRegex, useReactRouter } from "@ractf/util";
 import { ENDPOINTS } from "@ractf/api";
-import { zxcvbn } from "ractf";
 import { Wrap } from "./Parts";
 import Link from "components/Link";
 

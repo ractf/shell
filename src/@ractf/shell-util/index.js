@@ -1,4 +1,4 @@
-// Copyright (C) 2020-2021 Really Awesome Technology Ltd
+// Copyright (C) 2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -18,6 +18,11 @@
 import React from "react";
 import { store } from "store";
 import * as actions from "actions";
+
+export { default as useConfig } from "./useConfig";
+export { default as Challenge } from "./challenge";
+export { default as Category } from "./category";
+export * from "./hooks";
 
 export const appContext = React.createContext({});
 

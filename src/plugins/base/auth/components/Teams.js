@@ -24,7 +24,7 @@ import {
     Form, FormError, HR, Input, Button, Row, SubtleText, FormGroup, H2
 } from "@ractf/ui-kit";
 import { joinTeam, createTeam, reloadAll } from "@ractf/api";
-import { useConfig } from "@ractf/util";
+import { useConfig } from "@ractf/shell-util";
 import { Wrap } from "./Parts";
 import * as http from "@ractf/util/http";
 import Link from "components/Link";
