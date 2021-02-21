@@ -23,9 +23,7 @@ import { H1, H2, H3, H4, Page } from "@ractf/ui-kit";
 const Privacy = () => <Page>
     <H1>Privacy Policy</H1>
 
-
     <p>Effective date: August 31, 2019</p>
-
 
     <p>Really Awesome Technology Ltd ("us", "we", or "our") 
         operates the https://ractf.co.uk website (the "Service").</p>
@@ -36,7 +34,6 @@ const Privacy = () => <Page>
     <p>We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of
         information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this
         Privacy Policy have the same meanings as in our Terms and Conditions, accessible from https://ractf.co.uk</p>
-
 
     <H2>Information Collection And Use</H2>
 

@@ -16,14 +16,12 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState, useRef, useContext, useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { push } from "connected-react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import { useReactRouter } from "@ractf/util";
 import { Category, useCategory, useCategories, usePreference, appContext } from "@ractf/shell-util";
-
 import {
     Button, Row, Input, Form, FormError, PageHead, Card, Modal,
     Page, TabbedView, Tab, fromJson, Select, FormGroup, Masonry
@@ -31,9 +29,12 @@ import {
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
 import * as http from "@ractf/util/http";
+
 import Link from "components/Link";
+import { push } from "connected-react-router";
 
 import "./Campaign.scss";
+
 
 const ANC = ({ hide, anc, modal }) => {
     const app = useContext(appContext);
@@ -140,7 +141,6 @@ const ANC = ({ hide, anc, modal }) => {
     return body;
 };
 
-
 const CategoryList = () => {
     const { t } = useTranslation();
     const categories = useCategories();
@@ -166,7 +166,6 @@ const CategoryList = () => {
         </Masonry>
     </Page>;
 };
-
 
 export default () => {
     const [anc, setAnc] = useState(false);

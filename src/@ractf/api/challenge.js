@@ -16,10 +16,13 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { reloadAll } from "@ractf/api";
-import { ENDPOINTS } from "./consts";
+import * as http from "@ractf/util/http";
+
 import * as actions from "actions";
 import { store } from "store";
-import * as http from "@ractf/util/http";
+
+import { ENDPOINTS } from "./consts";
+
 
 export const getChallenges = () => {
     return http.get(ENDPOINTS.CATEGORIES).then(data => {

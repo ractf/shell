@@ -16,18 +16,19 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import {
     PageHead, FormGroup, Row, Column, ThemeLoader, Button, ColourPicker,
     HR, PalettePicker
 } from "@ractf/ui-kit";
-import { useDispatch } from "react-redux";
-import { setTheme } from "actions/theme";
-import UIPage from "./UI";
 import { BASE_COLOURS, COLOURS, BASE_TYPES, TYPES } from "@ractf/ui-kit/colours";
 import { copyObj, rgb2hex, unmergeObj } from "@ractf/util";
 import { downloadJSON } from "@ractf/util/download";
 
+import { setTheme } from "actions/theme";
+
+import UIPage from "./UI";
 import style from "./Theme.module.scss";
 
 
@@ -38,7 +39,6 @@ const exportTheme = () => {
     };
     downloadJSON(theme, "theme");
 };
-
 
 const PaletteSample = ({ colour, stateRef, tlProps, palette = false }) => {
     const [open, setOpen] = useState(false);
@@ -78,7 +78,6 @@ const PaletteSample = ({ colour, stateRef, tlProps, palette = false }) => {
         </div>
     </>;
 };
-
 
 const Editor = () => {
     const dispatch = useDispatch();

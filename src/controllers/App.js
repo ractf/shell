@@ -16,42 +16,38 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { ConnectedRouter } from "connected-react-router";
 import { useSelector } from "react-redux";
+import { Switch, Route } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-import SiteNav from "components/SiteNav";
-
+import RACTF_THEME from "@ractf/ui-kit/themes/ractf.json";
+import * as http from "@ractf/util/http";
+import { iteratePlugins, PluginComponent, mountPoint } from "@ractf/plugins";
+import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
+import { appContext } from "@ractf/shell-util";
 import {
     ModalPrompt, ToggleTabHolder, ProgressModal, ThemeLoader, UiKitContext
 } from "@ractf/ui-kit";
 
-import { appContext } from "@ractf/shell-util";
+import SiteNav from "components/SiteNav";
 import * as actions from "actions";
 import { history, store } from "store";
-import Routes from "./Routes";
-import WS from "./WS";
-
-import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
-import { iteratePlugins, PluginComponent, mountPoint } from "@ractf/plugins";
-import * as http from "@ractf/util/http";
-
 import lockImg from "static/spine.png";
-import "./App.scss";
-import { Switch, Route } from "react-router-dom";
+import { ConnectedRouter } from "connected-react-router";
 
-import RACTF_THEME from "@ractf/ui-kit/themes/ractf.json";
-import { useTranslation } from "react-i18next";
+import WS from "./WS";
+import Routes from "./Routes";
+
+import "./App.scss";
 
 
 const LOADING_TIMEOUT = 5000;
-
 
 const SpinningSpine_ = ({ text }) => <div className={"spinningSpine"}>
     <span>{text}</span>
     <img alt={""} src={lockImg} />
 </div>;
 const SpinningSpine = React.memo(SpinningSpine_);
-
 
 const VimDiv = () => {
     const [scrollback, setScrollback] = useState(`[www-data@ractfhost1 shell]$ npm run build

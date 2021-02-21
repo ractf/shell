@@ -25,8 +25,10 @@ import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/ap
 import { appContext } from "@ractf/shell-util";
 import { EMAIL_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
-import { Wrap } from "./Parts";
+
 import Link from "components/Link";
+
+import { Wrap } from "./Parts";
 
 
 const BasicLogin = () => {

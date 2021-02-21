@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext, useState, useRef, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -24,9 +25,9 @@ import {
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
 import * as http from "@ractf/util/http";
-import { useSelector, useDispatch } from "react-redux";
-import { setImpersonationToken } from "actions";
 import { appContext, useExperiment } from "@ractf/shell-util";
+
+import { setImpersonationToken } from "actions";
 
 
 export default () => {

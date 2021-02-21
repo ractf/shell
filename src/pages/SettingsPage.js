@@ -16,9 +16,9 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
-import { useTranslation } from "react-i18next";
 
 import { ENDPOINTS, leaveTeam, modifyTeam, reloadAll } from "@ractf/api";
 import { appContext, zxcvbn, useConfig, usePreferences, useExperiment } from "@ractf/shell-util";
@@ -28,10 +28,11 @@ import {
     Page, HR, Row, Hint, Button, Form, SubtleText, Input,
     Checkbox, FormGroup, InputButton, Card, Column, PageHead, H6
 } from "@ractf/ui-kit";
+
 import * as actions from "actions";
+import Link from "components/Link";
 
 import "./SettingsPage.scss";
-import Link from "components/Link";
 
 
 const makeOwner = (team, app, member, t) => {
@@ -54,7 +55,6 @@ const makeOwner = (team, app, member, t) => {
     };
 };
 
-
 const TeamMember = ({ team, app, member, isOwner, isCaptain }) => {
     const { t } = useTranslation();
 
@@ -68,7 +68,6 @@ const TeamMember = ({ team, app, member, isOwner, isCaptain }) => {
         </div>
     </div>;
 };
-
 
 const SettingsPage = () => {
     const app = useContext(appContext);

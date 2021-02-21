@@ -20,6 +20,7 @@ import { registerPlugin, registerReducer } from "@ractf/plugins";
 import { JeopardyChallenges } from "./components/JeopardyChallenges";
 import { jeopardySearchReducer } from "./reducers";
 
+
 export default () => {
     registerReducer("jeopardySearch", jeopardySearchReducer);
     registerPlugin("categoryType", "jeopardy", { component: JeopardyChallenges });

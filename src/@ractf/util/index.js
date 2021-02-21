@@ -19,7 +19,9 @@ import React, { forwardRef, memo, createElement } from "react";
 import Loadable from "react-loadable";
 
 import LoadingPage from "pages/LoadingPage";
+
 import { makeClass } from "./classes";
+
 
 export { default as useReactRouter } from "./useReactRouter";
 export { default as useWindowSize } from "./useWindowSize";
@@ -58,7 +60,6 @@ export const basicComponent = (localClass, name, element) => {
         Object.defineProperty(component, "name", { value: name });
     return memo(forwardRef(component));
 };
-
 
 export const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 

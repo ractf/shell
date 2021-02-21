@@ -45,7 +45,6 @@ export const useApi = route => {
     return [data, error, () => abortRequest.current(), refresh];
 };
 
-
 export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
     const abortRequest = useRef();
     const inFlight = useRef();
@@ -119,7 +118,6 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
 
     return [state, next, refresh];
 };
-
 
 export const useFullyPaginated = route => {
     const abortRequest = useRef();

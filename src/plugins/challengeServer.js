@@ -21,8 +21,10 @@ import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card } from "@ract
 import { appContext } from "@ractf/shell-util";
 import { registerPlugin } from "@ractf/plugins";
 import * as http from "@ractf/util/http";
-import { store } from "store";
 import { NUMBER_RE } from "@ractf/util";
+
+import { store } from "store";
+
 
 const ChallengeServer = ({ challenge }) => {
     const [state, setState] = useState({});
@@ -60,7 +62,6 @@ const ChallengeServer = ({ challenge }) => {
         </Card>
     </Row>;
 };
-
 
 const AddCSJob = ({ challenge, embedded }) => {
     const [isOpen, setOpen] = useState(false);
@@ -147,7 +148,6 @@ const AddCSJob = ({ challenge, embedded }) => {
         </Row>
     </>;
 };
-
 
 export default () => {
     registerPlugin("challengeMetadata", "challengeServer", {

@@ -20,9 +20,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { Column, Card, Input, FormGroup, ItemStack, Checkbox } from "@ractf/ui-kit";
 
-import * as actions from "../actions.js";
-
 import ChallengePage from "pages/ChallengePage.js";
+
+import * as actions from "../actions.js";
 import Challenge from "./Challenge.js";
 
 

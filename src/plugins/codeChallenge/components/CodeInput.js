@@ -16,13 +16,14 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState } from "react";
-
 import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
 
 import colours from "@ractf/ui-kit/Colours.scss";
+
+import { highlight, languages } from "prismjs/components/prism-core";
+
+import "prismjs/components/prism-clike";
+import "prismjs/components/prism-javascript";
 
 import "./Theme.scss";
 

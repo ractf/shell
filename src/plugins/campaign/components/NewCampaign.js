@@ -16,20 +16,20 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState, useCallback, useContext, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Button, Column } from "@ractf/ui-kit";
-import Link from "components/Link";
-
 import { FiUnlock, FiLock, FiEyeOff, FiCheck, FiMove, FiEdit2 } from "react-icons/fi";
 
-
-import style from "./NewCampaign.module.scss";
+import { Button, Column } from "@ractf/ui-kit";
 import { makeClass } from "@ractf/util";
 import { appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
-import { useDispatch } from "react-redux";
-import { push } from "connected-react-router";
 import { linkChallenges } from "@ractf/api";
+
+import Link from "components/Link";
+import { push } from "connected-react-router";
+
+import style from "./NewCampaign.module.scss";
 
 
 const emptyChallenge = (category, x, y) => ({
@@ -151,7 +151,6 @@ const Node = ({
 };
 export const AddNode = ({ text, ...props }) => <Node name={text} largeName orange unlocked {...props} />;
 
-
 const TileLink = (props) => {
     const tileLinkClass = makeClass(
         style.tileLink,
@@ -169,7 +168,6 @@ const NodeRow = ({ children }) => (
         </div>
     </div>
 );
-
 
 const MAX_WIDTH = 7;
 

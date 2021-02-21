@@ -20,10 +20,12 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-import { H2, Button, Row } from "@ractf/ui-kit";
-import { Wrap } from "./Parts";
 import { useConfig } from "@ractf/shell-util";
+import { H2, Button, Row } from "@ractf/ui-kit";
+
 import Link from "components/Link";
+
+import { Wrap } from "./Parts";
 
 
 const NoTeam = () => {

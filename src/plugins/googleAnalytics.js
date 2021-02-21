@@ -22,8 +22,6 @@ import { registerReducer } from "@ractf/plugins";
 import { LOCATION_CHANGE } from "connected-react-router";
 
 
-
-
 const analyticsReducer = (state, { type, payload }) => {
     if (type === LOCATION_CHANGE) {
         const { location } = payload;

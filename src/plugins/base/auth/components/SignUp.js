@@ -18,17 +18,19 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { push } from "connected-react-router";
-import qs from "query-string";
 
+import { ENDPOINTS } from "@ractf/api";
+import { EMAIL_RE, escapeRegex, useReactRouter } from "@ractf/util";
+import { useConfig, zxcvbn } from "@ractf/shell-util";
 import {
     Form, Input, Button, Row, Checkbox, FormGroup, H2, FormError, SubtleText
 } from "@ractf/ui-kit";
-import { useConfig, zxcvbn } from "@ractf/shell-util";
-import { EMAIL_RE, escapeRegex, useReactRouter } from "@ractf/util";
-import { ENDPOINTS } from "@ractf/api";
-import { Wrap } from "./Parts";
+
 import Link from "components/Link";
+import qs from "query-string";
+import { push } from "connected-react-router";
+
+import { Wrap } from "./Parts";
 
 
 export default () => {

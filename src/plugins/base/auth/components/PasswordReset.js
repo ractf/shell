@@ -16,9 +16,8 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
-import qs from "query-string";
+import { useTranslation } from "react-i18next";
 
 import {
     Form, FormError, Input, Button, FormGroup, Row, H2
@@ -27,6 +26,9 @@ import { completePasswordReset } from "@ractf/api";
 import { appContext, zxcvbn } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
 import * as http from "@ractf/util/http";
+
+import qs from "query-string";
+
 import { Wrap } from "./Parts";
 
 

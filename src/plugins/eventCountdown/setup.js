@@ -19,6 +19,7 @@ import { registerPlugin } from "@ractf/plugins";
 
 import EventCountdown from "./components/EventCountdown";
 
+
 export default () => {
     registerPlugin("toggleTabs", "eventCountdown", {
         component: EventCountdown,

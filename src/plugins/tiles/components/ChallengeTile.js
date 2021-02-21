@@ -19,8 +19,9 @@ import React, { useCallback } from "react";
 
 import { Card, Markdown } from "@ractf/ui-kit";
 
-import style from "./ChallengeTile.module.scss";
 import Link from "components/Link";
+
+import style from "./ChallengeTile.module.scss";
 
 
 const DIFFICULTIES = [
@@ -31,7 +32,6 @@ const DIFFICULTIES = [
     [500, "Hard", "red"],
     [1000, "Insane", "purple"],
 ];
-
 
 const ChallengeTile = ({ setChallenge, challenge }) => {
     let difficulty = 0;

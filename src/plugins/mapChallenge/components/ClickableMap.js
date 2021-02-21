@@ -16,11 +16,12 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState, useContext } from "react";
-import Marker from "pigeon-marker";
-import Map from "pigeon-maps";
 
 import { Card, Form, InputButton, Modal } from "@ractf/ui-kit";
 import { appContext } from "@ractf/shell-util";
+
+import Map from "pigeon-maps";
+import Marker from "pigeon-marker";
 
 import "./ClickableMap.scss";
 

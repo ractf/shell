@@ -90,7 +90,6 @@ const PackCreator = ({ close }) => {
     </Modal>;
 };
 
-
 export default () => {
     const app = useContext(appContext);
     const { t } = useTranslation();

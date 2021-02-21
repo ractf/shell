@@ -17,6 +17,7 @@
 
 import * as http from "@ractf/util/http";
 
+
 export const GENERATE_INVITES = "/auth/generate_invites/";
 export const INVITES = "/auth/invites/";
 

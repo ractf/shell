@@ -16,26 +16,27 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { FaRedditAlien } from "react-icons/fa";
-import { SiDiscord } from "react-icons/si";
-import { FiTwitter, FiUser, FiUsers } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { FaRedditAlien } from "react-icons/fa";
+import { SiDiscord } from "react-icons/si";
+import { FiTwitter, FiUser, FiUsers } from "react-icons/fi";
 
-import { BrokenShards } from "./ErrorPages";
-
-import { cssVar, useReactRouter } from "@ractf/util";
-import { useConfig, useCategories } from "@ractf/shell-util";
+import { useApi } from "@ractf/util/http";
+import { ENDPOINTS } from "@ractf/api";
 import {
     FormError, TabbedView, Tab, HR, ProgressBar, Row, Graph,
     Pie, Page, Column
 } from "@ractf/ui-kit";
-import { ENDPOINTS } from "@ractf/api";
+import { useConfig, useCategories } from "@ractf/shell-util";
+import { cssVar, useReactRouter } from "@ractf/util";
+
 import Link from "components/Link";
 
 import "./Profile.scss";
-import { useApi } from "@ractf/util/http";
+
+import { BrokenShards } from "./ErrorPages";
 import LoadingPage from "./LoadingPage";
 
 

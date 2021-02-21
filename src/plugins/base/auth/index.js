@@ -16,7 +16,9 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { registerPlugin } from "@ractf/plugins";
+
 import { push } from "connected-react-router";
+import { store } from "store";
 
 import { EmailVerif, EmailMessage } from "./components/EmailVerif";
 import { JoinTeam, CreateTeam } from "./components/Teams";
@@ -24,8 +26,6 @@ import PasswordReset from "./components/PasswordReset";
 import Welcome from "./components/Welcome";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
-
-import { store } from "store";
 
 
 export default () => {

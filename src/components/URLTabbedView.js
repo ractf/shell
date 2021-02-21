@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { push } from "connected-react-router";
 
 import { InnerTabs } from "@ractf/ui-kit";
+
+import { push } from "connected-react-router";
 
 
 const URLTabbedView = (props) => {

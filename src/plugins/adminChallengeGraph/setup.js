@@ -15,9 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import { FiShare2 } from "react-icons/fi";
+
 import { dynamicLoad } from "@ractf/util";
 import { registerPlugin } from "@ractf/plugins";
-import { FiShare2 } from "react-icons/fi";
+
 
 const ChallengeGraph = dynamicLoad(() => (
     import(/* webpackChunkName: "challenge-graph" */ "./components/ChallengeGraph")

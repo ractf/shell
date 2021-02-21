@@ -16,16 +16,17 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
-import { push } from "connected-react-router";
+import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
 import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
 import { PluginComponent, getPlugin } from "@ractf/plugins";
 import { Challenge, useChallenge, useCategory, appContext } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
 import * as http from "@ractf/util/http";
+
+import { push } from "connected-react-router";
 
 
 const EditorWrap = ({ challenge, category, isCreator, embedded }) => {

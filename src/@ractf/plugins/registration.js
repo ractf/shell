@@ -15,12 +15,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { store, injectReducer } from "store";
 import {
     _plugins as plugins,
     _mounts as mounts,
     registeredPreferences
 } from "@ractf/plugins";
+
+import { store, injectReducer } from "store";
+
 
 export const registerPlugin = (type, key, handler) => {
     if (!plugins[type]) plugins[type] = {};

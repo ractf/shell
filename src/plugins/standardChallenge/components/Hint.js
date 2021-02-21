@@ -16,8 +16,8 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { FiHelpCircle, FiEdit2, FiTrash } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import { FiHelpCircle, FiEdit2, FiTrash } from "react-icons/fi";
 
 import { removeHint, editHint, useHint } from "@ractf/api";
 import { Button, Row, Markdown } from "@ractf/ui-kit";
@@ -25,8 +25,8 @@ import { appContext } from "@ractf/shell-util";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 
-import "./Challenge.scss";
 import Link from "components/Link";
+import "./Challenge.scss";
 
 
 export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) => {

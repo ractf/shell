@@ -19,6 +19,7 @@ import { registerPlugin } from "@ractf/plugins";
 
 import LockWarning from "./components/LockWarning";
 
+
 export default () => {
     registerPlugin("toggleTabs", "adminLockWarning", {
         component: LockWarning,

@@ -17,16 +17,16 @@
 
 import React, { useState } from "react";
 import { FaLock, FaEyeSlash } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 import { linkChallenges } from "@ractf/api";
+import { Column } from "@ractf/ui-kit";
 
 import { Node, AddNode } from "./Node";
 import Row from "./Row";
-import "./Spacer.scss";
-import { Column } from "@ractf/ui-kit";
-import { useSelector } from "react-redux";
-
 import NewCampaign from "./NewCampaign";
+
+import "./Spacer.scss";
 
 
 const emptyChallenge = (challenges, x, y) => ({

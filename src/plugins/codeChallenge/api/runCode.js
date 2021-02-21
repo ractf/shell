@@ -15,10 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { codeRunError, codeRunStart } from "../actions";
+import * as http from "@ractf/util/http";
+
 import { store } from "store";
 
-import * as http from "@ractf/util/http";
+import { codeRunError, codeRunStart } from "../actions";
+
 
 const RUN_CODE_ENDPOINT = "/";
 

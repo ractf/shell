@@ -2,10 +2,12 @@ import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { getClass, iteratePlugins } from "@ractf/plugins";
+
+import * as actions from "actions";
+
 import Challenge from "./challenge";
 import Category from "./category";
 
-import * as actions from "actions";
 
 export const useCategories = () => {
     const categories = useSelector(state => state.challenges?.categories) || [];

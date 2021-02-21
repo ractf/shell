@@ -16,8 +16,8 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext, useCallback, useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Row, Checkbox, Button, Select, PageHead, InputTags,
@@ -28,8 +28,9 @@ import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
 import { newHint } from "@ractf/api";
 import { appContext } from "@ractf/shell-util";
-import * as actions from "actions";
 import * as http from "@ractf/util/http";
+
+import * as actions from "actions";
 import Link from "components/Link";
 
 import File from "./File";
@@ -39,7 +40,6 @@ import Hint from "./Hint";
 const UPLOAD_SPEED_HISTORY = 5;
 const SUPPORTED_FILE_SIZE = 104857600;  // 100 MB
 const LARGE_FILE_SIZE = 52428800;  // 50 MB
-
 
 const MetadataEditor = ({ challenge, category, save }) => {
     const fields = [];

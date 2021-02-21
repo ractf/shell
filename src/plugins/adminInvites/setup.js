@@ -15,8 +15,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "@ractf/plugins";
 import { FiKey } from "react-icons/fi";
+
+import { registerPlugin } from "@ractf/plugins";
 
 import Invites from "./components/Invites";
 

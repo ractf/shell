@@ -18,20 +18,21 @@
 import "promise-polyfill/src/polyfill";
 
 import React from "react";
-import i18next from "i18next";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import { AppContainer } from "react-hot-loader";
-import * as serviceWorker from "./serviceWorker";
 import { I18nextProvider } from "react-i18next";
 
 import * as http from "@ractf/util/http";
 
-import AppWrap from "./controllers/App";
+import i18next from "i18next";
 import { store, persistor } from "store";
+import { PersistGate } from "redux-persist/integration/react";
 
+import AppWrap from "./controllers/App";
+import * as serviceWorker from "./serviceWorker";
 import en from "./i18n/en.json";
+
 
 const DOMAIN = window.env.apiDomain;
 const API_BASE = window.env.apiBase;

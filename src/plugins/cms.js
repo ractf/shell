@@ -16,16 +16,18 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useEffect, useContext, useState, useRef } from "react";
-import { FiEdit2, FiTrash, FiPlus, FiFileText } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { Route } from "react-router-dom";
+import { FiEdit2, FiTrash, FiPlus, FiFileText } from "react-icons/fi";
 
-import { appContext } from "@ractf/shell-util";
-import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup } from "@ractf/ui-kit";
-import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
-import { store } from "store";
 import * as http from "@ractf/util/http";
+import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
+import { Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR, FormGroup } from "@ractf/ui-kit";
+import { appContext } from "@ractf/shell-util";
+
 import Link from "components/Link";
+import { store } from "store";
+
 
 const INITIAL = {
     pages: [],

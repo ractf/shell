@@ -17,6 +17,7 @@
 
 import { registeredPreferences } from "@ractf/plugins";
 
+
 const preferencesReducer = (state = {}, { type, payload }) => {
     switch (type) {
         case "SET_PREFERENCES":

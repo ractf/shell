@@ -19,10 +19,11 @@ import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { iteratePlugins, FlagForm } from "@ractf/plugins";
 import {
     Button, TextBlock, PageHead, Row, Markdown, Badge, Page, Card, Column
 } from "@ractf/ui-kit";
-import { iteratePlugins, FlagForm } from "@ractf/plugins";
+
 import Link from "components/Link";
 
 import Split from "./Split";

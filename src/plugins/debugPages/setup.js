@@ -17,9 +17,10 @@
 
 import { dynamicLoad } from "@ractf/util";
 import { registerPlugin, registerPreferences } from "@ractf/plugins";
-import LoadingPage from "../../pages/LoadingPage";
 
+import LoadingPage from "../../pages/LoadingPage";
 import { EXPERIMENTS } from "./components/Experiments";
+
 
 export default () => {
     const wsTester = dynamicLoad(() => import(/* webpackChunkName: "ws-tester" */ "./components/WSTester"));

@@ -16,9 +16,8 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
-import { BrokenShards } from "./ErrorPages";
 
 import {
     Page, Table, FormError, Button, Row, PageHead, Column
@@ -26,8 +25,10 @@ import {
 import { ENDPOINTS } from "@ractf/api";
 import { usePaginated } from "@ractf/util/http";
 import { useConfig } from "@ractf/shell-util";
-import { Redirect } from "react-router-dom";
+
 import Link from "components/Link";
+
+import { BrokenShards } from "./ErrorPages";
 
 
 export const TeamsList = () => {
@@ -61,7 +62,6 @@ export const TeamsList = () => {
         </Column>}
     </Page>;
 };
-
 
 export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);

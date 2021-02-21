@@ -19,6 +19,7 @@ import React from "react";
 
 import { Page, Row, Column, Spinner } from "@ractf/ui-kit";
 
+
 const LoadingPage = ({ title }) => (
     <Page title={title}>
         <Column centre>

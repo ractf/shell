@@ -1,25 +1,22 @@
-import React from "react";
 
-import { Row, Scrollbar } from "@ractf/ui-kit";
+import React, { useState , useCallback , useEffect , useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+
+import { colourToRGBA, makeClass, rgb2hex } from "@ractf/util";
+import ColourPicker, { getForegroundColour, PalettePicker } from "@ractf/ui-kit/components/widgets/ColourPicker";
 import { COLOURS, TYPES } from "@ractf/ui-kit/colours";
+import { Row, Scrollbar } from "@ractf/ui-kit";
+
+import { setColour, setColours, setType } from "actions/theme";
 
 import style from "./Theme.module.scss";
-import { useState } from "react";
-import ColourPicker, { getForegroundColour, PalettePicker } from "@ractf/ui-kit/components/widgets/ColourPicker";
-import { colourToRGBA, makeClass, rgb2hex } from "@ractf/util";
-import { setColour, setColours, setType } from "actions/theme";
-import { useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
 
 
 const PALETTE = [
     "green", "teal", "cyan", "blue", "indigo", "purple", "pink", "red",
     "orange", "yellow", "black", "darkGrey", "grey", "lightGrey", "white"
 ];
-
 
 const getBackLift = (background) => {
     const fg = getForegroundColour(background);
@@ -30,7 +27,6 @@ const getBackLift = (background) => {
     };
 };
 
-
 const Sample = React.forwardRef(({ colour, className, ...props }, ref) => (
     <div ref={ref}
         className={makeClass(style.sample, className)}
@@ -39,8 +35,6 @@ const Sample = React.forwardRef(({ colour, className, ...props }, ref) => (
     />
 ));
 Sample.displayName = "Sample";
-
-
 
 const resolveVar = (colour) => (
     (/^--[a-zA-Z-]+$/.test(colour)) ? `var(${colour})` : colour
@@ -77,7 +71,6 @@ const SamplePicker = ({ controls }) => {
         />
     ));
 };
-
 
 const SampleEditor = ({ controls }) => {
     const { t } = useTranslation();
@@ -164,7 +157,6 @@ const TypeEditor = ({ controlsType, controlsDetail, name }) => {
         </Row>
     );
 };
-
 
 const ThemeEditor = () => {
     const [tab, setTab] = useState(0);

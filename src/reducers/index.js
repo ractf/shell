@@ -28,6 +28,7 @@ import tokenReducer from "./tokenReducer";
 import teamReducer from "./teamReducer";
 import userReducer from "./userReducer";
 
+
 const mergeReducers = (...reducers) => {
     return (state, action) => {
         let nextState = { ...state };

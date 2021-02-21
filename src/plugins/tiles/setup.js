@@ -19,6 +19,7 @@ import { registerPlugin } from "@ractf/plugins";
 
 import { TilesChallenges } from "./components/TilesChallenges";
 
+
 export default () => {
     registerPlugin("categoryType", "tiles", { component: TilesChallenges });
 };

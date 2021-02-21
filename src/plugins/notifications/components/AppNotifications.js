@@ -18,9 +18,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { hideNotification } from "../actions";
 import { Markdown } from "@ractf/ui-kit";
+
 import Link from "components/Link";
+
+import { hideNotification } from "../actions";
 
 
 const PopupMessage = ({ data }) => {

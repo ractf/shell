@@ -15,10 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as actions from "actions";
 import { reloadAll } from "@ractf/api";
-import { store } from "store";
 import * as http from "@ractf/util/http";
+
+import * as actions from "actions";
+import { store } from "store";
 
 import { ENDPOINTS } from "./consts";
 

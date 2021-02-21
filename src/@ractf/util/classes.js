@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-
 export const TYPES = ["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"];
 
 export const makeClass = (...classes) => (

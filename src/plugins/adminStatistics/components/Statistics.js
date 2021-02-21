@@ -20,11 +20,11 @@ import React from "react";
 import {
     PageHead, Row, Column, Card, Large, HR, Bar, Pie, ModalSpinner
 } from "@ractf/ui-kit";
-
-import style from "./Statistics.module.scss";
 import { useApi } from "@ractf/util/http";
 import { cssVar } from "@ractf/util";
 import { useConfig, useCategories } from "@ractf/shell-util";
+
+import style from "./Statistics.module.scss";
 
 
 const minMaxFunction = (data, mapper) => {
@@ -42,7 +42,6 @@ const minMaxFunction = (data, mapper) => {
     }
     return [minMatch[1], maxMatch[1]];
 };
-
 
 const Statistics = () => {
     const [stats] = useApi("/stats/full");

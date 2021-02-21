@@ -16,9 +16,10 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { getChallenges } from "@ractf/api";
+import * as http from "@ractf/util/http";
+
 import * as actions from "actions";
 import { store } from "store";
-import * as http from "@ractf/util/http";
 
 import { ENDPOINTS } from "./consts";
 

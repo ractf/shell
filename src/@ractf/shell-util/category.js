@@ -19,6 +19,7 @@ import { getClass } from "@ractf/plugins";
 
 import Challenge from "./challenge";
 
+
 export default class Category {
     constructor(data) {
         const thisProxy = new Proxy(getClass(this), {

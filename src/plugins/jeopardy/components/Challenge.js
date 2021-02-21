@@ -19,11 +19,10 @@ import React, { useCallback } from "react";
 
 import { Card } from "@ractf/ui-kit";
 
-import { setJeopardyOpenCards } from "../actions";
-
 import { store } from "store";
-
 import ChallengePage from "pages/ChallengePage";
+
+import { setJeopardyOpenCards } from "../actions";
 
 
 const Challenge = ({ challenge }) => {

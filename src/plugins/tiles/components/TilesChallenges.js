@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import { Column, Row, Input, Button, Modal, Masonry } from "@ractf/ui-kit";
 
 import ChallengePage from "pages/ChallengePage.js";
+
 import ChallengeTile from "./ChallengeTile.js";
 
 

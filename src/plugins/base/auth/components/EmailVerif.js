@@ -17,13 +17,15 @@
 
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import qs from "query-string";
 
 import { Spinner, FormError } from "@ractf/ui-kit";
 import { useReactRouter } from "@ractf/util";
 import { verify } from "@ractf/api";
-import { Wrap } from "./Parts";
 import * as http from "@ractf/util/http";
+
+import qs from "query-string";
+
+import { Wrap } from "./Parts";
 
 
 export const EmailVerif = () => {
@@ -59,7 +61,6 @@ export const EmailVerif = () => {
         </div>
     </Wrap>;
 };
-
 
 export const EmailMessage = () => {
     return <Wrap>

@@ -21,7 +21,6 @@ import { registerPlugin } from "@ractf/plugins";
 
 import MedalPopup from "./components/MedalPopup";
 import BasePopup from "./components/BasePopup";
-
 import { ReactComponent as WinnerIcon } from "./winnerMedal.svg";
 
 

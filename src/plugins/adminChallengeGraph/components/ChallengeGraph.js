@@ -16,13 +16,14 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-
 import { Network, Node, Edge } from "react-vis-network";
-import { PageHead } from "@ractf/ui-kit";
 
-import style from "./ChallengeGraph.module.scss";
+import { PageHead } from "@ractf/ui-kit";
 import { useCategories } from "@ractf/shell-util";
 import { cssVar } from "@ractf/util";
+
+import style from "./ChallengeGraph.module.scss";
+
 
 const ChallengeGraph = () => {
     const categories = useCategories();

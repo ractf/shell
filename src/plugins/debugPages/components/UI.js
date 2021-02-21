@@ -16,6 +16,7 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
+import { FiHelpCircle } from "react-icons/fi";
 
 import {
     Page, HR, Row, Button, Input, TextBlock, ProgressBar, Radio, Scrollbar,
@@ -28,8 +29,8 @@ import {
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "@ractf/shell-util";
+
 import Link from "components/Link";
-import { FiHelpCircle } from "react-icons/fi";
 
 
 const Inner = () => (<NavCollapse>

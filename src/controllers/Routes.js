@@ -16,13 +16,8 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useEffect } from "react";
-import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-import { NotFound, BrokenShards } from "../pages/ErrorPages";
-import { TeamsList, UsersList } from "../pages/Lists";
-import Countdown from "../pages/Countdown";
-import TeamPage from "../pages/TeamPage";
+import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 
 import { TextBlock, Page as BasePage, H1, H2, SubtleText } from "@ractf/ui-kit";
 import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
@@ -30,6 +25,10 @@ import { useReactRouter } from "@ractf/util";
 import { useConfig } from "@ractf/shell-util";
 import { logout } from "@ractf/api";
 
+import TeamPage from "../pages/TeamPage";
+import Countdown from "../pages/Countdown";
+import { TeamsList, UsersList } from "../pages/Lists";
+import { NotFound, BrokenShards } from "../pages/ErrorPages";
 import ChallengePage from "../pages/ChallengePage";
 import SettingsPage from "../pages/SettingsPage";
 import Leaderboard from "../pages/Leaderboard";
@@ -38,10 +37,10 @@ import Campaign from "../pages/Campaign";
 import Profile from "../pages/Profile";
 import TwoFA from "../pages/TwoFA";
 
+
 const Route = React.memo(Route_);
 const Switch = React.memo(Switch_);
 const Redirect = React.memo(Redirect_);
-
 
 class ErrorBoundary extends React.PureComponent {
     constructor(props) {
@@ -108,7 +107,6 @@ class ErrorBoundary extends React.PureComponent {
     }
 }
 
-
 const Page_ = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     const user = useSelector(state => state.user);
     const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
@@ -151,7 +149,6 @@ const Logout = () => {
     }, []);
     return <Redirect to={"/"} />;
 };
-
 
 const Routes = () => {
     const notFoundPage = getPlugin("errorPage", "404")?.component;

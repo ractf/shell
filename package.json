@@ -51,7 +51,7 @@
     "eslint-config-react-app": "^4.0.1",
     "eslint-loader": "2.1.2",
     "eslint-plugin-flowtype": "2.50.1",
-    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-react": "7.12.4",
     "eslint-plugin-react-hooks": "^1.5.0",
@@ -108,6 +108,75 @@
         "double"
       ],
       "import/no-duplicates": "warn",
+      "import/order": [
+        "warn",
+        {
+          "groups": [
+            "builtin",
+            "external",
+            "internal",
+            [
+              "parent",
+              "sibling"
+            ],
+            "index",
+            "unknown"
+          ],
+          "pathGroups": [
+            {
+              "pattern": "react",
+              "group": "builtin"
+            },
+            {
+              "pattern": "react-**",
+              "group": "builtin"
+            },
+            {
+              "pattern": "react-*/**",
+              "group": "builtin"
+            },
+            {
+              "pattern": "@ractf/**",
+              "group": "external",
+              "position": "before"
+            },
+            {
+              "pattern": "{.,..}/**/*.(css|sass|less|scss)",
+              "patternOptions": {
+                "dot": true,
+                "nocomment": true
+              },
+              "group": "unknown",
+              "position": "after"
+            },
+            {
+              "pattern": "**/*.(css|sass|less|scss)",
+              "patternOptions": {
+                "dot": true,
+                "nocomment": true
+              },
+              "group": "unknown",
+              "position": "after"
+            }
+          ],
+          "pathGroupsExcludedImportTypes": [],
+          "newlines-between": "always"
+        }
+      ],
+      "no-multiple-empty-lines": [
+        "warn",
+        {
+          "max": 2,
+          "maxEOF": 1
+        }
+      ],
+      "import/newline-after-import": [
+        "warn",
+        {
+          "count": 2
+        }
+      ],
+      "eol-last": ["error", "always"],
       "react/display-name": "warn"
     }
   },

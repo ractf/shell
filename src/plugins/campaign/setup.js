@@ -19,6 +19,7 @@ import { registerPlugin } from "@ractf/plugins";
 
 import { CampaignChallenges } from "./components/CampaignChallenges";
 
+
 export default () => {
     registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
     registerPlugin("challengeMetadata", "campaign", {

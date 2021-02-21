@@ -17,7 +17,9 @@
 
 import React from "react";
 import Moment from "react-moment";
+
 import { Markdown } from "@ractf/ui-kit";
+
 import Link from "components/Link";
 
 import "./Announcement.scss";

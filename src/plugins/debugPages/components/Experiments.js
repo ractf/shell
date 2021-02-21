@@ -19,8 +19,9 @@ import React, { useCallback } from "react";
 
 import { Form, Page, Select, Column, PageHead, FormGroup } from "@ractf/ui-kit";
 import { usePreferences } from "@ractf/shell-util";
-import { setPreference } from "actions";
+
 import { store } from "store";
+import { setPreference } from "actions";
 
 
 export const EXPERIMENTS = {

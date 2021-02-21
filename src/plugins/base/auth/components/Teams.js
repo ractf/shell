@@ -16,18 +16,20 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import {
     Form, FormError, HR, Input, Button, Row, SubtleText, FormGroup, H2
 } from "@ractf/ui-kit";
 import { joinTeam, createTeam, reloadAll } from "@ractf/api";
 import { useConfig } from "@ractf/shell-util";
-import { Wrap } from "./Parts";
 import * as http from "@ractf/util/http";
+
 import Link from "components/Link";
+
+import { Wrap } from "./Parts";
 
 
 export const JoinTeam = () => {
@@ -95,7 +97,6 @@ export const JoinTeam = () => {
 
     </Wrap>;
 };
-
 
 export const CreateTeam = () => {
     const { t } = useTranslation();

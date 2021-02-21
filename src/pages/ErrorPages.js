@@ -17,6 +17,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+
 import { Page } from "@ractf/ui-kit";
 
 import broken from "static/broken.png";
@@ -26,7 +27,6 @@ import "./ErrorPages.scss";
 
 
 export const BrokenShards = () => <img alt={""} className={"errorImg"} src={broken} />;
-
 
 export const ErrorPage = ({ code, details }) => {
     const { t } = useTranslation();

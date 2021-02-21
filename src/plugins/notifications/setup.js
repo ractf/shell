@@ -17,20 +17,20 @@
 
 import { getLocalConfig } from "@ractf/shell-util";
 import { registerPreferences, registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
+import { reloadAll, reloadTeam } from "@ractf/api";
+import { getUUID } from "@ractf/util";
+
 import { store } from "store";
 
 import { notificationReducer } from "./reducers";
 import AppNotifications from "./components/AppNotifications";
-import { reloadAll, reloadTeam } from "@ractf/api";
 import * as actions from "./actions";
-import { getUUID } from "@ractf/util";
 
 
 const WS_CHALLENGE_SCORE = 1;
 const WS_TEAM_FLAG_REJECT = 2;
 const WS_TEAM_HINT_USE = 3;
 const WS_TEAM_JOIN = 4;
-
 
 export default () => {
     registerReducer("notifications", notificationReducer);

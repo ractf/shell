@@ -18,8 +18,9 @@
 import React from "react";
 import Moment from "react-moment";
 import { useTranslation } from "react-i18next";
-
-import { BrokenShards } from "./ErrorPages";
+import { FaRedditAlien } from "react-icons/fa";
+import { SiDiscord } from "react-icons/si";
+import { FiTwitter, FiUsers } from "react-icons/fi";
 
 import { cssVar, useReactRouter } from "@ractf/util";
 import { useConfig, useCategories } from "@ractf/shell-util";
@@ -27,14 +28,13 @@ import {
     FormError, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import LoadingPage from "./LoadingPage";
 import { useApi } from "@ractf/util/http";
+
 import Link from "components/Link";
 
+import LoadingPage from "./LoadingPage";
+import { BrokenShards } from "./ErrorPages";
 import "./Profile.scss";
-import { FaRedditAlien } from "react-icons/fa";
-import { SiDiscord } from "react-icons/si";
-import { FiTwitter, FiUsers } from "react-icons/fi";
 
 
 const UserSolve = ({ challenge_name, points }) => {

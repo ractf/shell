@@ -17,6 +17,7 @@
 
 import { editChallenge } from "@ractf/api";
 
+
 export default class Challenge {
     constructor(category, data) {
         if ("toJSON" in data && (typeof data.toJSON) === "function")

@@ -15,14 +15,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import { FiMessageCircle } from "react-icons/fi";
+
 import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
+
 import { store } from "store";
 
 import announcementsReducer from "./reducers/announcementsReducer";
 import { showAnnouncement } from "./actions/announcements";
 import AdminAnnouncements from "./components/AdminAnnouncements";
 import AppAnnouncements from "./components/AppAnnouncements";
-import { FiMessageCircle } from "react-icons/fi";
 
 
 const WS_ANNOUNCEMENT = 5;

@@ -16,23 +16,23 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
 
 import {
     SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
     Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem, Scrollbar
 } from "@ractf/ui-kit";
-import Link from "./Link";
-
 import { iteratePlugins } from "@ractf/plugins";
 import { useCategories, useExperiment, useConfig } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
+
 import footerLogo from "../static/spine.svg";
-import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
+import Link from "./Link";
+
 
 const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
-
 
 const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
@@ -72,7 +72,6 @@ const HeaderNav_ = () => {
     </NavBar>;
 };
 const HeaderNav = React.memo(HeaderNav_);
-
 
 const SideNavLink = ({ to, Icon, active, name }) => {
     const { location: { pathname } } = useReactRouter();

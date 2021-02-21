@@ -28,7 +28,6 @@ const BGM = "/synthwave.mp3";
 
 const wave = { on: false, audio: null };
 
-
 const RACTFCountdown = () => {
     const [swc, setWave] = useState(0);
     const cRef = useRef();
@@ -183,7 +182,6 @@ const RACTFCountdown = () => {
         }} />
     </>;
 };
-
 
 export default () => {
     registerMount("countdown", "ractf", RACTFCountdown);

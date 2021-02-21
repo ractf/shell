@@ -18,10 +18,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import style from "./LargeLeaderboard.module.scss";
 import { usePaginated } from "@ractf/util/http";
 import { useInterval } from "@ractf/util";
 import { ENDPOINTS } from "@ractf/api";
+
+import style from "./LargeLeaderboard.module.scss";
 
 
 const LargeLeaderboard = () => {

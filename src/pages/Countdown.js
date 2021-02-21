@@ -20,9 +20,9 @@ import { useSelector } from "react-redux";
 
 import { recheckCountdowns } from "@ractf/api";
 import { useInterval } from "@ractf/util";
+import { mountPoint } from "@ractf/plugins";
 
 import style from "./Countdown.module.scss";
-import { mountPoint } from "@ractf/plugins";
 
 
 export default ({ cdKey }) => {

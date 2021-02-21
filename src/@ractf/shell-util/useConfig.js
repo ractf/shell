@@ -15,8 +15,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 
 const useConfig = (key, fallback) => {
     const storeValue = useSelector(state => (state.config || {})[key]);

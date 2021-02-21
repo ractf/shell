@@ -1,4 +1,6 @@
+
 import React, { useState, useCallback, useContext } from "react";
+import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 
@@ -9,7 +11,6 @@ import { useConfig, appContext } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 
 import { editChallenge } from "actions";
-import { useDispatch } from "react-redux";
 import Link from "components/Link";
 
 
