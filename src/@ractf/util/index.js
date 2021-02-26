@@ -15,10 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { forwardRef, memo, createElement } from "react";
-import Loadable from "react-loadable";
-
-import LoadingPage from "pages/LoadingPage";
+import { forwardRef, memo, createElement } from "react";
 
 import { makeClass } from "./classes";
 
@@ -32,13 +29,6 @@ export * from "./colours";
 export * from "./objects";
 export * from "./classes";
 
-const Loading = () => <LoadingPage />;
-export const dynamicLoad = (loader) => {
-    return Loadable({
-        loader: loader,
-        loading: Loading,
-    });
-};
 
 export const getHeight = (...children) => {
     let height = 0;

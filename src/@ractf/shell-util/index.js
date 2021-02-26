@@ -15,8 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import React from "react";
+import Loadable from "react-loadable";
+
 import { store } from "store";
 import * as actions from "actions";
+import LoadingPage from "pages/LoadingPage";
 
 
 export { default as useConfig } from "./useConfig";
@@ -33,4 +37,12 @@ export const getLocalConfig = (key, fallback) => {
 };
 export const setLocalConfig = (key, value) => {
     store.dispatch(actions.setPreference(key, value));
+};
+
+const Loading = () => <LoadingPage />;
+export const dynamicLoad = (loader) => {
+    return Loadable({
+        loader: loader,
+        loading: Loading,
+    });
 };

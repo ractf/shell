@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { dynamicLoad } from "@ractf/util";
+import { dynamicLoad } from "@ractf/shell-util";
 import { registerPlugin, registerPreferences } from "@ractf/plugins";
 
 import LoadingPage from "../../pages/LoadingPage";

@@ -17,7 +17,7 @@
 
 import { FiShare2 } from "react-icons/fi";
 
-import { dynamicLoad } from "@ractf/util";
+import { dynamicLoad } from "@ractf/shell-util";
 import { registerPlugin } from "@ractf/plugins";
 
 
