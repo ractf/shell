@@ -30,6 +30,29 @@ import Link from "components/Link";
 import { Wrap } from "./Parts";
 
 
+const Login2FA = ({ ...props }) => {
+    const [mode, setMode] = useState(0);
+
+    const switchMode = useCallback(() => {
+        setMode(old => 1 - old);
+    }, []);
+
+    return <Container centre>
+        <Form.Group>
+            {mode === 0 ? (
+                <InputPin digits={6} {...props} />
+            ) : (
+                <Input placeholder={"2-factor authentication backup code"} {...props} />
+            )}
+        </Form.Group>
+        <SubtleText>
+            <span onClick={switchMode} className={"linkStyle"}>
+                Enter a {mode === 0 ? "backup" : "standard"} code instead
+            </span>
+        </SubtleText>
+    </Container>;
+};
+
 const BasicLogin = () => {
     const modals = useContext(UiKitModals);
     const { t } = useTranslation();
@@ -58,11 +81,7 @@ const BasicLogin = () => {
                 setNeedsOtp(true);
 
                 modals.promptConfirm({ message: t("2fa.required"), small: true },
-                    [{
-                        Component: function Modal2FA({ ...props }) {
-                            return <Container centre><InputPin digits={6} {...props} /></Container>;
-                        }, name: "pin"
-                    }]
+                    [{ Component: Login2FA, name: "pin" }]
                 ).then(({ pin }) => {
                     if (pin.length !== 6) return faPrompt();
                     submit.current({ tfa: pin });
