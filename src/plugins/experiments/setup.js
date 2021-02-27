@@ -15,11 +15,30 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import {  useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { registerMount, registerPlugin, registerPreferences } from "@ractf/plugins";
 import { dynamicLoad } from "@ractf/shell-util";
-import { registerPlugin, registerPreferences } from "@ractf/plugins";
+import * as http from "@ractf/util/http";
+
+import { store } from "store";
+import { setPreference } from "actions";
 
 import EXPERIMENTS from "./experiments";
 
+
+const ExperimentsLoader = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        http.get("/experiments").then((experiments) => {
+            Object.keys(experiments).forEach(i => {
+                store.dispatch(setPreference(`experiment.${i}`, experiments[i]));
+            });
+        });
+    }, [dispatch]);
+    return null;
+};
 
 export default () => {
     const experiments = dynamicLoad(() => import(/* webpackChunkName: "experiments" */ "./AdminPage"));
@@ -29,4 +48,6 @@ export default () => {
         title: "Experiments",
         component: experiments
     });
+
+    registerMount("app", "experiments", ExperimentsLoader);
 };
