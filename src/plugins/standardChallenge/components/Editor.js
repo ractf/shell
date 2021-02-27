@@ -20,9 +20,9 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Row, Checkbox, Button, Select, PageHead, InputTags,
-    FormGroup, fromJson, Page, Column, Card, Grid, Modal,
-    FileUpload, TabbedView, Tab, SubtleText, UiKitModals
+    Form, Input, Checkbox, Button, Select, PageHead, InputTags,
+    fromJson, Page, Column, Card, Grid, Modal,
+    FileUpload, TabbedView, Tab, SubtleText, UiKitModals, Container
 } from "@ractf/ui-kit";
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { iteratePlugins, getPlugin } from "@ractf/plugins";
@@ -63,9 +63,7 @@ const MetadataEditor = ({ challenge, category, save }) => {
 
     return <div style={{ width: "100%" }}><Form handle={saveEdit}>
         {fields}
-        <Row>
-            <Button submit>Save Edit</Button>
-        </Row>
+        <Button submit>Save Edit</Button>
     </Form></div>;
 };
 
@@ -89,15 +87,11 @@ const HintEditor = ({ challenge }) => {
     }, [modals, challenge.id]);
 
     return <>
-        <Row>
-            <Grid headings={["Name", "Cost", "Message", "Actions"]} data={challenge.hints.map(hint => [
-                hint.name, hint.penalty, hint.text.length > 100 ? hint.text.substring(0, 100) + "\u2026" : hint.text,
-                <Hint key={hint.id} {...hint} isEdit />
-            ])} />
-        </Row>
-        <Row>
-            <Button onClick={addHint}>Add Hint</Button>
-        </Row>
+        <Grid headings={["Name", "Cost", "Message", "Actions"]} data={challenge.hints.map(hint => [
+            hint.name, hint.penalty, hint.text.length > 100 ? hint.text.substring(0, 100) + "\u2026" : hint.text,
+            <Hint key={hint.id} {...hint} isEdit />
+        ])} />
+        <Button onClick={addHint}>Add Hint</Button>
     </>;
 };
 
@@ -187,28 +181,28 @@ const FileEditor = ({ challenge }) => {
                     postSubmit={postSubmit} submitRef={submitUpRef} onUploadProgress={onUploadProgress}
                     onError={uploadFailed} validator={validator}>
                     <Input hidden val={challenge.id} name={"challenge"} />
-                    <FormGroup label={"Choose file"} htmlFor={"upload"}>
+                    <Form.Group label={"Choose file"} htmlFor={"upload"}>
                         <FileUpload required name={"upload"} globalDrag />
                         <label><SubtleText>
                             Uploading files larger than {formatBytes(SUPPORTED_FILE_SIZE)} is not
                             officially supported. You may wish to instead upload files this large
                             to an alternative hosting provider and link the file instead.
                         </SubtleText></label>
-                    </FormGroup>
+                    </Form.Group>
                 </Form>
             </Tab>
             <Tab label={"Link File"} index={"link"}>
                 <Form multipart method={"POST"} action={"/challenges/files/"}
                     postSubmit={postSubmit} submitRef={submitAddRef} >
-                    <FormGroup label={"File name"} htmlFor={"name"}>
+                    <Form.Group label={"File name"} htmlFor={"name"}>
                         <Input required name={"name"} placeholder={"File name"} />
-                    </FormGroup>
-                    <FormGroup label={"File URL"} htmlFor={"url"}>
+                    </Form.Group>
+                    <Form.Group label={"File URL"} htmlFor={"url"}>
                         <Input required name={"url"} placeholder={"File URL"} />
-                    </FormGroup>
-                    <FormGroup label={"File size (in bytes)"} htmlFor={"size"}>
+                    </Form.Group>
+                    <Form.Group label={"File size (in bytes)"} htmlFor={"size"}>
                         <Input required name={"size"} placeholder={"File Size"} format={/\d+/} />
-                    </FormGroup>
+                    </Form.Group>
                     <Input hidden val={challenge.id} name={"challenge"} />
                 </Form>
             </Tab>
@@ -217,15 +211,11 @@ const FileEditor = ({ challenge }) => {
 
     return <>
         {modalOpen && modal}
-        <Row>
-            <Grid headings={["Name", "URL", "Size", "Actions"]} data={challenge.files.map(file => [
-                file.name, <Link to={file.url}>{file.url}</Link>, file.size,
-                <File key={file.id} {...file} isEdit />
-            ])} />
-        </Row>
-        <Row>
-            <Button onClick={addFile}>Add File</Button>
-        </Row>
+        <Grid headings={["Name", "URL", "Size", "Actions"]} data={challenge.files.map(file => [
+            file.name, <Link to={file.url}>{file.url}</Link>, file.size,
+            <File key={file.id} {...file} isEdit />
+        ])} />
+        <Button onClick={addFile}>Add File</Button>
     </>;
 };
 
@@ -250,37 +240,37 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
 
     const body = (
         <Form handle={saveEdit} transformer={editTransformer}>
-            <Row left>
+            <Container.Row>
                 <Column lgWidth={6} mdWidth={12}>
-                    <FormGroup label={"Unlock Requirements"} htmlFor={"name"}>
+                    <Form.Group label={"Unlock Requirements"} htmlFor={"name"}>
                         <InputTags name={"Test"} limit={allChallenges} val={["The", "quick", "brow", "fox"]} />
-                    </FormGroup>
+                    </Form.Group>
 
                     <Card lesser header={"Basic settings"} collapsible>
-                        <FormGroup htmlFor={"name"} label={t("editor.chal_name")}>
+                        <Form.Group htmlFor={"name"} label={t("editor.chal_name")}>
                             <Input val={challenge.name} name={"name"} placeholder={t("editor.chal_name")} required />
-                        </FormGroup>
-                        <FormGroup htmlFor={"score"} label={t("editor.chal_points")}>
+                        </Form.Group>
+                        <Form.Group htmlFor={"score"} label={t("editor.chal_points")}>
                             <Input val={challenge.score !== undefined ? challenge.score.toString() : undefined}
                                 name={"score"} placeholder={t("editor.chal_points")} format={NUMBER_RE} required />
-                        </FormGroup>
-                        <FormGroup htmlFor={"author"} label={t("editor.chal_author")}>
+                        </Form.Group>
+                        <Form.Group htmlFor={"author"} label={t("editor.chal_author")}>
                             <Input val={challenge.author} name={"author"} placeholder={t("editor.chal_author")}
                                 required />
-                        </FormGroup>
-                        <FormGroup htmlFor={"description"} label={t("editor.chal_brief")}>
+                        </Form.Group>
+                        <Form.Group htmlFor={"description"} label={t("editor.chal_brief")}>
                             <Input rows={5} val={challenge.description} name={"description"}
                                 placeholder={t("editor.chal_brief")} required />
-                        </FormGroup>
-                        <FormGroup htmlFor={"tags"} label={t("editor.tags")}>
+                        </Form.Group>
+                        <Form.Group htmlFor={"tags"} label={t("editor.tags")}>
                             <InputTags name={"tags"} val={challenge.tags} />
-                        </FormGroup>
+                        </Form.Group>
                     </Card>
                     <Card lesser header={"Advanced settings"} collapsible startClosed>
-                        <FormGroup htmlFor={"post_score_explanation"} label={t("editor.post_score_explanation")}>
+                        <Form.Group htmlFor={"post_score_explanation"} label={t("editor.post_score_explanation")}>
                             <Input rows={3} val={challenge.post_score_explanation} name={"post_score_explanation"}
                                 placeholder={t("editor.post_score_explanation")} />
-                        </FormGroup>
+                        </Form.Group>
                     </Card>
                     <Card lesser header={"Metadata"} collapsible startClosed>
                         <MetadataEditor category={category} challenge={challenge} save={saveEdit} />
@@ -288,40 +278,40 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                 </Column>
                 <Column lgWidth={6} mdWidth={12}>
                     <Card lesser header={"Display settings"} collapsible>
-                        <Row>
+                        <Form.Row>
                             <Checkbox val={!!challenge.hidden} name={"hidden"}>
                                 {t("editor.hide_challenge")}
                             </Checkbox>
                             <Checkbox val={isCreator || !!challenge.auto_unlock} name={"auto_unlock"}>
                                 {t("editor.auto_unlock")}
                             </Checkbox>
-                        </Row>
+                        </Form.Row>
 
-                        <FormGroup htmlFor={"challenge_type"} label={t("editor.chal_type")}>
+                        <Form.Group htmlFor={"challenge_type"} label={t("editor.chal_type")}>
                             <Select options={iteratePlugins("challengeType").map(({ key }) => ({ key, value: key }))}
                                 initial={challenge.challenge_type || "default"}
                                 name={"challenge_type"} />
-                        </FormGroup>
+                        </Form.Group>
                     </Card>
                     <Card lesser header={"Flag"} collapsible>
-                        <FormGroup htmlFor={"flag_type"} label={t("editor.chal_flag_type")}>
+                        <Form.Group htmlFor={"flag_type"} label={t("editor.chal_flag_type")}>
                             <Select
                                 options={iteratePlugins("flagType").map(
                                     ({ key, plugin: { name } }) => ({ key, value: name || key })
                                 )}
                                 initial={challenge.flag_type || "plaintext"}
                                 name={"flag_type"} />
-                        </FormGroup>
+                        </Form.Group>
                         <FlagMetadata formRequires={["flag_type"]} name={"flag_metadata"}
                             val={challenge.flag_metadata} />
                         {/*
-                        <FormGroup htmlFor={"flag_metadata"} label={t("editor.chal_flag")}>
+                        <Form.Group htmlFor={"flag_metadata"} label={t("editor.chal_flag")}>
                             <Input placeholder={t("editor.chal_flag")}
                                 name={"flag_metadata"} monospace format={{
                                     test: i => { try { JSON.parse(i); return true; } catch (e) { return false; } }
                                 }}
                                 val={JSON.stringify(challenge.flag_metadata)} />
-                            </FormGroup>*/}
+                            </Form.Group>*/}
                     </Card>
                     <Card lesser header={"Files"} collapsible startClosed={false}>
                         {isCreator
@@ -334,12 +324,12 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             : <HintEditor challenge={challenge} />}
                     </Card>
 
-                    <Row>
+                    <Container full toolbar>
                         {!isCreator && <Button onClick={removeChallenge} danger>{t("editor.remove")}</Button>}
                         <Button submit>{isCreator ? t("editor.create") : t("editor.save")}</Button>
-                    </Row>
+                    </Container>
                 </Column>
-            </Row>
+            </Container.Row>
         </Form>
     );
     if (embedded) return body;

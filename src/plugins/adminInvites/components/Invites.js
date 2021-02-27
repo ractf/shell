@@ -18,8 +18,8 @@
 import React, { useCallback, useState } from "react";
 
 import {
-    Button, Column, PageHead, Card, Row, Form, FormGroup, Input, InputButton,
-    Modal, Grid, Checkbox, Select, SubtleText
+    Button, Column, PageHead, Card, Form, Input, InputButton,
+    Modal, Grid, Checkbox, Select, SubtleText, Container
 } from "@ractf/ui-kit";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
@@ -63,7 +63,7 @@ const Invites = () => {
 
     const numValidator = useCallback(({ amount }) => {
         return new Promise((resolve, reject) => {
-            if (!(NUMBER_RE).test(amount)) return reject({ amount: "Number required" });
+            if (!(NUMBER_RE).test(amount)) return reject({ amount: "A number is required" });
             resolve();
         });
     }, []);
@@ -82,63 +82,59 @@ const Invites = () => {
         </Modal>
 
         <PageHead title={"Invites"} />
-        <Column lgWidth={6} mdWidth={12}>
-            <Row>
+        <Container.Row>
+            <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={"Quick Generation"}>
-                    <Row centre>
+                    <Container full centre toolbar>
                         <Button onClick={generate1} disabled={locked}>Generate 1 Invite</Button>
                         <Button onClick={generate10} disabled={locked}>Generate 10 Invites</Button>
                         <Button onClick={generate100} disabled={locked}>Generate 100 Invites</Button>
-                    </Row>
+                    </Container>
                 </Card>
                 <Card lesser header={"Generate Invites"}>
                     <Form handle={formCallback} validator={numValidator} action={GENERATE_INVITES} locked={locked}>
-                        <InputButton name={"amount"} format={NUMBER_RE}
+                        <InputButton name={"amount"} format={NUMBER_RE} required
                             placeholder={"Number of invites"} button={"Generate"} />
                     </Form>
                 </Card>
-            </Row>
-        </Column>
-        <Column lgWidth={6} mdWidth={12}>
-            <Row>
+            </Column>
+            <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={"Generate Single Invite"} >
                     <Form locked={locked}>
-                        <FormGroup label={"Auto-join team ID"}>
+                        <Form.Group label={"Auto-join team ID"}>
                             <Input name={"team"} placeholder={"Auto-join team ID"} />
-                        </FormGroup>
-                        <FormGroup label={"Email"}>
+                        </Form.Group>
+                        <Form.Group label={"Email"}>
                             <Input name={"email"} placeholder={"Email"} />
-                        </FormGroup>
-                        <FormGroup label={"Username"}>
+                        </Form.Group>
+                        <Form.Group label={"Username"}>
                             <Input name={"username"} placeholder={"Username"} />
-                        </FormGroup>
+                        </Form.Group>
                         <Button submit>Generate</Button>
                     </Form>
                 </Card>
-            </Row>
-        </Column>
-        <Column lgWidth={12}>
-            <Row>
+            </Column>
+            <Column lgWidth={12}>
                 <Card lesser header={"View existing invites"}>
                     <Form>
-                        <Row vCentre>
+                        <Form.Row>
                             <Checkbox onChange={toggleUnused} name={"Unused"}>Only show unused codes</Checkbox>
                             <SubtleText>Items per page:</SubtleText>
                             <Select onChange={setPerPage} mini options={[10, 100, 500, 1000]} initial={1} />
-                        </Row>
+                        </Form.Row>
                     </Form>
                     <Grid headings={["Code", "Uses", "Team"]}
                         data={iState.data.map(i => [<code>{i.code}</code>, `${i.uses}/${i.max_uses}`, i.auto_team])} />
                     {iState.hasMore && (
-                        <Row centre>
+                        <Container full toolbar centre>
                             <Button disabled={iState.loading} onClick={iNext}>
                                 Load{iState.data.length ? " More" : ""}
                             </Button>
-                        </Row>
+                        </Container>
                     )}
                 </Card>
-            </Row>
-        </Column>
+            </Column>
+        </Container.Row>
     </>;
 };
 export default Invites;

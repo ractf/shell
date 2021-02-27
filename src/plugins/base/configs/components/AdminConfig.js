@@ -19,8 +19,8 @@ import React, { useCallback, useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Row, FormGroup, Checkbox, DatePick, PageHead,
-    Column, Card, UiKitModals
+    Form, Input, Button, Checkbox, DatePick, PageHead,
+    Column, Card, UiKitModals, Container
 } from "@ractf/ui-kit";
 import { ENDPOINTS, setConfigValue } from "@ractf/api";
 import { iteratePlugins } from "@ractf/plugins";
@@ -75,7 +75,7 @@ const AdminConfig = () => {
                 fields.push(
                     <Card  lesser header={key}>
                         {Object.values(fieldTypes).map((fields) =>
-                            <Row>
+                            <Form.Row>
                                 {fields.map(([key, name, type, extra], i) => {
                                     switch (type) {
                                         case "string":
@@ -85,15 +85,15 @@ const AdminConfig = () => {
                                                 (type === "string") ? null :
                                                     (type === "int") ? NUMBER_RE : /\d+(\.\d+)?/
                                             );
-                                            return <FormGroup key={i} label={name}>
+                                            return <Form.Group key={i} label={name}>
                                                 <Input placeholder={name} val={adminConfig[key]}
                                                     format={format} name={key} />
-                                            </FormGroup>;
+                                            </Form.Group>;
                                         case "date":
-                                            return <FormGroup key={i} label={name}>
+                                            return <Form.Group key={i} label={name}>
                                                 <DatePick initial={adminConfig[key]} configSet={configSet}
                                                     configKey={key} />
-                                            </FormGroup>;
+                                            </Form.Group>;
                                         case "boolean":
                                             return <Checkbox key={i} name={key} val={adminConfig[key]}>
                                                 {name}
@@ -102,7 +102,7 @@ const AdminConfig = () => {
                                             return <></>;
                                     }
                                 })}
-                            </Row>
+                            </Form.Row>
                         )}
                     </Card>
                 );
@@ -113,17 +113,15 @@ const AdminConfig = () => {
     return <>
         <PageHead title={t("admin.configuration")} />
         <Form handle={updateConfig}>
-            <Row>
+            <Container.Row>
                 <Column lgWidth={6} mdWidth={12}>
                     {fields.filter((_, i) => (i % 2) === 0)}
                 </Column>
                 <Column lgWidth={6} mdWidth={12}>
                     {fields.filter((_, i) => (i % 2) === 1)}
                 </Column>
-            </Row>
-            <Row>
-                <Button submit>Save</Button>
-            </Row>
+            </Container.Row>
+            <Button submit>Save</Button>
         </Form>
     </>;
 };

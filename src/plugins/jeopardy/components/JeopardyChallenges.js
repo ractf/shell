@@ -18,7 +18,7 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Column, Card, Input, FormGroup, ItemStack, Checkbox } from "@ractf/ui-kit";
+import { Column, Card, Input, Form, ItemStack, Checkbox, Container } from "@ractf/ui-kit";
 
 import ChallengePage from "pages/ChallengePage.js";
 
@@ -106,13 +106,13 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
 
     const sortedTags = Object.keys(tags).sort((a, b) => a.localeCompare(b)).map(i => [i, tags[i]]);
 
-    return <>
+    return <Container.Row>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
             <Card lesser>
-                <FormGroup>
+                <Form.Group>
                     <Input onChange={searchChanged} value={search}
                         name={"search"} placeholder={"Search challenges"} val={search} managed />
-                </FormGroup>
+                </Form.Group>
                 <Checkbox name={"done"} managed onChange={setShowSolved} val={showSolved}>
                     Show solved challenges ({solved})
                 </Checkbox>
@@ -142,5 +142,5 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
                 i => (shouldShow(i) ? <Challenge category={category} key={i.id} challenge={i} /> : null)
             )}
         </Column>
-    </>;
+    </Container.Row>;
 };

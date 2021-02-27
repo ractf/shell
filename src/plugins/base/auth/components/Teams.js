@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, FormError, HR, Input, Button, Row, SubtleText, FormGroup, H2
+    Form, HR, Input, Button, SubtleText, Container
 } from "@ractf/ui-kit";
 import { joinTeam, createTeam, reloadAll } from "@ractf/api";
 import { useConfig } from "@ractf/shell-util";
@@ -45,7 +45,7 @@ export const JoinTeam = () => {
         return <Redirect to={"/"} />;
 
     if (team !== null)
-        return <Redirect to={"/campaign"} />;
+        return <Redirect to={"/team/me"} />;
 
     const doJoinTeam = ({ name, password }) => {
         if (!name.length)
@@ -62,39 +62,36 @@ export const JoinTeam = () => {
 
     return <Wrap>{success ?
         <div style={{ textAlign: "center" }}>
-            <H2>{t("team_wiz.joined")}</H2>
+            <h2>{t("team_wiz.joined")}</h2>
             <HR />
-            <div>{t("team_wiz.next")}</div>
+            <p>{t("team_wiz.next")}</p>
 
-            <Row>
+            <Container toolbar>
                 <Link to={"/campaign"}>
-                    <Button large >{t("challenge_plural")}</Button>
+                    <Button >{t("challenge_plural")}</Button>
                 </Link>
                 <Link to={"/settings"}>
-                    <Button large lesser>{t("setting_plural")}</Button>
+                    <Button lesser>{t("setting_plural")}</Button>
                 </Link>
-            </Row>
+            </Container>
         </div> : <>
             <Form locked={locked} handle={doJoinTeam}>
-                <H2>{t("join_a_team")}</H2>
-                <FormGroup>
+                <h2>{t("join_a_team")}</h2>
+                <Form.Group>
                     <Input autofill={"off"} name={"name"} placeholder={t("team_name")} required />
                     <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} required password />
-                </FormGroup>
+                </Form.Group>
 
-                {message && <FormError>{message}</FormError>}
+                {message && <Form.Error>{message}</Form.Error>}
 
                 <SubtleText>
                     {t("team_wiz.did_you_want_to")}
-                    <Link to={"/team/new"}>{t("team_wiz.create_a_team")}</Link>
+                    <Link to={"/team/create"}>{t("team_wiz.create_a_team")}</Link>
                     {t("team_wiz.instead")}
                 </SubtleText>
-                <Row right>
-                    <Button large submit>{t("team_wiz.join")}</Button>
-                </Row>
+                <Button fullWidth submit>{t("team_wiz.join")}</Button>
             </Form>
         </>}
-
     </Wrap>;
 };
 
@@ -105,9 +102,13 @@ export const CreateTeam = () => {
     const [success, setSuccess] = useState(false);
     const [locked, setLocked] = useState(false);
     const team = useSelector(state => state.team);
+    const hasTeams = useConfig("enable_teams");
+
+    if (!hasTeams)
+        return <Redirect to={"/"} />;
 
     if (team !== null)
-        return <Redirect to={"/campaign"} />;
+        return <Redirect to={"/team/me"} />;
 
     const doCreateTeam = ({ name, password }) => {
         if (!name.length)
@@ -125,39 +126,37 @@ export const CreateTeam = () => {
         });
     };
 
-    return <Wrap>{success ?
+    return <Wrap>{!success ?
         <div style={{ textAlign: "center" }}>
-            <H2>{t("team_wiz.created")}</H2>
+            <h2>{t("team_wiz.created")}</h2>
             <HR />
-            <div>{t("team_wiz.next")}</div>
+            <p>{t("team_wiz.next")}</p>
 
-            <Row>
+            <Container toolbar>
                 <Link to={"/campaign"}>
-                    <Button large>{t("challenge_plural")}</Button>
+                    <Button>{t("challenge_plural")}</Button>
                 </Link>
                 <Link to={"/settings"}>
-                    <Button large lesser>{t("setting_plural")}</Button>
+                    <Button lesser>{t("setting_plural")}</Button>
                 </Link>
-            </Row>
+            </Container>
         </div> : <>
             <Form locked={locked} handle={doCreateTeam}>
-                <H2>{t("create_a_team")}</H2>
-                <FormGroup>
+                <h2>{t("create_a_team")}</h2>
+                <Form.Group>
                     <Input autofill={"off"} name={"name"} limit={36} placeholder={t("team_name")} required />
                     <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} required password />
                     <SubtleText>{t("team_secret_warn")}</SubtleText>
-                </FormGroup>
+                </Form.Group>
 
-                {message && <FormError>{message}</FormError>}
+                {message && <Form.Error>{message}</Form.Error>}
 
                 <SubtleText>
                     {t("team_wiz.did_you_want_to")}
                     <Link to={"/team/join"}>{t("team_wiz.join_a_team")}</Link>
                     {t("team_wiz.instead")}
                 </SubtleText>
-                <Row right>
-                    <Button large submit>{t("team_wiz.create")}</Button>
-                </Row>
+                <Button fullWidth submit>{t("team_wiz.create")}</Button>
             </Form>
         </>}
     </Wrap>;

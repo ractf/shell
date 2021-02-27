@@ -19,65 +19,6 @@
 @import "@ractf/ui-kit/Fonts.scss";
 
 
-$link: (
-    color: #4582ec,
-    hover: #1559cf
-);
-
-
-* {
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: 100%;
-}
-
-p {
-    margin: 0;
-    margin-bottom: 1em;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
-
-center {
-    width: 100%;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-}
-body {
-    font-family: $fontStack;
-    background-color: var(--col-background);
-    color: var(--col-color);
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    font-size: 1rem;
-}
-
-code {
-    text-align: left;
-    background-color: var(--col-back-lift);
-    font-family: $monoStack;
-    padding: .2em .4em;
-    margin: 0 2px;
-    font-size: 85%;
-    border-radius: 8px;
-}
-pre > code {
-    display: block;
-    padding: 16px;
-    border-radius: 3px;
-    line-height: 1.45;
-    overflow: auto;
-}
 
 #root {
     height: 100%;
@@ -90,38 +31,6 @@ pre > code {
 }
 #root > * {
     width: 100%;
-}
-
-a, .linkStyle {
-    text-decoration: none;
-    color: map-get($link, "color");
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-
-    &:hover, &:focus {
-        color: map-get($link, "hover");
-        text-decoration: none;
-        outline: none;
-    }
-}
-
-pre:first-child {
-    margin-top: 0;
-}
-pre:last-child {
-    margin-bottom: 0;
-}
-
-ul {
-    text-align: left;
-}
-ul > li {
-    margin: 16px 0;
-}
-
-b {
-    font-weight: 600;
 }
 
 .redacted {

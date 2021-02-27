@@ -19,8 +19,8 @@ import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Spinner, Card, Row, FormGroup, Leader, PageHead,
-    Column, UiKitModals
+    Form, Input, Button, Spinner, Card, Leader, PageHead,
+    Column, UiKitModals, Container
 } from "@ractf/ui-kit";
 import * as http from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
@@ -63,38 +63,33 @@ export default () => {
 
     return <>
         <PageHead title={t("admin.announce.head")} />
-        <Column lgWidth={6} mdWidth={12}>
-            <Row>
+        <Container.Row>
+            <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={t("admin.announce.active")}>
                     <Form>{localA ?
                         localA.length ? (
-                            localA.map(i => <Row key={i.id}>
-                                <Leader sub={i.body} x onClick={remove(i)}>
+                            localA.map(i => (
+                                <Leader sub={i.body} key={i.id} x onClick={remove(i)}>
                                     {i.title}
                                 </Leader>
-                            </Row>
-                            )) : <label>{t("admin.announce.none")}</label>
-                        : <Row><Spinner /></Row>
+                            ))) : <label>{t("admin.announce.none")}</label>
+                        : <Spinner />
                     }</Form>
                 </Card>
-            </Row>
-        </Column>
-        <Column lgWidth={6} mdWidth={12}>
-            <Row>
+            </Column>
+            <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={t("admin.announce.add")}>
                     <Form handle={add} locked={locked}>
-                        <FormGroup htmlFor={"title"} label={t("admin.announce.title")}>
+                        <Form.Group htmlFor={"title"} label={t("admin.announce.title")}>
                             <Input name={"title"} />
-                        </FormGroup>
-                        <FormGroup htmlFor={"body"} label={t("admin.announce.body")}>
+                        </Form.Group>
+                        <Form.Group htmlFor={"body"} label={t("admin.announce.body")}>
                             <Input name={"body"} rows={4} />
-                        </FormGroup>
-                        <Row>
-                            <Button submit>{t("admin.announce.add")}</Button>
-                        </Row>
+                        </Form.Group>
+                        <Button submit>{t("admin.announce.add")}</Button>
                     </Form>
                 </Card>
-            </Row>
-        </Column>
+            </Column>
+        </Container.Row>
     </>;
 };

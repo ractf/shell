@@ -18,7 +18,7 @@
 import React from "react";
 
 import {
-    PageHead, Row, Column, Card, Large, HR, Bar, Pie, ModalSpinner
+    PageHead, Container, Column, Card, Large, HR, Bar, Pie, ModalSpinner
 } from "@ractf/ui-kit";
 import { useApi } from "@ractf/util/http";
 import { cssVar } from "@ractf/util";
@@ -72,7 +72,7 @@ const Statistics = () => {
 
     return <>
         <PageHead title={"Statistics"} />
-        <Row>
+        <Container.Row>
             <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={"Quick breakdown"}>
                     <Large>
@@ -148,7 +148,7 @@ const Statistics = () => {
                         labels={Object.keys(solvesPerCategory)} />
                 </Card>
             </Column>
-        </Row>
+        </Container.Row>
     </>;
 };
 export default Statistics;

@@ -23,8 +23,8 @@ import { FiEdit2, FiTrash, FiPlus, FiFileText } from "react-icons/fi";
 import * as http from "@ractf/util/http";
 import { registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
 import {
-    Markdown, Page, PageHead, Grid, Button, Row, Modal, Input, Form, HR,
-    FormGroup, UiKitModals
+    Markdown, Page, PageHead, Grid, Button, Modal, Input, Form, HR,
+    UiKitModals, Container
 } from "@ractf/ui-kit";
 
 import Link from "components/Link";
@@ -118,16 +118,16 @@ const CMSAdmin = () => {
                     action={(typeof editingPage.id !== "undefined") ? `/pages/${editingPage.id}/` : "/pages/"}
                     method={(typeof editingPage.id !== "undefined") ? "PATCH" : "POST"} submitRef={formSubmit}
                 >
-                    <FormGroup label={"URL"}>
+                    <Form.Group label={"URL"}>
                         <Input placeholder={"URL"} name={"url"} val={editingPage.url} required />
-                    </FormGroup>
-                    <FormGroup label={"Title"}>
+                    </Form.Group>
+                    <Form.Group label={"Title"}>
                         <Input placeholder={"Title"} name={"title"} val={editingPage.title} required />
-                    </FormGroup>
-                    <FormGroup label={"Content (supports markdown and basic html)"}>
+                    </Form.Group>
+                    <Form.Group label={"Content (supports markdown and basic html)"}>
                         <Input placeholder={"Content"} name={"content"} rows={10}
                             val={editingPage.content} monospace required />
-                    </FormGroup>
+                    </Form.Group>
 
                     <HR />
                     <Markdown LinkElem={Link} source={editContent} />
@@ -136,10 +136,10 @@ const CMSAdmin = () => {
         }
         <PageHead>Custom Site Pages</PageHead>
         <Grid headings={["Title", "URL", "Actions"]} data={[...pages.map(i => [
-            i.title, <Link to={i.url}>{i.url}</Link>, <Row>
+            i.title, <Link to={i.url}>{i.url}</Link>, <Container toolbar>
                 <Button tiny warning Icon={FiEdit2} onClick={() => editPage(i)} />
                 <Button tiny danger Icon={FiTrash} onClick={() => removePage(i)} />
-            </Row>
+            </Container>
         ]), [<Button tiny Icon={FiPlus} onClick={addNew}>Add page</Button>, null, null]]} />
     </Page>;
 };

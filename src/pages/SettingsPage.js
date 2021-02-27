@@ -25,8 +25,8 @@ import { zxcvbn, useConfig, usePreferences, useExperiment } from "@ractf/shell-u
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 import {
-    Page, HR, Row, Hint, Button, Form, SubtleText, Input,
-    Checkbox, FormGroup, InputButton, Card, Column, PageHead, H6, UiKitModals
+    Page, HR, Hint, Button, Form, SubtleText, Input, Container,
+    Checkbox, InputButton, Card, Column, PageHead, UiKitModals
 } from "@ractf/ui-kit";
 
 import * as actions from "actions";
@@ -162,169 +162,157 @@ const SettingsPage = () => {
         <PageHead>
             {t("settings.for", { name: user.username })}
         </PageHead>
-        <Column lgWidth={6} mdWidth={12}>
-            {!user.has_2fa ? (
-                <Card warning lesser header={t("settings.cards.2fa")}>
-                    <Row>
-                        <H6>{t("settings.2fa.disabled")}</H6>
+        <Container.Row>
+            <Column lgWidth={6} mdWidth={12}>
+                {!user.has_2fa ? (
+                    <Card warning lesser header={t("settings.cards.2fa")}>
+                        <h6>{t("settings.2fa.disabled")}</h6>
                         <SubtleText>{t("settings.2fa.prompt")}</SubtleText>
-                    </Row>
-                    <Row left>
                         <Link to={"/settings/2fa"}>
                             <Button warning>{t("settings.2fa.enable")}</Button>
                         </Link>
-                    </Row>
-                </Card>
-            ) : (<Card lesser header={t("settings.cards.2fa")}>
-                <Row>
+                    </Card>
+                ) : (<Card lesser header={t("settings.cards.2fa")}>
                     <p>{t("settings.2fa.enabled")}</p>
-                </Row>
-                <Row left>
                     <Link to={"/settings/2fa"}>
                         <Button>{t("settings.2fa.disable")}</Button>
                     </Link>
-                </Row>
-            </Card>
-                )}
-            <Card lesser header={t("settings.cards.identity")}>
-                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
-                    postSubmit={usernameChanged}>
-                    <FormGroup htmlFor={"username"} label={t("username")}>
-                        <InputButton name={"username"} label={t("username")} val={user.username}
-                            limit={36} placeholder={t("username")} button={t("save")} submit />
-                    </FormGroup>
-                </Form>
-                {accOauth && (
-                    <Row centre>
-                        <Button disabled lesser>Link Google account</Button>
-                        <Button disabled lesser>Link RACTF passport</Button>
-                    </Row>
-                )}
-            </Card>
-            <Card lesser header={t("settings.cards.change_password")}>
-                <Form action={ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
-                    postSubmit={passwordChanged}>
-                    <FormGroup>
-                        <Input password name={"old_password"} placeholder={t("curr_pass")} />
-                        <Input zxcvbn={zxcvbn()} password name={"password"} placeholder={t("new_pass")} />
-                        <Input password name={"new2"} placeholder={t("new_pass")} />
-                    </FormGroup>
-                    <Row>
-                        <Button submit>{t("change_pass")}</Button>
-                    </Row>
-                </Form>
-            </Card>
-            <Card lesser header={t("settings.cards.profile")}>
-                <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
-                    <FormGroup htmlFor={"discord"} label={<>
-                        {t("settings.profile.discord")} <Hint>
-                            You can find your discord ID by following the instructions <a
-                                target="_blank" rel="noopener noreferrer"
-                                href={("https://support.discord.com/hc/en-us/articles/206346498-" +
-                                    "Where-can-I-find-my-User-Server-Message-ID-")}>
-                                here
-                                </a>.
-                        </Hint>
-                    </>}>
-                        <Input name={"discord"} val={user.discord} limit={36}
-                            placeholder={t("settings.profile.discord")} />
-                        <Input name={"discordid"} val={user.discordid} format={NUMBER_RE} limit={18}
-                            placeholder={t("settings.profile.discord_id")} />
-                    </FormGroup>
-                    <FormGroup htmlFor={"twitter"} label={t("settings.profile.twitter")}>
-                        <Input name={"twitter"} val={user.twitter} limit={36}
-                            placeholder={t("settings.profile.twitter")} />
-                    </FormGroup>
-                    <FormGroup htmlFor={"reddit"} label={t("settings.profile.reddit")}>
-                        <Input name={"reddit"} val={user.reddit} limit={36}
-                            placeholder={t("settings.profile.reddit")} />
-                    </FormGroup>
-
-                    <FormGroup htmlFor={"bio"} label={t("settings.profile.bio")}>
-                        <Input name={"bio"} rows={5} val={user.bio} limit={400}
-                            placeholder={t("settings.profile.bio")} />
-                    </FormGroup>
-
-                    <Row>
-                        <Button submit>{t("save")}</Button>
-                    </Row>
-                </Form>
-            </Card>
-        </Column>
-        <Column lgWidth={6} mdWidth={12}>
-            {hasTeams && <>
-                <Card lesser header={t("settings.cards.team")}>
-                    {team ? <>
-                        <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
-                            locked={!teamOwner}>
-                            <FormGroup htmlFor={"name"} label={t("team_name")}>
-                                <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />
-                            </FormGroup>
-                            <FormGroup htmlFor={"desc"} label={t("team_desc")}>
-                                <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
-                            </FormGroup>
-                            <FormGroup htmlFor={"password"} label={t("team_secret")}>
-                                <Input val={team.password} name={"password"} password placeholder={t("team_secret")} />
-                                <SubtleText>{t("team_secret_warn")}</SubtleText>
-                            </FormGroup>
-
-                            {teamOwner && <Row>
-                                <Button submit>{t("settings.modify_team")}</Button>
-                            </Row>}
-                        </Form>
-                        <Button onClick={doLeaveTeam} danger lesser>
-                            {t("settings.leave_team")}
-                        </Button>
-                    </> : <div>
-                            {t("settings.not_in_team")}
-                            <br /><br />
-                            {t("settings.team_prompt")}
-                            <HR />
-                            <Row>
-                                <Link to={"/team/join"}>
-                                    <Button>{t("join_a_team")}</Button>
-                                </Link>
-                                <Link to={"/team/new"}>
-                                    <Button>{t("create_a_team")}</Button>
-                                </Link>
-                            </Row>
-                        </div>}
+                </Card>)}
+                <Card lesser header={t("settings.cards.identity")}>
+                    <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
+                        postSubmit={usernameChanged}>
+                        <Form.Group htmlFor={"username"} label={t("username")}>
+                            <InputButton name={"username"} label={t("username")} val={user.username}
+                                limit={36} placeholder={t("username")} button={t("save")} submit />
+                        </Form.Group>
+                    </Form>
+                    {accOauth && (
+                        <Container toolbar centre>
+                            <Button disabled lesser>Link Google account</Button>
+                            <Button disabled lesser>Link RACTF passport</Button>
+                        </Container>
+                    )}
                 </Card>
-                {team && (
-                    <Card lesser header={t("settings.cards.members")}>
-                        {team.members.map((i, n) => (
-                            <TeamMember key={n} team={team}
-                                isCaptain={i.id === team.owner} isOwner={teamOwner} member={i} />
-                        ))}
-                    </Card>
-                )}
-            </>}
-            <Card lesser header={t("settings.cards.notifications")}>
-                <Form handle={saveNotificationPrefs} disableDotExpansion>
-                    <FormGroup label={t("settings.notifications.send_options")}>
-                        {notificationGroups.map((group) =>
-                            <Checkbox key={`notifs.${group.name}`} name={`notifs.${group.name}`}
-                                val={preferences[`notifs.${group.name}`]}>
-                                {group.description}
-                            </Checkbox>
-                        )}
-                    </FormGroup>
-                    <Row>
-                        <Button submit>{t("save")}</Button>
-                    </Row>
-                </Form>
-            </Card>
-            {accDeletion && (
-                <Card lesser danger header={t("settings.cards.danger")}>
-                    <Form action={""} method={"POST"} validator={deleteValidator}>
-                        <FormGroup htmlFor={"password"} label={t("curr_pass")}>
-                            <Input name={"password"} label={t("curr_pass")} placeholder={t("curr_pass")} submit />
-                        </FormGroup>
-                        <Button danger submit>Delete my account</Button>
+                <Card lesser header={t("settings.cards.change_password")}>
+                    <Form action={ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
+                        postSubmit={passwordChanged}>
+                        <Form.Group>
+                            <Input password name={"old_password"} placeholder={t("curr_pass")} />
+                            <Input zxcvbn={zxcvbn()} password name={"password"} placeholder={t("new_pass")} />
+                            <Input password name={"new2"} placeholder={t("new_pass")} />
+                        </Form.Group>
+                        <Button submit>{t("change_pass")}</Button>
                     </Form>
                 </Card>
-            )}
-        </Column>
+                <Card lesser header={t("settings.cards.profile")}>
+                    <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
+                        <Form.Group htmlFor={"discord"} label={<>
+                            {t("settings.profile.discord")} <Hint>
+                                You can find your discord ID by following the instructions <a
+                                    target="_blank" rel="noopener noreferrer"
+                                    href={("https://support.discord.com/hc/en-us/articles/206346498-" +
+                                        "Where-can-I-find-my-User-Server-Message-ID-")}>
+                                    here
+                                    </a>.
+                            </Hint>
+                        </>}>
+                            <Input name={"discord"} val={user.discord} limit={36}
+                                placeholder={t("settings.profile.discord")} />
+                            <Input name={"discordid"} val={user.discordid} format={NUMBER_RE} limit={18}
+                                placeholder={t("settings.profile.discord_id")} />
+                        </Form.Group>
+                        <Form.Group htmlFor={"twitter"} label={t("settings.profile.twitter")}>
+                            <Input name={"twitter"} val={user.twitter} limit={36}
+                                placeholder={t("settings.profile.twitter")} />
+                        </Form.Group>
+                        <Form.Group htmlFor={"reddit"} label={t("settings.profile.reddit")}>
+                            <Input name={"reddit"} val={user.reddit} limit={36}
+                                placeholder={t("settings.profile.reddit")} />
+                        </Form.Group>
+
+                        <Form.Group htmlFor={"bio"} label={t("settings.profile.bio")}>
+                            <Input name={"bio"} rows={5} val={user.bio} limit={400}
+                                placeholder={t("settings.profile.bio")} />
+                        </Form.Group>
+
+                        <Button submit>{t("save")}</Button>
+                    </Form>
+                </Card>
+            </Column>
+            <Column lgWidth={6} mdWidth={12}>
+                {hasTeams && <>
+                    <Card lesser header={t("settings.cards.team")}>
+                        {!team ? <>
+                            <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
+                                locked={!teamOwner}>
+                                <Form.Group htmlFor={"name"} label={t("team_name")}>
+                                    <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />
+                                </Form.Group>
+                                <Form.Group htmlFor={"desc"} label={t("team_desc")}>
+                                    <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
+                                </Form.Group>
+                                <Form.Group htmlFor={"password"} label={t("team_secret")}>
+                                    <Input val={team.password} name={"password"}
+                                        password placeholder={t("team_secret")} />
+                                    <SubtleText>{t("team_secret_warn")}</SubtleText>
+                                </Form.Group>
+
+                                {teamOwner && <>
+                                    <Button submit>{t("settings.modify_team")}</Button>
+                                </>}
+                            </Form>
+                            <Button onClick={doLeaveTeam} danger lesser>
+                                {t("settings.leave_team")}
+                            </Button>
+                        </> : <div>
+                                {t("settings.not_in_team")}
+                                <br /><br />
+                                {t("settings.team_prompt")}
+                                <HR />
+                                <Container toolbar centre>
+                                    <Link to={"/team/join"}>
+                                        <Button>{t("join_a_team")}</Button>
+                                    </Link>
+                                    <Link to={"/team/create"}>
+                                        <Button>{t("create_a_team")}</Button>
+                                    </Link>
+                                </Container>
+                            </div>}
+                    </Card>
+                    {team && (
+                        <Card lesser header={t("settings.cards.members")}>
+                            {team.members.map((i, n) => (
+                                <TeamMember key={n} team={team}
+                                    isCaptain={i.id === team.owner} isOwner={teamOwner} member={i} />
+                            ))}
+                        </Card>
+                    )}
+                </>}
+                <Card lesser header={t("settings.cards.notifications")}>
+                    <Form handle={saveNotificationPrefs} disableDotExpansion>
+                        <Form.Group label={t("settings.notifications.send_options")}>
+                            {notificationGroups.map((group) =>
+                                <Checkbox key={`notifs.${group.name}`} name={`notifs.${group.name}`}
+                                    val={preferences[`notifs.${group.name}`]}>
+                                    {group.description}
+                                </Checkbox>
+                            )}
+                        </Form.Group>
+                        <Button submit>{t("save")}</Button>
+                    </Form>
+                </Card>
+                {accDeletion && (
+                    <Card lesser danger header={t("settings.cards.danger")}>
+                        <Form action={""} method={"POST"} validator={deleteValidator}>
+                            <Form.Group htmlFor={"password"} label={t("curr_pass")}>
+                                <Input name={"password"} label={t("curr_pass")} placeholder={t("curr_pass")} submit />
+                            </Form.Group>
+                            <Button danger submit>Delete my account</Button>
+                        </Form>
+                    </Card>
+                )}
+            </Column>
+        </Container.Row>
     </Page>;
 };
 export default SettingsPage;

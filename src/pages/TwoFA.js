@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 
 import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
 import {
-    Page, Row, Button, Spinner, TextBlock, FormError, H2, Column, UiKitModals
+    Form, Page, Row, Button, Spinner, TextBlock, Column, UiKitModals
 } from "@ractf/ui-kit";
 
 import Link from "components/Link";
@@ -104,7 +104,7 @@ export default () => {
                 </Row>
             </> : page === 2 ? <>
                 <Row centre>
-                    <H2>{t("2fa.finalise")}</H2>
+                    <h2>{t("2fa.finalise")}</h2>
                 </Row>
                 <Row centre>
                     <span>
@@ -126,7 +126,7 @@ export default () => {
                     </TextBlock>
                 </Row>
 
-                {message && <Row centre><FormError>{message}</FormError></Row>}
+                {message && <Row centre><Form.Error>{message}</Form.Error></Row>}
 
                 <Row centre>
                     <Link to={"/settings/2fa"}>
@@ -136,7 +136,7 @@ export default () => {
                 </Row>
             </> : page === 3 ? <>
                 <Row centre>
-                    <H2>{t("2fa.congratulations")}</H2>
+                    <h2>{t("2fa.congratulations")}</h2>
                 </Row>
                 <Row centre>
                     {t("2fa.setup")}

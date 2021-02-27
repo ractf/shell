@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
 import {
-    Button, TextBlock, PageHead, Row, Markdown, Badge, Page, Card, Column
+    Button, TextBlock, PageHead, Markdown, Badge, Page, Card, Container
 } from "@ractf/ui-kit";
 
 import Link from "components/Link";
@@ -55,58 +55,46 @@ export default ({ challenge, category, embedded, rightComponent }) => {
         rightSide = React.createElement(rightComponent, { challenge: challenge });
 
     const chalContent = <>
-        <Column noGutter={embedded}>
-            {challengeMods}
-            <Row>
-                <TextBlock>
-                    <Markdown LinkElem={Link} source={challenge.description} />
-                </TextBlock>
-            </Row>
+        {challengeMods}
+        <TextBlock>
+            <Markdown LinkElem={Link} source={challenge.description} />
+        </TextBlock>
 
-            {challenge.files && !!challenge.files.length && <Row>
-                {challenge.files.map(file => file && (
-                    <File key={file.id} {...file} tiny />
-                ))}
-            </Row>}
-            {user.team && challenge.hints && !!challenge.hints.length && <Row>
-                {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                    return <Hint {...hint} key={hint.id} tiny />;
-                })}
-            </Row>}
+        {challenge.files && !!challenge.files.length && <Container full toolbar spaced>
+            {challenge.files.map(file => file && (
+                <File key={file.id} {...file} tiny />
+            ))}
+        </Container>}
+        {user.team && challenge.hints && !!challenge.hints.length && <Container full toolbar spaced>
+            {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
+                return <Hint {...hint} key={hint.id} tiny />;
+            })}
+        </Container>}
 
-            {challenge.solved && challenge.post_score_explanation && <Row>
-                <Card lesser header={t("challenge.post_score_explanation")}>
-                    <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
-                </Card>
-            </Row>}
-            {user.team
-                ? (
-                    <Row>
-                        {embedded && (
-                            <Link to={challenge.url}>
-                                <Button>Open challenge page</Button>
-                            </Link>
-                        )}
-                        <FlagForm challenge={challenge} submitRef={submitFlag}
-                            onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
-                    </Row>
-                ) : (
-                    <>
-                        <Row>
-                            <Card slim danger>{t("challenge.no_team")}</Card>
-                        </Row>
-                        <Row>
-                            <Link to={"/team/join"}>
-                                <Button danger>{t("join_a_team")}</Button>
-                            </Link>
-                            <Link to={"/team/new"}>
-                                <Button danger>{t("create_a_team")}</Button>
-                            </Link>
-                        </Row>
-                    </>
-                )
-            }
-        </Column>
+        {challenge.solved && challenge.post_score_explanation && (
+            <Card lesser header={t("challenge.post_score_explanation")}>
+                <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
+            </Card>
+        )}
+        {user.team
+            ? (<>
+                {embedded && (
+                    <Link to={challenge.url}>
+                        <Button>Open challenge page</Button>
+                    </Link>
+                )}
+                <FlagForm challenge={challenge} submitRef={submitFlag}
+                    onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
+            </>) : (<>
+                <Card slim danger>{t("challenge.no_team")}</Card>
+                <Link to={"/team/join"}>
+                    <Button danger>{t("join_a_team")}</Button>
+                </Link>
+                <Link to={"/team/create"}>
+                    <Button danger>{t("create_a_team")}</Button>
+                </Link>
+            </>)
+        }
     </>;
 
     const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
@@ -123,13 +111,15 @@ export default ({ challenge, category, embedded, rightComponent }) => {
         : t("challenge.no_votes")
     );
 
-    if (embedded)
-        return <>
+    if (embedded) {
+        if (!rightSide) return chalContent;
+        return (
             <Split submitFlag={submitFlag} onFlagResponse={onFlagResponse} stacked>
                 {chalContent}
                 {rightSide}
             </Split>
-        </>;
+        );
+    }
 
     const leftSide = <Page>
         <PageHead
@@ -140,11 +130,11 @@ export default ({ challenge, category, embedded, rightComponent }) => {
             title={challenge.name} tags={tags}
         />
         {user.is_staff && (
-            <Row style={{ position: "absolute", top: 16, right: 32 }} right>
+            <div style={{ position: "absolute", top: 16, right: 32 }} right>
                 <Link to={"#edit"}>
                     <Button danger>{t("edit")}</Button>
                 </Link>
-            </Row>
+            </div>
         )}
         {chalContent}
     </Page>;

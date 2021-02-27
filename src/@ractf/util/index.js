@@ -53,7 +53,7 @@ export const basicComponent = (localClass, name, element) => {
 
 export const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-export const NUMBER_RE = /^-?(\d+)?\.?(\d+)?$/;
+export const NUMBER_RE = /^-?(.?\d+|\d+.?\d*?)$/;
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
 const _fastClick = e => {

@@ -21,11 +21,9 @@ import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 
 import { useConfig } from "@ractf/shell-util";
-import { H2, Button, Row } from "@ractf/ui-kit";
+import { Button, Page, Container } from "@ractf/ui-kit";
 
 import Link from "components/Link";
-
-import { Wrap } from "./Parts";
 
 
 const NoTeam = () => {
@@ -36,29 +34,27 @@ const NoTeam = () => {
     if (hasTeams && user.team !== null)
         return <Redirect to={"/campaign"} />;
 
-    return <Wrap>
-        <div style={{ textAlign: "center" }}>
-            <H2>{t("auth.welcome")}</H2>
-            <div>{t("auth.next")}</div>
-            <br />
-            <Row centre>
-                {hasTeams ? <>
-                    <Link to={"/team/new"}>
-                        <Button>{t("create_a_team")}</Button>
-                    </Link>
-                    <Link to={"/team/join"}>
-                        <Button>{t("join_a_team")}</Button>
-                    </Link>
-                </> : <>
-                    <Link to={"/campaign"}>
-                        <Button>{t("challenge_plural")}</Button>
-                    </Link>
-                    <Link to={"/settings"}>
-                        <Button>{t("setting_plural")}</Button>
-                    </Link>
-                </>}
-            </Row>
-        </div>
-    </Wrap>;
+    return <Page centre>
+        <h2>{t("auth.welcome")}</h2>
+        <div>{t("auth.next")}</div>
+        <br />
+        <Container toolbar>
+            {hasTeams ? <>
+                <Link to={"/team/create"}>
+                    <Button>{t("create_a_team")}</Button>
+                </Link>
+                <Link to={"/team/join"}>
+                    <Button>{t("join_a_team")}</Button>
+                </Link>
+            </> : <>
+                <Link to={"/campaign"}>
+                    <Button>{t("challenge_plural")}</Button>
+                </Link>
+                <Link to={"/settings"}>
+                    <Button>{t("setting_plural")}</Button>
+                </Link>
+            </>}
+        </Container>
+    </Page>;
 };
 export default NoTeam;

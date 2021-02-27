@@ -19,7 +19,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import {
-    PageHead, FormGroup, Row, Column, ThemeLoader, Button, ColourPicker,
+    PageHead, Form, Row, Column, ThemeLoader, Button, ColourPicker,
     HR, PalettePicker
 } from "@ractf/ui-kit";
 import { BASE_COLOURS, COLOURS, BASE_TYPES, TYPES } from "@ractf/ui-kit/colours";
@@ -100,18 +100,18 @@ const Editor = () => {
     return <>
         <ThemeLoader {...tlProps} />
         <Row>
-            <FormGroup label={"Background"}>
+            <Form.Group label={"Background"}>
                 <PaletteSample stateRef={coloursRef} colour={"background"} tlProps={tlProps} />
-            </FormGroup>
-            <FormGroup label={"Foreground"}>
+            </Form.Group>
+            <Form.Group label={"Foreground"}>
                 <PaletteSample stateRef={coloursRef} colour={"color"} tlProps={tlProps} />
-            </FormGroup>
-            <FormGroup label={"Accent Colour"}>
+            </Form.Group>
+            <Form.Group label={"Accent Colour"}>
                 <PaletteSample stateRef={coloursRef} colour={"accent"} tlProps={tlProps} />
-            </FormGroup>
+            </Form.Group>
         </Row>
         <Row>
-            <FormGroup label={"Colour Scheme"}>
+            <Form.Group label={"Colour Scheme"}>
                 <Row>
                     <PaletteSample stateRef={coloursRef} colour={"green"} tlProps={tlProps} />
                     <PaletteSample stateRef={coloursRef} colour={"teal"} tlProps={tlProps} />
@@ -124,7 +124,7 @@ const Editor = () => {
                     <PaletteSample stateRef={coloursRef} colour={"orange"} tlProps={tlProps} />
                     <PaletteSample stateRef={coloursRef} colour={"yellow"} tlProps={tlProps} />
                 </Row>
-            </FormGroup>
+            </Form.Group>
         </Row>
         <HR />
         <Row>
@@ -137,9 +137,9 @@ const Editor = () => {
             <Form valuesRef={valuesRef} onChange={onColourChange}>
                 <Row>
                     {Object.keys(COLOURS).map(key => (
-                        <FormGroup label={key} key={key}>
+                        <Form.Group label={key} key={key}>
                             <Input name={key} value={COLOURS[key]} />
-                        </FormGroup>
+                        </Form.Group>
                     ))}
                 </Row>
             </Form>

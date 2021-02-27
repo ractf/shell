@@ -21,8 +21,8 @@ import { useTranslation } from "react-i18next";
 import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
 import * as http from "@ractf/util/http";
 import {
-    Button, PageHead, Card, Row, Modal, Select, Badge, FormGroup, Input, Form,
-    H6, Column, UiKitModals
+    Button, PageHead, Card, Modal, Select, Badge, Input, Form,
+    Container, UiKitModals
 } from "@ractf/ui-kit";
 import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
 import { useCategories, useExperiment } from "@ractf/shell-util";
@@ -70,26 +70,22 @@ const PackCreator = ({ close }) => {
     return <Modal header={"Create Challenge Pack"} buttons={<>
         <Button onClick={close} lesser warning>Cancel</Button>
     </>} onClose={close} okay={"Download Pack"} onOkay={create} cancel={false}>
-        <H6>Settings:</H6>
+        <h6>Settings:</h6>
         <Form valuesRef={formValues}>
-            <FormGroup htmlFor={"name"} label={"Name"}>
+            <Form.Group htmlFor={"name"} label={"Name"}>
                 <Input name={"name"} placeholder={"Name"} />
-            </FormGroup>
-            <FormGroup htmlFor={"description"} label={"Description"}>
+            </Form.Group>
+            <Form.Group htmlFor={"description"} label={"Description"}>
                 <Input name={"description"} rows={3} placeholder={"Description"} />
-            </FormGroup>
+            </Form.Group>
         </Form>
-        <Row>
-            <H6>Challenges:</H6>
-        </Row>
-        <Row>{selected.map(i => (
+        <h6>Challenges:</h6>
+        <Container toolbar full spaced>{selected.map(i => (
             <Badge key={i.key} onClose={remove(i.key)} x>{i.value}</Badge>
-        ))}</Row>
-        <Row>
-            <Select onChange={select} options={
-                options.filter(i => selected.filter(j => j.key === i.key).length === 0)
-            } hasFilter />
-        </Row>
+        ))}</Container>
+        <Select onChange={select} options={
+            options.filter(i => selected.filter(j => j.key === i.key).length === 0)
+        } hasFilter />
     </Modal>;
 };
 
@@ -423,31 +419,25 @@ export default () => {
 
         {isCreatePack && <PackCreator close={stopCreatePack} />}
 
-        <Column>
-            <Row>
-                <Card lesser header={t("admin.import")}>
-                    <Row centre>
-                        {importEntire && <Button disabled danger>{t("admin.import_ctf")}</Button>}
-                        <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
-                        <Button onClick={importChal}>{t("admin.import_chal")}</Button>
-                    </Row>
-                </Card>
-            </Row>
-            <Row>
-                <Card lesser header={t("admin.export")}>
-                    <Row centre>
-                        {importEntire && <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>}
-                        <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
-                        <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
-                        <Button onClick={createPack}>Create challenge pack</Button>
-                    </Row>
-                    <Row centre>
-                        <Button onClick={exportLeaderboard}>{t("admin.export_sb")}</Button>
-                        <Button onClick={exportPlayers}>{t("admin.export_players")}</Button>
-                        <Button onClick={exportTeams}>{t("admin.export_teams")}</Button>
-                    </Row>
-                </Card>
-            </Row>
-        </Column>
+        <Card lesser header={t("admin.import")}>
+            <Container toolbar spaced centre>
+                {importEntire && <Button disabled danger>{t("admin.import_ctf")}</Button>}
+                <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
+                <Button onClick={importChal}>{t("admin.import_chal")}</Button>
+            </Container>
+        </Card>
+        <Card lesser header={t("admin.export")}>
+            <Container toolbar spaced centre>
+                {importEntire && <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>}
+                <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
+                <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
+                <Button onClick={createPack}>Create challenge pack</Button>
+            </Container>
+            <Container toolbar spaced centre>
+                <Button onClick={exportLeaderboard}>{t("admin.export_sb")}</Button>
+                <Button onClick={exportPlayers}>{t("admin.export_players")}</Button>
+                <Button onClick={exportTeams}>{t("admin.export_teams")}</Button>
+            </Container>
+        </Card>
     </>;
 };

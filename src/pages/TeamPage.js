@@ -26,8 +26,8 @@ import { FiTwitter, FiUser, FiUsers } from "react-icons/fi";
 import { useApi } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
 import {
-    FormError, TabbedView, Tab, HR, ProgressBar, Row, Graph,
-    Pie, Page, Column
+    TabbedView, Tab, HR, ProgressBar, Graph,
+    Pie, Page, Column, Form, Container
 } from "@ractf/ui-kit";
 import { useConfig, useCategories } from "@ractf/shell-util";
 import { cssVar, useReactRouter } from "@ractf/util";
@@ -61,7 +61,7 @@ const TeamPage = () => {
     if (user.team === null && team === "me") return <Redirect to={"/welcome"} />;
 
     if (error) return <Page title={t("teams.teams")} centre>
-        <FormError>{error}</FormError>
+        <Form.Error>{error}</Form.Error>
         <BrokenShards />
     </Page>;
     if (!teamData) return <LoadingPage title={t("teams.teams")} />;
@@ -112,8 +112,8 @@ const TeamPage = () => {
     });
 
     return <Page title={teamData.name}>
-        <Column xlWidth={3} lgWidth={4} mdWidth={12}>
-            <div className={"userMeta"}>
+        <Container.Row>
+            <Column xlWidth={3} lgWidth={4} mdWidth={12}>
                 <div className={"userName"}><FiUsers /> {teamData.name}</div>
                 <div>{t("point_count", { count: teamData.leaderboard_points })}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
@@ -144,13 +144,11 @@ const TeamPage = () => {
                             </span>)}
                 </>}
 
-                {teamData.members.map((i, n) => <><Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
+                {teamData.members.map((i, n) => <Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
                     <FiUser /> {i.username}
-                </Link><br /></>)}
-            </div>
-        </Column>
-        <Column xlWidth={9} lgWidth={8} mdWidth={12}>
-            <div className={"userSolves"}>
+                </Link>)}
+            </Column>
+            <Column xlWidth={9} lgWidth={8} mdWidth={12}>
                 {(!teamData.solves || teamData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
                     {t("teams.no_solves", { name: teamData.name })}
                 </div> : <TabbedView>
@@ -160,46 +158,39 @@ const TeamPage = () => {
                             ))}
                         </Tab>
                         <Tab label={"Stats"}>
-                            <div className={"ppwRow"}>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Solve attempts</div>
+                            <Container.Row>
+                                <Column lgWidth={4} mdWidth={12}>
+                                    <h5>Solve attempts</h5>
                                     <Pie data={[teamData.solves.filter(Boolean).length, teamData.incorrect_solves]}
                                         labels={["Correct", "Incorrect"]}
                                         colors={[cssVar("--col-green"), cssVar("--col-red")]} />
-                                </div>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Category Breakdown</div>
+                                </Column>
+                                <Column lgWidth={4} mdWidth={6}>
+                                    <h5>Category Breakdown</h5>
                                     <Pie data={Object.values(categoryValues)}
                                         labels={Object.keys(categoryValues)} />
-                                </div>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>User Breakdown</div>
+                                </Column>
+                                <Column lgWidth={4} mdWidth={6}>
+                                    <h5>User Breakdown</h5>
                                     <Pie data={Object.values(userValues)}
                                         labels={Object.keys(userValues)} />
-                                </div>
-                            </div>
+                                </Column>
+                            </Container.Row>
                             <HR />
-                            <div>
-                                <div className={"ppwHead"}>Category Progress</div>
-                                {catProgress.map(([name, got, tot]) => <>
-                                    <span style={{ fontWeight: 700 }}>{name}</span>
-                                    <span style={{ fontSize: ".8em", marginLeft: 8 }}>
-                                        {got}/{tot} ({tot === 0 ? 100 : Math.round(got / tot * 10000) / 100}%)
-                                    </span>
-                                    <Row>
-                                        <ProgressBar thick progress={tot === 0 ? 100 : got / tot} width={"auto"} />
-                                    </Row>
-                                </>)}
-                            </div>
+                            <h5>Category Progress</h5>
+                            {catProgress.map(([name, got, tot]) => <>
+                                <span><b>{name}</b> <small>
+                                    {got}/{tot} ({tot === 0 ? 100 : Math.round(got / tot * 10000) / 100}%)
+                                </small></span>
+                                <ProgressBar thick progress={tot === 0 ? 100 : got / tot} width={"auto"} />
+                            </>)}
                             <HR />
-                            <div>
-                                <div className={"ppwHead"}>Score Over Time</div>
-                                <Graph data={[scorePlotData]} filled timeGraph />
-                            </div>
+                            <h5>Score Over Time</h5>
+                            <Graph data={[scorePlotData]} filled timeGraph />
                         </Tab>
                     </TabbedView>}
-            </div>
-        </Column>
+            </Column>
+        </Container.Row>
     </Page>;
 };
 export default TeamPage;

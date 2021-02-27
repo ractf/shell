@@ -1,5 +1,6 @@
 {
     "error": "Error: ",
+    "load_more": "Load More",
     "2fa": {
         "2fa": "2-Factor Authentication",
         "replace_prompt": "You are about to replace the existing 2-factor authentication keys for your account!",

@@ -72,7 +72,7 @@ export default () => {
         title: "Join Team",
         component: JoinTeam,
     });
-    registerPlugin("page", "/team/new", {
+    registerPlugin("page", "/team/create", {
         title: "New Team",
         component: CreateTeam,
     });

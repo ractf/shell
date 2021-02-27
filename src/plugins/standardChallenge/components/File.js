@@ -20,7 +20,7 @@ import { FiFile, FiEdit2, FiTrash } from "react-icons/fi";
 
 import { NUMBER_RE, formatBytes } from "@ractf/util";
 import { removeFile, editFile } from "@ractf/api";
-import { Button, Row, UiKitModals } from "@ractf/ui-kit";
+import { Button, Container, UiKitModals } from "@ractf/ui-kit";
 import * as http from "@ractf/util/http";
 
 import "./Challenge.scss";
@@ -47,10 +47,10 @@ export default ({ name, url, size, id, isEdit, ...props }) => {
     };
 
     if (isEdit) {
-        return <Row>
+        return <Container toolbar>
             <Button tiny warning Icon={FiEdit2} onClick={edit} />
             <Button tiny danger Icon={FiTrash} onClick={() => removeFile(id)} />
-        </Row>;
+        </Container>;
     }
 
     return <a href={url} target={"_blank"} rel={"noopener noreferrer"}>

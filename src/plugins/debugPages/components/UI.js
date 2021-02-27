@@ -19,13 +19,13 @@ import React from "react";
 import { FiHelpCircle } from "react-icons/fi";
 
 import {
-    Page, HR, Row, Button, Input, TextBlock, ProgressBar, Radio, Scrollbar,
+    Page, HR, Button, Input, TextBlock, ProgressBar, Radio, Scrollbar,
     Select, Spinner, TabbedView, Tab, Table, ToggleButton, Tree,
-    TreeWrap, TreeValue, Checkbox, InputButton, Leader, FormGroup, Card,
-    H1, H2, H3, H4, H5, H6, SubtleText, Badge, InputGroup, InputHint, NavBar,
+    TreeWrap, TreeValue, Checkbox, InputButton, Leader, Card,
+    SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavMenu, NavItem, NavCollapse,
     Footer, FootRow, FootCol, Column, Breadcrumbs, Crumb, Form,
-    BareForm, ItemStack, /* ColourPicker, PalettePicker */
+    BareForm, ItemStack, Container, /* ColourPicker, PalettePicker */
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
 import { zxcvbn } from "@ractf/shell-util";
@@ -67,15 +67,15 @@ const Inner = () => (<NavCollapse>
     </NavMenu>
 </NavCollapse>);
 
-const UIPage = () => <Page><Row left>
+const UIPage = () => <Page>
     {/* <ColourPicker />
     <PalettePicker /> */}
     <HR />
     <HR />
     <HR />
-    <H1>Really Awesome UI Framework</H1>
+    <h1>Really Awesome UI Framework</h1>
     <HR />
-    <H2>Nav Bars</H2>
+    <h2>Nav Bars</h2>
     <NavBar>
         <NavBrand>RACTF/<b>UI-KIT</b></NavBrand>
         <NavCollapse>
@@ -123,218 +123,227 @@ const UIPage = () => <Page><Row left>
         <Crumb>Here!</Crumb>
     </Breadcrumbs>
     <HR />
-    <H1>Heading 1</H1>
-    <H2>Heading 2</H2>
-    <H3>Heading 3</H3>
-    <H4>Heading 4</H4>
-    <H5>Heading 5</H5>
-    <H6>Heading 6</H6>
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h3>
+    <h4>Heading 4</h4>
+    <h5>Heading 5</h5>
+    <h6>Heading 6</h6>
     <HR />
 
-    <Row left>
+    <Container toolbar>
         {TYPES.map(type => (
             <Button Icon={FiHelpCircle} tooltip={`This is a ${type} button`}
                 {...{ [type]: true }} key={type}>{type}</Button>
         ))}
-    </Row>
+    </Container>
 
     <HR />
-    <H2>Badges</H2>
-    <Column lgWidth={6} mdWidth={12}>
-        <Row left tight>
-            {TYPES.map(type => (
-                <Badge {...{ [type]: true }} key={type}>{type}</Badge>
-            ))}
-        </Row>
-    </Column>
-    <Column lgWidth={6} mdWidth={12}>
-        <Row left tight>
-            {TYPES.map(type => (
-                <Badge pill {...{ [type]: true }} key={type}>{type}</Badge>
-            ))}
-        </Row>
-    </Column>
+    <h2>Badges</h2>
+    <Container.Row>
+        <Column lgWidth={6} mdWidth={12}>
+            <Container toolbar>
+                {TYPES.map(type => (
+                    <Badge {...{ [type]: true }} key={type}>{type}</Badge>
+                ))}
+            </Container>
+        </Column>
+        <Column lgWidth={6} mdWidth={12}>
+            <Container toolbar>
+                {TYPES.map(type => (
+                    <Badge pill {...{ [type]: true }} key={type}>{type}</Badge>
+                ))}
+            </Container>
+        </Column>
+    </Container.Row>
     <HR />
-    <H2>Buttons</H2>
-    <Column lgWidth={6} mdWidth={12}>
-        <Row left>
-            {TYPES.map(type => (
-                <Button {...{ [type]: true }} key={type}>{type}</Button>
-            ))}
-        </Row>
-        <Row left>
-            {TYPES.map(type => (
-                <Button disabled {...{ [type]: true }} key={type}>{type}</Button>
-            ))}
-        </Row>
-        <Row left>
-            {TYPES.map(type => (
-                <Button lesser {...{ [type]: true }} key={type}>{type}</Button>
-            ))}
-        </Row>
-        <Row left>
-            <Button large>Large</Button>
-        </Row>
-        <ToggleButton
-            options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4], ["Option 5", 5]]}
-            default={2} />
-        <Row vCentre>
-            <ToggleButton small
-                options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
-                default={2} />
-            <SubtleText>Items per page:</SubtleText>
-            <Select mini options={[10, 25, 50, 100]} />
-        </Row>
-    </Column>
-    <Column lgWidth={6} mdWidth={12}>
-        <Row left>
-            {TYPES.map(type => (
-                <Button pill {...{ [type]: true }} key={type}>{type}</Button>
-            ))}
-        </Row>
-        <Row left>
-            {TYPES.map(type => (
-                <Button pill disabled {...{ [type]: true }} key={type}>{type}</Button>
-            ))}
-        </Row>
-        <Row left>
-            {TYPES.map(type => (
-                <Button pill lesser {...{ [type]: true }} key={type}>{type}</Button>
-            ))}
-        </Row>
-        <Row left>
-            <Button pill large>Large</Button>
-        </Row>
-        <ToggleButton pill
-            options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4], ["Option 5", 5]]}
-            default={2} />
-        <Row vCentre>
-            <ToggleButton pill small
-                options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
-                default={2} />
-            <SubtleText>Items per page:</SubtleText>
-            <Select pill mini options={[10, 25, 50, 100]} />
-        </Row>
-    </Column>
+    <h2>Buttons</h2>
+    <Container.Row>
+        <Column lgWidth={6} mdWidth={12}>
+            <Container toolbar spaced>
+                {TYPES.map(type => (
+                    <Button {...{ [type]: true }} key={type}>{type}</Button>
+                ))}
+            </Container>
+            <Container toolbar spaced>
+                {TYPES.map(type => (
+                    <Button disabled {...{ [type]: true }} key={type}>{type}</Button>
+                ))}
+            </Container>
+            <Container toolbar spaced>
+                {TYPES.map(type => (
+                    <Button lesser {...{ [type]: true }} key={type}>{type}</Button>
+                ))}
+            </Container>
+            <Container toolbar spaced>
+                <Button large>Large</Button>
+            </Container>
+            <Container spaced>
+                <ToggleButton
+                    options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4], ["Option 5", 5]]}
+                    default={2} />
+            </Container>
+            <Container toolbar spaced>
+                <ToggleButton small
+                    options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
+                    default={2} />
+                <SubtleText>Items per page:</SubtleText>
+                <Select mini options={[10, 25, 50, 100]} />
+            </Container>
+        </Column>
+        <Column lgWidth={6} mdWidth={12}>
+            <Container toolbar spaced>
+                {TYPES.map(type => (
+                    <Button pill {...{ [type]: true }} key={type}>{type}</Button>
+                ))}
+            </Container>
+            <Container toolbar spaced>
+                {TYPES.map(type => (
+                    <Button pill disabled {...{ [type]: true }} key={type}>{type}</Button>
+                ))}
+            </Container>
+            <Container toolbar spaced>
+                {TYPES.map(type => (
+                    <Button pill lesser {...{ [type]: true }} key={type}>{type}</Button>
+                ))}
+            </Container>
+            <Container toolbar spaced>
+                <Button pill large>Large</Button>
+            </Container>
+            <Container spaced>
+                <ToggleButton pill
+                    options={[["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4], ["Option 5", 5]]}
+                    default={2} />
+            </Container>
+            <Container toolbar spaced>
+                <ToggleButton pill small
+                    options={[["<", 0], ["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], [">", 6]]}
+                    default={2} />
+                <SubtleText>Items per page:</SubtleText>
+                <Select pill mini options={[10, 25, 50, 100]} />
+            </Container>
+        </Column>
+    </Container.Row>
     <HR />
-    <H2>Inputs</H2>
-    <Column lgWidth={6}>
-        <Form>
-            <FormGroup label={"Basic Inputs"}>
-                <Input name="def" placeholder={"Default"} />
-                <Input name="inv" placeholder={"Invalid"} error />
-                <Input name="lim" placeholder={"Limited"} limit={15} />
-                <Input name="mul" placeholder={"Multi-line"} rows={3} />
-                <Input name="pas" placeholder={"Password"} password />
-                <Input name="pst" zxcvbn={zxcvbn()} placeholder={"Password with strength"} password />
-            </FormGroup>
-            <FormGroup label={"Select"}>
-                <Select options={[
-                    { key: 0, value: "Example Select" },
-                    { key: 1, value: "This" },
-                    { key: 2, value: "is" },
-                    { key: 3, value: "a" },
-                    { key: 4, value: "dropdown" },
-                ]} />
-            </FormGroup>
-        </Form>
-    </Column>
-    <Column lgWidth={6}>
-        <Form locked>
-            <FormGroup label={"Disabled"}>
-                <Input name="dis" placeholder={"Disabled"} />
-            </FormGroup>
-        </Form>
-        <Form>
-            <FormGroup label={"Input Groups"}>
-                <InputButton name="inl" placeholder={"Inline Submit"} />
-                <InputGroup name="ing" left={
-                    <InputHint>@</InputHint>
-                } right={<>
-                    <Button success>Add New</Button>
-                    <Button danger>Remove</Button>
-                </>} />
-            </FormGroup>
-        </Form>
-        <Form locked>
-            <FormGroup label={"Disabled Input Groups"}>
-                <InputButton name="din" placeholder={"Disabled Inline Submit"} />
-                <InputGroup name="dig" left={
-                    <InputHint>@</InputHint>
-                } right={<>
-                    <Button disabled success>Add New</Button>
-                    <Button disabled danger>Remove</Button>
-                </>} />
-            </FormGroup>
-        </Form>
-    </Column>
-    <HR />
-    <H2>Progress Bar</H2>
-    <Row>
+    <h2>Inputs</h2>
+    <Container.Row>
         <Column lgWidth={6}>
-            <Row>
-                <ProgressBar />
-                <ProgressBar progress={.25} />
-                <ProgressBar progress={.50} />
-                <ProgressBar progress={.75} />
-                <ProgressBar progress={1} />
-            </Row>
+            <Form>
+                <Form.Group label={"Basic Inputs"}>
+                    <Input name="def" placeholder={"Default"} />
+                    <Input name="inv" placeholder={"Invalid"} error />
+                    <Input name="lim" placeholder={"Limited"} limit={15} />
+                    <Input name="mul" placeholder={"Multi-line"} rows={3} />
+                    <Input name="pas" placeholder={"Password"} password />
+                    <Input name="pst" zxcvbn={zxcvbn()} placeholder={"Password with strength"} password />
+                </Form.Group>
+                <Form.Group label={"Select"}>
+                    <Select options={[
+                        { key: 0, value: "Example Select" },
+                        { key: 1, value: "This" },
+                        { key: 2, value: "is" },
+                        { key: 3, value: "a" },
+                        { key: 4, value: "dropdown" },
+                    ]} />
+                </Form.Group>
+            </Form>
         </Column>
         <Column lgWidth={6}>
-            <Row>
-                <ProgressBar thick />
-                <ProgressBar thick progress={.25} />
-                <ProgressBar thick progress={.50} />
-                <ProgressBar thick progress={.75} />
-                <ProgressBar thick progress={1} />
-            </Row>
+            <Form locked>
+                <Form.Group label={"Disabled"}>
+                    <Input name="dis" placeholder={"Disabled"} />
+                </Form.Group>
+            </Form>
+            <Form>
+                <Form.Group label={"Input Groups"}>
+                    <InputButton name="inl" placeholder={"Inline Submit"} />
+                    <InputGroup name="ing" left={
+                        <InputHint>@</InputHint>
+                    } right={<>
+                        <Button success>Add New</Button>
+                        <Button danger>Remove</Button>
+                    </>} />
+                </Form.Group>
+            </Form>
+            <Form locked>
+                <Form.Group label={"Disabled Input Groups"}>
+                    <InputButton name="din" placeholder={"Disabled Inline Submit"} />
+                    <InputGroup name="dig" left={
+                        <InputHint>@</InputHint>
+                    } right={<>
+                        <Button disabled success>Add New</Button>
+                        <Button disabled danger>Remove</Button>
+                    </>} />
+                </Form.Group>
+            </Form>
         </Column>
-    </Row>
+    </Container.Row>
     <HR />
-    <Column lgWidth={6}>
-        <H2>Radio</H2>
-        <Form>
-            <Radio name="demoRadio" options={
-                [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
-            } val={2} />
-        </Form>
-        <HR />
-    </Column>
-    <Column lgWidth={6}>
-        <H2>Checkbox</H2>
-        <Form>
-            <Checkbox name="cb1">Checkbox</Checkbox>
-            <Checkbox name="cb2" val={true}>Checkbox checked</Checkbox>
-        </Form>
-        <HR />
-    </Column>
-    <H2>Scrollbar</H2>
-    <Column lgWidth={6}>
-        <TextBlock style={{ height: 100 }}>
-            <Scrollbar>
-                This is a text block<br />
-            The size has been limited to 100 pixels<br />
-            The &lt;Scrollbar&gt; element was placed inside it<br />
-            And then some content put inside that scrolled area<br />
-            You have to scroll to see this!<br />
-            Hello from below the fold!
-        </Scrollbar>
-        </TextBlock>
-    </Column>
-    <Column lgWidth={6}>
-        <TextBlock>
-            <Scrollbar height={100} primary>
-                This is the same demo as before<br />
-            But this is a primary scrollbar now<br />
-            There should usually only be a single primary scrollbar<br />
-            And that's the one on the right of the page<br />
-            You have to scroll to see this!<br />
-            Hello from below the fold!
-        </Scrollbar>
-        </TextBlock>
-    </Column>
+    <h2>Progress Bar</h2>
+    <Container.Row>
+        <Column lgWidth={6}>
+            <ProgressBar />
+            <ProgressBar progress={.25} />
+            <ProgressBar progress={.50} />
+            <ProgressBar progress={.75} />
+            <ProgressBar progress={1} />
+        </Column>
+        <Column lgWidth={6}>
+            <ProgressBar thick />
+            <ProgressBar thick progress={.25} />
+            <ProgressBar thick progress={.50} />
+            <ProgressBar thick progress={.75} />
+            <ProgressBar thick progress={1} />
+        </Column>
+    </Container.Row>
     <HR />
-    <H2>Tabbed notebook</H2>
+    <Container.Row>
+        <Column lgWidth={6}>
+            <h2>Radio</h2>
+            <Form>
+                <Radio name="demoRadio" options={
+                    [["Option 1", 1], ["Option 2", 2], ["Option 3", 3]]
+                } val={2} />
+            </Form>
+        </Column>
+        <Column lgWidth={6}>
+            <h2>Checkbox</h2>
+            <Form>
+                <Checkbox name="cb1">Checkbox</Checkbox>
+                <Checkbox name="cb2" val={true}>Checkbox checked</Checkbox>
+            </Form>
+        </Column>
+    </Container.Row>
+    <HR />
+    <h2>Scrollbar</h2>
+    <Container.Row>
+        <Column lgWidth={6}>
+            <TextBlock style={{ height: 100 }}>
+                <Scrollbar>
+                    This is a text block<br />
+                The size has been limited to 100 pixels<br />
+                The &lt;Scrollbar&gt; element was placed inside it<br />
+                And then some content put inside that scrolled area<br />
+                You have to scroll to see this!<br />
+                Hello from below the fold!
+            </Scrollbar>
+            </TextBlock>
+        </Column>
+    <Column lgWidth={6}>
+            <TextBlock>
+                <Scrollbar height={100} primary>
+                    This is the same demo as before<br />
+                But this is a primary scrollbar now<br />
+                There should usually only be a single primary scrollbar<br />
+                And that's the one on the right of the page<br />
+                You have to scroll to see this!<br />
+                Hello from below the fold!
+            </Scrollbar>
+            </TextBlock>
+        </Column>
+    </Container.Row>
+    <HR />
+    <h2>Tabbed notebook</h2>
     <TabbedView>
         <Tab label={"Tab 1"}>
             Welcome to my tabbed notebook<br />
@@ -345,7 +354,7 @@ const UIPage = () => <Page><Row left>
         </Tab>
     </TabbedView>
     <HR />
-    <H2>Tables</H2>
+    <h2>Tables</h2>
     <Table headings={["Header 1", "Header 2", "Header 3"]} data={[
         ["Row 1, cell 1", "Row 1, Cell 2", "Row 1, Cell 3"],
         ["Row 2, cell 1", "Row 2, Cell 2", "Row 2, Cell 3"],
@@ -357,7 +366,7 @@ const UIPage = () => <Page><Row left>
         ["Row 8, cell 1", "Row 8, Cell 2", "Row 8, Cell 3", { type: "danger" }],
     ]} />
     <HR />
-    <H2>Trees</H2>
+    <h2>Trees</h2>
     <TreeWrap>
         <Tree name="Folder">
             <TreeValue name="Read-only" value="yes" />
@@ -370,31 +379,45 @@ const UIPage = () => <Page><Row left>
         </Tree>
     </TreeWrap>
     <HR />
-    <H2>Card</H2>
-    <Row>
-        <Card header={"Card header"} title={"Card title"} light>Hi there!</Card>
-    </Row>
-    <Row>
-        <Card header={"Card header"} title={"Card title"} primary>Hi there!</Card>
-        <Card header={"Card header"} title={"Card title"} secondary>Hi there!</Card>
-        <Card header={"Card header"} title={"Card title"} success>Hi there!</Card>
-    </Row>
-    <Row>
-        <Card header={"Card header"} title={"Card title"} info>Hi there!</Card>
-        <Card header={"Card header"} title={"Card title"} warning>Hi there!</Card>
-        <Card header={"Card header"} title={"Card title"} danger>Hi there!</Card>
-    </Row>
-    <Row>
-        <Card lesser header={"Card header"} title={"Card title"} info>Hi there!</Card>
-        <Card lesser header={"Card header"} title={"Card title"} warning>Hi there!</Card>
-        <Card lesser header={"Card header"} title={"Card title"} danger>Hi there!</Card>
-    </Row>
+    <h2>Card</h2>
+    <Container.Row>
+        <Column>
+            <Card header={"Card header"} title={"Card title"} light>Hi there!</Card>
+        </Column>
+        <Column lgWidth={6}>
+            <Card header={"Card header"} title={"Card title"} primary>Hi there!</Card>
+        </Column>
+        <Column lgWidth={6}>
+            <Card header={"Card header"} title={"Card title"} secondary>Hi there!</Card>
+        </Column>
+        <Column lgWidth={6}>
+            <Card header={"Card header"} title={"Card title"} success>Hi there!</Card>
+        </Column>
+        <Column lgWidth={6}>
+            <Card header={"Card header"} title={"Card title"} info>Hi there!</Card>
+        </Column>
+        <Column lgWidth={6}>
+            <Card header={"Card header"} title={"Card title"} warning>Hi there!</Card>
+        </Column>
+        <Column lgWidth={6}>
+            <Card header={"Card header"} title={"Card title"} danger>Hi there!</Card>
+        </Column>
+        <Column lgWidth={4}>
+            <Card lesser header={"Card header"} title={"Card title"} info>Hi there!</Card>
+        </Column>
+        <Column lgWidth={4}>
+            <Card lesser header={"Card header"} title={"Card title"} warning>Hi there!</Card>
+        </Column>
+        <Column lgWidth={4}>
+            <Card lesser header={"Card header"} title={"Card title"} danger>Hi there!</Card>
+        </Column>
+    </Container.Row>
     <HR />
-    <H2>Misc</H2>
+    <h2>Misc</h2>
     <TextBlock>Text block</TextBlock>
-    <Row centre>
+    <Container spaced full centre>
         <Spinner />
-    </Row>
+    </Container>
     <Leader>This leads you on somewhere</Leader>
     <Leader sub={"but this time with a subtitle!"}>This leads you on somewhere</Leader>
     <p>This is text with <code>an inline snippet of code</code> inside it.</p>
@@ -408,7 +431,7 @@ const UIPage = () => <Page><Row left>
         </ItemStack>
     </Card>
     <HR />
-    <H2>Footer</H2>
+    <h2>Footer</h2>
     <Footer>
         <FootRow primary>
             <p>This is a primary row</p>
@@ -444,5 +467,5 @@ const UIPage = () => <Page><Row left>
             <p>These rows can go in any order!</p>
         </FootRow>
     </Footer>
-</Row></Page>;
+</Page>;
 export default UIPage;

@@ -33,6 +33,8 @@ import AppWrap from "./controllers/App";
 import * as serviceWorker from "./serviceWorker";
 import en from "./i18n/en.json";
 
+import "@ractf/ui-kit/Base.scss";
+
 
 const DOMAIN = window.env.apiDomain;
 const API_BASE = window.env.apiBase;

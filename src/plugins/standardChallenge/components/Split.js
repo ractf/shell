@@ -17,7 +17,7 @@
 
 import React, { useState } from "react";
 
-import { Row, Column } from "@ractf/ui-kit";
+import { Column, Container } from "@ractf/ui-kit";
 
 
 export default ({ children, stacked, ...props }) => {
@@ -52,12 +52,12 @@ export default ({ children, stacked, ...props }) => {
         </>;
     }
 
-    return <Row style={{ padding: 0, flexGrow: 1 }}>
+    return <Container.Row>
         {showLeft && left && <Column noGutter mdWidth={12} lgWidth={double ? 6 : 12}>
             {left}
         </Column>}
         {showRight && right && <Column noGutter mdWidth={12} lgWidth={double ? 6 : 12} style={{ height: "100%" }}>
             {right}
         </Column>}
-    </Row>;
+    </Container.Row>;
 };

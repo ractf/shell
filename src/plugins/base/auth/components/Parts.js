@@ -17,17 +17,14 @@
 
 import React from "react";
 
-import { Page, Column, Row } from "@ractf/ui-kit";
-
-import "./Parts.scss";
+import { Page } from "@ractf/ui-kit";
 
 
 export const Wrap = ({ children }) => {
-    return <Page centre>
-        <Column style={{ justifyContent: "center", width: "100%", height: "100%" }}>
-            <Row className={"authWrap"}>
-                {children}
-            </Row>
-        </Column>
+    return <Page centre style={{
+        maxWidth: 360,
+        marginTop: "2rem"
+    }}>
+        {children}
     </Page>;
 };

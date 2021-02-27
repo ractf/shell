@@ -17,113 +17,61 @@
 
 @import "@ractf/ui-kit/Colours.scss";
 
-.userMeta {
-    line-height: 1.5;
+.userName {
+    font-size: 2em;
+    font-weight: 600;
+    font-family: $titleStack;
+    word-wrap: break-word;
 
-    .userName {
-        font-size: 2em;
-        font-weight: 600;
-        font-family: $titleStack;
-        word-wrap: break-word;
-
-        svg {
-            margin-bottom: -0.125em;
-        }
-    }
-    .teamMemberico {
-        font-size: 0.9em;
-        color: var(--col-color);
-
-        svg {
-            margin-bottom: -0.125em;
-            margin-right: 0.25em;
-        }
-    }
-    .userBio {
-        font-size: 0.8em;
-        margin-bottom: 1em;
-        &.noBio {
-            font-style: italic;
-        }
-    }
-    .userSocial {
-        display: flex;
-        align-items: center;
-        margin: 8px 0;
-        color: var(--col-color);
-        transition: 150ms color ease;
-        opacity: .8;
-        cursor: pointer;
-
-        *:first-child {
-            margin-right: 8px;
-            font-size: 1.2em;
-        }
-        *:last-child {
-            font-size: 0.9em;
-        }
-        &:hover {
-            color: var(--col-color);
-            text-decoration: none;
-            opacity: 1;
-        }
-    }
-    .profilePieWrap {
-        position: relative;
-        margin-top: 24px;
-        padding-top: 12px;
-        .ppwHead {
-            margin-bottom: 12px;
-            text-align: center;
-            color: $back_200;
-        }
-        .svg-container {
-            margin: auto;
-        }
-        &::before {
-            content: "";
-            display: block;
-            height: 1px;
-            background-color: $back_600;
-            width: 80%;
-            top: 0;
-            position: absolute;
-            left: 10%;
-        }
+    svg {
+        margin-bottom: -0.125em;
     }
 }
-.userSolves {
-    .noSolves {
+.teamMemberico {
+    color: var(--col-color);
+
+    svg {
+        margin-bottom: -0.125em;
+        margin-right: 0.25em;
+    }
+}
+.userBio {
+    font-size: 0.8em;
+    margin-bottom: 1em;
+    &.noBio {
         font-style: italic;
-        text-align: left;
-        font-size: 0.9em;
-        margin-top: 0.6em;
-    }
-
-    .ppwHead {
-        margin-bottom: 12px;
-        text-align: center;
-        font-size: 1.2em;
-        font-weight: 500;
-        font-family: $titleStack;
-    }
-
-    .profilePieWrap {
-        margin-bottom: 8px;
-        max-width: 250px;
-        width: 12vw;
-
-        .svg-container {
-            margin: auto;
-        }
-    }
-    .ppwRow {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        justify-content: space-around;
     }
 }
+.userSocial {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    color: var(--col-color);
+    transition: 150ms color ease;
+    opacity: .8;
+    cursor: pointer;
+
+    *:first-child {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+    *:last-child {
+        font-size: 0.9em;
+    }
+    &:hover {
+        color: var(--col-color);
+        text-decoration: none;
+        opacity: 1;
+    }
+}
+
+.noSolves {
+    font-style: italic;
+    text-align: left;
+    font-size: 0.9em;
+    margin-top: 0.6em;
+}
+
 .userSolve {
     padding: 12px 16px;
     background-color: var(--col-back-lift);
@@ -140,9 +88,6 @@
 }
 
 @media (max-width: 1200px) {
-    .userMeta .profilePieWrap {
-        display: none;
-    }
     .profileSplit {
         flex-direction: column;
         align-items: center;
@@ -158,8 +103,5 @@
         & > * {
             width: 100%;
         }
-    }
-    .userSolves .profilePieWrap {
-        width: 250px;
     }
 }

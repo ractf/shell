@@ -71,6 +71,10 @@ export default class Challenge {
         return (this._data.votes || { positive: 0, negative: 0 });
     }
 
+    get unlocks() {
+        return [];
+    }
+
     toJSON() {
         const ret = {};
         for (const i of this)

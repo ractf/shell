@@ -25,7 +25,7 @@ import { FiTwitter, FiUsers } from "react-icons/fi";
 import { cssVar, useReactRouter } from "@ractf/util";
 import { useConfig, useCategories } from "@ractf/shell-util";
 import {
-    FormError, TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Row
+    TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Form, Container
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "@ractf/util/http";
@@ -57,7 +57,7 @@ const Profile = () => {
     const hasTeams = useConfig("enable_teams");
 
     if (error) return <Page title={"Users"} centre>
-        <FormError>{error}</FormError>
+        <Form.Error>{error}</Form.Error>
         <BrokenShards />
     </Page>;
     if (!userData) return <LoadingPage title={"Users"} />;
@@ -86,13 +86,13 @@ const Profile = () => {
     });
 
     return <Page title={userData.username}>
-        <Column xlWidth={3} lgWidth={4} mdWidth={12}>
-            <div className={"userMeta"}>
+        <Container.Row>
+            <Column xlWidth={3} lgWidth={4} mdWidth={12}>
                 <div className={"userName"}>{userData.username}</div>
-                {(userData.is_staff || userData.is_verified) && <Row tight>
+                {(userData.is_staff || userData.is_verified) && <Container full toolbar>
                     {userData.is_staff && <Badge danger pill>Admin</Badge>}
                     {userData.is_verified && <Badge warning pill>Staff</Badge>}
-                </Row>}
+                </Container>}
                 <div>{t("point_count", { count: userData.leaderboard_points })}</div>
                 <div className={"userJoined"}>Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment></div>
                 <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
@@ -126,17 +126,13 @@ const Profile = () => {
                     </Link>
                 )}
                 {Object.keys(categoryValues).length !== 0 && <>
-                    <div className={"profilePieWrap"}>
-                        <div className={"ppwHead"}>Solve attempts</div>
-                        <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
-                            labels={["Correct", "Incorrect"]}
-                            colors={[cssVar("--col-green"), cssVar("--col-red")]} />
-                    </div>
+                    <h5>Solve attempts</h5>
+                    <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
+                        labels={["Correct", "Incorrect"]}
+                        colors={[cssVar("--col-green"), cssVar("--col-red")]} />
                 </>}
-            </div>
-        </Column>
-        <Column xlWidth={9} lgWidth={8} mdWidth={12}>
-            <div className={"userSolves"}>
+            </Column>
+            <Column xlWidth={9} lgWidth={8} mdWidth={12}>
                 {(!userData.solves || userData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
                     {t("profile.no_solves", { name: userData.username })}
                 </div> : <TabbedView>
@@ -146,28 +142,26 @@ const Profile = () => {
                             ))}
                         </Tab>
                         <Tab label={"Stats"}>
-                            <div className={"ppwRow"}>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Solve attempts</div>
+                            <Container.Row>
+                                <Column lgWidth={6}>
+                                    <h5>Solve attempts</h5>
                                     <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
                                         colors={[cssVar("--col-green"), cssVar("--col-red")]}
                                         labels={["Correct", "Incorrect"]} height={300} />
-                                </div>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Category Breakdown</div>
+                                </Column>
+                                <Column lgWidth={6}>
+                                    <h5>Category Breakdown</h5>
                                     <Pie data={Object.values(categoryValues)}
                                         labels={Object.keys(categoryValues)} />
-                                </div>
-                            </div>
+                                </Column>
+                            </Container.Row>
                             <HR />
-                            <div>
-                                <div className={"ppwHead"}>Score Over Time</div>
-                                <Graph data={[scorePlotData]} />
-                            </div>
+                            <h5>Score Over Time</h5>
+                            <Graph data={[scorePlotData]} />
                         </Tab>
                     </TabbedView>}
-            </div>
-        </Column>
+            </Column>
+        </Container.Row>
     </Page>;
 };
 export default Profile;

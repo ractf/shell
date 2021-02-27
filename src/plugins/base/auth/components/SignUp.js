@@ -23,7 +23,7 @@ import { ENDPOINTS } from "@ractf/api";
 import { EMAIL_RE, escapeRegex, useReactRouter } from "@ractf/util";
 import { useConfig, zxcvbn } from "@ractf/shell-util";
 import {
-    Form, Input, Button, Row, Checkbox, FormGroup, H2, FormError, SubtleText
+    Form, Input, Button, Checkbox, SubtleText
 } from "@ractf/ui-kit";
 
 import Link from "components/Link";
@@ -54,15 +54,11 @@ export default () => {
 
     const regValidator = useCallback(({ username, email, password, password2, invite, accept }) => {
         return new Promise((resolve, reject) => {
-            if (!username)
-                return reject({ username: t("auth.no_uname") });
             if (!email)
                 return reject({ email: t("auth.no_email") });
             if (!localEmailRegex.test(email))
                 return reject({ email: t("auth.inv_email") });
 
-            if (!password)
-                return reject({ password: t("auth.no_pass") });
             const strength = zxcvbn()(password);
             if (strength.score < 3)
                 return reject({ password: (strength.feedback.warning || t("auth.pass_weak")) });
@@ -84,11 +80,11 @@ export default () => {
 
     return <Wrap>
         <Form action={ENDPOINTS.REGISTER} method={"POST"} validator={regValidator} postSubmit={afterSignUp}>
-            <H2>{t("auth.register")}</H2>
+            <h2>{t("auth.register")}</h2>
 
-            <FormGroup>
-                <Input name={"username"} placeholder={t("username")} autoFocus />
-                <Input format={localEmailRegex} name={"email"} placeholder={t("email")} />
+            <Form.Group>
+                <Input name={"username"} placeholder={t("username")} required autoFocus />
+                <Input format={localEmailRegex} name={"email"} required placeholder={t("email")} />
                 {(!emailRegex && emailDomain) && (
                     <SubtleText>A <code>{emailDomain}</code> email is required for registration.</SubtleText>
                 )}
@@ -98,11 +94,12 @@ export default () => {
                             Please contact them for details.
                     </SubtleText>
                 )}
-                <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} password />
-                <Input name={"password2"} placeholder={t("password_repeat")} password />
+                <Input zxcvbn={zxcvbn()} name={"password"} placeholder={t("password")} required password />
+                <Input name={"password2"} placeholder={t("password_repeat")} required password />
 
                 {inviteRequired && (
-                    <Input val={invite || ""} disabled={!!invite} name={"invite"} placeholder={t("invite_code")} />
+                    <Input val={invite || ""} disabled={!!invite} name={"invite"}
+                        placeholder={t("invite_code")} required />
                 )}
 
                 <Checkbox name={"accept"}>
@@ -110,12 +107,13 @@ export default () => {
                         privacy policy
                         </Link>.
                     </Checkbox>
-            </FormGroup>
+            </Form.Group>
 
-            <FormError />
-            <Row right>
-                <Button large submit>{t("register")}</Button>
-            </Row>
+            <Form.Error />
+            <Button fullWidth submit>{t("register")}</Button>
+            <SubtleText>
+                <Link to={"/login"}>I already have an account</Link>
+            </SubtleText>
         </Form>
     </Wrap>;
 };

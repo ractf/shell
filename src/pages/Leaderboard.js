@@ -19,7 +19,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Button, Row, Graph, Tab, Table, Page, PageHead, Column
+    Button, Graph, Tab, Table, Page, PageHead, Container
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
@@ -40,7 +40,7 @@ const Leaderboard = React.memo(() => {
     const [tState, tNext, tRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
     const start_time = useConfig("start_time");
     const hasTeams = useConfig("enable_teams");
-    const liveReload = usePreference("experiment.leaderboardReload");
+    const [liveReload] = usePreference("experiment.leaderboardReload");
 
     useEffect(() => {
         if (!graph) return;
@@ -121,18 +121,18 @@ const Leaderboard = React.memo(() => {
             <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
         )}
         <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
-        {tState.hasMore && <Row>
-            <Button disabled={tState.loading} onClick={tNext}>Load More</Button>
-        </Row>}
+        {tState.hasMore && <Container full centre>
+            <Button disabled={tState.loading} onClick={tNext}>{t("load_more")}</Button>
+        </Container>}
     </>;
     const userTab = <>
         {userGraphData && userGraphData.length > 0 && (
             <Graph key="users" data={userGraphData} timeGraph noAnimate />
         )}
         <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
-        {uState.hasMore && <Row>
-            <Button disabled={uState.loading} onClick={uNext}>Load More</Button>
-        </Row>}
+        {uState.hasMore && <Container full centre>
+            <Button disabled={uState.loading} onClick={uNext}>{t("load_more")}</Button>
+        </Container>}
     </>;
 
     if (hasTeams) return (
@@ -155,9 +155,7 @@ const LeaderboardPage = () => {
 
     return <Page title={t("leaderboard")}>
         <PageHead>{t("leaderboard")}</PageHead>
-        <Column>
-            <Leaderboard />
-        </Column>
+        <Leaderboard />
     </Page>;
 };
 export default React.memo(LeaderboardPage);

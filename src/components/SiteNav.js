@@ -198,7 +198,7 @@ const SiteNav = ({ children }) => {
             <Scrollbar style={{ height: "100vh" }} primary>
                 <SiteWrap>
                     <HeaderNav />
-                    <Container children={children} />
+                    <Container full children={children} />
                     <Footer>
                         <FootRow main>
                             <FootCol title={window.env.siteName}>

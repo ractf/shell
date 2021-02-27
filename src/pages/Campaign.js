@@ -23,8 +23,8 @@ import { useTranslation } from "react-i18next";
 import { useReactRouter } from "@ractf/util";
 import { Category, useCategory, useCategories, usePreference } from "@ractf/shell-util";
 import {
-    Button, Row, Input, Form, FormError, PageHead, Card, Modal,
-    Page, TabbedView, Tab, fromJson, Select, FormGroup, Masonry, UiKitModals
+    Button, Input, Form, PageHead, Card, Modal, Page, TabbedView, Tab, fromJson,
+    Select, Masonry, UiKitModals, Container
 } from "@ractf/ui-kit";
 import { editGroup, createGroup, quickRemoveChallenge, removeGroup } from "@ractf/api";
 import { getClass, getPlugin, iteratePlugins, PluginComponent } from "@ractf/plugins";
@@ -97,25 +97,25 @@ const ANC = ({ hide, anc, modal }) => {
     const body = <TabbedView neverUnmount>
         <Tab label={t("editor.cat_settings")}>
             <Form locked={locked} handle={create} submitRef={submit}>
-                <FormGroup htmlFor={"cname"} label={t("challenge.cat_name")}>
+                <Form.Group htmlFor={"cname"} label={t("challenge.cat_name")}>
                     <Input val={anc.name} name={"cname"} placeholder={t("challenge.cat_name")} />
-                </FormGroup>
-                <FormGroup htmlFor={"cdesc"} label={t("challenge.cat_brief")}>
+                </Form.Group>
+                <Form.Group htmlFor={"cdesc"} label={t("challenge.cat_brief")}>
                     <Input val={anc.description} name={"cdesc"} rows={5} placeholder={t("challenge.cat_brief")} />
-                </FormGroup>
-                <FormGroup htmlFor={"ctype"} label={t("challenge.cat_type")}>
+                </Form.Group>
+                <Form.Group htmlFor={"ctype"} label={t("challenge.cat_type")}>
                     <Select options={iteratePlugins("categoryType").map(({ key }) => ({ key, value: key }))}
                         initial={anc.contained_type} name={"ctype"} />
-                </FormGroup>
+                </Form.Group>
 
-                {error && <FormError>{error}</FormError>}
+                {error && <Form.Error>{error}</Form.Error>}
                 {!modal && (
-                    <Row>
+                    <Container full toolbar>
                         {anc.id &&
                             <Button danger onClick={removeCategory}>{t("challenge.remove_cat")}</Button>
                         }
                         <Button submit>{anc.id ? t("challenge.edit_cat") : t("challenge.new_cat")}</Button>
-                    </Row>
+                    </Container>
                 )}
             </Form>
         </Tab>
@@ -182,11 +182,8 @@ export default () => {
 
     if (tabId === "new" && user.is_staff)
         return <Page>
-            <Row>
-                <Card lesser header={t("challenge.new_cat")}>
-                    <ANC anc={true} />
-                </Card>
-            </Row>
+            <PageHead>{t("challenge.new_cat")}</PageHead>
+            <ANC anc />
         </Page>;
     else if (!tabId) {
         return <CategoryList />;
@@ -212,7 +209,7 @@ export default () => {
         <PageHead subTitle={tab.description} back={<>
             <Link className={"backToChals"} to={"/campaign"}>{t("back_to_cat")}</Link>
         </>} title={tab.name} />
-        {user.is_staff && <Row className={"campEdit"} right>
+        {user.is_staff && <Container toolbar className={"campEdit"}>
             {edit ? <>
                 <Button key={"edD"} onClick={() => setAnc(tab)}>
                     {t("edit_details")}
@@ -232,11 +229,9 @@ export default () => {
                         </Button>
                     </Link>
                 </>}
-        </Row>}
+        </Container>}
         {!user.team && (
-            <Row>
-                <Card slim danger>{t("campaign.no_team")}</Card>
-            </Row>
+            <Card slim danger>{t("campaign.no_team")}</Card>
         )}
         <PluginComponent type={"categoryType"} name={tab.contained_type} challenges={tab}
             showEditor={showEditor} isEdit={edit} showLocked={showLocked} />

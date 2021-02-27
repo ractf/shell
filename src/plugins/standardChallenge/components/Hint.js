@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { FiHelpCircle, FiEdit2, FiTrash } from "react-icons/fi";
 
 import { removeHint, editHint, useHint } from "@ractf/api";
-import { Button, Row, Markdown, UiKitModals } from "@ractf/ui-kit";
+import { Button, Markdown, UiKitModals, Container } from "@ractf/ui-kit";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 
@@ -73,10 +73,10 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) =>
     };
 
     if (isEdit) {
-        return <Row>
+        return <Container toolbar>
             <Button tiny warning Icon={FiEdit2} onClick={edit} />
             <Button tiny danger Icon={FiTrash} onClick={() => removeHint(id)} />
-        </Row>;
+        </Container>;
     }
 
     return <Button onClick={promptHint} Icon={FiHelpCircle} {...props}

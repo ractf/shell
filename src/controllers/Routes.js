@@ -19,7 +19,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 
-import { TextBlock, Page as BasePage, H1, H2, SubtleText } from "@ractf/ui-kit";
+import { TextBlock, Page as BasePage, SubtleText } from "@ractf/ui-kit";
 import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
 import { useReactRouter } from "@ractf/util";
 import { useConfig } from "@ractf/shell-util";
@@ -87,8 +87,8 @@ class ErrorBoundary extends React.PureComponent {
         if (this.state.error) {
             return <BasePage centre>
                 <BrokenShards />
-                <H1>This page failed to load.</H1>
-                <H2>Please report this!</H2>
+                <h1>This page failed to load.</h1>
+                <h2>Please report this!</h2>
                 {this.state.showDetails ? (
                     <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
                 ) : (

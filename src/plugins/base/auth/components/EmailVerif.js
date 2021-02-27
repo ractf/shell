@@ -18,7 +18,7 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
-import { Spinner, FormError } from "@ractf/ui-kit";
+import { Spinner, Form } from "@ractf/ui-kit";
 import { useReactRouter } from "@ractf/util";
 import { verify } from "@ractf/api";
 import * as http from "@ractf/util/http";
@@ -52,9 +52,9 @@ export const EmailVerif = () => {
                 <br />
                 <Spinner />
             </> : verif === 1 ? <>
-                <FormError>Account verification failed!</FormError>
+                <Form.Error>Account verification failed!</Form.Error>
                 <br />
-                <FormError>{message}</FormError>
+                <Form.Error>{message}</Form.Error>
             </> : verif === 2 ? <>
                 <Redirect to={"/welcome"} />
             </> : null}

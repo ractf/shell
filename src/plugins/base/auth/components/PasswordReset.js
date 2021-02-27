@@ -20,7 +20,7 @@ import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, FormError, Input, Button, FormGroup, Row, H2, UiKitModals
+    Form, Input, Button, UiKitModals
 } from "@ractf/ui-kit";
 import { completePasswordReset } from "@ractf/api";
 import { zxcvbn } from "@ractf/shell-util";
@@ -46,8 +46,6 @@ export default () => {
     const doReset = ({ passwd1, passwd2 }) => {
         if (passwd1 !== passwd2)
             return setMessage(t("auth.pass_match"));
-        if (!passwd1)
-            return setMessage(t("auth.no_pass"));
 
         const strength = zxcvbn()(passwd1);
         if (strength.score < 3)
@@ -66,18 +64,16 @@ export default () => {
 
     return <Wrap>
         <Form locked={locked} handle={doReset}>
-            <H2>{t("auth.reset_password")}</H2>
+            <h2>{t("auth.reset_password")}</h2>
 
-            <FormGroup>
-                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} password />
-                <Input name={"passwd2"} placeholder={t("password_repeat")} password />
-            </FormGroup>
+            <Form.Group>
+                <Input zxcvbn={zxcvbn()} name={"passwd1"} placeholder={t("new_pass")} required password />
+                <Input name={"passwd2"} placeholder={t("password_repeat")} required password />
+            </Form.Group>
 
-            {message && <FormError>{message}</FormError>}
+            {message && <Form.Error>{message}</Form.Error>}
 
-            <Row right>
-                <Button large submit>{t("auth.reset")}</Button>
-            </Row>
+            <Button fullWidth submit>{t("auth.reset")}</Button>
         </Form>
     </Wrap>;
 };

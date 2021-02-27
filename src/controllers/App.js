@@ -27,6 +27,7 @@ import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
 import {
     ToggleTabHolder, ThemeLoader, UiKitContext, ModalMount, UiKitModals
 } from "@ractf/ui-kit";
+import { usePreference } from "@ractf/shell-util";
 
 import SiteNav from "components/SiteNav";
 import * as actions from "actions";
@@ -252,6 +253,11 @@ const AppThemeLoader = () => {
 
 const AppWrap = () => {
     const { t } = useTranslation();
+    const [layoutDebug] = usePreference("experiment.layoutDebug");
+    useEffect(() => {
+        document.body.className = layoutDebug ? "debug" : "";
+    }, [layoutDebug]);
+
     return <ConnectedRouter history={history}>
         <UiKitContext.Provider value={{ t }}>
             <ModalMount>

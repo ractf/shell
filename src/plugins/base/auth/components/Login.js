@@ -19,7 +19,7 @@ import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, Row, FormGroup, H2, FormError, SubtleText, UiKitModals
+    Form, Input, Button, SubtleText, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
 import { EMAIL_RE } from "@ractf/util";
@@ -79,20 +79,18 @@ const BasicLogin = () => {
     return <Wrap>
         <Form action={needsOtp ? ENDPOINTS.LOGIN_2FA : ENDPOINTS.LOGIN} onError={onError}
             postSubmit={afterLogin} method={"POST"} submitRef={submit}>
-            <H2>{t("auth.login")}</H2>
-            <FormGroup>
+            <h2>{t("auth.login")}</h2>
+            <Form.Group>
                 <Input name={"username"} required placeholder={t("username")} autoFocus />
                 <Input name={"password"} required placeholder={t("password")} password />
-                <SubtleText>
-                    <Link onClick={openForget}>{t("auth.pass_forgot")}
-                    </Link> - <Link to={"/register"}>I need an account</Link>
-                </SubtleText>
-            </FormGroup>
+            </Form.Group>
 
-            <FormError />
-            <Row right>
-                <Button large submit>{t("login")}</Button>
-            </Row>
+            <Form.Error />
+            <Button fullWidth submit>{t("login")}</Button>
+            <SubtleText>
+                <Link onClick={openForget}>{t("auth.pass_forgot")}
+                </Link> - <Link to={"/register"}>I need an account</Link>
+            </SubtleText>
         </Form>
     </Wrap>;
 };

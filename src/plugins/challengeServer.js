@@ -17,7 +17,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useContext } from "react";
 
-import { Spinner, Button, Row, Modal, FormGroup, Form, Input, Card, UiKitModals } from "@ractf/ui-kit";
+import { Spinner, Button, Modal, Form, Input, Card, UiKitModals, Container } from "@ractf/ui-kit";
 import { registerPlugin } from "@ractf/plugins";
 import * as http from "@ractf/util/http";
 import { NUMBER_RE } from "@ractf/util";
@@ -49,7 +49,7 @@ const ChallengeServer = ({ challenge }) => {
         Reset
     </Button>;
 
-    return <Row>
+    return (
         <Card slim danger={!!state.error} button={button}>
             {state.error ? <div>Failed to request instance: {state.error}</div>
                 : state.instance ? <div>Challenge instance ready at <code>
@@ -59,7 +59,7 @@ const ChallengeServer = ({ challenge }) => {
                         <Spinner />
                     </>}
         </Card>
-    </Row>;
+    );
 };
 
 const AddCSJob = ({ challenge, embedded }) => {
@@ -109,42 +109,42 @@ const AddCSJob = ({ challenge, embedded }) => {
                 <Form submitRef={submitRef} handle={handle} transformer={transformer}>
                     <Input name={"challenge_id"} hidden val={challenge.id} />
 
-                    <FormGroup label={"Name"}>
+                    <Form.Group label={"Name"}>
                         <Input name={"job_spec.name"} required />
-                    </FormGroup>
-                    <FormGroup label={"Port"}>
+                    </Form.Group>
+                    <Form.Group label={"Port"}>
                         <Input name={"job_spec.port"} format={/\d+/} required />
-                    </FormGroup>
-                    <Row>
-                        <FormGroup label={"Replicas"}>
+                    </Form.Group>
+                    <Form.Row>
+                        <Form.Group label={"Replicas"}>
                             <Input name={"job_spec.replicas"} val={5} format={/\d+/} required />
-                        </FormGroup>
-                        <FormGroup label={"Max Memory (Bytes)"}>
+                        </Form.Group>
+                        <Form.Group label={"Max Memory (Bytes)"}>
                             <Input name={"job_spec.resources.memory"} val={1073741824} format={/\d+/} required />
-                        </FormGroup>
-                        <FormGroup label={"CPUs"}>
+                        </Form.Group>
+                        <Form.Group label={"CPUs"}>
                             <Input name={"job_spec.resources.cpus"} val={0.2} format={NUMBER_RE} required />
-                        </FormGroup>
-                    </Row>
-                    <FormGroup label={"Image path"}>
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Group label={"Image path"}>
                         <Input name={"job_spec.image"} required />
-                    </FormGroup>
-                    <Row>
-                        <FormGroup label={"Registry Username"}>
+                    </Form.Group>
+                    <Form.Row>
+                        <Form.Group label={"Registry Username"}>
                             <Input name={"job_spec.registryAuth.username"} />
-                        </FormGroup>
-                        <FormGroup label={"Registry Password"}>
+                        </Form.Group>
+                        <Form.Group label={"Registry Password"}>
                             <Input name={"job_spec.registryAuth.password"} password />
-                        </FormGroup>
-                    </Row>
+                        </Form.Group>
+                    </Form.Row>
                 </Form>
             </Modal>
         )}
-        <Row>
-            <Button onClick={open} info style={{ width: "100%" }}>
+        <Container full spaced>
+            <Button onClick={open} info fullWidth>
                 Add challenge server job
             </Button>
-        </Row>
+        </Container>
     </>;
 };
 

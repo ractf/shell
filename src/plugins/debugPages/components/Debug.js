@@ -18,7 +18,7 @@
 import React from "react";
 
 import {
-    Page, Row, PageHead, Column
+    Page, PageHead
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "@ractf/util/http";
@@ -29,10 +29,12 @@ const Debug = () => {
 
     return <Page>
         <PageHead>Debug Versions</PageHead>
-        <Column>
-            <Row><code>ractf/shell</code> version: <code>{__COMMIT_HASH__}</code></Row>
-            <Row><code>ractf/backend</code> version: <code>{backendVersion && backendVersion.commit_hash}</code></Row>
-        </Column>
+        <p>
+            <code>ractf/shell</code> version: <code>{__COMMIT_HASH__}</code>
+        </p>
+        <p>
+            <code>ractf/backend</code> version: <code>{backendVersion && backendVersion.commit_hash}</code>
+        </p>
     </Page>;
 };
 export default Debug;

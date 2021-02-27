@@ -38,7 +38,7 @@ const ChallengeGraph = () => {
     }));
     const unlocksMapped = [];
 
-    return <div className={style.networkOuter}>
+    return <>
         <PageHead>Challenge Graph</PageHead>
         <div className={style.network}>
             <Network>
@@ -91,6 +91,6 @@ const ChallengeGraph = () => {
                 ])).filter(Boolean)}
             </Network>
         </div>
-    </div>;
+    </>;
 };
 export default React.memo(ChallengeGraph);

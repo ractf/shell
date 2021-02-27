@@ -19,8 +19,8 @@ import React, { useContext, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Column, Card, ModalSpinner, UiKitModals
+    Form, Input, InputButton, Leader,
+    Checkbox, PageHead, Modal, Card, ModalSpinner, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
 import { NUMBER_RE } from "@ractf/util";
@@ -106,45 +106,39 @@ export default () => {
     return <>
         <PageHead title={t("admin.teams")} />
         {state.loading && <ModalSpinner />}
-        <Column>
-            <Row>
-                <Form handle={doSearch} locked={state.loading}>
-                    <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
-                    {state.error && <FormError>{state.error}</FormError>}
-                </Form>
-            </Row>
-            {state.results && <Row>
-                {state.results.length ? <>
-                    {state.more && <p>
-                        Additional results were omitted. Please refine your search.
-                </p>}
-                    {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
-                </> : <p>No results found</p>}
-            </Row>}
+        <Form handle={doSearch} locked={state.loading}>
+            <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
+            {state.error && <Form.Error>{state.error}</Form.Error>}
+        </Form>
+        {state.results && <>
+            {state.results.length ? <>
+                {state.more && <p>
+                    Additional results were omitted. Please refine your search.
+            </p>}
+                {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
+            </> : <p>No results found</p>}
+        </>}
 
-        </Column>
         {state.team && <Modal onClose={close} onConfirm={submit}>
             <Form handle={saveTeam(state.team)} locked={state.loading} submitRef={submitRef}>
-                <Row>
-                    <FormGroup label={"Team Name"} htmlFor={"name"}>
+                <Form.Row>
+                    <Form.Group label={"Team Name"} htmlFor={"name"}>
                         <Input val={state.team.name} name={"name"} />
-                    </FormGroup>
-                    <FormGroup label={"Team ID"} htmlFor={"id"}>
+                    </Form.Group>
+                    <Form.Group label={"Team ID"} htmlFor={"id"}>
                         <Input val={state.team.id} name={"id"} readonly />
-                    </FormGroup>
-                </Row>
-                <FormGroup label={"Rights"}>
-                    <Row left>
-                        <Checkbox val={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
-                    </Row>
-                </FormGroup>
-                <FormGroup label={"Password"} htmlFor={"password"}>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Group label={"Rights"}>
+                    <Checkbox val={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
+                </Form.Group>
+                <Form.Group label={"Password"} htmlFor={"password"}>
                     <Input val={state.team.password} name={"password"} />
-                </FormGroup>
-                <FormGroup label={"Owner ID"} htmlFor={"owner"}>
+                </Form.Group>
+                <Form.Group label={"Owner ID"} htmlFor={"owner"}>
                     <Input val={state.team.owner} name={"owner"} format={NUMBER_RE} />
-                </FormGroup>
-                <FormGroup label={"Members"}>
+                </Form.Group>
+                <Form.Group label={"Members"}>
                     {state.team.members.map(i => {
                         const owner = i.id === state.team.owner;
                         return <Leader sub={owner ? "Owner" : ""} none={owner}
@@ -152,7 +146,7 @@ export default () => {
                             {i.username}
                         </Leader>;
                     })}
-                </FormGroup>
+                </Form.Group>
             </Form>
         </Modal>}
     </>;

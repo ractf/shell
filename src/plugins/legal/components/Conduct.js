@@ -17,11 +17,11 @@
 
 import React from "react";
 
-import { H1, Page } from "@ractf/ui-kit";
+import { Page } from "@ractf/ui-kit";
 
 
 const Conduct = () => <Page>
-    <H1>Code of Conduct</H1>
+    <h1>Code of Conduct</h1>
     <i>The following rules should be followed at ALL TIMES when you are participating in the CTF. By using this site you
         agree to adhere to these terms unconditionally, violation of these terms may result in your access being revoked
         and/or your account terminated. Really Awesome CTF reserves the right to terminate accounts or revoke any access

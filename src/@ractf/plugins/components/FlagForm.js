@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 
 import {
-    Button, Input, InputButton, Form, FormError, Row, Modal, Markdown, HR, H6, UiKitModals
+    Button, Input, InputButton, Form, Row, Modal, Markdown, HR, UiKitModals, Container
 } from "@ractf/ui-kit";
 import { attemptFlag, reloadAll } from "@ractf/api";
 import { escapeRegex } from "@ractf/util";
@@ -142,24 +142,24 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
                 <HR />
             </>}
-            <H6>Rate this challenge:</H6>
-            <Row centre>
+            <h6>Rate this challenge:</h6>
+            <Container toolbar full centre>
                 <Button onClick={() => vote(true)} success Icon={FiThumbsUp}>Awesome</Button>
                 <Button onClick={() => vote(false)} danger Icon={FiThumbsDown}>Not great</Button>
-            </Row>
+            </Container>
         </Modal>}
         {feedback && <Modal onClose={rateNone} cancel={false} okay={false} transparent
             header={"Rate this challenge:"} buttons={<>
                 <Button onClick={rateNone} lesser>No thanks</Button>
             </>}>
-            <Row centre>
+            <Container toolbar full centre>
                 <Button onClick={() => vote(true)} success Icon={FiThumbsUp} lesser={challenge.votes?.self === false}>
                     Awesome
                 </Button>
                 <Button onClick={() => vote(false)} danger Icon={FiThumbsDown} lesser={challenge.votes?.self === true}>
                     Not great
                 </Button>
-            </Row>
+            </Container>
         </Modal>}
 
         {challenge.solved ? (<Row>
@@ -170,10 +170,10 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 <Form handle={tryFlag} locked={locked}>
                     {flagInput && <>
                         {flagInput}
-                        {message && <FormError>{message}</FormError>}
-                        {button && <Row>
+                        {message && <Form.Error>{message}</Form.Error>}
+                        {button && (
                             <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
-                        </Row>}
+                        )}
                     </>}
                 </Form>
             )}
