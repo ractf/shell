@@ -356,7 +356,8 @@
         "challenge_solved": "You cannot leave a team after solving a challenge for them.",
         "cannot_leave_team_ownerless": "You are the owner of this team and it has other members.",
         "invalid_team": "No team with this name was found.",
-        "invalid_team_password": "Password incorrect."
+        "invalid_team_password": "Password incorrect.",
+        "login_failed": "2-factor authentication failed."
     },
     "colours": {
         "backCol": "Background colour",

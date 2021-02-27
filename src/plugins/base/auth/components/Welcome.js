@@ -38,7 +38,7 @@ const NoTeam = () => {
         <h2>{t("auth.welcome")}</h2>
         <div>{t("auth.next")}</div>
         <br />
-        <Container toolbar>
+        <Container centre toolbar>
             {hasTeams ? <>
                 <Link to={"/team/create"}>
                     <Button>{t("create_a_team")}</Button>

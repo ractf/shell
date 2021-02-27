@@ -126,13 +126,13 @@ export const CreateTeam = () => {
         });
     };
 
-    return <Wrap>{!success ?
+    return <Wrap>{success ?
         <div style={{ textAlign: "center" }}>
             <h2>{t("team_wiz.created")}</h2>
             <HR />
             <p>{t("team_wiz.next")}</p>
 
-            <Container toolbar>
+            <Container centre toolbar>
                 <Link to={"/campaign"}>
                     <Button>{t("challenge_plural")}</Button>
                 </Link>

@@ -19,7 +19,7 @@ import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, SubtleText, UiKitModals
+    Form, Input, Button, SubtleText, UiKitModals, Container, InputPin
 } from "@ractf/ui-kit";
 import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
 import { EMAIL_RE } from "@ractf/util";
@@ -56,8 +56,13 @@ const BasicLogin = () => {
         if (resp && resp.reason === "2fa_required") {
             const faPrompt = () => {
                 setNeedsOtp(true);
+
                 modals.promptConfirm({ message: t("2fa.required"), small: true },
-                    [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]
+                    [{
+                        Component: function Modal2FA({ ...props }) {
+                            return <Container centre><InputPin digits={6} {...props} /></Container>;
+                        }, name: "pin"
+                    }]
                 ).then(({ pin }) => {
                     if (pin.length !== 6) return faPrompt();
                     submit.current({ tfa: pin });

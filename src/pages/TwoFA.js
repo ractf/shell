@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 
 import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
 import {
-    Form, Page, Row, Button, Spinner, TextBlock, Column, UiKitModals
+    Form, Page, Button, Spinner, TextBlock, UiKitModals, InputPin, Container
 } from "@ractf/ui-kit";
 
 import Link from "components/Link";
@@ -50,21 +50,26 @@ export default () => {
 
     const faPrompt = () => {
         modals.promptConfirm({ message: t("2fa.required"), small: true },
-            [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]).then(({ pin }) => {
-                if (pin.length !== 6) return faPrompt();
+            [{
+                Component: function Modal2FA({ ...props }) {
+                    return <Container centre><InputPin digits={6} {...props} /></Container>;
+                }, name: "pin"
+            }]
+        ).then(({ pin }) => {
+            if (pin.length !== 6) return faPrompt();
 
-                verify_2fa(pin).then(async resp => {
-                    if (resp.valid) {
-                        await reloadAll();
-                        setPage(3);
-                    } else { setMessage(t("2fa.validation_fail")); }
-                }).catch(e => {
-                    console.error(e);
-                    setMessage(t("2fa.validation_fail"));
-                });
-            }).catch(() => {
-                setMessage(t("2fa.unable_to_active"));
+            verify_2fa(pin).then(async resp => {
+                if (resp.valid) {
+                    await reloadAll();
+                    setPage(3);
+                } else { setMessage(t("2fa.validation_fail")); }
+            }).catch(e => {
+                console.error(e);
+                setMessage(t("2fa.validation_fail"));
             });
+        }).catch(() => {
+            setMessage(t("2fa.unable_to_active"));
+        });
     };
 
     const buildURI = sec => {
@@ -79,86 +84,57 @@ export default () => {
     };
 
     return <Page title={t("2fa.2fa")} centre>
-        <Column style={{ height: "100%", width: "100%", justifyContent: "center" }}>
-            {page === 0 ? <>
-                <Row centre>
-                    {user.has_2fa ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
-                </Row>
-                <Row centre>
-                    {t("2fa.device_warning")}
-                </Row>
-                <br />
-                <Row centre>
-                    <Link to={"/settings"}>
-                        <Button lesser>{t("2fa.nevermind")}</Button>
-                    </Link>
-                    <Button onClick={startFlow}>{t("2fa.enable_2fa")}</Button>
-                </Row>
-            </> : page === 1 ? <>
-                <Row centre>
-                    {t("2fa.enabling")}
-                </Row>
-                <br />
-                <Row centre>
-                    <Spinner />
-                </Row>
-            </> : page === 2 ? <>
-                <Row centre>
-                    <h2>{t("2fa.finalise")}</h2>
-                </Row>
-                <Row centre>
-                    <span>
-                        {t("2fa.please_scan_qr")}
-                    </span>
-                </Row>
-                <Row centre>
-                    <QRCode renderAs={"svg"} size={200} fgColor={"#161422"}
-                        value={buildURI(secret)} includeMargin />
-                </Row>
-                <Row centre>
-                    <span>
-                        {t("2fa.unable_to_qr")}
-                    </span>
-                </Row>
-                <Row centre>
-                    <TextBlock>
-                        {formatSecret(secret)}
-                    </TextBlock>
-                </Row>
+        {page === 0 ? <>
+            <p>
+                {user.has_2fa ? t("2fa.replace_prompt") : t("2fa.add_prompt")}<br />
+                {t("2fa.device_warning")}
+            </p>
+            <Container centre toolbar>
+                <Link to={"/settings"}>
+                    <Button lesser>{t("2fa.nevermind")}</Button>
+                </Link>
+                <Button onClick={startFlow}>{t("2fa.enable_2fa")}</Button>
+            </Container>
+        </> : page === 1 ? <>
+            <p>
+                {t("2fa.enabling")}
+            </p>
+            <Container centre>
+                <Spinner />
+            </Container>
+        </> : page === 2 ? <>
+            <h2>{t("2fa.finalise")}</h2>
+            <p>{t("2fa.please_scan_qr")}</p>
+            <QRCode renderAs={"svg"} size={200} fgColor={"#161422"}
+                value={buildURI(secret)} includeMargin />
+            <p>{t("2fa.unable_to_qr")}</p>
+            <TextBlock>
+                {formatSecret(secret)}
+            </TextBlock>
+            {message && <Form.Error>{message}</Form.Error>}
 
-                {message && <Row centre><Form.Error>{message}</Form.Error></Row>}
-
-                <Row centre>
-                    <Link to={"/settings/2fa"}>
-                        <Button lesser>{t("cancel")}</Button>
-                    </Link>
-                    <Button onClick={faPrompt}>{t("2fa.got_it")}</Button>
-                </Row>
-            </> : page === 3 ? <>
-                <Row centre>
-                    <h2>{t("2fa.congratulations")}</h2>
-                </Row>
-                <Row centre>
-                    {t("2fa.setup")}
-                </Row>
-                <br />
-                <Row centre>
-                    <Link to={"/"}>
-                        <Button>Yay!</Button>
-                    </Link>
-                </Row>
-            </> : <>
-                                <Row centre>
-                                    {t("2fa.error")}
-                                </Row>
-                                <br />
-                                <Row centre>
-                                    <Link to={"/settings"}>
-                                        <Button lesser>{t("2fa.back_to_settings")}</Button>
-                                    </Link>
-                                    <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
-                                </Row>
-                            </>}
-        </Column>
+            <Container toolbar centre>
+                <Link to={"/settings"}>
+                    <Button lesser>{t("cancel")}</Button>
+                </Link>
+                <Button onClick={faPrompt}>{t("2fa.got_it")}</Button>
+            </Container>
+        </> : page === 3 ? <>
+            <h2>{t("2fa.congratulations")}</h2>
+            <p>{t("2fa.setup")}</p>
+            <Container toolbar centre>
+                <Link to={"/"}>
+                    <Button>Yay!</Button>
+                </Link>
+            </Container>
+        </> : page === -1 ? <>
+            <p>{t("2fa.error")}</p>
+            <Container toolbar centre>
+                <Link to={"/settings"}>
+                    <Button lesser>{t("2fa.back_to_settings")}</Button>
+                </Link>
+                <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
+            </Container>
+        </> : null}
     </Page>;
 };
