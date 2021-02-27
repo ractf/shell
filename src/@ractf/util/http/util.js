@@ -49,6 +49,15 @@ export const appendSlash = url => {
     return base + (query || "");
 };
 
+const tryTranslate = m => {
+    let translated = m;
+    if (config.getTranslation)
+        translated = config.getTranslation("api." + m);
+    if (translated !== m && (typeof translated) !== "object")
+        return translated;
+    return m;
+};
+
 export const getError = e => {
     if (e) {
         if (e.response && e.response.data) {
@@ -56,22 +65,21 @@ export const getError = e => {
             if (e.response.data.m || e.response.data.d) {
                 let error = e.response.data.m;
                 if (error) {
-                    let translated_m = error;
-                    if (config.getTranslation)
-                        translated_m = config.getTranslation("api." + error);
-                    if (translated_m !== error && (typeof translated_m) !== "object")
-                        error = translated_m;
+                    if (error === "invalid"
+                        && typeof e.response.data.d === "object"
+                        && e.response.data.d.non_field_errors)
+                        error = "";
+                    else
+                        error = tryTranslate(error);
                 }
 
                 if (typeof e.response.data.d === "string") {
                     if (e.response.data.d.length > 0) {
-                        let error_d = e.response.data.d;
-                        let translated_d = error_d;
-                        if (config.getTranslation)
-                            translated_d = config.getTranslation("api." + error_d);
-                        if (translated_d !== error && (typeof translated_d) !== "object")
-                            error_d = translated_d;
-                        error += "\n" + error_d;
+                        error += "\n" + tryTranslate(e.response.data.d);
+                    }
+                } else if (e.response.data.d.non_field_errors) {
+                    for (const i of e.response.data.d.non_field_errors) {
+                        error += "\n" + tryTranslate(i);
                     }
                 }
 

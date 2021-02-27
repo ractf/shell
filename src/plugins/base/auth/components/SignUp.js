@@ -109,7 +109,7 @@ export default () => {
                     </Checkbox>
             </Form.Group>
 
-            <Form.Error />
+            <Form.Error IS_FOR_ERROR />
             <Button fullWidth submit>{t("register")}</Button>
             <SubtleText>
                 <Link to={"/login"}>I already have an account</Link>
