@@ -23,41 +23,8 @@ import { usePreferences } from "@ractf/shell-util";
 import { store } from "store";
 import { setPreference } from "actions";
 
+import EXPERIMENTS from "./experiments";
 
-export const EXPERIMENTS = {
-    "showDev": {
-        name: "Show developer links in navigations",
-        options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
-    },
-    "accDeletion": {
-        name: "Account deletion",
-        options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
-    },
-    "accOauth": {
-        name: "OAuth Providers",
-        options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
-    },
-    "importEntire": {
-        name: "Import Entire CTF",
-        options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
-    },
-    "advSearch": {
-        name: "Advanced Team/Member Search",
-        options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
-    },
-    "newCampaign": {
-        name: "Campaign Layout",
-        options: [{ key: false, value: "Old Layout" }, { key: true, value: "New Layout" }]
-    },
-    "leaderboardReload": {
-        name: "Live Leaderboard Reload",
-        options: [{ key: false, value: "Disabled" }, { key: true, value: "Enabled" }]
-    },
-    "layoutDebug": {
-        name: "Display Layout Debug",
-        options: [{ key: false, value: "Disabled" }, { key: true, value: "Enabled" }]
-    },
-};
 
 const Experiments = () => {
     const [prefs] = usePreferences();

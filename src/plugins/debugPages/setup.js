@@ -16,32 +16,24 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { dynamicLoad } from "@ractf/shell-util";
-import { registerPlugin, registerPreferences } from "@ractf/plugins";
+import { registerPlugin } from "@ractf/plugins";
 
 import LoadingPage from "../../pages/LoadingPage";
-import { EXPERIMENTS } from "./components/Experiments";
 
 
 export default () => {
     const wsTester = dynamicLoad(() => import(/* webpackChunkName: "ws-tester" */ "./components/WSTester"));
     const debug = dynamicLoad(() => import(/* webpackChunkName: "debug" */ "./components/Debug"));
-    const experiments = dynamicLoad(() => import(/* webpackChunkName: "experiments" */ "./components/Experiments"));
     const state = dynamicLoad(() => import(/* webpackChunkName: "state" */ "./components/State"));
     const ui = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "./components/UI"));
     const theme = dynamicLoad(() => import(/* webpackChunkName: "theme" */ "./components/Theme"));
     // const themeEditor = dynamicLoad(() => import(/* webpackChunkName: "theme" */ "./components/ThemeEditor"));
-
-    registerPreferences(Object.keys(EXPERIMENTS).map(i => ({ name: `experiment.${i}`, initial: false })));
 
     // registerMount("appSibling", "themeEditor", themeEditor);
 
     registerPlugin("page", "/debug/theme", {
         title: "Theme",
         component: theme
-    });
-    registerPlugin("page", "/debug/experiments", {
-        title: "Experiments",
-        component: experiments
     });
     registerPlugin("page", "/debug/state", {
         title: "State Download",
