@@ -25,6 +25,7 @@ export const ENDPOINTS = {
     LOGIN_2FA: "/auth/login_2fa/",
     ADD_2FA: "/auth/add_2fa/",
     VERIFY_2FA: "/auth/verify_2fa/",
+    REMOVE_2FA: "/auth/remove_2fa/",
     VERIFY: "/auth/verify_email/",
     REQUEST_RESET: "/auth/request_password_reset/",
     COMPLETE_RESET: "/auth/password_reset/",

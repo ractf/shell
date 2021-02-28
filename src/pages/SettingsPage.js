@@ -17,19 +17,19 @@
 
 import React, { useContext, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { GiCaptainHatProfile } from "react-icons/gi";
 
 import { ENDPOINTS, leaveTeam, modifyTeam, reloadAll } from "@ractf/api";
-import { zxcvbn, useConfig, usePreferences, useExperiment } from "@ractf/shell-util";
+import { useConfig, usePreferences, useExperiment } from "@ractf/shell-util";
 import { NUMBER_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 import {
     Page, HR, Hint, Button, Form, SubtleText, Input, Container,
-    Checkbox, InputButton, Card, Column, PageHead, UiKitModals
+    Checkbox, Card, Column, PageHead, UiKitModals
 } from "@ractf/ui-kit";
+import { mountPoint } from "@ractf/plugins";
 
-import * as actions from "actions";
 import Link from "components/Link";
 
 import "./SettingsPage.scss";
@@ -75,31 +75,8 @@ const SettingsPage = () => {
     const { t } = useTranslation();
     const user = useSelector(state => state.user);
     const team = useSelector(state => state.team);
-    const dispatch = useDispatch();
     const [preferences, setPreferences] = usePreferences();
     const hasTeams = useConfig("enable_teams");
-
-    const passwordValidator = useCallback(({ old_password, password, new2 }) => {
-        return new Promise((resolve, reject) => {
-            if (!old_password)
-                return reject({ old_password: t("settings.curr_pass_required") });
-            if (!password)
-                return reject({ password: t("settings.new_pass_required") });
-            if (!new2)
-                return reject({ new2: t("settings.new_pass_required") });
-            if (password !== new2)
-                return reject({ new2: t("auth.pass_match") });
-
-            const strength = zxcvbn()(password);
-            if (strength.score < 3)
-                return reject({ password: strength.feedback.warning || t("auth.pass_weak") });
-
-            resolve();
-        });
-    }, [t]);
-    const passwordChanged = useCallback(() => {
-        modals.alert(t("settings.pass_changed"));
-    }, [modals, t]);
 
     const deleteValidator = useCallback(({ password }) => {
         return new Promise((resolve, reject) => {
@@ -108,18 +85,6 @@ const SettingsPage = () => {
         });
     }, [t]);
 
-    const usernameValidator = useCallback(({ username }) => {
-        return new Promise((resolve, reject) => {
-            if (!username) return reject({ username: t("settings.uname_required") });
-            if (username === user.username) return reject({ username: t("settings.uname_unchanged") });
-
-            resolve();
-        });
-    }, [t, user.username]);
-    const usernameChanged = useCallback(({ form: { username } }) => {
-        modals.alert(t("settings.uname_changed"));
-        dispatch(actions.editUser({ username }));
-    }, [modals, dispatch, t]);
     const detailsUpdated = useCallback(() => {
         modals.alert(t("settings.details_changed"));
         reloadAll();
@@ -156,7 +121,6 @@ const SettingsPage = () => {
     ].filter(Boolean);
 
     const [accDeletion] = useExperiment("accDeletion");
-    const [accOauth] = useExperiment("accOauth");
 
     return <Page title={t("settings.for", { name: user.username })}>
         <PageHead>
@@ -164,46 +128,7 @@ const SettingsPage = () => {
         </PageHead>
         <Container.Row>
             <Column lgWidth={6} mdWidth={12}>
-                {!user.has_2fa ? (
-                    <Card warning lesser header={t("settings.cards.2fa")}>
-                        <h6>{t("settings.2fa.disabled")}</h6>
-                        <SubtleText>{t("settings.2fa.prompt")}</SubtleText>
-                        <Link to={"/settings/2fa"}>
-                            <Button warning>{t("settings.2fa.enable")}</Button>
-                        </Link>
-                    </Card>
-                ) : (<Card lesser header={t("settings.cards.2fa")}>
-                    <p>{t("settings.2fa.enabled")}</p>
-                    <Link to={"/settings/2fa"}>
-                        <Button>{t("settings.2fa.disable")}</Button>
-                    </Link>
-                </Card>)}
-                <Card lesser header={t("settings.cards.identity")}>
-                    <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} validator={usernameValidator}
-                        postSubmit={usernameChanged}>
-                        <Form.Group htmlFor={"username"} label={t("username")}>
-                            <InputButton name={"username"} label={t("username")} val={user.username}
-                                limit={36} placeholder={t("username")} button={t("save")} submit />
-                        </Form.Group>
-                    </Form>
-                    {accOauth && (
-                        <Container toolbar centre>
-                            <Button disabled lesser>Link Google account</Button>
-                            <Button disabled lesser>Link RACTF passport</Button>
-                        </Container>
-                    )}
-                </Card>
-                <Card lesser header={t("settings.cards.change_password")}>
-                    <Form action={ENDPOINTS.CHANGE_PASSWORD} method={"POST"} validator={passwordValidator}
-                        postSubmit={passwordChanged}>
-                        <Form.Group>
-                            <Input password name={"old_password"} placeholder={t("curr_pass")} />
-                            <Input zxcvbn={zxcvbn()} password name={"password"} placeholder={t("new_pass")} />
-                            <Input password name={"new2"} placeholder={t("new_pass")} />
-                        </Form.Group>
-                        <Button submit>{t("change_pass")}</Button>
-                    </Form>
-                </Card>
+                {mountPoint("settingsLeftA")}
                 <Card lesser header={t("settings.cards.profile")}>
                     <Form action={ENDPOINTS.USER + "self"} method={"PATCH"} postSubmit={detailsUpdated}>
                         <Form.Group htmlFor={"discord"} label={<>
@@ -238,8 +163,10 @@ const SettingsPage = () => {
                         <Button submit>{t("save")}</Button>
                     </Form>
                 </Card>
+                {mountPoint("settingsLeftB")}
             </Column>
             <Column lgWidth={6} mdWidth={12}>
+                {mountPoint("settingsRightA")}
                 {hasTeams && <>
                     <Card lesser header={t("settings.cards.team")}>
                         {!team ? <>
@@ -311,6 +238,7 @@ const SettingsPage = () => {
                         </Form>
                     </Card>
                 )}
+                {mountPoint("settingsRightB")}
             </Column>
         </Container.Row>
     </Page>;

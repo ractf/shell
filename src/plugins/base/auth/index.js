@@ -15,11 +15,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "@ractf/plugins";
+import { registerMount, registerPlugin } from "@ractf/plugins";
 
 import { push } from "connected-react-router";
 import { store } from "store";
 
+import { TwoFAPanel, UsernamePanel, PasswordPanel } from "./components/SettingsPanels";
 import { EmailVerif, EmailMessage } from "./components/EmailVerif";
 import { JoinTeam, CreateTeam } from "./components/Teams";
 import PasswordReset from "./components/PasswordReset";
@@ -29,6 +30,10 @@ import Login from "./components/Login";
 
 
 export default () => {
+    registerMount("settingsLeftA", "2fa", TwoFAPanel);
+    registerMount("settingsLeftA", "username", UsernamePanel);
+    registerMount("settingsLeftA", "password", PasswordPanel);
+
     registerPlugin("loginProvider", "basicAuth", {
         component: Login,
     });
