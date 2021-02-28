@@ -25,11 +25,14 @@ import { FiTwitter, FiUsers } from "react-icons/fi";
 import { cssVar, useReactRouter } from "@ractf/util";
 import { useConfig, useCategories } from "@ractf/shell-util";
 import {
-    TabbedView, Tab, HR, Graph, Pie, Page, Column, Badge, Form, Container
+    Graph, Pie, Page, Column, Badge, Form, Container, Grid, SubtleText
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
 import { useApi } from "@ractf/util/http";
 
+import * as dayjs from "dayjs";
+import * as relativeTime from "dayjs/plugin/relativeTime";
+import * as localizedFormat from "dayjs/plugin/localizedFormat";
 import Link from "components/Link";
 
 import LoadingPage from "./LoadingPage";
@@ -37,16 +40,9 @@ import { BrokenShards } from "./ErrorPages";
 import "./Profile.scss";
 
 
-const UserSolve = ({ challenge_name, points }) => {
-    const { t } = useTranslation();
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
 
-    return (
-        <div className={"userSolve"}>
-            <div>{challenge_name}</div>
-            <div>{t("point_count", { count: points })}</div>
-        </div>
-    );
-};
 
 const Profile = () => {
     const { match } = useReactRouter();
@@ -64,7 +60,7 @@ const Profile = () => {
 
     const categoryValues = {};
     const uData = userData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    const scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
+    const scorePlotData = { data: [], name: "score", fill: true };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.x.push(api.config.start_time);
     // scorePlotData.y.push(0);
@@ -80,88 +76,112 @@ const Profile = () => {
         if (!categoryValues[category]) categoryValues[category] = 0;
         categoryValues[category]++;
 
-        const score = (scorePlotData.y[scorePlotData.y.length - 1] || 0) + solve.points;
-        scorePlotData.x.push(new Date(solve.timestamp));
-        scorePlotData.y.push(score);
+        const score = ((scorePlotData.data[scorePlotData.data.length - 1] || {}).y || 0) + solve.points;
+        scorePlotData.data.push({ x: new Date(solve.timestamp), y: score });
     });
 
-    return <Page title={userData.username}>
-        <Container.Row>
-            <Column xlWidth={3} lgWidth={4} mdWidth={12}>
-                <div className={"userName"}>{userData.username}</div>
-                {(userData.is_staff || userData.is_verified) && <Container full toolbar>
-                    {userData.is_staff && <Badge danger pill>Admin</Badge>}
-                    {userData.is_verified && <Badge warning pill>Staff</Badge>}
-                </Container>}
-                <div>{t("point_count", { count: userData.leaderboard_points })}</div>
-                <div className={"userJoined"}>Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment></div>
-                <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
-                    {userData.bio || t("profile.no_bio")}
-                </div>
+    const bannerFg = userData.is_staff
+        ? "var(--type-danger-fg)"
+        : userData.is_verified
+            ? "var(--type-warning-fg)"
+            : undefined;
+    const bannerBg = userData.is_staff
+        ? "var(--type-danger-bg)"
+        : userData.is_verified
+            ? "var(--type-warning-bg)"
+            : undefined;
 
-                {userData.twitter && userData.twitter.length !== 0 &&
-                    <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
-                        href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
-                        <FiTwitter /><span>@{userData.twitter}</span>
-                    </a>}
-                {userData.reddit && userData.reddit.length !== 0 &&
-                    <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
-                        href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
-                        <FaRedditAlien /><span>/u/{userData.reddit}</span>
-                    </a>}
-                {userData.discord && userData.discord.length !== 0 &&
-                    (userData.discordid && userData.discordid.length !== 0
-                        ? <a target={"_blank"} rel={"noopener noreferrer"}
-                            href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
-                            className={"userSocial"}>
-                            <SiDiscord /><span>{userData.discord}</span>
-                        </a>
-                        : <span className={"userSocial"}>
-                            <SiDiscord /><span>{userData.discord}</span>
-                        </span>)}
+    const hasSocialsRow = (
+        (hasTeams && userData.team)
+        || userData.reddit || userData.discord || userData.twitter
+    );
 
-                {hasTeams && userData.team && (
-                    <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
-                        <FiUsers /> {userData.team_name}
-                    </Link>
+    return <Page title={userData.username} noWrap>
+        <div style={{ position: "relative" }}>
+            <div className={"profileBack"} style={{
+                backgroundColor: bannerBg, color: bannerFg
+            }} />
+            <Container className={"profileRow"}>
+                {userData.profilePicture && (
+                    <img alt={"Avatar"} src={userData.profilePicture} className={"pfp"} />
                 )}
-                {Object.keys(categoryValues).length !== 0 && <>
-                    <h5>Solve attempts</h5>
-                    <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
-                        labels={["Correct", "Incorrect"]}
-                        colors={[cssVar("--col-green"), cssVar("--col-red")]} />
+                <div className={"profileBanner"} style={{ color: bannerFg }}>
+                    <h2>{userData.username}</h2>
+                    <Container full spaced={!userData.bio}>
+                        {t("point_count", { count: userData.leaderboard_points })}
+                        <span className={"profileSep"} />
+                        Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment>
+                    </Container>
+                    {userData.bio && <Container full spaced><SubtleText>
+                        {userData.bio}
+                    </SubtleText></Container>}
+                    <Container full toolbar spaced>
+                        {userData.is_staff && <Badge danger pill outline>Admin</Badge>}
+                        {userData.is_verified && <Badge warning pill outline={!userData.is_staff}>
+                            Staff
+                        </Badge>}
+                    </Container>
+                    {hasSocialsRow && (
+                        <Container full toolbar className={"socialsRow"}>
+                            {hasTeams && userData.team && (
+                                <Link to={"/team/" + (userData.team.id || userData.team)}>
+                                    <FiUsers /> {userData.team_name}
+                                </Link>
+                            )}
+                            {userData.twitter && (
+                                <a target={"_blank"} rel={"noopener noreferrer"}
+                                    href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
+                                    <FiTwitter /><span>@{userData.twitter}</span>
+                                </a>
+                            )}
+                            {userData.reddit && (
+                                <a target={"_blank"} rel={"noopener noreferrer"}
+                                    href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
+                                    <FaRedditAlien /><span>/u/{userData.reddit}</span>
+                                </a>
+                            )}
+                            {userData.discord && (
+                                userData.discordid && userData.discordid.length !== 0
+                                    ? <a target={"_blank"} rel={"noopener noreferrer"}
+                                        href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}>
+                                        <SiDiscord /><span>{userData.discord}</span>
+                                    </a>
+                                    : <span>
+                                        <SiDiscord /><span>{userData.discord}</span>
+                                    </span>
+                            )}
+                        </Container>
+                    )}
+                </div>
+            </Container>
+        </div>
+        <Container>
+            {userData.solves.filter(Boolean).length ? <>
+                <Container.Row>
+                    <Column lgWidth={6}>
+                        <h5>Solve attempts</h5>
+                        <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
+                            colors={[cssVar("--col-green"), cssVar("--col-red")]}
+                            labels={["Correct", "Incorrect"]} noAnimate />
+                    </Column>
+                    <Column lgWidth={6}>
+                        <h5>Category Breakdown</h5>
+                        <Pie data={Object.values(categoryValues)}
+                            labels={Object.keys(categoryValues)} noAnimate />
+                    </Column>
+                </Container.Row>
+                <h4>Score Over Time</h4>
+                <Graph data={[scorePlotData]} timeGraph />
+                <h4>Challenge Solves</h4>
+                <Grid headings={["Challenge", "Points", "Time"]} data={userData.solves.filter(Boolean).map((i, n) => [
+                    i.challenge_name, i.points, <span title={dayjs(i.timestamp).format("lll")}>
+                        {dayjs(i.timestamp).fromNow()}
+                    </span>
+                ])} />
+            </> : <>
+                    <h5>{t("profile.no_solves", { name: userData.username })}</h5>
                 </>}
-            </Column>
-            <Column xlWidth={9} lgWidth={8} mdWidth={12}>
-                {(!userData.solves || userData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
-                    {t("profile.no_solves", { name: userData.username })}
-                </div> : <TabbedView>
-                        <Tab label={"Solves"}>
-                            {userData.solves && userData.solves.filter(Boolean).map((i, n) => (
-                                <UserSolve key={i.timestamp} {...i} />
-                            ))}
-                        </Tab>
-                        <Tab label={"Stats"}>
-                            <Container.Row>
-                                <Column lgWidth={6}>
-                                    <h5>Solve attempts</h5>
-                                    <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
-                                        colors={[cssVar("--col-green"), cssVar("--col-red")]}
-                                        labels={["Correct", "Incorrect"]} height={300} />
-                                </Column>
-                                <Column lgWidth={6}>
-                                    <h5>Category Breakdown</h5>
-                                    <Pie data={Object.values(categoryValues)}
-                                        labels={Object.keys(categoryValues)} />
-                                </Column>
-                            </Container.Row>
-                            <HR />
-                            <h5>Score Over Time</h5>
-                            <Graph data={[scorePlotData]} />
-                        </Tab>
-                    </TabbedView>}
-            </Column>
-        </Container.Row>
+        </Container>
     </Page>;
 };
 export default Profile;

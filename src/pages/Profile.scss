@@ -17,6 +17,68 @@
 
 @import "@ractf/ui-kit/Colours.scss";
 
+.pfp {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background-color: #0004;
+    border: none;
+    margin-right: px(16);
+}
+.profileBanner {
+    h2 {
+        margin-bottom: 0;
+    }
+}
+.profileBack {
+    background-color: inherit;
+    top: -32px;
+    left: -64px;
+    right: -64px;
+    bottom: 0;
+    z-index: -1;
+    position: absolute;
+
+    @media (max-width: 1200px) {
+        top: -16px;
+        left: -32px;
+        right: -32px;
+    }
+    @media (max-width: 800px) {
+        left: -4px;
+        right: -4px;
+        top: -4px;
+    }
+}
+.profileRow {
+    padding-top: px(32);
+    padding-bottom: px(24);
+    margin-bottom: px(24) !important;
+    display: flex;
+    @media (max-width: 576px) {
+        display: block;
+    }
+}
+.profileSep {
+    &::before {
+        content: "\00b7";
+    }
+    margin: 0 px(4);
+}
+.socialsRow > * {
+    color: var(--col-color);
+    &:hover {
+        color: var(--col-color);
+        text-decoration: underline;
+    }
+    display: flex;
+    align-items: center;
+    margin-right: px(16) !important;
+    svg {
+        margin-right: px(4);
+    }
+}
+
 .userName {
     font-size: 2em;
     font-weight: 600;
@@ -48,7 +110,7 @@
     margin: 8px 0;
     color: var(--col-color);
     transition: 150ms color ease;
-    opacity: .8;
+    opacity: 0.8;
     cursor: pointer;
 
     *:first-child {
