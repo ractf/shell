@@ -37,21 +37,21 @@ export const TwoFAPanel = () => {
     const { t } = useTranslation();
 
     const remove2fa = useCallback(() => {
-        modals.promptConfirm("Are you sure you want to remove 2-factor authentication from your account?").then(() => {
+        modals.promptConfirm(t("2fa.remove_warning")).then(() => {
             modals.promptConfirm({ message: t("2fa.required"), small: true },
                 [{ Component: Login2FAPopup, name: "pin" }]
             ).then(({ pin }) => {
                 http.post(ENDPOINTS.REMOVE_2FA, {otp: pin}).then(() => {
-                    modals.alert("2-factor authentication has been removed from your account.");
+                    modals.alert(t("2fa.removed"));
                     dispatch(actions.setUser({
                         ...user, has_2fa: false
                     }));
                 }).catch(e => {
                     console.log(http.getError(e));
-                    modals.alert("Failed to remove 2-factor authentication:\n" + http.getError(e));
+                    modals.alert(t("2fa.remove_failed") + "\n" + http.getError(e));
                 });
             }).catch(() => {
-                modals.alert("2-factor authentication has not been removed from your account.");
+                modals.alert(t("2fa.no_remove"));
             });
         }).catch(() => {});
     }, [modals, t, dispatch, user]);
