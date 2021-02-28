@@ -19,7 +19,7 @@ import React, { useContext, useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Button, SubtleText, UiKitModals, Container, InputPin
+    Form, Input, Button, SubtleText, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
 import { EMAIL_RE } from "@ractf/util";
@@ -27,31 +27,9 @@ import * as http from "@ractf/util/http";
 
 import Link from "components/Link";
 
+import { Login2FAPopup } from "./Login2FAPopup";
 import { Wrap } from "./Parts";
 
-
-const Login2FA = ({ ...props }) => {
-    const [mode, setMode] = useState(0);
-
-    const switchMode = useCallback(() => {
-        setMode(old => 1 - old);
-    }, []);
-
-    return <Container centre>
-        <Form.Group>
-            {mode === 0 ? (
-                <InputPin digits={6} {...props} />
-            ) : (
-                <Input placeholder={"2-factor authentication backup code"} {...props} />
-            )}
-        </Form.Group>
-        <SubtleText>
-            <span onClick={switchMode} className={"linkStyle"}>
-                Enter a {mode === 0 ? "backup" : "standard"} code instead
-            </span>
-        </SubtleText>
-    </Container>;
-};
 
 const BasicLogin = () => {
     const modals = useContext(UiKitModals);
@@ -81,9 +59,8 @@ const BasicLogin = () => {
                 setNeedsOtp(true);
 
                 modals.promptConfirm({ message: t("2fa.required"), small: true },
-                    [{ Component: Login2FA, name: "pin" }]
+                    [{ Component: Login2FAPopup, name: "pin" }]
                 ).then(({ pin }) => {
-                    if (pin.length !== 6) return faPrompt();
                     submit.current({ tfa: pin });
                     setNeedsOtp(false);
                 }).catch(() => {

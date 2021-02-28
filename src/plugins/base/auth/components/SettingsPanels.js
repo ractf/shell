@@ -22,21 +22,44 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, Container, Form, Input, InputButton, SubtleText, UiKitModals } from "@ractf/ui-kit";
 import { zxcvbn, useExperiment } from "@ractf/shell-util";
 import { ENDPOINTS } from "@ractf/api";
+import * as http from "@ractf/util/http";
 
 import Link from "components/Link";
 import * as actions from "actions";
 
+import { Login2FAPopup } from "./Login2FAPopup";
+
 
 export const TwoFAPanel = () => {
+    const modals = useContext(UiKitModals);
     const user = useSelector(state => state.user);
+    const dispatch = useDispatch();
     const { t } = useTranslation();
+
+    const remove2fa = useCallback(() => {
+        modals.promptConfirm("Are you sure you want to remove 2-factor authentication from your account?").then(() => {
+            modals.promptConfirm({ message: t("2fa.required"), small: true },
+                [{ Component: Login2FAPopup, name: "pin" }]
+            ).then(({ pin }) => {
+                http.post(ENDPOINTS.REMOVE_2FA, {otp: pin}).then(() => {
+                    modals.alert("2-factor authentication has been removed from your account.");
+                    dispatch(actions.setUser({
+                        ...user, has_2fa: false
+                    }));
+                }).catch(e => {
+                    console.log(http.getError(e));
+                    modals.alert("Failed to remove 2-factor authentication:\n" + http.getError(e));
+                });
+            }).catch(() => {
+                modals.alert("2-factor authentication has not been removed from your account.");
+            });
+        }).catch(() => {});
+    }, [modals, t, dispatch, user]);
 
     if (user.has_2fa) return (
         <Card lesser header={t("settings.cards.2fa")}>
             <p>{t("settings.2fa.enabled")}</p>
-            <Link to={"/settings/2fa"}>
-                <Button>{t("settings.2fa.disable")}</Button>
-            </Link>
+            <Button onClick={remove2fa}>{t("settings.2fa.disable")}</Button>
         </Card>
     );
 
