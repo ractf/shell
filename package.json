@@ -7,6 +7,7 @@
     "axios": "^0.21.1",
     "chart.js": "^2.5.0",
     "connected-react-router": "^6.8.0",
+    "dayjs": "^1.10.4",
     "i18next": "^19.4.2",
     "markdown-to-jsx": "^6.11.4",
     "moment": "^2.24.0",
@@ -176,7 +177,10 @@
           "count": 2
         }
       ],
-      "eol-last": ["error", "always"],
+      "eol-last": [
+        "error",
+        "always"
+      ],
       "react/display-name": "warn"
     }
   },

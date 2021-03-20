@@ -37,3 +37,12 @@ export const propsToTypeClass = (props, styles, fallback) => {
     }
     return makeClass(...className);
 };
+
+export const propsNotTypeClass = (props, styles) => {
+    const newProps = {};
+    for (const i of Object.keys(props)) {
+        if (!styles[i])
+            newProps[i] = props[i];
+    }
+    return newProps;
+};

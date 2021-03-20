@@ -32,14 +32,14 @@ export const getChallenges = () => {
 
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags,
-    post_score_explanation
+    challenge_metadata, author, challenge_type, files, hidden, tags,
+    post_score_explanation, unlock_requirements
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
         category: id, name, score, description,
         flag_type, flag_metadata, post_score_explanation,
-        challenge_metadata, hidden,
-        author, unlocks, files, tags,
+        challenge_metadata, hidden, unlock_requirements,
+        author, files, tags,
         challenge_type: challenge_type || "default",
         auto_unlock,
     }).then(data => {
@@ -50,8 +50,8 @@ export const createChallenge = ({
 
 export const editChallenge = ({
     id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags,
-    post_score_explanation
+    challenge_metadata, author, challenge_type, files, hidden, tags,
+    post_score_explanation, unlock_requirements
 }) => {
     const categories = store.getState().challenges?.categories || [];
     let original = null;
@@ -60,9 +60,9 @@ export const editChallenge = ({
     });
     const changes = {
         name, score, description, post_score_explanation,
-        flag_type, flag_metadata,
+        flag_type, flag_metadata, unlock_requirements,
         challenge_metadata, hidden,
-        author, unlocks, files, tags,
+        author, files, tags,
         challenge_type: challenge_type || "default",
         auto_unlock,
     };
@@ -85,6 +85,8 @@ export const quickRemoveChallenge = async (challenge) => {
     return http.delete_(ENDPOINTS.CHALLENGES + challenge.id);
 };
 export const removeChallenge = async (challenge, dumbRemove) => {
+    // TODO: This
+    /*
     const categories = store.getState().challenges.categories;
     // Unlink all challenges
     await Promise.all(challenge.unlocks.map(i => (
@@ -98,10 +100,14 @@ export const removeChallenge = async (challenge, dumbRemove) => {
             ))
         ))
     )));
+    */
     quickRemoveChallenge(challenge).then(() => reloadAll());
 };
 
 export const linkChallenges = (challenge1, challenge2, linkState) => {
+    // TODO: This
+    return;
+    /*
     let c1unlocks = [...challenge1.unlocks];
     let c2unlocks = [...challenge2.unlocks];
 
@@ -116,6 +122,7 @@ export const linkChallenges = (challenge1, challenge2, linkState) => {
         challenge1.edit({ unlocks: c1unlocks }),
         challenge2.edit({ unlocks: c2unlocks }),
     ]);
+    */
 };
 
 export const attemptFlag = (flag, challenge) => {

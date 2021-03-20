@@ -15,17 +15,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useContext, useCallback, useState, useRef } from "react";
+import React, { useContext, useCallback, useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, Checkbox, Button, Select, PageHead, InputTags,
-    fromJson, Page, Column, Card, Grid, Modal,
-    FileUpload, TabbedView, Tab, SubtleText, UiKitModals, Container
+    fromJson, Page, Column, Card, Grid, Modal, Markdown, Spoiler,
+    FileUpload, TabbedView, Tab, SubtleText, UiKitModals, Container,
+    Badge, Row, HR, ToggleButton
 } from "@ractf/ui-kit";
 import { NUMBER_RE, formatBytes } from "@ractf/util";
-import { iteratePlugins, getPlugin } from "@ractf/plugins";
+import { iteratePlugins, getPlugin, getClass } from "@ractf/plugins";
+import { useChallenges, Challenge, ASTChallenge, ASTBinOp } from "@ractf/shell-util";
 import { newHint } from "@ractf/api";
 import * as http from "@ractf/util/http";
 
@@ -34,6 +36,21 @@ import Link from "components/Link";
 
 import File from "./File";
 import Hint from "./Hint";
+
+
+const UNLOCK_HELP = `
+### Unlock requirements help
+Unlock requirements are encoded using reverse polish notation.
+
+For now, have this sloppy grammar:
+
+\`\`\`
+<code> ::= <term>
+<term> ::= <challenge id>|<term> <term> AND|<term> <term> OR
+<challenge id> ::= \\d+
+\`\`\`
+For example: \`1 2 OR 3 AND\` decodes as \`(1 OR 2) AND 3\`
+`;
 
 
 const UPLOAD_SPEED_HISTORY = 5;
@@ -229,6 +246,153 @@ const FlagMetadata = React.memo(({ flag_type, val, onChange }) => {
 });
 FlagMetadata.displayName = "FlagMetadata";
 
+
+const SimpleUnlockEditor = ({ challenge, value, onChange }) => {
+    const allChallenges = challenge.category.challenges.filter(
+        j => j.id !== challenge.id).map(j => j.name);
+
+    const ast = getClass(Challenge).tryParseAST(value, true)[1];
+    let simpleRequirements = getClass(Challenge).getSimpleRequirementsStatic(ast);
+    if (simpleRequirements === null) {
+        simpleRequirements = ["OR", getClass(Challenge).astChallengesList(ast)];
+    }
+    const simplyRequiredChallenges = useChallenges(simpleRequirements[1]);
+
+    const [challenges, setChallenges] = useState(simplyRequiredChallenges.map(i => i.name));
+    const [mode, setMode] = useState(simpleRequirements[0]);
+
+    useEffect(() => {
+        const reverseMap = Object.fromEntries(simplyRequiredChallenges.map(i => [i.name, i.id]));
+        const output = [];
+        challenges.forEach(i => {
+            output.push(reverseMap[i]);
+            if (output.length !== 1)
+                output.push(mode);
+        });
+        onChange(output.join(" "));
+    }, [onChange, mode, challenges, simplyRequiredChallenges]);
+
+    return <>
+        <Row>
+            {challenges.map((i, n) => <React.Fragment key={`${mode}|${i}`}>
+                {(n !== 0) && <Badge lesser pill outline>{mode}</Badge>}
+                <Badge pill>{i}</Badge>
+            </React.Fragment>)}
+        </Row>
+        <HR />
+        <Form.Group label={"Challenges"}>
+            <InputTags name={"Challenges"} limit={allChallenges}
+                val={challenges} onChange={setChallenges} />
+        </Form.Group>
+        <Form.Group label={"Mode"}>
+            <ToggleButton small
+                options={[["Any", "OR"], ["All", "AND"]]}
+                default={mode} onChange={setMode}
+            />
+        </Form.Group>
+    </>;
+};
+
+const UnlockPreview = ({ ast, value, simple }) => {
+    if (!ast)
+        ast = getClass(Challenge).tryParseAST(value, true)[1];
+    const parsedChallenges = useChallenges(Challenge.astChallengesList(ast));
+    const challengeMap = Object.fromEntries(parsedChallenges.map(i => [i.id, i]));
+
+    const parse = (node, depth = 0, first = false) => {
+        if (node instanceof ASTChallenge) {
+            return [<Badge key={node._id} pill>
+                {challengeMap[node.challenge_id]?.name || <i>Unknown Challenge</i>}
+            </Badge>];
+        } else if (node instanceof ASTBinOp) {
+            return [
+                (!first && !simple) && <Badge key={"(" + node._id} lesser secondary pill outline>(</Badge>,
+                ...parse(node.left, depth + 1),
+                <Badge lesser pill outline key={node._id}>{node.op}</Badge>,
+                ...parse(node.right, depth + 1),
+                (!first && !simple) && <Badge key={")" + node._id} lesser secondary pill outline>)</Badge>,
+            ];
+        }
+        return [];
+    };
+    return <Row children={parse(ast, 0, true)} />;
+};
+
+const UnlockEditor = ({ challenge, value, onClose, onChange }) => {
+    const [isAdvanced, setAdvanced] = useState(() => {
+        return getClass(Challenge).getSimpleRequirementsStatic(
+            getClass(Challenge).tryParseAST(value, true)[1]
+        ) === null;
+    });
+    const modals = useContext(UiKitModals);
+    const [simpleVal, setSimpleVal] = useState(value);
+
+    const switchSimple = () => {
+        modals.promptConfirm(
+            "Switching to simple mode will discard edits made in advanced mode. Switch anyway?"
+        ).then(() => {
+            setAdvanced(false);
+        }).catch(() => { });
+    };
+
+    const onConfirm = () => {
+        if (!isAdvanced) {
+            onChange(simpleVal);
+            onClose();
+        } else {
+            if (validationError) {
+                modals.alert("There are errors with your code. Please either fix the errors, or discard changes.");
+            } else {
+                onChange(parsed.serialized);
+                onClose();
+            }
+        }
+    };
+
+    const [validationError, setValidationError] = useState(null);
+    const [parsed, setParsed] = useState();
+    const updateValError = ({ code }) => {
+        const [success, astOrError] = getClass(Challenge).tryParseAST(code);
+        setValidationError(success ? null : astOrError);
+        setParsed(success ? astOrError : null);
+    };
+    useEffect(() => {
+        updateValError({ code: value });
+    }, [value, isAdvanced]);
+    const simpleOnChange = useCallback((code) => {
+        setSimpleVal(code);
+    }, [setSimpleVal]);
+
+    return <Modal header={"Edit Unlock Requirements"} buttons={
+        !isAdvanced ? (
+            <Button lesser small warning onClick={() => setAdvanced(true)}>
+                Switch to advanced mode
+            </Button>
+        ) : (
+            <Button lesser small danger onClick={switchSimple}>
+                Switch to simple mode
+            </Button>
+        )
+    } noHide onClose={onClose} onConfirm={onConfirm}>
+        {!isAdvanced ? <>
+            <SimpleUnlockEditor onChange={simpleOnChange} value={simpleVal} challenge={challenge} />
+        </> : <>
+            <UnlockPreview ast={parsed} />
+            <HR />
+            <Form onChange={updateValError}>
+                <Form.Group label={"Unlock requirements code:"} error="test">
+                    <Input name={"code"} value={value} />
+                </Form.Group>
+                <Form.Error>{validationError}</Form.Error>
+            </Form>
+            <Spoiler title={"Unlock code documentation"}>
+                <Markdown source={UNLOCK_HELP} />
+            </Spoiler>
+        </>}
+    </Modal>;
+};
+
+
 const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, embedded }) => {
     const { t } = useTranslation();
 
@@ -236,15 +400,24 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
         return { ...data, tags: data.tags ? data.tags.map(i => ({ type: "tag", text: i })) : [] };
     }, []);
 
-    const allChallenges = category.challenges.filter(j => j.id !== challenge.id).map(j => j.name);
+    const [unlockOpen, setUnlockOpen] = useState(false);
 
     const body = (
         <Form handle={saveEdit} transformer={editTransformer}>
+            {unlockOpen ?
+                <UnlockEditor name={"unlock_requirements"} challenge={challenge}
+                    value={challenge.unlock_requirements}
+                    onClose={() => setUnlockOpen(false)} />
+                : <Input hidden name={"unlock_requirements"}
+                    val={challenge.unlock_requirements} />
+            }
+
             <Container.Row>
                 <Column lgWidth={6} mdWidth={12}>
-                    <Form.Group label={"Unlock Requirements"} htmlFor={"name"}>
-                        <InputTags name={"Test"} limit={allChallenges} val={["The", "quick", "brow", "fox"]} />
-                    </Form.Group>
+                    <Card lesser header={"Unlock Requirements"} collapsible>
+                        <UnlockPreview receive={"unlock_requirements"} />
+                        <Button small onClick={() => setUnlockOpen(true)}>Open Editor</Button>
+                    </Card>
 
                     <Card lesser header={"Basic settings"} collapsible>
                         <Form.Group htmlFor={"name"} label={t("editor.chal_name")}>

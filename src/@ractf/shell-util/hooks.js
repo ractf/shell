@@ -54,6 +54,23 @@ export const useChallenge = (category, challengeId) => {
     return null;
 };
 
+export const useChallenges = (challengeIds) => {
+    const categories = useSelector(state => state.challenges?.categories) || [];
+    if (challengeIds === null)
+        return [];
+
+    challengeIds = challengeIds.map(i => i.toString());
+    const challenges = [];
+    for (const category of categories) {
+        for (const i of category.challenges) {
+            if (challengeIds.indexOf(i.id.toString()) !== -1) {
+                challenges.push(getClass(Challenge).fromJSON(category, i));
+            }
+        }
+    }
+    return challenges;
+};
+
 export const usePreference = (preferenceName, fallback) => {
     const preference = useSelector(state => (state.preferences || {})[preferenceName]);
     const dispatch = useDispatch();

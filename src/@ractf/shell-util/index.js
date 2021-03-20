@@ -25,6 +25,7 @@ import LoadingPage from "pages/LoadingPage";
 
 export { default as useConfig } from "./useConfig";
 export { default as Challenge } from "./challenge";
+export * from "./challenge";
 export { default as Category } from "./category";
 export * from "./hooks";
 
