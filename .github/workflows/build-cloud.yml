@@ -94,7 +94,7 @@ jobs:
       with:
         args: --acl public-read --follow-symlinks
       env:
-        AWS_S3_BUCKET: ${{ github.event.inputs.tags }}
+        AWS_S3_BUCKET: ${{ github.event.inputs.domain }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'eu-west-2'
