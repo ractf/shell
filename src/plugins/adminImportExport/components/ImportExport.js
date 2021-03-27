@@ -293,7 +293,6 @@ export default () => {
             data.hasOwnProperty("challenge_metadata") &&
             data.hasOwnProperty("flag_type") &&
             data.hasOwnProperty("author") &&
-            data.hasOwnProperty("auto_unlock") &&
             data.hasOwnProperty("score") &&
             data.hasOwnProperty("unlocks") &&
             data.hasOwnProperty("flag_metadata") &&
@@ -324,7 +323,6 @@ export default () => {
             challenge_type: data.challenge_type,
             // TODO: This, but better
             challenge_metadata: data.challenge_metadata,
-            auto_unlock: data.auto_unlock,
             flag_type: data.flag_type,
             author: data.author,
             score: data.score,

@@ -5,9 +5,7 @@ export const log = window.console.log.bind(window.console, "%c[Campaign]", "colo
 export const emptyChallenge = (category, x, y) => ({
     lock: false,
     solve: false,
-    unlocks: [],
     files: [],
-    auto_unlock: true,
     challenge_type: "default",
     challenge_metadata: {
         x: x,

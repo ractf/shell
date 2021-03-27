@@ -57,7 +57,7 @@ const ChallengeGraph = () => {
                         color={challenge.hidden ? cssVar("--col-red") : cssVar("--col-greem")}
                         shape={"box"} widthConstraint={{ maximum: 150 }}
                     />,
-                    challenge.auto_unlock ? (
+                    challenge.unlockedBy.length === 0 ? (
                         <Edge
                             id={`link_category_${category.id}_challenge_${challenge.id}`}
                             key={`link_category_${category.id}_challenge_${challenge.id}`}

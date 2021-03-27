@@ -31,7 +31,7 @@ export const getChallenges = () => {
 };
 
 export const createChallenge = ({
-    id, name, score, description, flag_type, flag_metadata, auto_unlock,
+    id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
     post_score_explanation, unlock_requirements
 }) => {
@@ -41,7 +41,6 @@ export const createChallenge = ({
         challenge_metadata, hidden, unlock_requirements,
         author, files, tags,
         challenge_type: challenge_type || "default",
-        auto_unlock,
     }).then(data => {
         store.dispatch(actions.addChallenge(data));
         return data;
@@ -49,7 +48,7 @@ export const createChallenge = ({
 };
 
 export const editChallenge = ({
-    id, name, score, description, flag_type, flag_metadata, auto_unlock,
+    id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
     post_score_explanation, unlock_requirements
 }) => {
@@ -64,7 +63,6 @@ export const editChallenge = ({
         challenge_metadata, hidden,
         author, files, tags,
         challenge_type: challenge_type || "default",
-        auto_unlock,
     };
     // Immediate dispatch to make things feel more responsive
     store.dispatch(actions.editChallenge({ id, ...changes }));
