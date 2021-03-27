@@ -114,6 +114,10 @@ export default class Challenge {
         return [];
     }
 
+    get unlockedBy() {
+        return getClass(Challenge).astChallengesList(this.getRequirementAST());
+    }
+
     static tryParseAST(requirements, lenientParse = false) {
         const stack = [];
         requirements = (requirements || "").trim();
@@ -121,7 +125,7 @@ export default class Challenge {
             return [true, new ASTNode()];
         for (const i of requirements.split(/\s+/)) {
             if (/^\d+$/.test(i)) {
-                stack.push(new ASTChallenge(i));
+                stack.push(new ASTChallenge(parseInt(i, 10)));
             } else {
                 switch (i) {
                     case "OR":

@@ -23,7 +23,6 @@ import { FiUnlock, FiLock, FiEyeOff, FiCheck, FiMove, FiEdit2 } from "react-icon
 import { Button, Column, UiKitModals } from "@ractf/ui-kit";
 import { makeClass } from "@ractf/util";
 import * as http from "@ractf/util/http";
-import { linkChallenges } from "@ractf/api";
 
 import Link from "components/Link";
 import { push } from "connected-react-router";
@@ -52,20 +51,11 @@ const clickBlock = (e) => {
 
 const Node = ({
     name, right, below, linksU, linksD, linksR, linksL, isEdit,
-    onClick, toggleLink, url, x, y, challenge, startMove, startEdit,
+    onClick, url, x, y, challenge, startMove, startEdit,
     ...props
 }) => {
     const { unlocked } = props;
     const { solved, solve_count, score } = challenge || {};
-    const toggle = side => {
-        return e => {
-            if (isEdit) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleLink(side);
-            }
-        };
-    };
     const { t } = useTranslation();
 
     const solvedRight = solved && right && right.solved;
@@ -114,18 +104,10 @@ const Node = ({
             {solvedDown ? <FiCheck /> : unlockedDown ? <FiUnlock /> : <FiLock />}
         </div>}
 
-        <TileLink
-            onClick={toggle("left")} isEdit={isEdit} show={linksL} left
-            solved={solved} unlocked={unlocked} />
-        <TileLink
-            onClick={toggle("right")} isEdit={isEdit} show={linksR} right
-            solved={solved} unlocked={unlocked} />
-        <TileLink
-            onClick={toggle("up")} isEdit={isEdit} show={linksU} up
-            solved={solved} unlocked={unlocked} />
-        <TileLink
-            onClick={toggle("down")} isEdit={isEdit} show={linksD} down
-            solved={solved} unlocked={unlocked} />
+        <TileLink show={linksL} left solved={solved} unlocked={unlocked} />
+        <TileLink show={linksR} right solved={solved} unlocked={unlocked} />
+        <TileLink show={linksU} up solved={solved} unlocked={unlocked} />
+        <TileLink show={linksD} down solved={solved} unlocked={unlocked} />
 
         <div className={style.buttons} onClick={clickBlock}>
             <Button success onClick={doStartMove} Icon={FiMove} />
@@ -156,8 +138,7 @@ const TileLink = (props) => {
         ...Object.keys(props).map(i => props[i] && style[i]).filter(Boolean)
     );
 
-    return <div onClick={props.onClick} onMouseDown={props.onMouseDown}
-        onTouchStart={props.onTouchStart} className={tileLinkClass} />;
+    return <div className={tileLinkClass} />;
 };
 
 const NodeRow = ({ children }) => (
@@ -272,36 +253,6 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
         dispatch(push(challenge.url + "#edit"));
     }, [dispatch]);
 
-    const toggleLink = challenge => {
-        const { x, y } = challenge.challenge_metadata;
-        return side => {
-            let other;
-            switch (side) {
-                case "up":
-                    other = challenge_grid[x][y - 1];
-                    break;
-                case "down":
-                    other = challenge_grid[x][y + 1];
-                    break;
-                case "left":
-                    other = (challenge_grid[x - 1] || [])[y];
-                    break;
-                case "right":
-                    other = (challenge_grid[x + 1] || [])[y];
-                    break;
-                default:
-                    break;
-            }
-            if (other) {
-                linkChallenges(
-                    challenge, other,
-                    challenge.unlocks.indexOf(other.id) === -1
-                );
-                // setReRender(reRender + 1);
-            }
-        };
-    };
-
     const rows = [];
     for (let y = 0; y < height; y++) {
         const row = [];
@@ -319,33 +270,15 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
                 continue;
             }
 
-            const adjacent = [
-                [x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]
-            ].filter(([x, y]) => (x >= 0 && y >= 0 && x < width && y < height));
-
-            const has_broken_link = !challenge.unlocks.map(unlocks => {
-                unlocks = category.challenges.filter(i => i.id === unlocks)[0];
-                if (!unlocks)
-                    return false;
-
-                let { x: ux, y: uy } = unlocks.challenge_metadata;
-                ux = parseInt(ux, 10); uy = parseInt(uy, 10);
-                // Handle non-campaign challenges (e.g. after conversion)
-                if (isNaN(ux)) ux = -1; if (isNaN(uy)) uy = -1;
-
-                // Check if [ux, uy] in adjacent
-                return adjacent.map(([ax, ay]) => (ax === ux && ay === uy)).reduce((a, b) => a || b);
-            }).reduce((a, b) => a && b, true);
-
             const right = (challenge_grid[x + 1] || [])[y],
                 left = (challenge_grid[x - 1] || [])[y],
                 above = challenge_grid[x][y - 1],
                 below = challenge_grid[x][y + 1];
 
-            const linksR = (right && challenge.unlocks.indexOf(right.id) !== -1),
-                linksL = (left && challenge.unlocks.indexOf(left.id) !== -1),
-                linksU = (above && challenge.unlocks.indexOf(above.id) !== -1),
-                linksD = (below && challenge.unlocks.indexOf(below.id) !== -1);
+            const linksR = (right && challenge.unlockedBy.indexOf(right.id) !== -1),
+                linksL = (left && challenge.unlockedBy.indexOf(left.id) !== -1),
+                linksU = (above && challenge.unlockedBy.indexOf(above.id) !== -1),
+                linksD = (below && challenge.unlockedBy.indexOf(below.id) !== -1);
 
             const isSelected = selected && (selected[0] === x && selected[1] === y);
             const subdued = selected && (selected[0] === x && selected[1] === y);
@@ -360,8 +293,9 @@ export const Campaign = ({ category, isEdit, showLocked, showEditor }) => {
                 linksR={linksR} linksL={linksL}
                 linksU={linksU} linksD={linksD}
                 right={right} below={below}
-                warning={has_broken_link}
-                toggleLink={toggleLink(challenge)}
+
+
+                test={challenge.unlockedBy}
 
                 onClick={selected && nodeMove}
                 startEdit={nodeEdit}
