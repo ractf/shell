@@ -114,18 +114,18 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
             flagInput = <Input placeholder="Flag"
                 name={"flag"} onChange={changeFlag}
                 light monospace autoFocus={autoFocus}
-                center width={"80%"} />;
+                center width={"80%"} error={message} />;
             break;
         case "longText":
             flagInput = <Input rows={5} placeholder="Flag text"
                 format={partial} name={"flag"} autoFocus={autoFocus}
                 onChange={changeFlag} light monospace
-                center width={"80%"} />;
+                center width={"80%"} error={message} />;
             break;
         default:
             flagInput = <InputButton placeholder={"Flag format: " + format_string}
                 format={partial} name={"flag"} autoFocus={autoFocus} center
-                onChange={changeFlag} light monospace
+                onChange={changeFlag} light monospace error={message}
                 button={t("challenge.attempt")} btnDisabled={!flagValid} />;
             button = false;
             break;
@@ -170,7 +170,6 @@ const FlagForm = ({ challenge, onFlagResponse, autoFocus, submitRef }) => {
                 <Form handle={tryFlag} locked={locked}>
                     {flagInput && <>
                         {flagInput}
-                        {message && <Form.Error>{message}</Form.Error>}
                         {button && (
                             <Button disabled={!flagValid} submit>{t("challenge.attempt")}</Button>
                         )}

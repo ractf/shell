@@ -78,13 +78,13 @@ export default ({ challenge, category, embedded, rightComponent }) => {
         )}
         {user.team
             ? (<>
+                <FlagForm challenge={challenge} submitRef={submitFlag}
+                    onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
                 {embedded && (
                     <Link to={challenge.url}>
                         <Button>Open challenge page</Button>
                     </Link>
                 )}
-                <FlagForm challenge={challenge} submitRef={submitFlag}
-                    onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
             </>) : (<>
                 <Card slim danger>{t("challenge.no_team")}</Card>
                 <Link to={"/team/join"}>

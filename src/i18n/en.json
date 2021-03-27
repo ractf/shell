@@ -347,6 +347,7 @@
         "invalid_invite": "Invalid invite code.",
         "hint_already_used": "Hint has already been used.",
         "bad_request": "Invalid API request.",
+        "already_solved_challenge": "You have already solved this challenge.",
         "challenge_not_unlocked": "This challenge has not been unlocked yet.",
         "join_disabled": "Joining teams has been disabled.",
         "blank": "A required field was not provided.",
