@@ -19,10 +19,6 @@ export default {
         name: "Advanced Team/Member Search",
         options: [{ key: true, value: "Enabled" }, { key: false, value: "Disabled" }]
     },
-    "newCampaign": {
-        name: "Campaign Layout",
-        options: [{ key: false, value: "Old Layout" }, { key: true, value: "New Layout" }]
-    },
     "leaderboardReload": {
         name: "Live Leaderboard Reload",
         options: [{ key: false, value: "Disabled" }, { key: true, value: "Enabled" }]
