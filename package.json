@@ -39,6 +39,10 @@
   "devDependencies": {
     "@babel/compat-data": "~7.8.0",
     "@babel/core": "7.4.3",
+    "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-essentials": "^6.1.21",
+    "@storybook/addon-links": "^6.1.21",
+    "@storybook/react": "^6.1.21",
     "@svgr/webpack": "4.1.0",
     "babel-eslint": "10.0.1",
     "babel-loader": "8.0.5",
@@ -85,7 +89,9 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "eslintConfig": {
     "extends": "react-app",
