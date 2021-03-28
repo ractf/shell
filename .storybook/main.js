@@ -17,6 +17,7 @@ module.exports = {
 
     config.module.rules.push({
       test: /\.scss$/,
+      sideEffects: true,
       exclude: /\.module\.scss$/,
       use: ['style-loader', {
         loader: require.resolve('css-loader'),
@@ -28,6 +29,7 @@ module.exports = {
     });
     config.module.rules.push({
       test: /\.module\.scss$/,
+      sideEffects: true,
       use: ['style-loader', {
         loader: require.resolve('css-loader'),
         options: {

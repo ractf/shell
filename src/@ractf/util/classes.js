@@ -32,6 +32,10 @@ export const propsToTypeClass = (props, styles, fallback) => {
                 willFallback = false;
         }
     }
+    if (props.active_state && styles[props.active_state]) {
+        className.push(styles[props.active_state]);
+        willFallback = false;
+    }
     if (willFallback && fallback) {
         className.push(styles[fallback]);
     }

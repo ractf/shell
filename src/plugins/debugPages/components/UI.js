@@ -24,7 +24,7 @@ import {
     TreeWrap, TreeValue, Checkbox, InputButton, Leader, Card,
     SubtleText, Badge, InputGroup, InputHint, NavBar,
     NavBrand, NavGap, NavMenu, NavItem, NavCollapse,
-    Footer, FootRow, FootCol, Column, Breadcrumbs, Crumb, Form,
+    Footer, FootRow, FootCol, Column, Breadcrumbs, Form,
     BareForm, ItemStack, Container, /* ColourPicker, PalettePicker */
 } from "@ractf/ui-kit";
 import { TYPES } from "@ractf/util";
@@ -118,9 +118,9 @@ const UIPage = () => <Page>
     </NavBar>
     <HR />
     <Breadcrumbs>
-        <Crumb to={"#"}>You</Crumb>
-        <Crumb to={"#"}>Are</Crumb>
-        <Crumb>Here!</Crumb>
+        <Breadcrumbs.Crumb><Link to={"#"}>You</Link></Breadcrumbs.Crumb>
+        <Breadcrumbs.Crumb><Link to={"#"}>Are</Link></Breadcrumbs.Crumb>
+        <Breadcrumbs.Crumb>Here!</Breadcrumbs.Crumb>
     </Breadcrumbs>
     <HR />
     <h1>Heading 1</h1>

@@ -11,9 +11,10 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <div style={{ margin: 16 }}>
-      <ThemeLoader />
+    <>
+      <ThemeLoader root={[":root", "#root"]} />
+      <ThemeLoader root={[":root", "#docs-root"]} />
       <Story />
-    </div>
+    </>
   )
 ];
