@@ -15,49 +15,70 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import axios from "axios";
-
-import { appendSlash, prefixBase, _getHeaders } from "./util";
+import { prepareUrl, _getHeaders } from "./util";
 
 
 export const abortableGet = (url, params) => {
-    const CancelToken = axios.CancelToken;
-    const source = CancelToken.source();
+    const controller = new AbortController();
+    const { signal } = controller;
 
-    return [new Promise((resolve, reject) => {
-        axios({
-            url: appendSlash(prefixBase(url)),
-            params: params,
-            cancelToken: source.token,
-            method: "get",
+    return [
+        fetch(prepareUrl(url, params), {
+            method: "GET",
             headers: _getHeaders(),
-        }).then(response => {
-            resolve(response.data.d);
-        }).catch(reject);
-    }), source.cancel];
+            signal: signal
+        }).then(res => res.json()).then(res => res.d),
+        () => controller.abort()
+    ];
 };
 
 export const makeRequest = (method, url, data, headers, params, multipart, onUploadProgress) => {
-    const localHeaders = { ...headers };
+    let localHeaders = { ...headers };
     let localData = data;
     if (multipart) {
         localData = new FormData();
         Object.keys(data).forEach(i => {
             localData.append(i, data[i]);
         });
-        localHeaders["Content-Type"] = "multipart/form-data";
+    } else {
+        localData = JSON.stringify(data);
+        localHeaders["Content-Type"] = "application/json;charset=UTF-8";
     }
+    localHeaders = _getHeaders(localHeaders);
+
+    // Fetch doesn't support upload progress, so XHR it is
     return new Promise((resolve, reject) => {
-        axios({
-            url: appendSlash(prefixBase(url)),
-            params: params,
-            method: method,
-            data: localData,
-            headers: _getHeaders(localHeaders),
-            onUploadProgress: onUploadProgress,
-        }).then(response => {
-            resolve(response.data.d);
-        }).catch(reject);
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, prepareUrl(url, params));
+        for (const k in localHeaders)
+            xhr.setRequestHeader(k, localHeaders[k]);
+        xhr.onreadystatechange  = event => {
+            if (xhr.readyState === 4) {
+                // I hate this line of code as much as you do
+                if (Math.floor(xhr.status / 100) === 2) {
+                    resolve(JSON.parse(event.target.responseText).d);
+                } else if (xhr.status === 0) {
+                    reject({ message: "Network request failed" });
+                } else {
+                    let data;
+                    try {
+                        data = JSON.parse(event.target.responseText);
+                    } catch (e) {
+                        data = event.target.responseText;
+                    }
+                    reject({
+                        response: { data },
+                        message: event.target.responseText ?? event.target.message
+                    });
+                }
+            }
+        };
+        xhr.onerror = () => reject({ message: "Network request failed" });
+        xhr.ontimeout = () => reject({ message: "Network request timed out" });
+        if (xhr.upload && onUploadProgress)
+            xhr.upload.onprogress = onUploadProgress;
+
+        xhr.send(localData);
     });
 };
 

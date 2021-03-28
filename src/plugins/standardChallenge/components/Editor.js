@@ -139,6 +139,7 @@ const FileEditor = ({ challenge }) => {
         dispatch(actions.addFile(challenge.id, resp));
         setModalOpen(false);
         modals.alert("New file added");
+        modals.showProgress();
     }, [dispatch, challenge.id, modals]);
     const onUploadProgress = useCallback((event) => {
         uploadSpeedLog.current.push([event.loaded, new Date()]);
@@ -166,6 +167,7 @@ const FileEditor = ({ challenge }) => {
     }, [modals]);
     const uploadFailed = useCallback(({ error }) => {
         modals.alert("Upload failed: " + http.getError(error));
+        modals.showProgress();
     }, [modals]);
     const validator = useCallback(({ upload }) => {
         return new Promise((resolve, reject) => {
