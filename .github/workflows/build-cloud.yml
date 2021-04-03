@@ -71,6 +71,7 @@ jobs:
         RACTF_GA_UA: UA-167342912-1
         RACTF_UI_KIT_THEME: RACTF
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
+        GENERATE_SOURCEMAP: true
 
     - name: Install Sentry CLI
       run: curl -sL https://sentry.io/get-cli/ | bash
