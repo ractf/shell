@@ -87,9 +87,6 @@ jobs:
         SENTRY_ORG: ractf
         SENTRY_PROJECT: frontend
 
-    - name: Clear Sourcemaps
-      run: find . -type f -name '*.map' -delete
-
     - uses: jakejarvis/s3-sync-action@master
       with:
         args: --acl public-read --follow-symlinks
