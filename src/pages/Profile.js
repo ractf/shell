@@ -143,7 +143,7 @@ const Profile = () => {
                             {userData.discord && (
                                 userData.discordid && userData.discordid.length !== 0
                                     ? <a target={"_blank"} rel={"noopener noreferrer"}
-                                        href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}>
+                                        href={"https://discord.com/users/" + encodeURIComponent(userData.discordid)}>
                                         <SiDiscord /><span>{userData.discord}</span>
                                     </a>
                                     : <span>

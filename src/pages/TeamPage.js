@@ -135,7 +135,7 @@ const TeamPage = () => {
                     {teamData.discord && teamData.discord.length !== 0 &&
                         (teamData.discordid && teamData.discordid.length !== 0
                             ? <a target={"_blank"} rel={"noopener noreferrer"}
-                                href={"https://discordapp.com/users/" + encodeURIComponent(teamData.discordid)}
+                                href={"https://discord.com/users/" + encodeURIComponent(teamData.discordid)}
                                 className={"userSocial"}>
                                 <SiDiscord /><span>{teamData.discord}</span>
                             </a>
