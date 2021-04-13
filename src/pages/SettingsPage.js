@@ -169,7 +169,7 @@ const SettingsPage = () => {
                 {mountPoint("settingsRightA")}
                 {hasTeams && <>
                     <Card lesser header={t("settings.cards.team")}>
-                        {!team ? <>
+                        {team ? <>
                             <Form action={ENDPOINTS.TEAM + "self"} method={"PATCH"} postSubmit={teamUpdated}
                                 locked={!teamOwner}>
                                 <Form.Group htmlFor={"name"} label={t("team_name")}>
