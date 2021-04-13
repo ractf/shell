@@ -56,7 +56,10 @@ export const makeRequest = (method, url, data, headers, params, multipart, onUpl
             if (xhr.readyState === 4) {
                 // I hate this line of code as much as you do
                 if (Math.floor(xhr.status / 100) === 2) {
-                    resolve(JSON.parse(event.target.responseText).d);
+                    if (event.target.responseText)
+                        resolve(JSON.parse(event.target.responseText).d);
+                    else
+                        resolve(null);
                 } else if (xhr.status === 0) {
                     reject({ message: "Network request failed" });
                 } else {
