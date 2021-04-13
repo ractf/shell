@@ -66,9 +66,9 @@
     margin: 0 px(4);
 }
 .socialsRow > * {
-    color: var(--col-color);
+    color: inherit;
     &:hover {
-        color: var(--col-color);
+        color: inherit;
         text-decoration: underline;
     }
     display: flex;
