@@ -82,8 +82,8 @@ export const makeRequest = (method, url, data, headers, params, multipart, onUpl
     });
 };
 
-export const get = makeRequest.bind(this, "get");
-export const post = makeRequest.bind(this, "post");
-export const put = makeRequest.bind(this, "put");
-export const patch = makeRequest.bind(this, "patch");
-export const delete_ = makeRequest.bind(this, "delete");
+export const get = makeRequest.bind(this, "GET");
+export const post = makeRequest.bind(this, "POST");
+export const put = makeRequest.bind(this, "PUT");
+export const patch = makeRequest.bind(this, "PATCH");
+export const delete_ = makeRequest.bind(this, "DELETE");
