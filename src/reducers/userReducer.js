@@ -17,6 +17,8 @@
 
 const userReducer = (state = null, { type, payload }) => {
     switch (type) {
+        case "SET_TEAM":
+            return { ...state, team: payload };
         case "SET_USER":
             return payload;
         case "EDIT_USER":
