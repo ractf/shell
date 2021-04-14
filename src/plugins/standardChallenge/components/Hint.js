@@ -35,13 +35,16 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) =>
     const edit = () => {
         modals.promptConfirm({ message: "Edit hint", remove: () => removeHint(id) },
             [{ name: "name", placeholder: "Hint name", val: name, label: "Name" },
-            { name: "cost", placeholder: "Hint cost", val: penalty.toString(), label: "Cost", format: NUMBER_RE },
+            {
+                name: "penalty", placeholder: "Hint penalty", val: penalty.toString(),
+                label: "Penalty", format: NUMBER_RE
+            },
             { name: "text", placeholder: "Hint text", val: text, label: "Message", rows: 5 }]
-        ).then(({ name, cost, text }) => {
+        ).then(({ name, penalty, text }) => {
 
-            if (!cost.toString().match(NUMBER_RE)) return modals.alert("Invalid hint const!");
+            if (!penalty.toString().match(NUMBER_RE)) return modals.alert("Invalid hint const!");
 
-            editHint(id, name, cost, text).then(() =>
+            editHint(id, name, penalty, text).then(() =>
                 modals.alert("Hint edited!")
             ).catch(e =>
                 modals.alert("Error editing hint:\n" + http.getError(e))

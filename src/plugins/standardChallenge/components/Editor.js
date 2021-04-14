@@ -90,12 +90,12 @@ const HintEditor = ({ challenge }) => {
     const addHint = useCallback(() => {
         modals.promptConfirm({ message: "New hint" },
             [{ name: "name", placeholder: "Hint name", label: "Name" },
-            { name: "cost", placeholder: "Hint cost", label: "Cost", format: NUMBER_RE },
+            { name: "penalty", placeholder: "Hint penalty", label: "Penalty", format: NUMBER_RE },
             { name: "body", placeholder: "Hint text", label: "Message", rows: 5 }]
-        ).then(({ name, cost, body }) => {
-            if (!cost.match(NUMBER_RE)) return modals.alert("Invalid hint cost!");
+        ).then(({ name, penalty, body }) => {
+            if (!penalty.match(NUMBER_RE)) return modals.alert("Invalid hint penalty!");
 
-            newHint(challenge.id, name, cost, body).then(() =>
+            newHint(challenge.id, name, penalty, body).then(() =>
                 modals.alert("New hint added!")
             ).catch(e =>
                 modals.alert("Error creating new hint:\n" + http.getError(e))
@@ -104,7 +104,7 @@ const HintEditor = ({ challenge }) => {
     }, [modals, challenge.id]);
 
     return <>
-        <Grid headings={["Name", "Cost", "Message", "Actions"]} data={challenge.hints.map(hint => [
+        <Grid headings={["Name", "Penalty", "Message", "Actions"]} data={challenge.hints.map(hint => [
             hint.name, hint.penalty, hint.text.length > 100 ? hint.text.substring(0, 100) + "\u2026" : hint.text,
             <Hint key={hint.id} {...hint} isEdit />
         ])} />

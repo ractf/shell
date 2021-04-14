@@ -81,7 +81,7 @@ export default () => {
         if (getLocalConfig("notifs.hint_used", undefined, true))
             addNotification("Hint used",
                 `**${data.username}** used a hint for **${data.challenge}**, ` +
-                `costing **${data.hint_penalty}** points.`
+                `with a **${data.hint_penalty}** point penalty.`
             );
         // Todo: Update the challenge with the used hint
     });

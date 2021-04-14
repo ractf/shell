@@ -31,7 +31,7 @@ export const newFile = (chalId, name, url, size) => (
 );
 
 export const editFile = (id, name, url, size) => (
-    http.patch(ENDPOINTS.FILE + id, { name, url, size }).then(() => {
+    http.patch(ENDPOINTS.FILE + id, { name, url, size }, null, null, true).then(() => {
         store.dispatch(actions.editFile(id, { name, url, size }));
         return { name, url, size };
     })

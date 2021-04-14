@@ -30,10 +30,10 @@ export const newHint = (challenge, name, penalty, text) => (
     })
 );
 
-export const editHint = (id, name, cost, text) => (
-    http.patch(ENDPOINTS.HINT + id, { name, cost, text }).then(() => {
-        store.dispatch(actions.editHint(id, { name, cost, text }));
-        return { name, cost, text };
+export const editHint = (id, name, penalty, text) => (
+    http.patch(ENDPOINTS.HINT + id, { name, penalty, text }).then(() => {
+        store.dispatch(actions.editHint(id, { name, penalty, text }));
+        return { name, penalty, text };
     })
 );
 
