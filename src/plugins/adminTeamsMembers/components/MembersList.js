@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import {
     Form, Input, InputButton, Leader, Checkbox, PageHead, Modal, Button,
-    ModalForm, ModalSpinner, UiKitModals
+    ModalForm, ModalSpinner, UiKitModals, Hint
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
 import * as http from "@ractf/util/http";
@@ -163,7 +163,14 @@ export default () => {
                     <Form.Row>
                         <Checkbox val={state.member.is_active} name={"is_active"}>Active</Checkbox>
                         <Checkbox val={state.member.is_visible} name={"is_visible"}>Visible</Checkbox>
+                        <Hint>
+                            Admins have full control of the site, and can view user details
+                        </Hint>
                         <Checkbox val={state.member.is_staff} name={"is_staff"}>Admin</Checkbox>
+                        <Hint>
+                            Staff is a visual indicator to players that a member is part of the event staff.
+                            There are no additional permissions gained from this.
+                        </Hint>
                         <Checkbox val={state.member.is_verified} name={"is_verified"}>Staff</Checkbox>
                     </Form.Row>
                 </Form.Group>
