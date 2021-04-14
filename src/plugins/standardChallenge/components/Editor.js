@@ -403,6 +403,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
     }, []);
 
     const [unlockOpen, setUnlockOpen] = useState(false);
+    const [markdownSource, setMarkdownSource] = useState(challenge.description);
 
     const body = (
         <Form handle={saveEdit} transformer={editTransformer}>
@@ -435,8 +436,11 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                         </Form.Group>
                         <Form.Group htmlFor={"description"} label={t("editor.chal_brief")}>
                             <Input rows={5} val={challenge.description} name={"description"}
-                                placeholder={t("editor.chal_brief")} required />
+                                placeholder={t("editor.chal_brief")} onChange={setMarkdownSource} required />
                         </Form.Group>
+                        <Card lesser header={"Live preview"} collapsible startClosed>
+                            <Markdown source={markdownSource}></Markdown>
+                        </Card>
                         <Form.Group htmlFor={"tags"} label={t("editor.tags")}>
                             <InputTags name={"tags"} val={challenge.tags} />
                         </Form.Group>
