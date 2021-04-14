@@ -1,4 +1,3 @@
-/* eslint-disable import/order */
 // Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
