@@ -275,7 +275,6 @@ const SimpleUnlockEditor = ({ challenge, value, onChange }) => {
             if (output.length !== 1)
                 output.push(mode);
         });
-        console.log(output);
     }, [onChange, mode, challenges, allChallengesMap]);
 
     return <>

@@ -35,7 +35,7 @@ export class ASTChallenge extends ASTNode {
         return this._challenge_id;
     }
     get serialized() {
-        return this.challenge_id;
+        return `${this.challenge_id}`;
     }
 }
 
