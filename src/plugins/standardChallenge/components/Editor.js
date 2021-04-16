@@ -252,6 +252,11 @@ FlagMetadata.displayName = "FlagMetadata";
 const SimpleUnlockEditor = ({ challenge, value, onChange }) => {
     const allChallenges = challenge.category.challenges.filter(
         j => j.id !== challenge.id).map(j => j.name);
+    const allChallengesMap = Object.fromEntries(
+        challenge.category.challenges.filter(
+            j => j.id !== challenge.id).map(j => [j.name, j.id]
+        )
+    );
 
     const ast = getClass(Challenge).tryParseAST(value, true)[1];
     let simpleRequirements = getClass(Challenge).getSimpleRequirementsStatic(ast);
@@ -264,15 +269,14 @@ const SimpleUnlockEditor = ({ challenge, value, onChange }) => {
     const [mode, setMode] = useState(simpleRequirements[0]);
 
     useEffect(() => {
-        const reverseMap = Object.fromEntries(simplyRequiredChallenges.map(i => [i.name, i.id]));
         const output = [];
         challenges.forEach(i => {
-            output.push(reverseMap[i]);
+            output.push(allChallengesMap[i]);
             if (output.length !== 1)
                 output.push(mode);
         });
-        onChange(output.join(" "));
-    }, [onChange, mode, challenges, simplyRequiredChallenges]);
+        console.log(output);
+    }, [onChange, mode, challenges, allChallengesMap]);
 
     return <>
         <Row>
