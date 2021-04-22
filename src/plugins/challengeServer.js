@@ -45,19 +45,22 @@ const ChallengeServer = ({ challenge }) => {
         });
     };
 
-    const button = (state.error || !state.instance) ? null : <Button large lesser onClick={reset}>
-        Reset
-    </Button>;
-
     return (
-        <Card slim danger={!!state.error} button={button}>
-            {state.error ? <div>Failed to request instance: {state.error}</div>
-                : state.instance ? <div>Challenge instance ready at <code>
-                    {state.instance.ip}:{state.instance.port}
-                </code>.</div> : <>
-                        <div>Requesting challenge instance...</div>
-                        <Spinner />
-                    </>}
+        <Card slim danger={!!state.error}
+            header={!(state.error | state.instance) ? "Requesting challenge instance..." : null}
+        >
+            {state.error
+                ? (
+                    <div>Failed to request instance: {state.error}</div>
+                ) : state.instance ? (
+                    <div>
+                        Challenge instance ready at <code>
+                            {state.instance.ip}:{state.instance.port}
+                        </code>. <span className={"linkStyle"} onClick={reset}>
+                            Click here to request a new instance.
+                        </span>
+                    </div>
+                ) : <Spinner />}
         </Card>
     );
 };
