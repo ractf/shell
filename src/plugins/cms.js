@@ -31,6 +31,23 @@ import Link from "components/Link";
 import { store } from "store";
 
 
+const DEFAULT_PAGES = {
+    "/conduct": {
+        title: "Code of Conduct",
+        content: `## This event has not set a code of conduct
+
+If you are an event admin, consider creating a page at \`/conduct\` from the
+[CMS configuration page](/admin/cms).`
+    },
+    "/privacy": {
+        title: "Privacy Policy",
+        content: `## This event has not set a privacy policy
+
+If you are an event admin, consider creating a page at \`/privacy\` from the
+[CMS configuration page](/admin/cms).`
+    },
+};
+
 const INITIAL = {
     pages: [],
     cache: {}
@@ -46,6 +63,7 @@ const cmsReducer = (state = INITIAL, { type, payload }) => {
 };
 
 const CMSPage = React.memo(({ page }) => {
+    console.log(page);
     if (page.title)
         document.title = page.title;
 
@@ -146,11 +164,18 @@ const CMSAdmin = () => {
 
 const cmsRoutes = () => {
     const pages = store.getState().cms.pages || [];
-    return pages.map(i => (
-        <Route key={i.url} path={i.url} exact>
-            <CMSPage page={i} />
-        </Route>
-    ));
+    return [
+        ...pages.map(i => (
+            <Route key={i.url} path={i.url} exact>
+                <CMSPage page={i} />
+            </Route>
+        )),
+        ...Object.entries(DEFAULT_PAGES).map(([key, value]) => (
+            <Route key={key} path={key} exact>
+                <CMSPage page={value} />
+            </Route>
+        )),
+    ];
 };
 
 export default () => {
