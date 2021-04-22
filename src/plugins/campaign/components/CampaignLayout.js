@@ -118,10 +118,10 @@ const CampaignLayout = ({ challenges: category, isEdit, showLocked, showEditor }
                 above = challenge_grid[x][y - 1],
                 below = challenge_grid[x][y + 1];
 
-            const linksR = (right && challenge.unlockedBy.indexOf(right.id) !== -1),
-                linksL = (left && challenge.unlockedBy.indexOf(left.id) !== -1),
-                linksU = (above && challenge.unlockedBy.indexOf(above.id) !== -1),
-                linksD = (below && challenge.unlockedBy.indexOf(below.id) !== -1);
+            const linksR = (right && challenge.relatedTo(right)),
+                linksL = (left && challenge.relatedTo(left)),
+                linksU = (above && challenge.relatedTo(above)),
+                linksD = (below && challenge.relatedTo(below));
 
             const isSelected = selected && (selected[0] === x && selected[1] === y);
             const subdued = selected && (selected[0] === x && selected[1] === y);

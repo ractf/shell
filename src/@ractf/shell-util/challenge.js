@@ -118,6 +118,13 @@ export default class Challenge {
         return getClass(Challenge).astChallengesList(this.getRequirementAST());
     }
 
+    relatedTo(challenge) {
+        return (
+            challenge.unlockedBy.indexOf(this.id) !== -1
+            || this.unlockedBy.indexOf(challenge.id) !== -1
+        );
+    }
+
     static tryParseAST(requirements, lenientParse = false) {
         const stack = [];
         requirements = (requirements || "").trim();
