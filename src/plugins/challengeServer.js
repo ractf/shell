@@ -47,7 +47,7 @@ const ChallengeServer = ({ challenge }) => {
 
     return (
         <Card slim danger={!!state.error}
-            header={!(state.error | state.instance) ? "Requesting challenge instance..." : null}
+            header={!(state.error || state.instance) ? "Requesting challenge instance..." : null}
         >
             {state.error
                 ? (
