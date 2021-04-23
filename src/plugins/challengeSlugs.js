@@ -20,10 +20,14 @@ import { Challenge, Category } from "@ractf/shell-util";
 
 
 export default () => {
+    const defaultSlug = (object) => {
+        return object.name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+    };
+
     // Category slugs
     class SluggedCategory extends getClass(Category) {
         get url() {
-            const id = this.metadata?.category_slug || this.id;
+            const id = this.metadata?.category_slug || defaultSlug(this);
             return `/campaign/${id}`;
         }
     };
@@ -37,13 +41,15 @@ export default () => {
         for (const i of categories)
             if (i.metadata?.category_slug === id)
                 return i;
+            else if (!i.metadata?.category_slug && defaultSlug(i) === id)
+                return i;
         return null;
     });
 
     // Challenge slugs
     class SluggedChallenge extends getClass(Challenge) {
         get url() {
-            const id = this.challenge_metadata?.challenge_slug || this.id;
+            const id = this.challenge_metadata?.challenge_slug || defaultSlug(this);
             return `${this.category.url}/${id}`;
         }
     };
@@ -60,6 +66,8 @@ export default () => {
     registerPlugin("challengeMatcher", "challengeSlugs", (category, challengeId) => {
         for (const i of category.challenges)
             if (i.challenge_metadata?.challenge_slug === challengeId)
+                return i;
+            else if (!i.metadata?.category_slug && defaultSlug(i) === challengeId)
                 return i;
         return null;
     });
