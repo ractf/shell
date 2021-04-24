@@ -95,8 +95,16 @@ const HintEditor = ({ challenge }) => {
         ).then(({ name, penalty, body }) => {
             if (!penalty.match(NUMBER_RE)) return modals.alert("Invalid hint penalty!");
 
+            let message = "New hint added";
+            if (parseInt(penalty) < 0)
+                message = (
+                    "You have set a negative penalty for this hint. This will cause players to " +
+                    "gain points when they use this hint. If this was unintentional, you may wish " +
+                    "to return and edit this hint."
+                );
+
             newHint(challenge.id, name, penalty, body).then(() =>
-                modals.alert("New hint added!")
+                modals.alert(message)
             ).catch(e =>
                 modals.alert("Error creating new hint:\n" + http.getError(e))
             );

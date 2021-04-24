@@ -41,11 +41,19 @@ export default ({ name, text, penalty, used, isEdit, onClick, id, ...props }) =>
             },
             { name: "text", placeholder: "Hint text", val: text, label: "Message", rows: 5 }]
         ).then(({ name, penalty, text }) => {
+            if (!penalty.match(NUMBER_RE))
+                return modals.alert("Invalid hint penalty!");
 
-            if (!penalty.toString().match(NUMBER_RE)) return modals.alert("Invalid hint const!");
+            let message = "Hint edited";
+            if (parseInt(penalty) < 0)
+                message = (
+                    "You have set a negative penalty for this hint. This will cause players to " +
+                    "gain points when they use this hint. If this was unintentional, you may wish " +
+                    "to return and edit this hint."
+                );
 
             editHint(id, name, penalty, text).then(() =>
-                modals.alert("Hint edited!")
+                modals.alert(message)
             ).catch(e =>
                 modals.alert("Error editing hint:\n" + http.getError(e))
             );
