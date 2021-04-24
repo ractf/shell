@@ -21,6 +21,8 @@ import { Challenge, Category } from "@ractf/shell-util";
 
 export default () => {
     const defaultSlug = (object) => {
+        if (!object.name)
+            return object.id;
         return object.name.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
     };
 
