@@ -13,6 +13,7 @@ import { useConfig } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
 
 import { editChallenge } from "actions";
+import { incrementSolveCount } from "@ractf/api"
 import Link from "components/Link";
 
 
