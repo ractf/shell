@@ -58,8 +58,8 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
                 i.challenges = i.challenges.map(chal => {
                     if (chal.id !== payload.id) return chal;
                     const newAttributes = {solve_count: chal.solve_count + 1};
-                    if (!chal.blood_name && payload.blood_name) { 
-                        newAttributes.first_blood_name = payload.blood_name;
+                    if (!chal.first_blood_name && payload.team_name) { 
+                        newAttributes.first_blood_name = payload.team_name;
                     }
                     return { ...chal, ...newAttributes };
                 });

@@ -79,8 +79,8 @@ export const editChallenge = ({
     });
 };
 
-export const incrementSolveCount = (id, blood_name) => {
-    store.dispatch(actions.incrementSolveCount(id, blood_name));
+export const incrementSolveCount = (id, team_name) => {
+    store.dispatch(actions.incrementSolveCount(id, team_name));
 };
 
 export const quickRemoveChallenge = async (challenge) => {

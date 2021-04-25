@@ -54,10 +54,10 @@ export const editChallenge = (challenge) => {
     };
 };
 
-export const incrementSolveCount = (challenge_id, blood_name) => {
+export const incrementSolveCount = (challenge_id, team_name) => {
     return {
         type: "INCREMENT_SOLVE_COUNT",
-        payload: {id: challenge_id, blood_name: blood_name}
+        payload: {id: challenge_id, team_name: team_name}
     };
 };
 
