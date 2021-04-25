@@ -57,7 +57,7 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             categories.forEach(i => {
                 i.challenges = i.challenges.map(chal => {
                     if (chal.id !== payload.id) return chal;
-                    let newAttributes = {solve_count: chal.solve_count + 1};
+                    const newAttributes = {solve_count: chal.solve_count + 1};
                     if (!chal.blood_name && payload.blood_name) { 
                         newAttributes.first_blood_name = payload.blood_name;
                     }

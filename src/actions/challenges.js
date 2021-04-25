@@ -59,7 +59,7 @@ export const incrementSolveCount = (challenge_id, blood_name) => {
         type: "INCREMENT_SOLVE_COUNT",
         payload: {id: challenge_id, blood_name: blood_name}
     };
-}
+};
 
 export const addFile = (chalId, data) => {
     return {
