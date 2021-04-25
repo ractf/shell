@@ -31,7 +31,6 @@ export const getChallenges = () => {
 };
 
 export const resyncChallenge = (id) => {
-    console.log(ENDPOINTS.CHALLENGES + id);
     return http.get(ENDPOINTS.CHALLENGES + id).then(data => {
         store.dispatch(actions.editChallenge(data));
     });
