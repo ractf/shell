@@ -80,7 +80,6 @@ export const editChallenge = ({
 };
 
 export const incrementSolveCount = (id, blood_name) => {
-    console.log(actions.incrementSolveCount(id, blood_name));
     store.dispatch(actions.incrementSolveCount(id, blood_name));
 };
 
