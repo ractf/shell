@@ -17,7 +17,7 @@
 
 import React, { useState, useRef } from "react";
 
-import { Form, Table, Page, InputButton, FlashText, HR } from "@ractf/ui-kit";
+import { Form, Table, Page, InputButton, HR, Card, Column } from "@ractf/ui-kit";
 
 
 export default () => {
@@ -47,19 +47,21 @@ export default () => {
     };
 
     return <Page>
-        <FlashText danger={!state}>{state ? state : "WebSocket closed"}</FlashText>
-        <Form handle={connect}>
-            <InputButton name={"ws"} val={window.env.wssUrl} placeholder={"wss://"}
-                button={"Connect"} submit />
-        </Form>
-        <HR />
-        <Form handle={send} disabled={state}>
-            <InputButton name={"data"} placeholder={"JSON"}
-                button={"Send"} submit />
-        </Form>
-        <HR />
-        <Table headings={["type", "data"]} data={
-            msgs.map(([type, data]) => [<code>{type}</code>, <code>{data}</code>])
-        } />
+        <Column>
+            <Card slim danger={!state}>{state ? state : "WebSocket closed"}</Card>
+            <Form handle={connect}>
+                <InputButton name={"ws"} val={window.env.wssUrl} placeholder={"wss://"}
+                    button={"Connect"} submit />
+            </Form>
+            <HR />
+            <Form handle={send} disabled={state}>
+                <InputButton name={"data"} placeholder={"JSON"}
+                    button={"Send"} submit />
+            </Form>
+            <HR />
+            <Table headings={["type", "data"]} data={
+                msgs.map(([type, data]) => [<code>{type}</code>, <code>{data}</code>])
+            } />
+        </Column>
     </Page>;
 };

@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with RACTF.  If not, see <https:#www.gnu.org/licenses/>.
 
-name: Build (Elite)
+name: Build (BSides)
 
 on:
   repository_dispatch:
     types: [bsides_build_deploy]
+  workflow_dispatch: null
 
 jobs:
   build:
@@ -65,6 +66,7 @@ jobs:
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
         REACT_APP_SITE_NAME: "BSides NCL"
         REACT_APP_USE_HEAD_NAV: true
+        RACTF_EXCLUDE_PLUGINS: "ractfCountdown"
 
     - name: Install Sentry CLI
       run: curl -sL https://sentry.io/get-cli/ | bash

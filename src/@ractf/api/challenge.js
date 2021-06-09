@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -16,10 +16,13 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import { reloadAll } from "@ractf/api";
-import { ENDPOINTS } from "./consts";
+import * as http from "@ractf/util/http";
+
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
+
+import { ENDPOINTS } from "./consts";
+
 
 export const getChallenges = () => {
     return http.get(ENDPOINTS.CATEGORIES).then(data => {
@@ -28,16 +31,16 @@ export const getChallenges = () => {
 };
 
 export const createChallenge = ({
-    id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags
+    id, name, score, description, flag_type, flag_metadata,
+    challenge_metadata, author, challenge_type, files, hidden, tags,
+    post_score_explanation, unlock_requirements
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
         category: id, name, score, description,
-        flag_type, flag_metadata,
-        challenge_metadata, hidden,
-        author, unlocks, files, tags,
+        flag_type, flag_metadata, post_score_explanation,
+        challenge_metadata, hidden, unlock_requirements,
+        author, files, tags,
         challenge_type: challenge_type || "default",
-        auto_unlock,
     }).then(data => {
         store.dispatch(actions.addChallenge(data));
         return data;
@@ -45,26 +48,43 @@ export const createChallenge = ({
 };
 
 export const editChallenge = ({
-    id, name, score, description, flag_type, flag_metadata, auto_unlock,
-    challenge_metadata, author, challenge_type, unlocks, files, hidden, tags
+    id, name, score, description, flag_type, flag_metadata,
+    challenge_metadata, author, challenge_type, files, hidden, tags,
+    post_score_explanation, unlock_requirements
 }) => {
-    return http.patch(ENDPOINTS.CHALLENGES + id, {
-        name, score, description,
-        flag_type, flag_metadata,
+    const categories = store.getState().challenges?.categories || [];
+    let original = null;
+    categories.forEach(i => {
+        original = i.challenges.filter(j => j.id === id)[0] || original;
+    });
+    const changes = {
+        name, score, description, post_score_explanation,
+        flag_type, flag_metadata, unlock_requirements,
         challenge_metadata, hidden,
-        author, unlocks, files, tags,
+        author, files, tags,
         challenge_type: challenge_type || "default",
-        auto_unlock,
-    }).then(data => {
+    };
+    // Immediate dispatch to make things feel more responsive
+    store.dispatch(actions.editChallenge({ id, ...changes }));
+
+    return http.patch(
+        ENDPOINTS.CHALLENGES + id, changes
+    ).then(data => {
         store.dispatch(actions.editChallenge(data));
         return data;
+    }).catch(e => {
+        // Rollback
+        store.dispatch(actions.editChallenge(original));
+        throw e;
     });
 };
 
 export const quickRemoveChallenge = async (challenge) => {
-    return http.delete(ENDPOINTS.CHALLENGES + challenge.id);
+    return http.delete_(ENDPOINTS.CHALLENGES + challenge.id);
 };
 export const removeChallenge = async (challenge, dumbRemove) => {
+    // TODO: This
+    /*
     const categories = store.getState().challenges.categories;
     // Unlink all challenges
     await Promise.all(challenge.unlocks.map(i => (
@@ -78,21 +98,29 @@ export const removeChallenge = async (challenge, dumbRemove) => {
             ))
         ))
     )));
+    */
     quickRemoveChallenge(challenge).then(() => reloadAll());
 };
 
-export const linkChallenges = (chal1, chal2, linkState) => {
+export const linkChallenges = (challenge1, challenge2, linkState) => {
+    // TODO: This
+    return;
+    /*
+    let c1unlocks = [...challenge1.unlocks];
+    let c2unlocks = [...challenge2.unlocks];
+
     if (linkState) {
-        chal1.unlocks.push(chal2.id);
-        chal2.unlocks.push(chal1.id);
+        c1unlocks.push(challenge2.id);
+        c2unlocks.push(challenge1.id);
     } else {
-        chal1.unlocks = chal1.unlocks.filter(i => i !== chal2.id);
-        chal2.unlocks = chal2.unlocks.filter(i => i !== chal1.id);
+        c1unlocks = c1unlocks.filter(i => i !== challenge2.id);
+        c2unlocks = c2unlocks.filter(i => i !== challenge1.id);
     }
     return Promise.all([
-        http.patch(ENDPOINTS.CHALLENGES + chal1.id, { unlocks: chal1.unlocks }),
-        http.patch(ENDPOINTS.CHALLENGES + chal2.id, { unlocks: chal2.unlocks })
+        challenge1.edit({ unlocks: c1unlocks }),
+        challenge2.edit({ unlocks: c2unlocks }),
     ]);
+    */
 };
 
 export const attemptFlag = (flag, challenge) => {

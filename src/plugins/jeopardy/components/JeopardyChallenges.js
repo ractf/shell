@@ -15,18 +15,21 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Row, Column, Card, Input, FormGroup, ItemStack, Checkbox } from "@ractf/ui-kit";
+import { Column, Card, Input, Form, ItemStack, Checkbox, Container } from "@ractf/ui-kit";
+
+import ChallengePage from "pages/ChallengePage.js";
 
 import * as actions from "../actions.js";
-
 import Challenge from "./Challenge.js";
 
 
 export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, showLocked }) => {
-    const { showSolved, filter, search } = useSelector(state => state.jeopardySearch);
+    const showSolved = useSelector(state => state.jeopardySearch.showSolved);
+    const filter = useSelector(state => state.jeopardySearch.filter);
+    const search = useSelector(state => state.jeopardySearch.search);
     const dispatch = useDispatch();
 
     const tags = {};
@@ -39,7 +42,14 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
             return false;
 
         if (!options.ignoreTags && Object.keys(filter).length !== 0) {
-            if (!filter[challenge.author])
+            let hasATag = false;
+            for (const i of challenge.tags) {
+                if (filter[i]) {
+                    hasATag = true;
+                    break;
+                }
+            }
+            if (!hasATag)
                 return false;
         }
 
@@ -76,25 +86,41 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
             dispatch(actions.setJeopardyFilter(newFilter));
         };
     };
+    // Refresh filter
+    useEffect(() => {
+        const newFilter = { ...filter };
+        let changed = false;
+        for (const i in filter) {
+            if ((typeof tags[i]) === "undefined") {
+                if (filter[i]) {
+                    delete newFilter[i];
+                    changed = true;
+                }
+            }
+        }
+        if (changed)
+            dispatch(actions.setJeopardyFilter(newFilter));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tags, dispatch]);
     const setShowSolved = useCallback(value => dispatch(actions.setJeopardyShowSolved(value)), [dispatch]);
 
     const sortedTags = Object.keys(tags).sort((a, b) => a.localeCompare(b)).map(i => [i, tags[i]]);
 
-    return <Row>
+    return <Container.Row>
         <Column xlWidth={3} lgWidth={4} mdWidth={12}>
-            <Card>
-                <FormGroup>
+            <Card lesser>
+                <Form.Group>
                     <Input onChange={searchChanged} value={search}
                         name={"search"} placeholder={"Search challenges"} val={search} managed />
-                </FormGroup>
+                </Form.Group>
                 <Checkbox name={"done"} managed onChange={setShowSolved} val={showSolved}>
                     Show solved challenges ({solved})
                 </Checkbox>
             </Card>
             {sortedTags.length !== 0 && (
-                <Card noPad header={"Filter"} collapsible>
+                <Card lesser noPad header={"Filter"} collapsible>
                     <ItemStack>
-                        {sortedTags.map((tag, tagCount) => (
+                        {sortedTags.map(([tag, tagCount]) => (
                             <ItemStack.Item
                                 key={tag} label={tagCount} active={filter[tag]}
                                 success={filter[tag]} onClick={toggleFilter(tag)}
@@ -107,9 +133,14 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
             )}
         </Column>
         <Column xlWidth={9} lgWidth={8} mdWidth={12}>
+            {isEdit && (
+                <Card lesser info header={"Add new challenge"} startClosed collapsible>
+                    <ChallengePage tabId={category.id} chalId={"new"} />
+                </Card>
+            )}
             {category.challenges.sort((x, y) => x.score - y.score).map(
                 i => (shouldShow(i) ? <Challenge category={category} key={i.id} challenge={i} /> : null)
             )}
         </Column>
-    </Row>;
+    </Container.Row>;
 };

@@ -16,14 +16,14 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-
 import { Network, Node, Edge } from "react-vis-network";
-import { PageHead } from "@ractf/ui-kit";
 
-import colours from "@ractf/ui-kit/Colours.scss";
+import { PageHead } from "@ractf/ui-kit";
+import { useCategories } from "@ractf/shell-util";
+import { cssVar } from "@ractf/util";
 
 import style from "./ChallengeGraph.module.scss";
-import { useCategories } from "@ractf/util/hooks";
+
 
 const ChallengeGraph = () => {
     const categories = useCategories();
@@ -38,7 +38,7 @@ const ChallengeGraph = () => {
     }));
     const unlocksMapped = [];
 
-    return <div className={style.networkOuter}>
+    return <>
         <PageHead>Challenge Graph</PageHead>
         <div className={style.network}>
             <Network>
@@ -46,7 +46,7 @@ const ChallengeGraph = () => {
                     id={`category_${category.id}`}
                     key={`category_${category.id}`}
                     label={category.name}
-                    color={colours.blue}
+                    color={cssVar("--col-blue")}
                     widthConstraint={{ maximum: 100 }}
                 />)}
                 {categories.flatMap(category => category.challenges.flatMap(challenge => [
@@ -54,10 +54,10 @@ const ChallengeGraph = () => {
                         id={`challenge_${challenge.id}`}
                         key={`challenge_${challenge.id}`}
                         label={challenge.name}
-                        color={challenge.hidden ? colours.red : colours.green}
+                        color={challenge.hidden ? cssVar("--col-red") : cssVar("--col-greem")}
                         shape={"box"} widthConstraint={{ maximum: 150 }}
                     />,
-                    challenge.auto_unlock ? (
+                    challenge.unlockedBy.length === 0 ? (
                         <Edge
                             id={`link_category_${category.id}_challenge_${challenge.id}`}
                             key={`link_category_${category.id}_challenge_${challenge.id}`}
@@ -91,6 +91,6 @@ const ChallengeGraph = () => {
                 ])).filter(Boolean)}
             </Network>
         </div>
-    </div>;
+    </>;
 };
 export default React.memo(ChallengeGraph);

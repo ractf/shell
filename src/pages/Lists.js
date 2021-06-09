@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -16,22 +16,24 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { BrokenShards } from "./ErrorPages";
-
 import {
-    Page, Table, FormError, Button, Row, H2
+    Page, Table, Button, PageHead, Container, Form
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { usePaginated } from "ractf";
-import { useConfig } from "@ractf/util";
-import { Redirect } from "react-router-dom";
+import { usePaginated } from "@ractf/util/http";
+import { useConfig } from "@ractf/shell-util";
+
+import Link from "components/Link";
+
+import { BrokenShards } from "./ErrorPages";
 
 
 export const TeamsList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.TEAM);
-    const [state, next] = usePaginated(ENDPOINTS.TEAM); 
+    const [state, next] = usePaginated(ENDPOINTS.TEAM);
     const hasTeams = useConfig("enable_teams");
 
     const { t } = useTranslation();
@@ -39,53 +41,51 @@ export const TeamsList = () => {
     if (!hasTeams)
         return <Redirect to={"/"} />;
 
-    return <Page
-        title={t("team_plural")} centre={state.error}>
-        <div style={{ textAlign: "center" }}>
-            <H2>{t("lists.all_teams")}</H2>
-            <br />
-        </div>
+    return <Page title={t("team_plural")} centre={!!state.error}>
+        <PageHead>{t("lists.all_teams")}</PageHead>
         {state.error ? <>
-            <FormError>
+            <Form.Error>
                 {t("lists.teams_error")}<br />{t("lists.try_reload")}
-            </FormError>
+            </Form.Error>
             <BrokenShards />
         </> : <>
             <Table headings={[t("team"), t("members")]} data={
-                state.data.map(x => [x.name, x.members, { link: "/team/" + x.id }])
+                state.data.map(x => [
+                    <Link to={`/team/${x.id}`}>{x.name}</Link>,
+                    <Link to={`/team/${x.id}`}>{x.members}</Link>,
+                ])
             } />
-            {state.hasMore && <Row>
-                <Button disabled={state.loading} onClick={next}>Load More</Button>
-            </Row>}
+            {!state.hasMore && (<Container full centre>
+                <Button disabled={state.loading} onClick={next}>{t("load_more")}</Button>
+            </Container>)}
         </>}
     </Page>;
 };
 
-
 export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
-    const [state, next] = usePaginated(ENDPOINTS.USER); 
+    const [state, next] = usePaginated(ENDPOINTS.USER);
     const { t } = useTranslation();
     const hasTeams = useConfig("enable_teams");
 
-    return <Page
-        title={t("user_plural")} centre={!!state.error}>
-        <div style={{ textAlign: "center" }}>
-            <H2>{t("lists.all_users")}</H2>
-            <br />
-        </div>
+    return <Page title={t("user_plural")} centre={!!state.error}>
+        <PageHead>{t("lists.all_users")}</PageHead>
+
         {state.error ? <>
-            <FormError>
+            <Form.Error>
                 {t("lists.users_error")}<br />{t("lists.try_reload")}
-            </FormError>
+            </Form.Error>
             <BrokenShards />
         </> : <>
             <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
-                state.data.map(x => [x.username, hasTeams && x.team_name, { link: "/profile/" + x.id }].filter(Boolean))
+                state.data.map(x => [
+                    <Link to={`/profile/${x.id}`}>{x.username}</Link>,
+                    hasTeams && <Link to={`/profile/${x.id}`}>{x.team_name}</Link>
+                ].filter(i => i !== false))
             } />
-            {state.hasMore && <Row>
-                <Button disabled={state.loading} onClick={next}>Load More</Button>
-            </Row>}
+            {state.hasMore && (<Container full centre>
+                <Button disabled={state.loading} onClick={next}>{t("load_more")}</Button>
+            </Container>)}
         </>}
     </Page>;
 };

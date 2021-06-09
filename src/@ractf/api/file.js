@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,9 +15,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import * as http from "@ractf/util/http";
+
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -30,7 +31,7 @@ export const newFile = (chalId, name, url, size) => (
 );
 
 export const editFile = (id, name, url, size) => (
-    http.patch(ENDPOINTS.FILE + id, { name, url, size }).then(() => {
+    http.patch(ENDPOINTS.FILE + id, { name, url, size }, null, null, true).then(() => {
         store.dispatch(actions.editFile(id, { name, url, size }));
         return { name, url, size };
     })

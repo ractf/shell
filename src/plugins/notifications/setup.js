@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,14 +15,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getLocalConfig, registerPlugin, registerReducer } from "ractf";
+import { getLocalConfig } from "@ractf/shell-util";
+import { registerPreferences, registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
+import { reloadAll, reloadTeam } from "@ractf/api";
+import { getUUID } from "@ractf/util";
+
 import { store } from "store";
 
 import { notificationReducer } from "./reducers";
 import AppNotifications from "./components/AppNotifications";
-import { reloadAll } from "@ractf/api";
 import * as actions from "./actions";
-import { getUUID } from "@ractf/util";
 
 
 const WS_CHALLENGE_SCORE = 1;
@@ -30,13 +32,16 @@ const WS_TEAM_FLAG_REJECT = 2;
 const WS_TEAM_HINT_USE = 3;
 const WS_TEAM_JOIN = 4;
 
-
 export default () => {
     registerReducer("notifications", notificationReducer);
 
-    registerPlugin("mountWithinApp", "notifications", {
-        component: AppNotifications,
-    });
+    registerMount("app", "notifications", AppNotifications);
+    registerPreferences([
+        {name: "notifs.all_solves", initial: true},
+        {name: "notifs.flag_reject", initial: true},
+        {name: "notifs.hint_used", initial: true},
+        {name: "notifs.team_join", initial: true},
+    ]);
 
     const addNotification = (title, body) => {
         const id = getUUID();
@@ -65,24 +70,26 @@ export default () => {
     });
 
     registerPlugin("wsMessage", WS_TEAM_FLAG_REJECT, (data) => {
-        // TODO: Hookup settings
-        addNotification("Flag rejected",
-            `**${data.username}** had a flag rejected for ` +
-            `**${data.challenge_name}**.`
-        );
+        if (getLocalConfig("notifs.flag_reject", undefined, true))
+            addNotification("Flag rejected",
+                `**${data.username}** had a flag rejected for ` +
+                `**${data.challenge_name}**.`
+            );
     });
 
     registerPlugin("wsMessage", WS_TEAM_HINT_USE, (data) => {
-        // TODO: Hookup settings
-        addNotification("Hint used",
-            `**${data.username}** used a hint for **${data.challenge}**, ` +
-            `costing **${data.hint_penalty}** points.`
-        );
+        if (getLocalConfig("notifs.hint_used", undefined, true))
+            addNotification("Hint used",
+                `**${data.username}** used a hint for **${data.challenge}**, ` +
+                `with a **${data.hint_penalty}** point penalty.`
+            );
+        // Todo: Update the challenge with the used hint
     });
 
     registerPlugin("wsMessage", WS_TEAM_JOIN, (data) => {
-        // TODO: Hookup settings
-        addNotification("Team join", `**${data.username}** joined your team!`);
+        if (getLocalConfig("notifs.team_join", undefined, true))
+            addNotification("Team join", `**${data.username}** joined your team!`);
+        reloadTeam();
     });
 
 };

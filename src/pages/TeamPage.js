@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -16,24 +16,28 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { FaUsers, FaUser, FaTwitter, FaRedditAlien, FaDiscord } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { FaRedditAlien } from "react-icons/fa";
+import { SiDiscord } from "react-icons/si";
+import { FiTwitter, FiUser, FiUsers } from "react-icons/fi";
 
-import { BrokenShards } from "./ErrorPages";
-
-import { useReactRouter, useConfig } from "@ractf/util";
-import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, ProgressBar, Row, Graph,
-    Pie, Page
-} from "@ractf/ui-kit";
+import { useApi } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
-import colours from "@ractf/ui-kit/Colours.scss";
+import {
+    TabbedView, Tab, HR, ProgressBar, Graph,
+    Pie, Page, Column, Form, Container
+} from "@ractf/ui-kit";
+import { useConfig, useCategories } from "@ractf/shell-util";
+import { cssVar, useReactRouter } from "@ractf/util";
+
+import Link from "components/Link";
 
 import "./Profile.scss";
-import { useCategories } from "@ractf/util/hooks";
+
+import { BrokenShards } from "./ErrorPages";
+import LoadingPage from "./LoadingPage";
 
 
 const TeamPage = () => {
@@ -54,13 +58,13 @@ const TeamPage = () => {
     const hasTeams = useConfig("enable_teams");
 
     if (!hasTeams) return <Redirect to={"/"} />;
-    if (user.team === null && team === "me") return <Redirect to={"/noteam"} />;
+    if (user.team === null && team === "me") return <Redirect to={"/welcome"} />;
 
     if (error) return <Page title={t("teams.teams")} centre>
-        <FormError>{error}</FormError>
+        <Form.Error>{error}</Form.Error>
         <BrokenShards />
     </Page>;
-    if (!teamData) return <Page title={t("teams.teams")} centre><Row><Spinner /></Row></Page>;
+    if (!teamData) return <LoadingPage title={t("teams.teams")} />;
 
     const UserSolve = ({ solved_by_name, challenge_name, points }) => <div className={"userSolve"}>
         <div>{challenge_name}</div>
@@ -70,7 +74,7 @@ const TeamPage = () => {
     const categoryValues = {};
     const userValues = {};
     const tData = teamData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    const scorePlotData = { data: [], label: "Score" };
+    const scorePlotData = { data: [] };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.data.push({ x: api.config.start_time, y: 0 });
     tData.forEach(solve => {
@@ -87,7 +91,7 @@ const TeamPage = () => {
         if (!userValues[solve.solved_by_name]) userValues[solve.solved_by_name] = 0;
         userValues[solve.solved_by_name]++;
 
-        const score = (scorePlotData.data[scorePlotData.data.length - 1] || {y: 0}).y + solve.points;
+        const score = (scorePlotData.data[scorePlotData.data.length - 1] || { y: 0 }).y + solve.points;
         scorePlotData.data.push({ x: new Date(solve.timestamp), y: score });
     });
 
@@ -108,9 +112,9 @@ const TeamPage = () => {
     });
 
     return <Page title={teamData.name}>
-        <div className={"profileSplit"}>
-            <div className={"userMeta"}>
-                <div className={"userName"}><FaUsers /> {teamData.name}</div>
+        <Container.Row>
+            <Column xlWidth={3} lgWidth={4} mdWidth={12}>
+                <div className={"userName"}><FiUsers /> {teamData.name}</div>
                 <div>{t("point_count", { count: teamData.leaderboard_points })}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
                     ? " noBio" : "")}>
@@ -119,32 +123,32 @@ const TeamPage = () => {
 
                 {teamData.social && <>
                     {teamData.twitter && teamData.twitter.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"}
+                        <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://twitter.com/" + encodeURIComponent(teamData.twitter)}>
-                            <FaTwitter /><span>@{teamData.twitter}</span>
+                            <FiTwitter /><span>@{teamData.twitter}</span>
                         </a>}
                     {teamData.reddit && teamData.reddit.length !== 0 &&
-                        <a className={"userSocial"} target={"_blank"}
+                        <a className={"userSocial"} target={"_blank"} rel={"noopener noreferrer"}
                             href={"https://reddit.com/u/" + encodeURIComponent(teamData.reddit)}>
                             <FaRedditAlien /><span>/u/{teamData.reddit}</span>
                         </a>}
                     {teamData.discord && teamData.discord.length !== 0 &&
                         (teamData.discordid && teamData.discordid.length !== 0
-                            ? <a target={"_blank"}
-                                href={"https://discordapp.com/users/" + encodeURIComponent(teamData.discordid)}
+                            ? <a target={"_blank"} rel={"noopener noreferrer"}
+                                href={"https://discord.com/users/" + encodeURIComponent(teamData.discordid)}
                                 className={"userSocial"}>
-                                <FaDiscord /><span>{teamData.discord}</span>
+                                <SiDiscord /><span>{teamData.discord}</span>
                             </a>
                             : <span className={"userSocial"}>
-                                <FaDiscord /><span>{teamData.discord}</span>
+                                <SiDiscord /><span>{teamData.discord}</span>
                             </span>)}
                 </>}
 
-                {teamData.members.map((i, n) => <><Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
-                    <FaUser /> {i.username}
-                </Link><br /></>)}
-            </div>
-            <div className={"userSolves"}>
+                {teamData.members.map((i, n) => <Link to={"/profile/" + i.id} className={"teamMemberico"} key={n}>
+                    <FiUser /> {i.username}
+                </Link>)}
+            </Column>
+            <Column xlWidth={9} lgWidth={8} mdWidth={12}>
                 {(!teamData.solves || teamData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
                     {t("teams.no_solves", { name: teamData.name })}
                 </div> : <TabbedView>
@@ -154,46 +158,39 @@ const TeamPage = () => {
                             ))}
                         </Tab>
                         <Tab label={"Stats"}>
-                            <div className={"ppwRow"}>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Solve attempts</div>
+                            <Container.Row>
+                                <Column lgWidth={4} mdWidth={12}>
+                                    <h5>Solve attempts</h5>
                                     <Pie data={[teamData.solves.filter(Boolean).length, teamData.incorrect_solves]}
                                         labels={["Correct", "Incorrect"]}
-                                        colors={[colours.green, colours.red]} />
-                                </div>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Category Breakdown</div>
+                                        colors={[cssVar("--col-green"), cssVar("--col-red")]} />
+                                </Column>
+                                <Column lgWidth={4} mdWidth={6}>
+                                    <h5>Category Breakdown</h5>
                                     <Pie data={Object.values(categoryValues)}
                                         labels={Object.keys(categoryValues)} />
-                                </div>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>User Breakdown</div>
+                                </Column>
+                                <Column lgWidth={4} mdWidth={6}>
+                                    <h5>User Breakdown</h5>
                                     <Pie data={Object.values(userValues)}
                                         labels={Object.keys(userValues)} />
-                                </div>
-                            </div>
+                                </Column>
+                            </Container.Row>
                             <HR />
-                            <div>
-                                <div className={"ppwHead"}>Category Progress</div>
-                                {catProgress.map(([name, got, tot]) => <>
-                                    <span style={{ fontWeight: 700 }}>{name}</span>
-                                    <span style={{ fontSize: ".8em", marginLeft: 8 }}>
-                                        {got}/{tot} ({tot === 0 ? 100 : Math.round(got / tot * 10000) / 100}%)
-                                    </span>
-                                    <Row>
-                                        <ProgressBar thick progress={tot === 0 ? 100 : got / tot} width={"auto"} />
-                                    </Row>
-                                </>)}
-                            </div>
+                            <h5>Category Progress</h5>
+                            {catProgress.map(([name, got, tot]) => <>
+                                <span><b>{name}</b> <small>
+                                    {got}/{tot} ({tot === 0 ? 100 : Math.round(got / tot * 10000) / 100}%)
+                                </small></span>
+                                <ProgressBar thick progress={tot === 0 ? 100 : got / tot} width={"auto"} />
+                            </>)}
                             <HR />
-                            <div>
-                                <div className={"ppwHead"}>Score Over Time</div>
-                                <Graph data={[scorePlotData]} filled timeGraph />
-                            </div>
+                            <h5>Score Over Time</h5>
+                            <Graph data={[scorePlotData]} filled timeGraph />
                         </Tab>
                     </TabbedView>}
-            </div>
-        </div>
+            </Column>
+        </Container.Row>
     </Page>;
 };
 export default TeamPage;

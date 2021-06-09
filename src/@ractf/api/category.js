@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,10 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as actions from "actions";
 import { reloadAll } from "@ractf/api";
+import * as http from "@ractf/util/http";
+
+import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -32,7 +33,7 @@ export const createGroup = (name, desc, type, metadata) => {
     });
 };
 export const removeGroup = async (id) => {
-    return http.delete(ENDPOINTS.CATEGORIES + id).then(() => {
+    return http.delete_(ENDPOINTS.CATEGORIES + id).then(() => {
         return reloadAll();
     }).then(data => {
         store.dispatch(actions.removeCategory(data));

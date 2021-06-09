@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,14 +15,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as actions from "actions";
-import { push } from "connected-react-router";
-
 import { iteratePlugins } from "@ractf/plugins";
 import { reloadAll } from "@ractf/api";
-import { ENDPOINTS } from "./consts";
+import * as http from "@ractf/util/http";
+
+import * as actions from "actions";
+import { push } from "connected-react-router";
 import { store } from "store";
-import http from "@ractf/http";
+
+import { ENDPOINTS } from "./consts";
 
 
 export const postLogin = async token => {

@@ -17,13 +17,14 @@
 
 import React from "react";
 
-import { Page, Row, Spinner } from "@ractf/ui-kit";
+import { Page, Container, Spinner } from "@ractf/ui-kit";
 
-const LoadingPage = () => (
-    <Page centre>
-        <Row>
+
+const LoadingPage = ({ title }) => (
+    <Page title={title}>
+        <Container full centre>
             <Spinner />
-        </Row>
+        </Container>
     </Page>
 );
 export default LoadingPage;

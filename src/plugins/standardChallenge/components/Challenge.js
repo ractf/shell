@@ -19,10 +19,12 @@ import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import {
-    Button, TextBlock, PageHead, Link, Row, FlashText, Markdown, Badge, Page, Card
-} from "@ractf/ui-kit";
 import { iteratePlugins, FlagForm } from "@ractf/plugins";
+import {
+    Button, TextBlock, PageHead, Markdown, Badge, Page, Card, Container
+} from "@ractf/ui-kit";
+
+import Link from "components/Link";
 
 import Split from "./Split";
 import File from "./File";
@@ -31,7 +33,7 @@ import Hint from "./Hint";
 import "./Challenge.scss";
 
 
-export default ({ challenge, category, rightComponent }) => {
+export default ({ challenge, category, embedded, rightComponent }) => {
     const onFlagResponse = useRef();
     const submitFlag = useRef();
 
@@ -43,7 +45,7 @@ export default ({ challenge, category, rightComponent }) => {
     iteratePlugins("challengeMod").forEach(({ key, plugin }) => {
         if (!plugin.check || plugin.check(challenge, category)) {
             challengeMods.push(React.createElement(plugin.component, {
-                challenge: challenge, category: category, key: key,
+                challenge, category, embedded, key,
             }));
         }
     });
@@ -54,39 +56,45 @@ export default ({ challenge, category, rightComponent }) => {
 
     const chalContent = <>
         {challengeMods}
-        <Row>
-            <TextBlock>
-                <Markdown source={challenge.description} />
-            </TextBlock>
-        </Row>
+        <TextBlock>
+            <Markdown LinkElem={Link} source={challenge.description} />
+        </TextBlock>
 
-        {challenge.files && !!challenge.files.length && <Row>
-            {challenge.files.map(file =>
-                file && <File name={file.name} url={file.url} size={file.size} key={file.id} id={file.id} />
-            )}
-        </Row>}
-        {user.team && challenge.hints && !!challenge.hints.length && <Row>
+        {challenge.files && !!challenge.files.length && <Container full toolbar spaced>
+            {challenge.files.map(file => file && (
+                <File key={file.id} {...file} tiny />
+            ))}
+        </Container>}
+        {user.team && challenge.hints && !!challenge.hints.length && <Container full toolbar spaced>
             {challenge.hints && !challenge.solved && challenge.hints.map((hint, n) => {
-                return <Hint {...hint} key={hint.id} />;
+                return <Hint {...hint} key={hint.id} tiny />;
             })}
-        </Row>}
+        </Container>}
 
-        {challenge.solved && challenge.post_score_explanation && <Row>
-            <Card header={t("challenge.post_score_explanation")}>
-                <Markdown source={challenge.post_score_explanation} />
+        {challenge.solved && challenge.post_score_explanation && (
+            <Card lesser header={t("challenge.post_score_explanation")}>
+                <Markdown LinkElem={Link} source={challenge.post_score_explanation} />
             </Card>
-        </Row>}
-        {user.team ? <Row>
-            <FlagForm challenge={challenge} submitRef={submitFlag} onFlagResponse={onFlagResponse.current} autoFocus />
-        </Row> : <>
-            <Row>
-                <FlashText danger>{t("challenge.no_team")}</FlashText>
-            </Row>
-            <Row>
-                <Button danger to={"/team/join"}>{t("join_a_team")}</Button>
-                <Button danger to={"/team/new"}>{t("create_a_team")}</Button>
-            </Row>
-        </>}
+        )}
+        {user.team
+            ? (<>
+                <FlagForm challenge={challenge} submitRef={submitFlag}
+                    onFlagResponse={onFlagResponse.current} autoFocus={!embedded} />
+                {embedded && (
+                    <Link to={challenge.url}>
+                        <Button>Open challenge page</Button>
+                    </Link>
+                )}
+            </>) : (<>
+                <Card slim danger>{t("challenge.no_team")}</Card>
+                <Link to={"/team/join"}>
+                    <Button danger>{t("join_a_team")}</Button>
+                </Link>
+                <Link to={"/team/create"}>
+                    <Button danger>{t("create_a_team")}</Button>
+                </Link>
+            </>)
+        }
     </>;
 
     const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
@@ -95,21 +103,39 @@ export default ({ challenge, category, rightComponent }) => {
         ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
         : t("challenge.no_solve"));
     const votesMessage = ((challenge.votes.positive || challenge.votes.negative)
-        ? t("challenge.votes", { percentage: Math.round(
-            (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
-        ) / 10 })
+        ? t("challenge.votes", {
+            percentage: Math.round(
+                (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
+            ) / 10
+        })
         : t("challenge.no_votes")
     );
+
+    if (embedded) {
+        if (!rightSide) return chalContent;
+        return (
+            <Split submitFlag={submitFlag} onFlagResponse={onFlagResponse} stacked>
+                {chalContent}
+                {rightSide}
+            </Split>
+        );
+    }
 
     const leftSide = <Page>
         <PageHead
             subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg} - {votesMessage}</>}
-            back={<Link className={"backToChals"} to={".."}>{t("back_to_chal")}</Link>}
+            back={<Link className={"backToChals"} to={challenge.category.url}>
+                {t("back_to_chal")}
+            </Link>}
             title={challenge.name} tags={tags}
         />
-        <Row style={{ position: "absolute", top: 16, right: 32 }} right>
-            <Button to="#edit" danger>{t("edit")}</Button>
-        </Row>
+        {user.is_staff && (
+            <div style={{ position: "absolute", top: 16, right: 32 }} right>
+                <Link to={"#edit"}>
+                    <Button danger>{t("edit")}</Button>
+                </Link>
+            </div>
+        )}
         {chalContent}
     </Page>;
 

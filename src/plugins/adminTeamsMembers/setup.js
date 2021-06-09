@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,7 +15,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { FiUser, FiUsers } from "react-icons/fi";
+
+import { registerPlugin } from "@ractf/plugins";
 
 import MembersList from "./components/MembersList";
 import TeamsList from "./components/TeamsList";
@@ -25,9 +27,11 @@ export default () => {
     registerPlugin("adminPage", "members", {
         component: MembersList,
         sidebar: "Members",
+        Icon: FiUsers,
     });
     registerPlugin("adminPage", "teams", {
         component: TeamsList,
         sidebar: "Teams",
+        Icon: FiUser,
     });
 };

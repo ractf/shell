@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,7 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin, dynamicLoad } from "ractf";
+import { dynamicLoad } from "@ractf/shell-util";
+import { registerPlugin } from "@ractf/plugins";
 
 
 export default () => {

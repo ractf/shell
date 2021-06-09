@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,7 +15,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { FiDownloadCloud } from "react-icons/fi";
+
+import { registerPlugin } from "@ractf/plugins";
 
 import ImportExport from "./components/ImportExport";
 
@@ -24,5 +26,6 @@ export default () => {
     registerPlugin("adminPage", "port", {
         component: ImportExport,
         sidebar: "Import/Export",
+        Icon: FiDownloadCloud,
     });
 };

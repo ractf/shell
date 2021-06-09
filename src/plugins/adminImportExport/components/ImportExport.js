@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -19,11 +19,13 @@ import React, { useContext, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ENDPOINTS, createChallenge, newHint, newFile, reloadAll, createGroup, editChallenge } from "@ractf/api";
-import { appContext } from "ractf";
-import http from "@ractf/http";
-import { Button, PageHead, Card, Row, Modal, Select, Badge, FormGroup, Input, Form, H6 } from "@ractf/ui-kit";
+import * as http from "@ractf/util/http";
+import {
+    Button, PageHead, Card, Modal, Select, Badge, Input, Form,
+    Container, UiKitModals
+} from "@ractf/ui-kit";
 import { cleanFilename, downloadJSON, downloadCSV } from "@ractf/util/download";
-import { useCategories } from "@ractf/util/hooks";
+import { useCategories, useExperiment } from "@ractf/shell-util";
 
 
 const PackCreator = ({ close }) => {
@@ -67,36 +69,31 @@ const PackCreator = ({ close }) => {
 
     return <Modal header={"Create Challenge Pack"} buttons={<>
         <Button onClick={close} lesser warning>Cancel</Button>
-        <Button onClick={create}>Download Pack</Button>
-    </>} onClose={close}>
-        <H6>Settings:</H6>
+    </>} onClose={close} okay={"Download Pack"} onOkay={create} cancel={false}>
+        <h6>Settings:</h6>
         <Form valuesRef={formValues}>
-            <FormGroup htmlFor={"name"} label={"Name"}>
+            <Form.Group htmlFor={"name"} label={"Name"}>
                 <Input name={"name"} placeholder={"Name"} />
-            </FormGroup>
-            <FormGroup htmlFor={"description"} label={"Description"}>
+            </Form.Group>
+            <Form.Group htmlFor={"description"} label={"Description"}>
                 <Input name={"description"} rows={3} placeholder={"Description"} />
-            </FormGroup>
+            </Form.Group>
         </Form>
-        <Row>
-            <H6>Challenges:</H6>
-        </Row>
-        <Row>{selected.map(i => (
+        <h6>Challenges:</h6>
+        <Container toolbar full spaced>{selected.map(i => (
             <Badge key={i.key} onClose={remove(i.key)} x>{i.value}</Badge>
-        ))}</Row>
-        <Row>
-            <Select onChange={select} options={
-                options.filter(i => selected.filter(j => j.key === i.key).length === 0)
-            } hasFilter />
-        </Row>
+        ))}</Container>
+        <Select onChange={select} options={
+            options.filter(i => selected.filter(j => j.key === i.key).length === 0)
+        } hasFilter />
     </Modal>;
 };
 
-
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const { t } = useTranslation();
     const categories = useCategories();
+    const [importEntire] = useExperiment("importEntire");
 
     const stripKeys = (orig, keys) => (
         Object.keys(orig).filter(
@@ -121,7 +118,7 @@ export default () => {
     };
 
     const exportCat = () => {
-        app.promptConfirm({ message: "Select category", small: true }, [
+        modals.promptConfirm({ message: "Select category", small: true }, [
             {
                 name: "cat", options: categories.map(i => ({ key: i.id, value: i.name })),
                 hasFilter: true
@@ -130,13 +127,13 @@ export default () => {
             if (typeof cat === "number") {
                 const category = categories.filter(i => i.id === cat)[0].toJSON();
                 category.challenges = category.challenges.map(cleanChallenge);
-                if (!category) return app.alert("Something went wrong while trying to export");
+                if (!category) return modals.alert("Something went wrong while trying to export");
                 downloadJSON(category, category.name);
             }
         });
     };
     const exportChal = () => {
-        app.promptConfirm({ message: "Select challenge", small: true }, [
+        modals.promptConfirm({ message: "Select challenge", small: true }, [
             {
                 name: "chal", options: categories.map(i => i.challenges).flat().map(
                     i => ({ key: i.id, value: i.name })
@@ -146,7 +143,7 @@ export default () => {
             if (typeof chal === "number") {
                 let challenge = categories.map(i => i.challenges).flat().filter(i => i.id === chal)[0];
                 challenge = cleanChallenge(challenge.toJSON());
-                if (!challenge) return app.alert("Something went wrong while trying to export");
+                if (!challenge) return modals.alert("Something went wrong while trying to export");
                 downloadJSON(challenge, challenge.name);
             }
         });
@@ -167,12 +164,12 @@ export default () => {
     };
 
     const exportPlayers = () => {
-        app.showProgress("Exporting users", 0);
+        modals.showProgress("Exporting users", 0);
 
         http.get(ENDPOINTS.STATS).then(({ user_count }) => {
-            if (user_count === 0) return app.alert("No users to export!");
+            if (user_count === 0) return modals.alert("No users to export!");
 
-            const every = data => app.showProgress(
+            const every = data => modals.showProgress(
                 `Exporting users: ${data.length}/${user_count}`,
                 data.length / user_count
             );
@@ -187,7 +184,7 @@ export default () => {
                     i.bio,
                     i.solves ? i.solves.filter(Boolean).map(j => j.id).join(",") : ""
                 ]);
-                app.showProgress(null);
+                modals.showProgress(null);
                 downloadCSV([[
                     "id", "username", "email", "email verified", "date joined",
                     "active", "visible", "staff",
@@ -195,17 +192,17 @@ export default () => {
                     "reddit", "twitter", "discord", "discord id",
                     "bio", "solves"
                 ], ...data], "players");
-            }).catch(e => app.alert(http.getError(e)));
+            }).catch(e => modals.alert(http.getError(e)));
         });
     };
 
     const exportTeams = () => {
-        app.showProgress("Exporting teams", 0);
+        modals.showProgress("Exporting teams", 0);
 
         http.get(ENDPOINTS.STATS).then(({ team_count }) => {
-            if (team_count === 0) return app.alert("No teams to export!");
+            if (team_count === 0) return modals.alert("No teams to export!");
 
-            const every = data => app.showProgress(
+            const every = data => modals.showProgress(
                 `Exporting teams: ${data.length}/${team_count}`,
                 data.length / team_count
             );
@@ -217,17 +214,17 @@ export default () => {
                     i.owner, i.password, i.members,
                     i.solves ? i.solves.filter(Boolean).map(j => j.id).join(",") : ""
                 ]);
-                app.showProgress(null);
+                modals.showProgress(null);
                 downloadCSV([[
                     "id", "name", "visible", "owner", "password", "members", "solves"
                 ], ...data], "teams");
-            }).catch(e => app.alert(http.getError(e)));
+            }).catch(e => modals.alert(http.getError(e)));
         });
     };
 
     const exportLeaderboard = () => {
         const progress = [false, false];
-        app.showProgress("Exporting...", 0);
+        modals.showProgress("Exporting...", 0);
 
         fullyPaginate(ENDPOINTS.LEADERBOARD_TEAM).then(data => {
             data = data.map(i => [
@@ -235,8 +232,8 @@ export default () => {
             ]);
 
             progress[0] = true;
-            if (progress[1]) app.showProgress(null);
-            else app.showProgress("Exporting...", .5);
+            if (progress[1]) modals.showProgress(null);
+            else modals.showProgress("Exporting...", .5);
 
             downloadCSV([[
                 "team name", "points"
@@ -248,8 +245,8 @@ export default () => {
             ]);
 
             progress[1] = true;
-            if (progress[0]) app.showProgress(null);
-            else app.showProgress("Exporting...", .5);
+            if (progress[0]) modals.showProgress(null);
+            else modals.showProgress("Exporting...", .5);
 
             downloadCSV([[
                 "username", "points"
@@ -280,7 +277,7 @@ export default () => {
                     try {
                         data = JSON.parse(text);
                     } catch (e) {
-                        return app.alert("Failed to parse JSON");
+                        return modals.alert("Failed to parse JSON");
                     }
                     resolve(data);
                 });
@@ -296,7 +293,6 @@ export default () => {
             data.hasOwnProperty("challenge_metadata") &&
             data.hasOwnProperty("flag_type") &&
             data.hasOwnProperty("author") &&
-            data.hasOwnProperty("auto_unlock") &&
             data.hasOwnProperty("score") &&
             data.hasOwnProperty("unlocks") &&
             data.hasOwnProperty("flag_metadata") &&
@@ -327,11 +323,11 @@ export default () => {
             challenge_type: data.challenge_type,
             // TODO: This, but better
             challenge_metadata: data.challenge_metadata,
-            auto_unlock: data.auto_unlock,
             flag_type: data.flag_type,
             author: data.author,
             score: data.score,
             flag_metadata: data.flag_metadata,
+            tags: data.tags || []
         }).then(async (chal) => {
             await Promise.all([
                 ...data.hints.map(hint => hint.text && newHint(
@@ -348,9 +344,9 @@ export default () => {
     const importChal = () => {
         askOpenJSON().then(data => {
             if (!validate_challenge(data))
-                return app.alert("Invalid challenge data");
+                return modals.alert("Invalid challenge data");
 
-            app.promptConfirm({ message: "Select category to import into", small: true }, [
+            modals.promptConfirm({ message: "Select category to import into", small: true }, [
                 {
                     name: "cat", options: categories.map(
                         i => ({ key: i.id, value: i.name })
@@ -360,10 +356,10 @@ export default () => {
                 if (typeof cat === "number") {
                     importChallengeData(cat, data).then(() => {
                         reloadAll();
-                        app.alert("Imported challenge!");
+                        modals.alert("Imported challenge!");
                     }).catch(e => {
                         reloadAll();
-                        app.alert("Failed to import challenge:\n" + http.getError(e));
+                        modals.alert("Failed to import challenge:\n" + http.getError(e));
                         console.error(e);
                     });
                 }
@@ -374,8 +370,8 @@ export default () => {
     const importCategory = () => {
         askOpenJSON().then(data => {
             if (!validate_category(data))
-                return app.alert("Invalid category data");
-            app.showProgress("Creating category...", .5);
+                return modals.alert("Invalid category data");
+            modals.showProgress("Creating category...", .5);
             createGroup(data.name, data.description, data.contained_type, data.metadata)
                 .then(async ({ id }) => {
                     const challenge_map = {};
@@ -384,7 +380,7 @@ export default () => {
                     await Promise.all(data.challenges.map(chal => (importChallengeData(id, chal).then(cdat => {
                         challenge_map[chal.id] = cdat;
                         progress += 1 / data.challenges.length;
-                        app.showProgress("Creating challenges...", progress);
+                        modals.showProgress("Creating challenges...", progress);
                     }))));
                     return challenge_map;
                 }).then(challenge_map => {
@@ -395,15 +391,15 @@ export default () => {
                             unlocks: chal.unlocks.map(i => challenge_map[i].id)
                         }).then(() => {
                             progress += 1 / data.challenges.length;
-                            app.showProgress("Linking challenges...", progress);
+                            modals.showProgress("Linking challenges...", progress);
                         })
                     )));
                 }).then(() => {
                     reloadAll();
-                    app.alert("Imported category!");
+                    modals.alert("Imported category!");
                 }).catch(e => {
                     reloadAll();
-                    app.alert("Failed to import category:\n" + http.getError(e));
+                    modals.alert("Failed to import category:\n" + http.getError(e));
                     console.error(e);
                 });
         });
@@ -421,29 +417,25 @@ export default () => {
 
         {isCreatePack && <PackCreator close={stopCreatePack} />}
 
-        <Row>
-            <Card header={t("admin.import")}>
-                <Row centre>
-                    <Button disabled danger>{t("admin.import_ctf")}</Button>
-                    <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
-                    <Button onClick={importChal}>{t("admin.import_chal")}</Button>
-                </Row>
-            </Card>
-        </Row>
-        <Row>
-            <Card header={t("admin.export")}>
-                <Row centre>
-                    <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>
-                    <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
-                    <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
-                    <Button onClick={createPack}>Create challenge pack</Button>
-                </Row>
-                <Row centre>
-                    <Button onClick={exportLeaderboard}>{t("admin.export_sb")}</Button>
-                    <Button onClick={exportPlayers}>{t("admin.export_players")}</Button>
-                    <Button onClick={exportTeams}>{t("admin.export_teams")}</Button>
-                </Row>
-            </Card>
-        </Row>
+        <Card lesser header={t("admin.import")}>
+            <Container toolbar spaced centre>
+                {importEntire && <Button disabled danger>{t("admin.import_ctf")}</Button>}
+                <Button onClick={importCategory}>{t("admin.import_cat")}</Button>
+                <Button onClick={importChal}>{t("admin.import_chal")}</Button>
+            </Container>
+        </Card>
+        <Card lesser header={t("admin.export")}>
+            <Container toolbar spaced centre>
+                {importEntire && <Button onClick={exportCTF}>{t("admin.export_ctf")}</Button>}
+                <Button onClick={exportCat}>{t("admin.export_cat")}</Button>
+                <Button onClick={exportChal}>{t("admin.export_chal")}</Button>
+                <Button onClick={createPack}>Create challenge pack</Button>
+            </Container>
+            <Container toolbar spaced centre>
+                <Button onClick={exportLeaderboard}>{t("admin.export_sb")}</Button>
+                <Button onClick={exportPlayers}>{t("admin.export_players")}</Button>
+                <Button onClick={exportTeams}>{t("admin.export_teams")}</Button>
+            </Container>
+        </Card>
     </>;
 };

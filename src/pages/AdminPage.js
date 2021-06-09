@@ -16,8 +16,8 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { useReactRouter } from "@ractf/util";
 
+import { useReactRouter } from "@ractf/util";
 import { PluginComponent } from "@ractf/plugins";
 import { Page } from "@ractf/ui-kit";
 

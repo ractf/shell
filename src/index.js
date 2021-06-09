@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -18,22 +18,40 @@
 import "promise-polyfill/src/polyfill";
 
 import React from "react";
-import i18next from "i18next";
 import ReactDOM from "react-dom";
-//import Loadable from "react-loadable";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import { AppContainer } from "react-hot-loader";
-import * as serviceWorker from "./serviceWorker";
 import { I18nextProvider } from "react-i18next";
 
-import AppWrap from "./controllers/App";
-import { store, persistor } from "store";
+import * as http from "@ractf/util/http";
 
+import i18next from "i18next";
+import { store, persistor } from "store";
+import { PersistGate } from "redux-persist/integration/react";
+
+import AppWrap from "./controllers/App";
+import * as serviceWorker from "./serviceWorker";
 import en from "./i18n/en.json";
 
+import "@ractf/ui-kit/Base.scss";
+
+
+const DOMAIN = window.env.apiDomain;
+const API_BASE = window.env.apiBase;
+const BASE_URL = DOMAIN + API_BASE;
+http.setConfig({
+    base: BASE_URL,
+    getHeaders: () => {
+        const token = store.getState().token?.token;
+        if (token)
+            return { Authorization: `Token ${token}` };
+        return {};
+    },
+    getTranslation: str => i18next.t(str),
+});
+
 (r => r.keys().forEach(key => r(key).default()))(
-    require.context("./plugins", true, /setup\.js$/)
+    require.context("./plugins", true, __PLUGIN_REGEX__)
 );
 
 /* Enable or disable service workers.
@@ -47,11 +65,11 @@ const ENABLE_SERVICE_WORKER = false;
 const gft = i18next.getFixedT.bind(i18next);
 i18next.getFixedT = (lng, ns) => {
     const t = gft(lng, ns);
-    
+
     const fixedT = (key, opts, ...rest) => {
         const tl = t(key, opts, ...rest);
         if (tl === key)
-            return <span style={{background: "#3a3"}}>{tl}</span>;
+            return <span style={{ background: "#3a3" }}>{tl}</span>;
         return tl;
     };
     fixedT.lng = t.lng;

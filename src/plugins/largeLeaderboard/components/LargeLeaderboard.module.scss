@@ -1,0 +1,85 @@
+@import "@ractf/ui-kit/Colours.scss";
+
+$background: #000;
+$color: green;
+$accent: blue;
+$font: monospace;
+
+.background {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+
+    &::after {
+        content: "";
+        display: block;
+        z-index: -1;
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $background;
+    }
+}
+
+.background ~ * {
+    display: none;
+}
+
+.wrapper {
+    margin: auto;
+    max-width: 1200px;
+    margin: auto;
+    padding: px(32) 0;
+    color: $color;
+    font-family: $font;
+
+    .header {
+        border: px(2) solid $accent;
+        display: flex;
+        padding: px(16);
+
+        .siteName {
+            font-size: 1.2em;
+            flex-grow: 1;
+            font-weight: 800;
+        }
+    }
+    .board {
+        border: px(2) solid $accent;
+        border-top: 0;
+        padding: px(16);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+
+            thead {
+                font-weight: 800;
+                td {
+                    border-bottom: px(2) solid $color;
+                    padding: 0 px(16) px(16) px(16);
+                }
+            }
+            tbody td {
+                padding: px(16) px(16) px(8) px(16);
+            }
+        }
+    }
+}
+
+.button {
+    border: 2px solid $accent;
+    padding: px(16);
+    margin: px(8) auto;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

@@ -16,42 +16,40 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useEffect } from "react";
-import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Switch as Switch_, Route as Route_, Redirect as Redirect_ } from "react-router-dom";
 
-import { NotFound, BrokenShards } from "../pages/ErrorPages";
-import { TeamsList, UsersList } from "../pages/Lists";
-import Countdown from "../pages/Countdown";
-import TeamPage from "../pages/TeamPage";
-
-import { TextBlock, Page as BasePage, H1, H2 } from "@ractf/ui-kit";
-import { iteratePlugins, PluginComponent } from "@ractf/plugins";
-import { dynamicLoad } from "ractf";
-import { useConfig } from "@ractf/util";
+import { TextBlock, Page as BasePage, SubtleText } from "@ractf/ui-kit";
+import { iteratePlugins, PluginComponent, getPlugin, mountPoint } from "@ractf/plugins";
+import { useReactRouter } from "@ractf/util";
+import { useConfig } from "@ractf/shell-util";
 import { logout } from "@ractf/api";
+
+import TeamPage from "../pages/TeamPage";
+import Countdown from "../pages/Countdown";
+import { TeamsList, UsersList } from "../pages/Lists";
+import { NotFound, BrokenShards } from "../pages/ErrorPages";
+import ChallengePage from "../pages/ChallengePage";
+import SettingsPage from "../pages/SettingsPage";
+import Leaderboard from "../pages/Leaderboard";
+import AdminPage from "../pages/AdminPage";
+import Campaign from "../pages/Campaign";
+import Profile from "../pages/Profile";
+import TwoFA from "../pages/TwoFA";
+
 
 const Route = React.memo(Route_);
 const Switch = React.memo(Switch_);
 const Redirect = React.memo(Redirect_);
 
-const ChallengePage = dynamicLoad(() => import(/* webpackChunkName: "challenge-page" */ "../pages/ChallengePage"));
-const SettingsPage = dynamicLoad(() => import(/* webpackChunkName: "settings-page" */ "../pages/SettingsPage"));
-const Leaderboard = dynamicLoad(() => import(/* webpackChunkName: "leaderboard" */ "../pages/Leaderboard"));
-const AdminPage = dynamicLoad(() => import(/* webpackChunkName: "admin-page" */ "../pages/AdminPage"));
-const Campaign = dynamicLoad(() => import(/* webpackChunkName: "campaign" */ "../pages/Campaign"));
-const Profile = dynamicLoad(() => import(/* webpackChunkName: "profile" */ "../pages/Profile"));
-const TwoFA = dynamicLoad(() => import(/* webpackChunkName: "2fa" */ "../pages/TwoFA"));
-const UI = dynamicLoad(() => import(/* webpackChunkName: "ui" */ "../pages/UI"));
-
-
 class ErrorBoundary extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = { error: null };
+        this.state = { error: null, showDetails: false };
     }
 
     static getDerivedStateFromError(error) {
-        return { error: error };
+        return { error, showDetails: false };
     }
 
     componentDidCatch(error, errorInfo) {
@@ -61,13 +59,47 @@ class ErrorBoundary extends React.PureComponent {
         });
     }
 
+    showDetails = () => {
+        this.setState({ showDetails: true });
+    }
+
+    copyDetails = () => {
+        const text = document.createElement("input");
+        text.style.opacity = "0";
+        text.style.position = "absolute";
+        text.style.left = "0";
+        text.style.top = "0";
+        document.body.append(text);
+        text.value = this.state.error.stack;
+        text.select();
+        text.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        document.body.removeChild(text);
+        try {
+            window.__ractf_alert("Details copied to clipboard");
+        } catch (e) {
+            // The error we're debugging might be due to alerts in the first place!
+            alert("Details copied to clipboard");
+        }
+    }
+
     render() {
         if (this.state.error) {
             return <BasePage centre>
                 <BrokenShards />
-                <H1>This page failed to load.</H1>
-                <H2>Please report this!</H2>
-                <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
+                <h1>This page failed to load.</h1>
+                <h2>Please report this!</h2>
+                {this.state.showDetails ? (
+                    <TextBlock style={{ textAlign: "left" }}>{this.state.error.stack}</TextBlock>
+                ) : (
+                        <SubtleText>
+                            <span className={"linkStyle"} onClick={this.copyDetails}>
+                                Copy details
+                        </span> - <span className={"linkStyle"} onClick={this.showDetails}>
+                                View details
+                        </span>
+                        </SubtleText>
+                    )}
             </BasePage>;
         }
 
@@ -75,8 +107,7 @@ class ErrorBoundary extends React.PureComponent {
     }
 }
 
-
-let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
+const Page_ = ({ title, auth, admin, noAuth, countdown, children, C }) => {
     const user = useSelector(state => state.user);
     const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
     //if (!process.env.REACT_APP_NO_SITE_LOCK) {
@@ -91,14 +122,14 @@ let Page = ({ title, auth, admin, noAuth, countdown, children, C }) => {
         document.title = title || window.env.siteName;
 
     if (auth && !user) return <Redirect to={"/login"} />;
-    if (noAuth && user) return <Redirect to={"/home"} />;
-    if (admin && (!user || !user.is_staff)) return <Redirect to={"/home"} />;
+    if (noAuth && user) return <Redirect to={"/"} />;
+    if (admin && (!user || !user.is_staff)) return <Redirect to={"/"} />;
 
     return <ErrorBoundary>
         {C ? <C /> : children}
     </ErrorBoundary>;
 };
-Page = React.memo(Page);
+export const Page = React.memo(Page_);
 
 const URIHandler = () => {
     return <Redirect to={decodeURIComponent(window.location.search).split(":", 2)[1]} />;
@@ -116,14 +147,18 @@ const Logout = () => {
     useEffect(() => {
         logout();
     }, []);
-    return <Redirect to={"/home"} />;
+    return <Redirect to={"/"} />;
 };
 
-
 const Routes = () => {
+    const notFoundPage = getPlugin("errorPage", "404")?.component;
+    const { location: { pathname } } = useReactRouter();
+
     return <Switch>
+        <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
+        {mountPoint("routes")}
         {iteratePlugins("page").map(({ key: url, plugin: page }) =>
-            <Route exact path={url} key={url}>
+            <Route exact={!page.noExact} path={url} key={url}>
                 <Page title={page.title} auth={page.auth} countdown={page.countdown}
                     admin={page.admin} noAuth={page.noAuth} C={page.component} />
             </Route>
@@ -131,8 +166,7 @@ const Routes = () => {
 
         <Route exact path={"/uri"} component={URIHandler} />
 
-        <Redirect exact path={"/"} to={"/home"} />
-        <Route exact path={"/home"}>
+        <Route exact path={"/"}>
             <Page countdown={"registration_open"} auth>
                 <Redirect to={"/campaign"} />
             </Page>
@@ -156,7 +190,7 @@ const Routes = () => {
             <Page title={"Settings"} auth C={TwoFA} />
         </Route>
 
-        <Route exact path={"/campaign/:tabId/challenge/:chalId"}>
+        <Route exact path={"/campaign/:tabId/:chalId"}>
             <Page countdown={"countdown_timestamp"} title={"Challenges"} auth C={ChallengePage} />
         </Route>
         <Route exact path={"/campaign"}>
@@ -182,18 +216,16 @@ const Routes = () => {
             <Page title={"Leaderboard"} C={Leaderboard} />
         </Route>
 
-        <Route exact path={"/ui"}>
-            <Page title={"UI"} C={UI} />
-        </Route>
-
         <Redirect path={"/team"} to={"/team/me"} exact />
         <Route exact path={"/team/:team"}>
             <Page title={"Team"} auth C={TeamPage} />
         </Route>
 
-        <Route>
-            <Page title={"Error"} C={NotFound} />
-        </Route>
+        {notFoundPage ? <Route component={notFoundPage} /> : (
+            <Route>
+                <Page title={"Error"} C={NotFound} />
+            </Route>
+        )}
     </Switch>;
 };
 export default React.memo(Routes);

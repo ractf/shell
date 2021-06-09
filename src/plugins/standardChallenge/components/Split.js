@@ -17,11 +17,10 @@
 
 import React, { useState } from "react";
 
-import "./Split.scss";
-import { Row, Column } from "@ractf/ui-kit";
+import { Column, Container } from "@ractf/ui-kit";
 
 
-export default ({ children, ...props }) => {
+export default ({ children, stacked, ...props }) => {
     if (!(children instanceof Array)) children = [children];
     const [showLeft, setShowLeft] = useState(true);
     const [showRight, setShowRight] = useState(true);
@@ -44,12 +43,21 @@ export default ({ children, ...props }) => {
 
     const double = (left && showLeft && right && showRight);
 
-    return <Row style={{ padding: 0 }} className={"challengeSplit"}>
-        {showLeft && left && <Column mdWidth={12} lgWidth={double ? 6 : 12} className={"challengeLeft"}>
+    if (stacked) {
+        return <>
+            {left}
+            <Column noGutter>
+                {right}
+            </Column>
+        </>;
+    }
+
+    return <Container.Row>
+        {showLeft && left && <Column noGutter mdWidth={12} lgWidth={double ? 6 : 12}>
             {left}
         </Column>}
-        {showRight && right && <Column mdWidth={12} lgWidth={double ? 6 : 12} className={"challengeRight"}>
+        {showRight && right && <Column noGutter mdWidth={12} lgWidth={double ? 6 : 12} style={{ height: "100%" }}>
             {right}
         </Column>}
-    </Row>;
+    </Container.Row>;
 };

@@ -17,33 +17,14 @@
 
 @import "@ractf/ui-kit/Colours.scss";
 
-.networkOuter {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    position: absolute;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-
-    padding: 2rem;
-
-    @media (max-width: 1200px) {
-        padding: 1rem 1.5rem;
-    }
-
-    @media (max-width: 800px) {
-        padding: 0.5rem;
-    }
-}
 
 .network {
-    border: 2px solid $back_lift;
+    border: 2px solid var(--col-back-lift);
+    height: px(800);
+    max-height: 80vh;
 
     flex-grow: 1;
     position: relative;
-    height: auto !important;
     display: flex;
     flex-direction: column;
     overflow: hidden;

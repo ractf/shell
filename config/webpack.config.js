@@ -27,9 +27,18 @@ const { getWebpackImporter, getSassImplementation } = require("sass-loader/dist/
 
 const postcssNormalize = require('postcss-normalize');
 
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'true';
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 const shouldUseCaddy = !!process.env.RACTF_USING_CADDY;
+
+
+function escapeRegex (string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+const exclude = (process.env.RACTF_EXCLUDE_PLUGINS || "").split(",").map(i => i.trim());
+const excludeRegex = new RegExp(
+  "^./[^//]*?(?<!" + exclude.map(i => "/" + escapeRegex(i)).join("|") + ")(?:/setup\\.js|.js)$"
+);
 
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
@@ -258,7 +267,7 @@ module.exports = function (webpackEnv) {
         {
           oneOf: [
             {
-              test: /\.(bmp|gif|jpe?g|png)$/,
+              test: /\.(bmp|gif|jpe?g|png|svg)$/,
               loader: require.resolve('url-loader'),
               options: {
                 limit: 10000,
@@ -367,6 +376,7 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       new webpack.DefinePlugin({
+        __PLUGIN_REGEX__: excludeRegex,
         __COMMIT_HASH__: JSON.stringify(commitHash),
       }),
       new HtmlWebpackPlugin(

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,7 +15,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import http from "@ractf/http";
+import * as http from "@ractf/util/http";
+
 
 export const GENERATE_INVITES = "/auth/generate_invites/";
 export const INVITES = "/auth/invites/";

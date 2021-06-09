@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,11 +15,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import * as http from "@ractf/util/http";
+
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
+import { reloadAll } from "./reloadAll";
 
 
 export const modifyTeam = (teamId, data) => http.patch(ENDPOINTS.TEAM + teamId, data);
@@ -40,6 +42,15 @@ export const joinTeam = (name, password) => {
             const team = await http.get("/team/self");
             store.dispatch(actions.setTeam(team));
             resolve(data);
+        }).catch(reject);
+    });
+};
+
+export const leaveTeam = () => {
+    return new Promise((resolve, reject) => {
+        http.post(ENDPOINTS.TEAM_LEAVE).then(async () => {
+            await reloadAll();
+            resolve();
         }).catch(reject);
     });
 };

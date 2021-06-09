@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,16 +15,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import * as http from "@ractf/util/http";
+import { ENDPOINTS } from "@ractf/api";
+
 import { store } from "store";
-import http from "@ractf/http";
 
 import * as actions from "../actions/announcements";
 
-import { ENDPOINTS } from "@ractf/api";
 
 export const addAnnouncement = (title, body) => http.post(ENDPOINTS.ANNOUNCEMENTS, { title, body });
 
-export const removeAnnouncement = ({ id }) => http.delete(ENDPOINTS.ANNOUNCEMENTS + id);
+export const removeAnnouncement = ({ id }) => http.delete_(ENDPOINTS.ANNOUNCEMENTS + id);
 
 export const getAnnouncements = () => {
     http.get(ENDPOINTS.ANNOUNCEMENTS).then(data => {

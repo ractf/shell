@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -17,11 +17,10 @@
 
 import React from "react";
 
-import { registerPlugin } from "ractf";
+import { registerPlugin } from "@ractf/plugins";
 
 import MedalPopup from "./components/MedalPopup";
 import BasePopup from "./components/BasePopup";
-
 import { ReactComponent as WinnerIcon } from "./winnerMedal.svg";
 
 

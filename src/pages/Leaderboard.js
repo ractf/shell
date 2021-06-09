@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -19,23 +19,28 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Button, Row, Graph, URLTabbedView, Tab, Table, Page, PageHead
+    Button, Graph, Tab, Table, Page, PageHead, Container
 } from "@ractf/ui-kit";
-import { useApi, usePaginated } from "ractf";
+import { useApi, usePaginated } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
-import { useConfig } from "@ractf/util";
+import { useInterval } from "@ractf/util";
+import { useConfig, usePreference } from "@ractf/shell-util";
+
+import URLTabbedView from "components/URLTabbedView";
+import Link from "components/Link";
 
 
-const LeaderboardPage = () => {
+const Leaderboard = React.memo(() => {
     const [userGraphData, setUserGraphData] = useState([]);
     const [teamGraphData, setTeamGraphData] = useState([]);
     const { t } = useTranslation();
 
-    const [graph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
-    const [uState, uNext] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
-    const [tState, tNext] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
+    const [graph, , , refreshGraph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
+    const [uState, uNext, uRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
+    const [tState, tNext, tRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
     const start_time = useConfig("start_time");
     const hasTeams = useConfig("enable_teams");
+    const [liveReload] = usePreference("experiment.leaderboardReload");
 
     useEffect(() => {
         if (!graph) return;
@@ -89,11 +94,26 @@ const LeaderboardPage = () => {
         );
     }, [graph, start_time, hasTeams]);
 
+    useInterval(() => {
+        if (!liveReload) return;
+        refreshGraph();
+        uRefresh();
+        tRefresh();
+    }, 10000);
+
     const userData = (lbdata) => {
-        return lbdata.map((i, n) => [n + 1, i.username, i.leaderboard_points, { link: "/profile/" + i.id }]);
+        return lbdata.map((i, n) => [
+            <Link to={`/profile/${i.id}`}>{n + 1}</Link>,
+            <Link to={`/profile/${i.id}`}>{i.username}</Link>,
+            <Link to={`/profile/${i.id}`}>{i.leaderboard_points}</Link>
+        ]);
     };
     const teamData = (lbdata) => {
-        return lbdata.map((i, n) => [n + 1, i.name, i.leaderboard_points, { link: "/team/" + i.id }]);
+        return lbdata.map((i, n) => [
+            <Link to={`/team/${i.id}`}>{n + 1}</Link>,
+            <Link to={`/team/${i.id}`}>{i.name}</Link>,
+            <Link to={`/team/${i.id}`}>{i.leaderboard_points}</Link>
+        ]);
     };
 
     const teamTab = <>
@@ -101,33 +121,41 @@ const LeaderboardPage = () => {
             <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
         )}
         <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
-        {tState.hasMore && <Row>
-            <Button disabled={tState.loading} onClick={tNext}>Load More</Button>
-        </Row>}
+        {tState.hasMore && <Container full centre>
+            <Button disabled={tState.loading} onClick={tNext}>{t("load_more")}</Button>
+        </Container>}
     </>;
     const userTab = <>
         {userGraphData && userGraphData.length > 0 && (
             <Graph key="users" data={userGraphData} timeGraph noAnimate />
         )}
         <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
-        {uState.hasMore && <Row>
-            <Button disabled={uState.loading} onClick={uNext}>Load More</Button>
-        </Row>}
+        {uState.hasMore && <Container full centre>
+            <Button disabled={uState.loading} onClick={uNext}>{t("load_more")}</Button>
+        </Container>}
     </>;
+
+    if (hasTeams) return (
+        <URLTabbedView center initial={1}>
+            <Tab label={t("team_plural")} index={"team"}>
+                {teamTab}
+            </Tab>
+
+            <Tab label={t("user_plural")} index={"user"}>
+                {userTab}
+            </Tab>
+        </URLTabbedView>
+    );
+    return userTab;
+});
+Leaderboard.displayName = "Leaderboard";
+
+const LeaderboardPage = () => {
+    const { t } = useTranslation();
 
     return <Page title={t("leaderboard")}>
         <PageHead>{t("leaderboard")}</PageHead>
-        {hasTeams ? (
-            <URLTabbedView center initial={1}>
-                <Tab label={t("team_plural")} index={"team"}>
-                    {teamTab}
-                </Tab>
-
-                <Tab label={t("user_plural")} index={"user"}>
-                    {userTab}
-                </Tab>
-            </URLTabbedView>
-        ) : userTab}
+        <Leaderboard />
     </Page>;
 };
 export default React.memo(LeaderboardPage);

@@ -17,11 +17,12 @@
 
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import CodeInput from "./CodeInput";
+
+import { store } from "store";
 
 import { codeRunAbort } from "../actions";
 import { runCode } from "../api";
-import { store } from "store";
+import CodeInput from "./CodeInput";
 
 import "./IDE.scss";
 

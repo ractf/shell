@@ -17,11 +17,15 @@
 
 const userReducer = (state = null, { type, payload }) => {
     switch (type) {
+        case "SET_TEAM":
+            return { ...state, team: payload };
         case "SET_USER":
             return payload;
         case "EDIT_USER":
             return { ...state, ...payload };
         case "INIT_STATE":
+            if (typeof payload.user === "undefined")
+                return state;
             return payload.user;
         case "LOGOUT":
             return null;

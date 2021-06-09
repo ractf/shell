@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -19,18 +19,17 @@ import React, { useContext, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, FlashText
+    Form, Input, InputButton, Leader,
+    Checkbox, PageHead, Modal, Card, ModalSpinner, UiKitModals
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyTeam } from "@ractf/api";
-import { appContext } from "ractf";
 import { NUMBER_RE } from "@ractf/util";
-import http from "@ractf/http";
-import { useConfig } from "@ractf/util";
+import * as http from "@ractf/util/http";
+import { useConfig } from "@ractf/shell-util";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const submitRef = useRef();
     const { t } = useTranslation();
     const hasTeams = useConfig("enable_teams");
@@ -66,11 +65,11 @@ export default () => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
             modifyTeam(team.id, changes).then(() => {
-                app.alert("Modified team");
+                modals.alert("Modified team");
                 setState(prevState => ({ ...prevState, team: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(http.getError(e));
+                modals.alert(http.getError(e));
             });
         };
     };
@@ -81,17 +80,17 @@ export default () => {
 
     const makeOwner = (team, member) => {
         return () => {
-            app.promptConfirm({
+            modals.promptConfirm({
                 message: `Make ${member.username} the owner of ${team.name}?`, small: true
             }).then(() => {
                 modifyTeam(team.id, { owner: member.id }).then(() => {
-                    app.alert(`Transfered ownership to ${team.name}.`);
+                    modals.alert(`Transfered ownership to ${team.name}.`);
                     setState(prevState => {
                         if (!prevState.team) return prevState;
                         return { ...prevState, team: { ...prevState.team, owner: member.id } };
                     });
                 }).catch(e => {
-                    app.alert(http.getError(e));
+                    modals.alert(http.getError(e));
                 });
             }).catch(() => { });
         };
@@ -101,47 +100,45 @@ export default () => {
     }, []);
 
     if (!hasTeams) {
-        return <FlashText danger>Teams are not enabled for this event.</FlashText>;
+        return <Card slim danger>Teams are not enabled for this event.</Card>;
     }
 
     return <>
         <PageHead title={t("admin.teams")} />
+        {state.loading && <ModalSpinner />}
         <Form handle={doSearch} locked={state.loading}>
             <InputButton submit name={"name"} placeholder={"Search for Team"} button={"Search"} />
-            {state.error && <FormError>{state.error}</FormError>}
+            {state.error && <Form.Error>{state.error}</Form.Error>}
         </Form>
-        <br />
-        {state.loading && <Row><Spinner /></Row>}
-        {state.results && <Row>
+        {state.results && <>
             {state.results.length ? <>
                 {state.more && <p>
                     Additional results were omitted. Please refine your search.
-                </p>}
+            </p>}
                 {state.results.map(i => <Leader onClick={editTeam(i)} key={i.id}>{i.name}</Leader>)}
             </> : <p>No results found</p>}
-        </Row>}
+        </>}
+
         {state.team && <Modal onClose={close} onConfirm={submit}>
             <Form handle={saveTeam(state.team)} locked={state.loading} submitRef={submitRef}>
-                <Row>
-                    <FormGroup label={"Team Name"} htmlFor={"name"}>
+                <Form.Row>
+                    <Form.Group label={"Team Name"} htmlFor={"name"}>
                         <Input val={state.team.name} name={"name"} />
-                    </FormGroup>
-                    <FormGroup label={"Team ID"} htmlFor={"id"}>
+                    </Form.Group>
+                    <Form.Group label={"Team ID"} htmlFor={"id"}>
                         <Input val={state.team.id} name={"id"} readonly />
-                    </FormGroup>
-                </Row>
-                <FormGroup label={"Rights"}>
-                    <Row left>
-                        <Checkbox val={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
-                    </Row>
-                </FormGroup>
-                <FormGroup label={"Password"} htmlFor={"password"}>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Group label={"Rights"}>
+                    <Checkbox val={state.team.is_visible} name={"is_visible"}>Visible</Checkbox>
+                </Form.Group>
+                <Form.Group label={"Password"} htmlFor={"password"}>
                     <Input val={state.team.password} name={"password"} />
-                </FormGroup>
-                <FormGroup label={"Owner ID"} htmlFor={"owner"}>
+                </Form.Group>
+                <Form.Group label={"Owner ID"} htmlFor={"owner"}>
                     <Input val={state.team.owner} name={"owner"} format={NUMBER_RE} />
-                </FormGroup>
-                <FormGroup label={"Members"}>
+                </Form.Group>
+                <Form.Group label={"Members"}>
                     {state.team.members.map(i => {
                         const owner = i.id === state.team.owner;
                         return <Leader sub={owner ? "Owner" : ""} none={owner}
@@ -149,7 +146,7 @@ export default () => {
                             {i.username}
                         </Leader>;
                     })}
-                </FormGroup>
+                </Form.Group>
             </Form>
         </Modal>}
     </>;

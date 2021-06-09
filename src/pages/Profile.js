@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -18,44 +18,31 @@
 import React from "react";
 import Moment from "react-moment";
 import { useTranslation } from "react-i18next";
+import { FaRedditAlien } from "react-icons/fa";
+import { SiDiscord } from "react-icons/si";
+import { FiTwitter, FiUsers } from "react-icons/fi";
 
-import { transparentize } from "polished";
-import { BrokenShards } from "./ErrorPages";
-
-import { useReactRouter } from "@ractf/util";
+import { cssVar, useReactRouter } from "@ractf/util";
+import { useConfig, useCategories } from "@ractf/shell-util";
 import {
-    Spinner, FormError, Link, TabbedView, Tab, HR, Graph, Pie, Page, Row
+    Graph, Pie, Page, Column, Badge, Form, Container, Grid, SubtleText
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
+import { useApi } from "@ractf/util/http";
 
-import admin from "static/img/admin.png";
-import donor from "static/img/donor_large.png";
-import beta from "static/img/beta.png";
-import colours from "@ractf/ui-kit/Colours.scss";
+import * as dayjs from "dayjs";
+import * as relativeTime from "dayjs/plugin/relativeTime";
+import * as localizedFormat from "dayjs/plugin/localizedFormat";
+import Link from "components/Link";
 
+import LoadingPage from "./LoadingPage";
+import { BrokenShards } from "./ErrorPages";
 import "./Profile.scss";
-import { FaTwitter, FaDiscord, FaRedditAlien, FaUsers } from "react-icons/fa";
-import { useCategories } from "@ractf/util/hooks";
 
 
-const UserSpecial = ({ children, col, ico }) => (
-    <div className={"userSpecial"} style={{ backgroundColor: transparentize(.7, col) }}>
-        <div style={{ backgroundImage: "url(" + ico + ")" }} />
-        {children}
-    </div>
-);
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
 
-const UserSolve = ({ challenge_name, points }) => {
-    const { t } = useTranslation();
-
-    return (
-        <div className={"userSolve"}>
-            <div>{challenge_name}</div>
-            <div>{t("point_count", { count: points })}</div>
-        </div>
-    );
-};
 
 const Profile = () => {
     const { match } = useReactRouter();
@@ -63,16 +50,17 @@ const Profile = () => {
     const user = match.params.user;
     const categories = useCategories();
     const [userData, error] = useApi(ENDPOINTS.USER + (user === "me" ? "self" : user));
+    const hasTeams = useConfig("enable_teams");
 
     if (error) return <Page title={"Users"} centre>
-        <FormError>{error}</FormError>
+        <Form.Error>{error}</Form.Error>
         <BrokenShards />
     </Page>;
-    if (!userData) return <Page title={"Users"} centre><Row><Spinner /></Row></Page>;
+    if (!userData) return <LoadingPage title={"Users"} />;
 
     const categoryValues = {};
     const uData = userData.solves.filter(Boolean).sort((a, b) => (new Date(a.timestamp)) - (new Date(b.timestamp)));
-    const scorePlotData = { x: [], y: [], name: "score", fill: "tozeroy" };
+    const scorePlotData = { data: [], name: "score", fill: true };
     // OPTIONAL: Use start time instead of first solve
     // scorePlotData.x.push(api.config.start_time);
     // scorePlotData.y.push(0);
@@ -88,93 +76,112 @@ const Profile = () => {
         if (!categoryValues[category]) categoryValues[category] = 0;
         categoryValues[category]++;
 
-        const score = (scorePlotData.y[scorePlotData.y.length - 1] || 0) + solve.points;
-        scorePlotData.x.push(new Date(solve.timestamp));
-        scorePlotData.y.push(score);
+        const score = ((scorePlotData.data[scorePlotData.data.length - 1] || {}).y || 0) + solve.points;
+        scorePlotData.data.push({ x: new Date(solve.timestamp), y: score });
     });
 
-    return <Page title={userData.username}>
-        <div className={"profileSplit"}>
-            <div className={"userMeta"}>
-                <div className={"userName"}>{userData.username}</div>
-                <div>{t("point_count", { count: userData.leaderboard_points })}</div>
-                <div className={"userJoined"}>Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment></div>
-                <div className={"userBio" + ((!userData.bio || userData.bio.length === 0) ? " noBio" : "")}>
-                    {userData.bio || t("profile.no_bio")}
+    const bannerFg = userData.is_staff
+        ? "var(--type-danger-fg)"
+        : userData.is_verified
+            ? "var(--type-warning-fg)"
+            : undefined;
+    const bannerBg = userData.is_staff
+        ? "var(--type-danger-bg)"
+        : userData.is_verified
+            ? "var(--type-warning-bg)"
+            : undefined;
+
+    const hasSocialsRow = (
+        (hasTeams && userData.team)
+        || userData.reddit || userData.discord || userData.twitter
+    );
+
+    return <Page title={userData.username} noWrap>
+        <div style={{ position: "relative" }}>
+            <div className={"profileBack"} style={{
+                backgroundColor: bannerBg, color: bannerFg
+            }} />
+            <Container className={"profileRow"}>
+                {userData.profilePicture && (
+                    <img alt={"Avatar"} src={userData.profilePicture} className={"pfp"} />
+                )}
+                <div className={"profileBanner"} style={{ color: bannerFg }}>
+                    <h2>{userData.username}</h2>
+                    <Container full spaced={!userData.bio}>
+                        {t("point_count", { count: userData.leaderboard_points })}
+                        <span className={"profileSep"} />
+                        Joined <Moment fromNow>{new Date(userData.date_joined)}</Moment>
+                    </Container>
+                    {userData.bio && <Container full spaced><SubtleText>
+                        {userData.bio}
+                    </SubtleText></Container>}
+                    <Container full toolbar spaced>
+                        {userData.is_staff && <Badge danger pill outline>Admin</Badge>}
+                        {userData.is_verified && <Badge warning pill outline={!userData.is_staff}>
+                            Staff
+                        </Badge>}
+                    </Container>
+                    {hasSocialsRow && (
+                        <Container full toolbar className={"socialsRow"}>
+                            {hasTeams && userData.team && (
+                                <Link to={"/team/" + (userData.team.id || userData.team)}>
+                                    <FiUsers /> {userData.team_name}
+                                </Link>
+                            )}
+                            {userData.twitter && (
+                                <a target={"_blank"} rel={"noopener noreferrer"}
+                                    href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
+                                    <FiTwitter /><span>@{userData.twitter}</span>
+                                </a>
+                            )}
+                            {userData.reddit && (
+                                <a target={"_blank"} rel={"noopener noreferrer"}
+                                    href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
+                                    <FaRedditAlien /><span>/u/{userData.reddit}</span>
+                                </a>
+                            )}
+                            {userData.discord && (
+                                userData.discordid && userData.discordid.length !== 0
+                                    ? <a target={"_blank"} rel={"noopener noreferrer"}
+                                        href={"https://discord.com/users/" + encodeURIComponent(userData.discordid)}>
+                                        <SiDiscord /><span>{userData.discord}</span>
+                                    </a>
+                                    : <span>
+                                        <SiDiscord /><span>{userData.discord}</span>
+                                    </span>
+                            )}
+                        </Container>
+                    )}
                 </div>
-
-                {userData.twitter && userData.twitter.length !== 0 &&
-                    <a className={"userSocial"} target={"_blank"}
-                        href={"https://twitter.com/" + encodeURIComponent(userData.twitter)}>
-                        <FaTwitter /><span>@{userData.twitter}</span>
-                    </a>}
-                {userData.reddit && userData.reddit.length !== 0 &&
-                    <a className={"userSocial"} target={"_blank"}
-                        href={"https://reddit.com/u/" + encodeURIComponent(userData.reddit)}>
-                        <FaRedditAlien /><span>/u/{userData.reddit}</span>
-                    </a>}
-                {userData.discord && userData.discord.length !== 0 &&
-                    (userData.discordid && userData.discordid.length !== 0
-                        ? <a target={"_blank"}
-                            href={"https://discordapp.com/users/" + encodeURIComponent(userData.discordid)}
-                            className={"userSocial"}>
-                            <FaDiscord /><span>{userData.discord}</span>
-                        </a>
-                        : <span className={"userSocial"}>
-                            <FaDiscord /><span>{userData.discord}</span>
-                        </span>)}
-
-                {userData.team && <Link to={"/team/" + (userData.team.id || userData.team)} className={"teamMemberico"}>
-                    <FaUsers /> {userData.team_name}
-                </Link>}
-                {Object.keys(categoryValues).length !== 0 && <>
-                    <div className={"profilePieWrap"}>
-                        <div className={"ppwHead"}>Solve attempts</div>
-                        <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
-                            labels={["Correct", "Incorrect"]}
-                            colors={[colours.green, colours.red]} />
-                    </div>
-                </>}
-            </div>
-            <div className={"userSolves"}>
-                {userData.is_beta &&
-                    <UserSpecial col={"#66bb66"} ico={beta}>Beta Tester</UserSpecial>}
-                {userData.is_donor &&
-                    <UserSpecial col={"#bbbb33"} ico={donor}>Donor</UserSpecial>}
-                {userData.is_staff &&
-                    <UserSpecial col={"#bb6666"} ico={admin}>Admin</UserSpecial>}
-
-                {(!userData.solves || userData.solves.filter(Boolean).length === 0) ? <div className={"noSolves"}>
-                    {t("profile.no_solves", { name: userData.username })}
-                </div> : <TabbedView>
-                        <Tab label={"Solves"}>
-                            {userData.solves && userData.solves.filter(Boolean).map((i, n) => (
-                                <UserSolve key={i.timestamp} {...i} />
-                            ))}
-                        </Tab>
-                        <Tab label={"Stats"}>
-                            <div className={"ppwRow"}>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Solve attempts</div>
-                                    <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
-                                        colors={[colours.green, colours.red]}
-                                        labels={["Correct", "Incorrect"]} height={300} />
-                                </div>
-                                <div className={"profilePieWrap"}>
-                                    <div className={"ppwHead"}>Category Breakdown</div>
-                                    <Pie data={Object.values(categoryValues)}
-                                        labels={Object.keys(categoryValues)} />
-                                </div>
-                            </div>
-                            <HR />
-                            <div>
-                                <div className={"ppwHead"}>Score Over Time</div>
-                                <Graph data={[scorePlotData]} />
-                            </div>
-                        </Tab>
-                    </TabbedView>}
-            </div>
+            </Container>
         </div>
+        <Container>
+            {userData.solves.filter(Boolean).length ? <>
+                <Container.Row>
+                    <Column lgWidth={6}>
+                        <h5>Solve attempts</h5>
+                        <Pie data={[userData.solves.filter(Boolean).length, userData.incorrect_solves]}
+                            colors={[cssVar("--col-green"), cssVar("--col-red")]}
+                            labels={["Correct", "Incorrect"]} noAnimate />
+                    </Column>
+                    <Column lgWidth={6}>
+                        <h5>Category Breakdown</h5>
+                        <Pie data={Object.values(categoryValues)}
+                            labels={Object.keys(categoryValues)} noAnimate />
+                    </Column>
+                </Container.Row>
+                <h4>Score Over Time</h4>
+                <Graph data={[scorePlotData]} timeGraph />
+                <h4>Challenge Solves</h4>
+                <Grid headings={["Challenge", "Points", "Time"]} data={userData.solves.filter(Boolean).map((i, n) => [
+                    i.challenge_name, i.points, <span title={dayjs(i.timestamp).format("lll")}>
+                        {dayjs(i.timestamp).fromNow()}
+                    </span>
+                ])} />
+            </> : <>
+                    <h5>{t("profile.no_solves", { name: userData.username })}</h5>
+                </>}
+        </Container>
     </Page>;
 };
 export default Profile;

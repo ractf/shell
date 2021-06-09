@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -16,21 +16,22 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext, useState, useRef, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, Input, Spinner, Row, FormGroup, InputButton, FormError, Leader,
-    Checkbox, PageHead, Modal, Button, ModalForm
+    Form, Input, InputButton, Leader, Checkbox, PageHead, Modal, Button,
+    ModalForm, ModalSpinner, UiKitModals, Hint
 } from "@ractf/ui-kit";
 import { ENDPOINTS, modifyUser, reloadAll } from "@ractf/api";
-import { appContext } from "ractf";
-import http from "@ractf/http";
-import { useSelector, useDispatch } from "react-redux";
+import * as http from "@ractf/util/http";
+import { useExperiment } from "@ractf/shell-util";
+
 import { setImpersonationToken } from "actions";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const submitRef = useRef();
     const { t } = useTranslation();
     const currentUser = useSelector(state => state.user);
@@ -71,19 +72,19 @@ export default () => {
         return (changes) => {
             setState(prevState => ({ ...prevState, loading: true }));
             modifyUser(member.id, changes).then(() => {
-                app.alert("Modified user");
+                modals.alert("Modified user");
                 setState(prevState => ({ ...prevState, member: null, loading: false }));
             }).catch(e => {
                 setState(prevState => ({ ...prevState, loading: false }));
-                app.alert(http.getError(e));
+                modals.alert(http.getError(e));
             });
         };
     };
     const impersonate = useCallback(() => {
         if (state.member.id === currentUser.id) {
-            return app.alert("You cannot impersonate yourself.");
+            return modals.alert("You cannot impersonate yourself.");
         }
-        app.promptConfirm({
+        modals.promptConfirm({
             small: true,
             message: <>
                 You are about to impersonate a user.<br />
@@ -92,14 +93,14 @@ export default () => {
                 Are you sure you wish to continue?
             </>
         }).catch().then(() => {
-            http.post("/auth/sudo", {id: state.member.id}).then(({ token }) => {
+            http.post("/auth/sudo", { id: state.member.id }).then(({ token }) => {
                 dispatch(setImpersonationToken(token));
                 reloadAll();
             }).catch(e => {
-                app.alert(<>Failed to impersonate user:<br/>{http.getError(e)}</>);
+                modals.alert(<>Failed to impersonate user:<br />{http.getError(e)}</>);
             });
         });
-    }, [app, currentUser.id, state.member, dispatch]);
+    }, [modals, currentUser.id, state.member, dispatch]);
 
     const close = useCallback(() => {
         setState(prevState => ({ ...prevState, member: null }));
@@ -115,75 +116,83 @@ export default () => {
         setState(prevState => ({ ...prevState, advSearch: false }));
     }, []);
 
+    const [advSearch] = useExperiment("advSearch");
+
     return <>
         {state.advSearch && (
-            <ModalForm header={"Advanced Member Search"} okayLabel={"Search"}
+            <ModalForm header={"Advanced Member Search"} okay={"Search"}
                 onClose={closeAdvSearch} handle={doSearch}>
-                <FormGroup label={"Username"} for={"username"}>
+                <Form.Group label={"Username"} for={"username"}>
                     <Input name={"username"} placeholder={"Username"} />
-                </FormGroup>
-                <FormGroup label={"Email"} for={"email"}>
+                </Form.Group>
+                <Form.Group label={"Email"} for={"email"}>
                     <Input name={"email"} placeholder={"Email"} />
-                </FormGroup>
+                </Form.Group>
             </ModalForm>
         )}
 
         <PageHead title={t("admin.members")} />
+        {state.loading && <ModalSpinner />}
         <Form handle={doSearch} locked={state.loading}>
-            <Row>
-                <InputButton submit name={"username"} placeholder={"Search for Username"} button={"Search"} />
-                <Button disabled onClick={openAdvSearch}>Advanced Search</Button>
-            </Row>
-            {state.error && <FormError>{state.error}</FormError>}
+            <InputButton submit name={"username"} placeholder={"Search for Username"} button={"Search"} />
+            {advSearch && <Button onClick={openAdvSearch}>Advanced Search</Button>}
+            {state.error && <Form.Error>{state.error}</Form.Error>}
         </Form>
-        <br />
-        {state.loading && <Row><Spinner /></Row>}
-        {state.results && <Row>
+        {state.results && <>
             {state.results.length ? <>
                 {state.more && <p>
                     Additional results were omitted. Please refine your search.
                 </p>}
                 {state.results.map(i => <Leader onClick={editMember(i)} key={i.id}>{i.username}</Leader>)}
             </> : <p>No results found</p>}
-        </Row>}
-        {state.member && <Modal onClose={close} onConfirm={submit} extraButtons={<>
+        </>}
+
+        {state.member && <Modal onClose={close} onConfirm={submit} buttons={<>
             <Button lesser onClick={impersonate} warning>Impersonate user</Button>
         </>}>
             <Form handle={saveMember(state.member)} locked={state.loading} submitRef={submitRef}>
-                <Row>
-                    <FormGroup label={"Username"} htmlFor={"username"}>
+                <Form.Row>
+                    <Form.Group label={"Username"} htmlFor={"username"}>
                         <Input val={state.member.username} name={"username"} />
-                    </FormGroup>
-                    <FormGroup label={"User ID"} htmlFor={"id"}>
+                    </Form.Group>
+                    <Form.Group label={"User ID"} htmlFor={"id"}>
                         <Input val={state.member.id} name={"id"} readonly />
-                    </FormGroup>
-                </Row>
-                <FormGroup label={"Rights"}>
-                    <Row left>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Group label={"Rights"}>
+                    <Form.Row>
                         <Checkbox val={state.member.is_active} name={"is_active"}>Active</Checkbox>
-                        <Checkbox val={state.member.is_staff} name={"is_staff"}>Staff</Checkbox>
                         <Checkbox val={state.member.is_visible} name={"is_visible"}>Visible</Checkbox>
-                    </Row>
-                </FormGroup>
-                <FormGroup label={"Bio"} htmlFor={"bio"}>
+                        <Hint>
+                            Admins have full control of the site, and can view user details
+                        </Hint>
+                        <Checkbox val={state.member.is_staff} name={"is_staff"}>Admin</Checkbox>
+                        <Hint>
+                            Staff is a visual indicator to players that a member is part of the event staff.
+                            There are no additional permissions gained from this.
+                        </Hint>
+                        <Checkbox val={state.member.is_verified} name={"is_verified"}>Staff</Checkbox>
+                    </Form.Row>
+                </Form.Group>
+                <Form.Group label={"Bio"} htmlFor={"bio"}>
                     <Input val={state.member.bio} name={"bio"} rows={2} />
-                </FormGroup>
-                <FormGroup label={"Discord"} htmlFor={"discord"}>
+                </Form.Group>
+                <Form.Group label={"Discord"} htmlFor={"discord"}>
                     <Input val={state.member.discord} name={"discord"} />
                     <Input val={state.member.discordid} name={"discordid"} />
-                </FormGroup>
-                <FormGroup label={"Reddit"} htmlFor={"reddit"}>
+                </Form.Group>
+                <Form.Group label={"Reddit"} htmlFor={"reddit"}>
                     <Input val={state.member.reddit} name={"reddit"} />
-                </FormGroup>
-                <FormGroup label={"Twitter"} htmlFor={"twitter"}>
+                </Form.Group>
+                <Form.Group label={"Twitter"} htmlFor={"twitter"}>
                     <Input val={state.member.twitter} name={"twitter"} />
-                </FormGroup>
-                <FormGroup label={"Email"} htmlFor={"email"}>
+                </Form.Group>
+                <Form.Group label={"Email"} htmlFor={"email"}>
                     <Input val={state.member.email} name={"email"} />
                     <Checkbox val={state.member.email_verified} name={"email_verified"}>
                         Email verified
                     </Checkbox>
-                </FormGroup>
+                </Form.Group>
             </Form>
         </Modal>}
     </>;

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -18,56 +18,23 @@
 import React from "react";
 
 import {
-    Page, HR, Button, TextBlock, Row, H2
+    Page, PageHead
 } from "@ractf/ui-kit";
-import { downloadJSON } from "@ractf/util/download";
 import { ENDPOINTS } from "@ractf/api";
-import { useApi } from "ractf";
-import { store } from "store";
+import { useApi } from "@ractf/util/http";
 
 
-export default () => {
+const Debug = () => {
     const [backendVersion] = useApi(ENDPOINTS.VERSION);
 
-    const state = store.getState();
-    const challenges = state.challenges?.categories;
-    const countdowns = state.countdowns;
-    const config = state.config;
-
-    const exportData = () => {
-        const debugExport = {
-            versions: {
-                shell: __COMMIT_HASH__,
-                backend: backendVersion && backendVersion.commit_hash
-            },
-            config, countdowns, challenges,
-        };
-        downloadJSON(debugExport, "debug.json");
-    };
-
     return <Page>
-        <H2>RACTF Debug Page:</H2>
-        <HR />
-        <div><code>ractf/shell</code> version: <code>{__COMMIT_HASH__}</code></div>
-        <div><code>ractf/backend</code> version: <code>{backendVersion && backendVersion.commit_hash}</code></div>
-        <HR />
-        <Row>
-            <Button onClick={exportData}>Export debug data</Button>
-        </Row>
-        <HR />
-        <div>Config:</div>
-        <TextBlock className={"monospaced"}>
-            {JSON.stringify(config, "", 2)}
-        </TextBlock>
-        <HR />
-        <div>Countdowns:</div>
-        <TextBlock className={"monospaced"}>
-            {JSON.stringify(countdowns, "", 2)}
-        </TextBlock>
-        <HR />
-        <div>Challenges:</div>
-        <TextBlock className={"monospaced"}>
-            {JSON.stringify(challenges, "", 2)}
-        </TextBlock>
+        <PageHead>Debug Versions</PageHead>
+        <p>
+            <code>ractf/shell</code> version: <code>{__COMMIT_HASH__}</code>
+        </p>
+        <p>
+            <code>ractf/backend</code> version: <code>{backendVersion && backendVersion.commit_hash}</code>
+        </p>
     </Page>;
 };
+export default Debug;

@@ -23,9 +23,11 @@ import challengesReducer from "./challengesReducer";
 import countdownsReducer from "./countdownsReducer";
 import websocketReducer from "./websocketReducer";
 import configReducer from "./configReducer";
+import themeReducer from "./themeReducer";
 import tokenReducer from "./tokenReducer";
 import teamReducer from "./teamReducer";
 import userReducer from "./userReducer";
+
 
 const mergeReducers = (...reducers) => {
     return (state, action) => {
@@ -47,6 +49,7 @@ export default (history, asyncReducers) => mergeReducers(combineReducers({
     countdowns: countdownsReducer,
     websocket: websocketReducer,
     config: configReducer,
+    theme: themeReducer,
     token: tokenReducer,
     team: teamReducer,
     user: userReducer,

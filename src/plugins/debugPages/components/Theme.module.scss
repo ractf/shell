@@ -1,0 +1,110 @@
+@import "@ractf/ui-kit/Colours.scss";
+
+/*
+    These styles must *NOT* respect the site colour scheme. The
+    rationale is that if a user has messed up the colour scheme, they
+    need to be able to see this interface to fix it!
+*/
+
+.sample {
+    width: 0;
+    height: 0;
+    padding: px(14);
+    position: relative;
+    border-radius: 50%;
+
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        box-sizing: border-box;
+        left: 0;
+        top: 0;
+        width: px(28);
+        height: px(28);
+        cursor: pointer;
+        border-radius: 50%;
+        border: 2px solid #fff3;
+        background-color: inherit;
+    }
+
+    > * {
+        position: absolute;
+        left: 0;
+        top: calc(100% + #{px(4)});
+        z-index: 2;
+        box-shadow: 0 0 px(16) #0004;
+    }
+
+    &.active::after {
+        content: "";
+        display: block;
+        position: absolute;
+        border-width: px(2);
+        width: px(12);
+        height: px(4);
+        border-style: solid;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        top: 50%;
+        left: 50%;
+        transform: translate(-55%, -70%) rotate(-55deg);
+        pointer-events: none;
+        cursor: pointer;
+    }
+}
+
+.sidebar {
+    height: 100%;
+    width: 276px;
+    background-color: #eee;
+    color: #111;
+    flex-shrink: 0;
+
+    .title {
+        font-weight: 600;
+
+    }
+    *:not(:first-child) > .title {
+        margin-top: px(8);
+    }
+
+    .tabs {
+        border-bottom: 1px solid #444;
+        display: flex;
+        flex-wrap: wrap;
+
+        & > div {
+            border-bottom: inherit;
+            margin-bottom: -1px;
+            padding: px(16);
+            cursor: pointer;
+            transition: 50ms border linear;
+            font-weight: 600;
+            user-select: none;
+
+            &:hover {
+                border-bottom: 4px solid #e53935;
+            }
+        }
+        & > div.active {
+            border-bottom: 4px solid #e53935;
+        }
+    }
+    .tab {
+        padding: px(12) px(16);
+    }
+    .name {
+        font-weight: 600;
+    }
+
+    code {
+        background-color: #00000010;
+        font-weight: 400 !important;
+    }
+}
+
+.picker {
+    position: absolute;
+}
+

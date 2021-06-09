@@ -32,7 +32,10 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
                 })
             };
         case "REMOVE_CATEGORY":
-            return { ...state, categories: state.categories.filter(i => i.id !== payload.id) };
+            return {
+                ...state,
+                categories: state.categories.filter(i => i && (!payload || i.id !== payload.id))
+            };
 
         case "ADD_CHALLENGE":
             categories.forEach(i => {
@@ -60,15 +63,17 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             return { ...state, categories };
         case "EDIT_FILE":
             categories.forEach(i => i.challenges.forEach(j => {
-                j.files = j.files.map(file => {
-                    if (file.id !== payload.fileId) return file;
-                    return { ...file, ...payload.data };
-                });
+                if (j.files)
+                    j.files = j.files.map(file => {
+                        if (file.id !== payload.fileId) return file;
+                        return { ...file, ...payload.data };
+                    });
             }));
             return { ...state, categories };
         case "REMOVE_FILE":
             categories.forEach(i => i.challenges.forEach(chal => {
-                chal.files = chal.files.filter(j => j.id.toString() !== payload.toString());
+                if (chal.files)
+                    chal.files = chal.files.filter(j => j.id.toString() !== payload.toString());
             }));
             return { ...state, categories };
 
@@ -82,19 +87,23 @@ const challengesReducer = (state = { categories: [] }, { type, payload }) => {
             return { ...state, categories };
         case "EDIT_HINT":
             categories.forEach(i => i.challenges.forEach(chal => {
-                chal.hints = chal.hints.map(hint => {
-                    if (hint.id !== payload.hintId) return hint;
-                    return { ...hint, ...payload.data };
-                });
+                if (chal.hints)
+                    chal.hints = chal.hints.map(hint => {
+                        if (hint.id !== payload.hintId) return hint;
+                        return { ...hint, ...payload.data };
+                    });
             }));
             return { ...state, categories };
         case "REMOVE_HINT":
             categories.forEach(i => i.challenges.forEach(chal => {
-                chal.hints = chal.hints.filter(j => j.id.toString() !== payload.toString());
+                if (chal.hints)
+                    chal.hints = chal.hints.filter(j => j.id.toString() !== payload.toString());
             }));
             return { ...state, categories };
 
         case "INIT_STATE":
+            if (typeof payload.challenges === "undefined")
+                return state;
             return { ...state, categories: payload.challenges };
         case "LOGOUT":
             return { ...state, categories: [] };

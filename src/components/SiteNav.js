@@ -16,23 +16,23 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
 
 import {
-    Link, SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
-    FootLink, NavLink, Container, SiteWrap, NavCollapse, NavMenuLink,
-    NavMenu, Wordmark
+    SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
+    Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem, Scrollbar
 } from "@ractf/ui-kit";
-import Header from "./Header";
-
 import { iteratePlugins } from "@ractf/plugins";
-import { useCategories } from "@ractf/util/hooks";
-import { useConfig } from "@ractf/util";
+import { useCategories, useExperiment, useConfig } from "@ractf/shell-util";
+import { useReactRouter } from "@ractf/util";
+
 import footerLogo from "../static/spine.svg";
+import Link from "./Link";
+
 
 const USE_HEAD_NAV = !!process.env.REACT_APP_USE_HEAD_NAV;
-
 
 const HeaderNav_ = () => {
     const user = useSelector(state => state.user);
@@ -40,36 +40,49 @@ const HeaderNav_ = () => {
     const categories = useCategories();
 
     return <NavBar primary>
-        <NavBrand><NavLink to={"/"}><b>{window.env.siteName}</b></NavLink></NavBrand>
+        <NavBrand><Link to={"/"}><b>{window.env.siteName}</b></Link></NavBrand>
         <NavCollapse>
-            <NavLink to={"/users"}>Users</NavLink>
-            {hasTeams && <NavLink to={"/teams"}>Teams</NavLink>}
-            <NavLink to={"/leaderboard"}>Leaderboard</NavLink>
+            <NavItem><Link to={"/users"}>Users</Link></NavItem>
+            {hasTeams && <NavItem><Link to={"/teams"}>Teams</Link></NavItem>}
+            <NavItem><Link to={"/leaderboard"}>Leaderboard</Link></NavItem>
             {categories.length === 1 ? (
-                <NavLink to={categories[0].url}>Challenges</NavLink>
+                <NavItem><Link to={categories[0].url}>Challenges</Link></NavItem>
             ) : (
-                <NavLink to={"/campaign"}>Challenges</NavLink>
-            )}
-            {user && user.is_staff && <NavLink to={"/campaign/new"}>Add Category</NavLink>}
+                    <NavItem><Link to={"/campaign"}>Challenges</Link></NavItem>
+                )}
+            {user && user.is_staff && <NavItem>
+                <Link to={"/campaign/new"}>Add Category</Link>
+            </NavItem>}
             <NavGap />
             {user ? <>
-                <NavLink to={"/profile/me"}>Profile</NavLink>
-                {hasTeams && <NavLink to={"/team/me"}>Team</NavLink>}
-                <NavLink to={"/settings"}>Settings</NavLink>
-                <NavLink to={"/logout"}>Logout</NavLink>
+                <NavItem><Link to={"/profile/me"}>Profile</Link></NavItem>
+                {hasTeams && <NavItem><Link to={"/team/me"}>Team</Link></NavItem>}
+                <NavItem><Link to={"/settings"}>Settings</Link></NavItem>
+                <NavItem><Link to={"/logout"}>Logout</Link></NavItem>
             </> : <>
-                    <NavLink to={"/login"}>Login</NavLink>
-                    <NavLink to={"/register"}>Register</NavLink>
+                    <NavItem><Link to={"/login"}>Login</Link></NavItem>
+                    <NavItem><Link to={"/register"}>Register</Link></NavItem>
                 </>}
             {user && user.is_staff && <NavMenu name={"Admin"}>
                 {iteratePlugins("adminPage").map(({ key, plugin }) => (
-                    <NavMenuLink key={key} to={"/admin/" + key}>{plugin.sidebar}</NavMenuLink>
+                    <Link key={key} to={"/admin/" + key}>{plugin.sidebar}</Link>
                 ))}
             </NavMenu>}
         </NavCollapse>
     </NavBar>;
 };
 const HeaderNav = React.memo(HeaderNav_);
+
+const SideNavLink = ({ to, Icon, active, name }) => {
+    const { location: { pathname } } = useReactRouter();
+    return (
+        <Link to={to}>
+            <SideNav.Item active={active || pathname === to} Icon={Icon}>
+                {name}
+            </SideNav.Item>
+        </Link>
+    );
+};
 
 const SideBarNav_ = ({ children }) => {
     const { t } = useTranslation();
@@ -80,71 +93,13 @@ const SideBarNav_ = ({ children }) => {
     const user = useSelector(state => state.user);
     const categories = useCategories();
 
-    const menu = [];
-    menu.push({
-        name: t("sidebar.brand"),
-        submenu: [
-            [t("sidebar.home"), "/home"],
-            [t("user_plural"), "/users"],
-            hasTeams ? [t("team_plural"), "/teams"] : null,
-            [t("leaderboard"), "/leaderboard"]
-        ],
-        startOpen: true
-    });
-
-    if (user) {
-        if (user.is_staff || categories.length) {
-            const submenu = categories.map(i => [i.name, i.url]);
-            if (user.is_staff) {
-                submenu.push([<>+ {t("challenge.new_cat")}</>, "/campaign/new"]);
-            }
-            if (user.is_staff || submenu.length !== 1) {
-                menu.push({
-                    name: t("challenge_plural"),
-                    submenu: submenu,
-                    startOpen: true
-                });
-            } else {
-                menu.push({
-                    name: t("challenge_plural"),
-                    link: categories[0].url,
-                });
-            }
-        }
-
-        menu.push({
-            name: user.username,
-            submenu: [
-                [t("sidebar.profile"), "/profile/me"],
-                hasTeams ? [t("team"), "/team/me"] : null,
-                [t("setting_plural"), "/settings"],
-                [t("sidebar.logout"), "/logout"],
-            ]
-        });
-    } else if (login || registration) {
-        const submenu = [];
-        if (login)
-            submenu.push([t("login"), "/login"]);
-        if (registration)
-            submenu.push([t("register"), "/register"]);
-        menu.push({
-            name: t("login"),
-            submenu: submenu,
-            startOpen: true
-        });
-    }
-    if (user && user.is_staff) {
-        menu.push({
-            name: t("sidebar.admin"),
-            submenu: iteratePlugins("adminPage").map(({ key, plugin }) => [plugin.sidebar, "/admin/" + key])
-        });
-    }
+    const [showDev] = useExperiment("showDev");
 
     const header = <Wordmark />;
     const footer = <>
         <footer>
             <img alt={""} src={footerLogo} />
-            &copy; Really Awesome Technology Ltd 2020
+            <p>&copy; Really Awesome Technology Ltd 2021</p>
         </footer>
         <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
         {window.env.footerText && <p>{window.env.footerText}</p>}
@@ -154,45 +109,120 @@ const SideBarNav_ = ({ children }) => {
             {t("footer.privacy")}
         </Link> - <Link to="/conduct">
             {t("footer.terms")}
-        </Link><br /><Link to="/ui">
-            UI Framework
-        </Link> - <Link to="/debug">
-            Debug
-        </Link>
+        </Link>{showDev && <>
+            <br /><Link to="/debug">
+                Debug Versions
+            </Link> - <Link to="/debug/ui">
+                UI Framework
+            </Link>
+            <br /><Link to="/debug/state">
+                State Export
+            </Link> - <Link to="/debug/experiments">
+                Experiments
+            </Link>
+        </>}
+    </>;
+
+    const { location: { pathname } } = useReactRouter();
+
+    const items = <>
+        <SideNavLink to={"/"} Icon={FiHome} name={t("sidebar.home")} />
+        <SideNavLink to={"/users"} Icon={FiUser} name={t("user_plural")} />
+        {hasTeams && (
+            <SideNavLink to={"/teams"} Icon={FiUsers} name={t("team_plural")} />
+        )}
+        <SideNavLink to={"/leaderboard"} Icon={FiBarChart2} name={t("leaderboard")} />
+
+        {user ? <>
+            {(user.is_staff || categories.length > 1) && (
+                <SideNav.UncontrolledSubMenu name={t("challenge_plural")} startOpen>
+                    {categories.map(i => (
+                        <SideNavLink key={i.id} to={i.url} name={i.name} />
+                    ))}
+                    {user.is_staff && (
+                        <SideNavLink to={"/campaign/new"} name={t("challenge.new_cat")} Icon={FiPlus} />
+                    )}
+                </SideNav.UncontrolledSubMenu>
+            )}
+            {(!user.is_staff && categories.length === 1) && (
+                <Link to={categories[0].url}><SideNav.Item>{t("challenge_plural")}</SideNav.Item></Link>
+            )}
+            <SideNav.UncontrolledSubMenu name={user.username}>
+                <SideNavLink to={"/profile/me"} Icon={FiUser} name={t("sidebar.profile")} />
+                {hasTeams && (
+                    <SideNavLink to={"/team/me"} Icon={FiUsers} name={t("team")} />
+                )}
+                <SideNavLink to={"/settings"} Icon={FiSettings} name={t("setting_plural")} />
+                <SideNavLink to={"/logout"} Icon={FiLogOut} name={t("sidebar.logout")} />
+            </SideNav.UncontrolledSubMenu>
+            {user.is_staff && (
+                <SideNav.UncontrolledSubMenu name={t("sidebar.admin")}>
+                    {iteratePlugins("adminPage").map(({ key, plugin }) => (
+                        <SideNavLink
+                            to={`/admin/${key}`} key={key}
+                            Icon={plugin.Icon} name={plugin.sidebar}
+                        />
+                    ))}
+                </SideNav.UncontrolledSubMenu>
+            )}
+        </> : <>
+                {(login || registration) && (
+                    <SideNav.UncontrolledSubMenu name={t("account")} startOpen>
+                        {login && <Link to={"/login"}>
+                            <SideNav.Item active={pathname === "/login"} Icon={FiLogIn}>
+                                {t("login")}
+                            </SideNav.Item>
+                        </Link>}
+                        {registration && <Link to={"/register"}>
+                            <SideNav.Item active={pathname === "/register"}>
+                                {t("register")}
+                            </SideNav.Item>
+                        </Link>}
+                    </SideNav.UncontrolledSubMenu>
+                )}
+            </>}
     </>;
 
     return <>
-        <Header />
-        <SideNav ractfSidebar header={header} footer={footer} items={menu}>
+        <SideNav sidebarType header={header} footer={footer} items={items}>
             {children}
         </SideNav>
     </>;
 };
 const SideBarNav = React.memo(SideBarNav_);
 
-const SiteNav = ({ children }) => {    
+const SiteNav = ({ children }) => {
+    const [showDev] = useExperiment("showDev");
     if (USE_HEAD_NAV)
         return <SiteWrap>
-            <HeaderNav />
-            <Container children={children} />
-            <Footer>
-                <FootRow main>
-                    <FootCol title={window.env.siteName}>
-                        <FootLink to={"/home"}>Home</FootLink>
-                        <FootLink to={"/privacy"}>Privacy Policy</FootLink>
-                        <FootLink to={"/conduct"}>Terms of Use</FootLink>
-                    </FootCol>
-                    <FootCol title={"For Developers"}>
-                        <FootLink to={"/ui"}>UI Framework</FootLink>
-                        <FootLink to={"/debug"}>Debug</FootLink>
-                    </FootCol>
-                </FootRow>
-                <FootRow center slim darken column>
-                    <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
-                    <p>&copy; Really Awesome Technology Ltd 2020</p>
-                    {window.env.footerText && <p>{window.env.footerText}</p>}
-                </FootRow>
-            </Footer>
+            <Scrollbar style={{ height: "100vh" }} primary>
+                <SiteWrap>
+                    <HeaderNav />
+                    <Container full children={children} />
+                    <Footer>
+                        <FootRow main>
+                            <FootCol title={window.env.siteName}>
+                                <Link to={"/"}>Home</Link>
+                                <Link to={"/privacy"}>Privacy Policy</Link>
+                                <Link to={"/conduct"}>Terms of Use</Link>
+                            </FootCol>
+                            {showDev && (
+                                <FootCol title={"For Developers"}>
+                                    <Link to={"/debug"}>Debug Versions</Link>
+                                    <Link to={"/debug/ui"}>UI Framework</Link>
+                                    <Link to={"/debug/state"}>State Export</Link>
+                                    <Link to={"/debug/experiments"}>Experiments</Link>
+                                </FootCol>
+                            )}
+                        </FootRow>
+                        <FootRow center slim darken column>
+                            <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
+                            <p>&copy; Really Awesome Technology Ltd 2021</p>
+                            {window.env.footerText && <p>{window.env.footerText}</p>}
+                        </FootRow>
+                    </Footer>
+                </SiteWrap>
+            </Scrollbar>
         </SiteWrap>;
     return <SideBarNav children={children} />;
 };

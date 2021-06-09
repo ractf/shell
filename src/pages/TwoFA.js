@@ -18,17 +18,18 @@
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import QRCode from "qrcode.react";
 
-import {
-    Page, Row, Button, Spinner, TextBlock, FormError, H2
-} from "@ractf/ui-kit";
-import { appContext } from "ractf";
 import { add_2fa, verify_2fa, reloadAll } from "@ractf/api";
+import {
+    Form, Page, Button, Spinner, TextBlock, UiKitModals, InputPin, Container
+} from "@ractf/ui-kit";
+
+import Link from "components/Link";
+import QRCode from "qrcode.react";
 
 
 export default () => {
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     const user = useSelector(state => state.user);
     const [page, setPage] = useState(0);
     const [secret, setSecret] = useState("");
@@ -45,29 +46,30 @@ export default () => {
         }).catch(() => {
             setPage(-1);
         });
-
-        setTimeout(() => {
-            setPage(2);
-        }, 500);
     };
 
     const faPrompt = () => {
-        app.promptConfirm({ message: t("2fa.required"), small: true },
-            [{ name: "pin", placeholder: t("2fa.code_prompt"), format: /^\d{6}$/, limit: 6 }]).then(({ pin }) => {
-                if (pin.length !== 6) return faPrompt();
+        modals.promptConfirm({ message: t("2fa.required"), small: true },
+            [{
+                Component: function Modal2FA({ ...props }) {
+                    return <Container centre><InputPin digits={6} {...props} /></Container>;
+                }, name: "pin"
+            }]
+        ).then(({ pin }) => {
+            if (pin.length !== 6) return faPrompt();
 
-                verify_2fa(pin).then(async resp => {
-                    if (resp.valid) {
-                        await reloadAll();
-                        setPage(3);
-                    } else {setMessage(t("2fa.validation_fail"));}
-                }).catch(e => {
-                    console.error(e);
-                    setMessage(t("2fa.validation_fail"));
-                });
-            }).catch(() => {
-                setMessage(t("2fa.unable_to_active"));
+            verify_2fa(pin).then(async resp => {
+                if (resp.valid) {
+                    await reloadAll();
+                    setPage(3);
+                } else { setMessage(t("2fa.validation_fail")); }
+            }).catch(e => {
+                console.error(e);
+                setMessage(t("2fa.validation_fail"));
             });
+        }).catch(() => {
+            setMessage(t("2fa.unable_to_active"));
+        });
     };
 
     const buildURI = sec => {
@@ -81,63 +83,58 @@ export default () => {
         );
     };
 
-    return <Page title={t("2fa.2fa")} vCentre>
+    return <Page title={t("2fa.2fa")} centre>
         {page === 0 ? <>
-            <Row>
-                {user.totp_status === 2 ? t("2fa.replace_prompt") : t("2fa.add_prompt")}
-            </Row>
-            <Row>
-                <b>{t("2fa.no_remove_warning")}</b>
-            </Row>
-
-            <Row>
-                <Button to={"/settings"} lesser>{t("2fa.nevermind")}</Button>
+            <p>
+                {user.has_2fa ? t("2fa.replace_prompt") : t("2fa.add_prompt")}<br />
+                {t("2fa.device_warning")}
+            </p>
+            <Container centre toolbar>
+                <Link to={"/settings"}>
+                    <Button lesser>{t("2fa.nevermind")}</Button>
+                </Link>
                 <Button onClick={startFlow}>{t("2fa.enable_2fa")}</Button>
-            </Row>
+            </Container>
         </> : page === 1 ? <>
-            {t("2fa.enabling")}
-            <Spinner />
+            <p>
+                {t("2fa.enabling")}
+            </p>
+            <Container centre>
+                <Spinner />
+            </Container>
         </> : page === 2 ? <>
-            <Row>
-                <H2>{t("2fa.finalise")}</H2>
-            </Row>
-            <Row>
-                {t("2fa.please_scan_qr")}
-            </Row>
-            <Row>
-                <QRCode renderAs={"svg"} size={128} fgColor={"#161422"} value={buildURI(secret)} includeMargin />
-            </Row>
-            <Row>
-                {t("2fa.unable_to_qr")}
-            </Row>
-            <Row>
-                <TextBlock>
-                    {formatSecret(secret)}
-                </TextBlock>
-            </Row>
+            <h2>{t("2fa.finalise")}</h2>
+            <p>{t("2fa.please_scan_qr")}</p>
+            <QRCode renderAs={"svg"} size={200} fgColor={"#161422"}
+                value={buildURI(secret)} includeMargin />
+            <p>{t("2fa.unable_to_qr")}</p>
+            <TextBlock>
+                {formatSecret(secret)}
+            </TextBlock>
+            {message && <Form.Error>{message}</Form.Error>}
 
-            {message && <Row><FormError>{message}</FormError></Row>}
-
-            <Row>
+            <Container toolbar centre>
+                <Link to={"/settings"}>
+                    <Button lesser>{t("cancel")}</Button>
+                </Link>
                 <Button onClick={faPrompt}>{t("2fa.got_it")}</Button>
-            </Row>
+            </Container>
         </> : page === 3 ? <>
-            <Row>
-                <H2>{t("2fa.congratulations")}</H2>
-            </Row>
-            <Row>
-                {t("2fa.setup")}
-            </Row>
-            <Row>
-                <Button to={"/"}>Yay!</Button>
-            </Row>
-        </> : <>
-            <Row>
-                {t("2fa.error")}
-            </Row>
-            <Row>
+            <h2>{t("2fa.congratulations")}</h2>
+            <p>{t("2fa.setup")}</p>
+            <Container toolbar centre>
+                <Link to={"/"}>
+                    <Button>Yay!</Button>
+                </Link>
+            </Container>
+        </> : page === -1 ? <>
+            <p>{t("2fa.error")}</p>
+            <Container toolbar centre>
+                <Link to={"/settings"}>
+                    <Button lesser>{t("2fa.back_to_settings")}</Button>
+                </Link>
                 <Button onClick={() => setPage(0)}>{t("2fa.restart")}</Button>
-            </Row>
-        </>}
+            </Container>
+        </> : null}
     </Page>;
 };

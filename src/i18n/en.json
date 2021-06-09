@@ -1,15 +1,17 @@
 {
     "error": "Error: ",
+    "load_more": "Load More",
     "2fa": {
         "2fa": "2-Factor Authentication",
         "replace_prompt": "You are about to replace the existing 2-factor authentication keys for your account!",
         "add_prompt": "You are about to enable 2-factor authentication for you account.",
-        "no_remove_warning": "Note that once added, 2-factor cannot be removed from your account!",
-        "please_scan_qr": "Please scan the QR code below to add RACTF to your 2-factor app.",
+        "device_warning": "You will need to have your 2FA device to hand when logging in.",
+        "back_to_settings": "Back to settings",
+        "please_scan_qr": "Please scan the QR code below to add RACTF to your 2-factor app:",
         "unable_to_qr": "If you are unable to scan the code, use the key shown below:",
         "enable_2fa": "Enable 2FA",
         "setup": "Two-factor authentication has been setup!",
-        "enabling": "Enabling 2-Factor...",
+        "enabling": "Enabling two-factor authentication...",
         "finalise": "Finalise Setup",
         "nevermind": "Never-mind",
         "got_it": "I've got it",
@@ -20,7 +22,11 @@
         "canceled": "2-Factor Authentication Required!",
         "validation_fail": "Code validation failed.",
         "unable_to_active": "Unable to activate two-factor authentication.",
-        "error": "Something went wrong when setting up two-factor authentication."
+        "error": "Something went wrong when setting up two-factor authentication.",
+        "remove_warning": "Are you sure you want to remove 2-factor authentication from your account?",
+        "removed": "2-factor authentication has been removed from your account.",
+        "remove_failed": "Failed to remove 2-factor authentication:",
+        "no_remove": "2-factor authentication has not been removed from your account."
     },
     "teams": {
         "teams": "Teams",
@@ -76,7 +82,11 @@
             "disabled": "2-factor authentication is disabled for your account.",
             "enabled": "2-factor authentication is enabled for your account.",
             "disable": "Disable 2-factor authentication"
-        }
+        },
+        "leave_team": "Leave team",
+        "team_leave_confirm": "Are you sure you want to leave your current team?",
+        "left_team": "Left team successfully",
+        "no_leave_team": "Could not leave team"
     },
     "lists": {
         "all_teams": "All Teams",
@@ -137,7 +147,6 @@
         "files": "Files",
         "hints": "Hints",
         "metadata": "Metadata",
-        "auto_unlock": "Always unlock",
         "remove": "Remove Challenge",
         "save": "Save Challenge",
         "create": "Create Challenge",
@@ -250,12 +259,15 @@
     },
     "campaign": {
         "no_team": "You are not in a team. You will be unable to submit flags until you join a team.",
+        "create_success": "Created category successfully.",
         "edit_success": "Edited category successfully."
     },
     "setting_plural": "Settings",
     "leaderboard": "Leaderboard",
     "point": "Point",
     "point_plural": "Points",
+    "solve": "Solve",
+    "solve_plural": "Solves",
     "rank": "Ranking",
     "edit": "Edit",
     "edit_stop": "Stop Editing",
@@ -286,6 +298,7 @@
     "team_secret": "Team Secret",
     "team_secret_warn": "In order to display the secret for you above, we store it un-hashed. Don't put sensitive things like your bank details here.",
     "bio": "Bio",
+    "account": "Account",
     "login": "Login",
     "register": "Register",
     "okay": "Okay",
@@ -334,10 +347,41 @@
         "invalid_invite": "Invalid invite code.",
         "hint_already_used": "Hint has already been used.",
         "bad_request": "Invalid API request.",
+        "already_solved_challenge": "You have already solved this challenge.",
         "challenge_not_unlocked": "This challenge has not been unlocked yet.",
         "join_disabled": "Joining teams has been disabled.",
         "blank": "A required field was not provided.",
         "max_length": "One your submissions was too long.",
-        "challenge_not_solved": "Challenge not yet solved."
+        "challenge_not_solved": "Challenge not yet solved.",
+        "required": "A required field was missing.",
+        "invalid_team_or_password": "Incorrect team name or password.",
+        "unique": "Something already exists with that name.",
+        "leave_disabled": "This event does not allow leaving teams.",
+        "challenge_solved": "You cannot leave a team after solving a challenge for them.",
+        "cannot_leave_team_ownerless": "You are the owner of this team and it has other members.",
+        "invalid_team": "No team with this name was found.",
+        "invalid_team_password": "Password incorrect.",
+        "login_failed": "2-factor authentication failed.",
+        "code_incorrect": "2-factor code incorrect"
+    },
+    "colours": {
+        "backCol": "Background colour",
+        "accentCol": "Accent colour",
+        "textCol": "Text colour",
+        "green": "Green",
+        "teal": "Teal",
+        "cyan": "Cyan",
+        "blue": "Blue",
+        "indigo": "Indigo",
+        "purple": "Purple",
+        "pink": "Pink",
+        "red": "Red",
+        "orange": "Orange",
+        "yellow": "Yellow",
+        "black": "Black",
+        "darkGrey": "Dark Grey",
+        "grey": "Grey",
+        "lightGrey": "Light Grey",
+        "white": "White"
     }
 }

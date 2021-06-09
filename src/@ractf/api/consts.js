@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,11 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-//export const DOMAIN = "https://staging-ephemeral.ractf.co.uk";
-//export const DOMAIN = "https://api-elite.ractf.co.uk";
-export const DOMAIN = window.env.apiDomain;
-export const API_BASE = window.env.apiBase;
-export const BASE_URL = DOMAIN + API_BASE;
 export const ENDPOINTS = {
     COUNTDOWN: "/stats/countdown/",
     CONFIG: "/config/",
@@ -27,8 +22,10 @@ export const ENDPOINTS = {
 
     REGISTER: "/auth/register/",
     LOGIN: "/auth/login/",
+    LOGIN_2FA: "/auth/login_2fa/",
     ADD_2FA: "/auth/add_2fa/",
     VERIFY_2FA: "/auth/verify_2fa/",
+    REMOVE_2FA: "/auth/remove_2fa/",
     VERIFY: "/auth/verify_email/",
     REQUEST_RESET: "/auth/request_password_reset/",
     COMPLETE_RESET: "/auth/password_reset/",
@@ -47,6 +44,7 @@ export const ENDPOINTS = {
 
     TEAM_CREATE: "/team/create/",
     TEAM_JOIN: "/team/join/",
+    TEAM_LEAVE: "/team/leave/",
 
     LEADERBOARD_GRAPH: "/leaderboard/graph/",
     LEADERBOARD_USER: "/leaderboard/user/",

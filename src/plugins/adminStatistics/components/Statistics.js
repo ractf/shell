@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -18,13 +18,13 @@
 import React from "react";
 
 import {
-    PageHead, Row, Column, Card, Large, HR, Bar, Pie, Spinner
+    PageHead, Container, Column, Card, Large, HR, Bar, Pie, ModalSpinner
 } from "@ractf/ui-kit";
-import colours from "@ractf/ui-kit/Colours.scss";
+import { useApi } from "@ractf/util/http";
+import { cssVar } from "@ractf/util";
+import { useConfig, useCategories } from "@ractf/shell-util";
 
 import style from "./Statistics.module.scss";
-import { useApi } from "controllers/UseAPI";
-import { useCategories } from "@ractf/util/hooks";
 
 
 const minMaxFunction = (data, mapper) => {
@@ -43,15 +43,15 @@ const minMaxFunction = (data, mapper) => {
     return [minMatch[1], maxMatch[1]];
 };
 
-
 const Statistics = () => {
     const [stats] = useApi("/stats/full");
     const categories = useCategories();
     const challenges = categories.flatMap(i => i.challenges);
+    const hasTeams = useConfig("enable_teams");
 
     if (!stats) return <>
         <PageHead title={"Statistics"} />
-        <Spinner />
+        <ModalSpinner />
     </>;
 
     const add = (x, y) => x + y;
@@ -72,27 +72,31 @@ const Statistics = () => {
 
     return <>
         <PageHead title={"Statistics"} />
-        <Row>
+        <Container.Row>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Quick breakdown"}>
-                    <Large><b>{stats.users.all}</b> registered users (
-                        <b>{stats.users.all - stats.users.confirmed}</b> pending confirmation
-                    )</Large>
-                    <Large><b>{stats.teams}</b> registered teams</Large>
-                    <Large><b>{stats.ips}</b> unique IPs</Large>
+                <Card lesser header={"Quick breakdown"}>
+                    <Large>
+                        <b>{stats.users.all.toString()}</b> registered users (
+                            <b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation
+                        )
+                        {hasTeams && <><br /><b>{stats.teams.toString()}</b> registered teams</>}
+                        <br /><b>{stats.ips.toString()}</b> unique IPs
+                    </Large>
                     <HR />
-                    <Large><b>{maxPoints}</b> total possible points</Large>
-                    <Large><b>{stats.total_points}</b> total points scored</Large>
-                    {maxChallenge && (
-                        <Large><b>{maxChallenge.name}</b> has the most solves, at {maxChallenge.solve_count}</Large>
-                    )}
-                    {minChallenge && (
-                        <Large><b>{minChallenge.name}</b> has the fewest solves, at {minChallenge.solve_count}</Large>
-                    )}
+                    <Large>
+                        <b>{maxPoints.toString()}</b> total possible points
+                        <br /><b>{(stats.total_points || 0).toString()}</b> total points scored
+                        {maxChallenge && (
+                            <><br /><b>{maxChallenge.name}</b> has the most solves, at {maxChallenge.solve_count}</>
+                        )}
+                        {minChallenge && (
+                            <><br /><b>{minChallenge.name}</b> has the fewest solves, at {minChallenge.solve_count}</>
+                        )}
+                    </Large>
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Solve count per challenge"}>
+                <Card lesser header={"Solve count per challenge"}>
                     <Bar className={style.smallChart} yLabel={"Solves"} data={Object.fromEntries(
                         challenges.map(
                             challenge => [challenge.name, challenge.solve_count]
@@ -101,12 +105,12 @@ const Statistics = () => {
                 </Card>
             </Column>
             <Column lgWidth={12}>
-                <Card header={"Score distribution"}>
+                <Card lesser header={"Score distribution"}>
                     <Bar className={style.chart} yLabel={"Solves"} data={stats.team_point_distribution} />
                 </Card>
             </Column>
             <Column lgWidth={12}>
-                <Card header={"Solve percentage per challenge"}>
+                <Card lesser header={"Solve percentage per challenge"}>
                     <Bar className={style.chart} yLabel={"Percentage of teams"} yMax={100}
                         data={Object.fromEntries(
                             challenges.map(
@@ -116,35 +120,35 @@ const Statistics = () => {
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Solve accuracy"}>
+                <Card lesser header={"Solve accuracy"}>
                     <Pie className={style.chart}
                         data={[
                             totalCorrect / (totalCorrect + totalIncorrect) * 100,
                             totalIncorrect / (totalCorrect + totalIncorrect) * 100
                         ]}
                         labels={["Correct", "Incorrect"]}
-                        colors={[colours.green, colours.red]} percent />
+                        colors={[cssVar("--col-green"), cssVar("--col-red")]} percent />
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Accuracy per category"}>
+                <Card lesser header={"Accuracy per category"}>
                     <Pie className={style.chart} data={Object.values(accuracyPerCategory)}
                         labels={Object.keys(accuracyPerCategory)} percent />
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Challenges per category"}>
+                <Card lesser header={"Challenges per category"}>
                     <Pie className={style.chart} data={Object.values(challengesPerCategory)}
                         labels={Object.keys(challengesPerCategory)} />
                 </Card>
             </Column>
             <Column lgWidth={6} mdWidth={12}>
-                <Card header={"Solves per category"}>
+                <Card lesser header={"Solves per category"}>
                     <Pie className={style.chart} data={Object.values(solvesPerCategory)}
                         labels={Object.keys(solvesPerCategory)} />
                 </Card>
             </Column>
-        </Row>
+        </Container.Row>
     </>;
 };
 export default Statistics;

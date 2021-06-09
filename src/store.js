@@ -19,8 +19,10 @@ import { createStore, compose, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
-import createReducer from "./reducers";
 import storage from "redux-persist/lib/storage";
+
+import createReducer from "./reducers";
+
 
 export const history = createBrowserHistory();
 
@@ -42,6 +44,7 @@ const store = createStore(
         ? compose(appliedMiddleware, window.__REDUX_DEVTOOLS_EXTENSION__())
         : appliedMiddleware,
 );
+window.__ractf_store = store;
 store.asyncReducers = { named: {}, anon: [] };
 const injectReducer = (store, name, asyncReducer) => {
     if (name)

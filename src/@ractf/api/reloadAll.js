@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,38 +15,63 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as actions from "actions";
 import { logout } from "@ractf/api";
+import * as http from "@ractf/util/http";
+
+import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
+
+export const reloadSelf = async (shouldUpdate = true) => {
+    let userData = null;
+
+    try {
+        userData = await http.get(ENDPOINTS.USER + "self");
+    } catch (e) {
+        if (e.response && e.response.data) {
+            logout(true, http.getError(e));
+            return undefined;
+        }
+    }
+    if (!shouldUpdate)
+        return userData;
+    store.dispatch(actions.setUser(userData));
+};
+
+export const reloadTeam = async (shouldUpdate = true) => {
+    let teamData = null;
+
+    try {
+        teamData = await http.get(ENDPOINTS.TEAM + "self");
+    } catch (e) {
+        if (e.request && e.request.status === 404) {
+            teamData = null;
+        } else {
+            if (e.response && e.response.data) {
+                logout(true, http.getError(e));
+                return undefined;
+            }
+        }
+    }
+    if (!shouldUpdate)
+        return teamData;
+    store.dispatch(actions.setTeam(teamData));
+};
 
 export const reloadAll = async (minimal, noChallenges) => {
     const hasTeams = (store.getState().config || {}).enable_teams;
     const token = store.getState().token?.token;
 
-    let userData = null, teamData = null, challenges = true;
+    let userData = undefined, teamData = undefined, challenges = undefined;
     if (token && !minimal) {
-        try {
-            userData = await http.get(ENDPOINTS.USER + "self");
-        } catch (e) {
-            if (e.response && e.response.data)
-                return logout(true, http.getError(e));
-        }
+        if (typeof (userData = await reloadSelf(false)) === "undefined")
+            return;
 
         if (hasTeams && userData && userData.team !== null) {
-            try {
-                teamData = await http.get(ENDPOINTS.TEAM + "self");
-            } catch (e) {
-                if (e.request && e.request.status === 404) {
-                    teamData = null;
-                } else {
-                    if (e.response && e.response.data)
-                        return logout(true, http.getError(e));
-                }
-            }
+            if (typeof (teamData = await reloadTeam(false)) === "undefined")
+                return;
         } else teamData = null;
     }
 
@@ -54,7 +79,7 @@ export const reloadAll = async (minimal, noChallenges) => {
         try {
             challenges = await http.get(ENDPOINTS.CATEGORIES);
         } catch (e) {
-            challenges = [];
+            challenges = undefined;
         }
     }
 

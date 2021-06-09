@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,9 +15,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
+import * as http from "@ractf/util/http";
+
 import * as actions from "actions";
 import { store } from "store";
-import http from "@ractf/http";
 
 import { ENDPOINTS } from "./consts";
 
@@ -29,15 +30,15 @@ export const newHint = (challenge, name, penalty, text) => (
     })
 );
 
-export const editHint = (id, name, cost, text) => (
-    http.patch(ENDPOINTS.HINT + id, { name, cost, text }).then(() => {
-        store.dispatch(actions.editHint(id, { name, cost, text }));
-        return { name, cost, text };
+export const editHint = (id, name, penalty, text) => (
+    http.patch(ENDPOINTS.HINT + id, { name, penalty, text }).then(() => {
+        store.dispatch(actions.editHint(id, { name, penalty, text }));
+        return { name, penalty, text };
     })
 );
 
 export const removeHint = (id) => (
-    http.delete(ENDPOINTS.HINT + id).then(data => {
+    http.delete_(ENDPOINTS.HINT + id).then(data => {
         store.dispatch(actions.removeHint(id));
         return data;
     })

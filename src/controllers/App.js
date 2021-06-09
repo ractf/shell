@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,44 +15,43 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { ConnectedRouter } from "connected-react-router";
+import React, { useState, useEffect, useRef, useMemo, useCallback, useContext } from "react";
 import { useSelector } from "react-redux";
+import { Switch, Route } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+import RACTF_THEME from "@ractf/ui-kit/themes/ractf.json";
+import * as http from "@ractf/util/http";
+import { iteratePlugins, PluginComponent, mountPoint } from "@ractf/plugins";
+import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
+import {
+    ToggleTabHolder, ThemeLoader, UiKitContext, ModalMount, UiKitModals
+} from "@ractf/ui-kit";
+import { usePreference } from "@ractf/shell-util";
 
 import SiteNav from "components/SiteNav";
-
-import {
-    ProgressBar, Scrollbar, Modal, ModalPrompt, ToggleTabHolder
-} from "@ractf/ui-kit";
-
-import { AppContext } from "./Contexts";
 import * as actions from "actions";
-import { history } from "store";
-import Routes from "./Routes";
-import WS from "./WS";
-
-import { reloadAll, getCountdown, ENDPOINTS, getConfig } from "@ractf/api";
-import { iteratePlugins, PluginComponent } from "@ractf/plugins";
-import http from "@ractf/http";
-
+import { history, store } from "store";
 import lockImg from "static/spine.png";
+import { ConnectedRouter } from "connected-react-router";
+
+import WS from "./WS";
+import Routes from "./Routes";
+
 import "./App.scss";
-import { store } from "store";
 
 
 const LOADING_TIMEOUT = 5000;
 
-
-let SpinningSpine = ({ text }) => <div className={"spinningSpine"}>
-    <img alt={""} src={lockImg} />
+const SpinningSpine_ = ({ text }) => <div className={"spinningSpine"}>
     <span>{text}</span>
+    <img alt={""} src={lockImg} />
 </div>;
-SpinningSpine = React.memo(SpinningSpine);
-
+const SpinningSpine = React.memo(SpinningSpine_);
 
 const VimDiv = () => {
     const [scrollback, setScrollback] = useState(`[www-data@ractfhost1 shell]$ npm run build
-[www-data@ractfhost1 shell]$ python3.7 -m http.server --directory build 80
+[www-data@ractfhost1 shell]$ python3.9 -m http.server --directory build 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 
 Keyboard interrupt received, exiting.
@@ -105,14 +104,14 @@ Keyboard interrupt received, exiting.
     </div>;
 };
 
-let WSSpine = () => {
+const WSSpine_ = () => {
     const ws = useSelector(state => state.websocket) || {};
     if (ws.connected) return null;
 
     return <SpinningSpine
         text={"Lost connection. Reconnecting" + (ws.timer > 0 ? " in " + ws.timer + "s..." : "...")} />;
 };
-WSSpine = React.memo(WSSpine);
+const WSSpine = React.memo(WSSpine_);
 
 class FirstLoader extends React.Component {
     componentDidMount() {
@@ -155,12 +154,13 @@ const SiteLoading = () => {
 const App = React.memo(() => {
     useMemo(() => { new WS(); }, []);
 
+    const modals = useContext(UiKitModals);
+    window.__ractf_alert = modals.alert;
+
     const countdowns = useSelector(state => state.countdowns);
     const config = useSelector(state => state.config);
 
     const [consoleMode, setConsole] = useState(false);
-    const [currentPrompt, setCurrentPrompt] = useState(null);
-    const [progressBar, setProgressBar] = useState(null);
     const [popups, setPopups] = useState([
         /*{ type: 0, title: 'Achievement get', body: 'You got a thing!' },
         { type: 'medal', medal: 'winner' },
@@ -168,39 +168,6 @@ const App = React.memo(() => {
     ]);
     const typedText = useRef();
     if (!typedText.current) typedText.current = [];
-
-    const hideModal = () => {
-        setCurrentPrompt(null);
-    };
-
-    const promptConfirm = (body, inputs = 0) => {
-        if (inputs === 0) inputs = [];
-
-        return new Promise((resolveOuter, rejectOuter) => {
-            const innerPromise = new Promise((resolve, reject) => {
-                setCurrentPrompt({ body: body, promise: { resolve: resolve, reject: reject }, inputs: inputs });
-            });
-
-            innerPromise.then(values => {
-                hideModal();
-                resolveOuter(values);
-            }).catch(values => {
-                hideModal();
-                rejectOuter(values);
-            });
-        });
-    };
-
-    const showAlert = (message) => {
-        setProgressBar(null);
-        return promptConfirm({ message: message, noCancel: true, small: true });
-    };
-
-    const showProgress = (text, progress) => {
-        if (text && !currentPrompt)
-            setProgressBar({ text: text, progress: progress });
-        else setProgressBar(null);
-    };
 
     useEffect(() => {
         getCountdown();
@@ -240,54 +207,67 @@ const App = React.memo(() => {
         </div>;
     }).reverse();
 
-    window.__ractf_alert = showAlert;
-    return <Scrollbar primary><div className={"bodyScroll"}>
-        <AppContext.Provider value={{
-            promptConfirm: promptConfirm, alert: showAlert,
-            showProgress: showProgress
-        }}>
-            {/*!api.ready && loaded ? <div className={"siteWarning"}>
-                Site operating in offline mode:
-                    Failed to connect to the CTF servers!<br />
-                Functionality will be limited until service is restored.
-        </div> : null*/}
+    return (<>
+        {/*!api.ready && loaded ? <div className={"siteWarning"}>
+            Site operating in offline mode:
+                Failed to connect to the CTF servers!<br />
+            Functionality will be limited until service is restored.
+    </div> : null*/}
 
-            <SiteNav>
-                <Routes />
-            </SiteNav>
+        <Switch>
+            {iteratePlugins("topLevelPage").map(({ key: url, plugin: page }) =>
+                <Route exact={!page.noExact} path={url} key={url}>
+                    {React.createElement(page.component)}
+                </Route>
+            )}
+            <Route>
+                <SiteNav>
+                    <Routes />
+                </SiteNav>
+            </Route>
+        </Switch>
 
-            {currentPrompt ? <ModalPrompt
-                body={currentPrompt.body}
-                promise={currentPrompt.promise}
-                inputs={currentPrompt.inputs}
-                onHide={hideModal}
-            /> : null}
+        <div className={"eventsWrap"}>
+            {popupsEl}
+        </div>
 
-            <div className={"eventsWrap"}>
-                {popupsEl}
-            </div>
+        <WSSpine />
 
-            {progressBar && <Modal small>
-                {progressBar.text}
-                <ProgressBar progress={progressBar.progress} />
-            </Modal>}
+        <FirstLoader />
+        {mountPoint("app")}
 
-            <WSSpine />
-
-            <FirstLoader />
-            {iteratePlugins("mountWithinApp").map(({ key, plugin }) => (
+        <ToggleTabHolder>
+            {iteratePlugins("toggleTabs").map(({ key, plugin }) => (
                 React.createElement(plugin.component, { key })
             ))}
-            <ToggleTabHolder>
-                {iteratePlugins("toggleTabs").map(({ key, plugin }) => (
-                    React.createElement(plugin.component, { key })
-                ))}
-            </ToggleTabHolder>
-        </AppContext.Provider>
-    </div></Scrollbar>;
+        </ToggleTabHolder>
+    </>);
 });
 
-const AppWrap = () => <ConnectedRouter history={history}>
-    <App />
-</ConnectedRouter>;
+const AppThemeLoader = () => {
+    const { colours, types } = useSelector(state => state.theme);
+    return <>
+        <ThemeLoader theme={RACTF_THEME} colours={{ ...colours }} types={types} global />
+    </>;
+};
+
+const AppWrap = () => {
+    const { t } = useTranslation();
+    const [layoutDebug] = usePreference("experiment.layoutDebug");
+    useEffect(() => {
+        document.body.className = layoutDebug ? "debug" : "";
+    }, [layoutDebug]);
+
+    return <ConnectedRouter history={history}>
+        <UiKitContext.Provider value={{ t }}>
+            <ModalMount>
+                <AppThemeLoader />
+                <div className={"bodyScroll"}>
+                    {mountPoint("appSibling")}
+                    <App />
+                </div>
+            </ModalMount>
+        </UiKitContext.Provider>
+    </ConnectedRouter>;
+};
 export default AppWrap;

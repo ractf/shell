@@ -18,8 +18,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { hideNotification } from "../actions";
 import { Markdown } from "@ractf/ui-kit";
+
+import Link from "components/Link";
+
+import { hideNotification } from "../actions";
 
 
 const PopupMessage = ({ data }) => {
@@ -30,7 +33,7 @@ const PopupMessage = ({ data }) => {
 
     return <div onClick={onClick}>
         <div>{data.title}</div>
-        <div><Markdown>{data.body}</Markdown></div>
+        <div><Markdown LinkElem={Link} source={data.body} /></div>
     </div>;
 };
 

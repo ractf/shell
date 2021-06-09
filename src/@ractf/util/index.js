@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -17,24 +17,24 @@
 
 import { forwardRef, memo, createElement } from "react";
 
+import { makeClass } from "./classes";
+
+
 export { default as useReactRouter } from "./useReactRouter";
 export { default as useWindowSize } from "./useWindowSize";
 export { default as formatBytes } from "./formatBytes";
 export { default as useInterval } from "./useInterval";
-export { default as useConfig } from "./useConfig";
 export { default as getUUID } from "./getUUID";
+export * from "./colours";
+export * from "./objects";
+export * from "./classes";
 
-export const TYPES = ["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"];
-
-export const makeClass = (...classes) => (
-    classes.filter(x => !!x).join(" ")
-);
 
 export const getHeight = (...children) => {
     let height = 0;
     children.forEach(child => {
         const styles = window.getComputedStyle(child);
-        height += child.offsetHeight;
+        height += child.getBoundingClientRect().height;
         height += parseFloat(styles["marginTop"]);
         height += parseFloat(styles["marginBottom"]);
     });
@@ -51,22 +51,18 @@ export const basicComponent = (localClass, name, element) => {
     return memo(forwardRef(component));
 };
 
-export const propsToTypeClass = (props, styles, fallback) => {
-    const className = [];
+export const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    let willFallback = true;
-    for (const i of Object.keys(props)) {
-        if (props[i] && styles[i]) {
-            className.push(styles[i]);
-            if (TYPES.indexOf(i) !== -1)
-                willFallback = false;
-        }
-    }
-    if (willFallback && fallback) {
-        className.push(styles[fallback]);
-    }
-    return makeClass(...className);
-};
-
-export const NUMBER_RE = /^(\d+)?\.?(\d+)?$/;
+export const NUMBER_RE = /^-?(.?\d+|\d+.?\d*?)$/;
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
+
+const _fastClick = e => {
+    e.target && e.target.click && e.target.click();
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+};
+export const fastClick = {
+    onMouseDown: _fastClick,
+    onTouchStart: _fastClick,
+};

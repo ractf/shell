@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,14 +15,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { FiShare2 } from "react-icons/fi";
 
-import ChallengeGraph from "./components/ChallengeGraph";
+import { dynamicLoad } from "@ractf/shell-util";
+import { registerPlugin } from "@ractf/plugins";
 
+
+const ChallengeGraph = dynamicLoad(() => (
+    import(/* webpackChunkName: "challenge-graph" */ "./components/ChallengeGraph")
+));
 
 export default () => {
     registerPlugin("adminPage", "graph", {
         component: ChallengeGraph,
         sidebar: "Challenge Graph",
+        Icon: FiShare2,
     });
 };

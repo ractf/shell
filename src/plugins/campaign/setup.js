@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -15,12 +15,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { registerPlugin } from "ractf";
+import { registerPlugin } from "@ractf/plugins";
 
-import { CampaignChallenges } from "./components/CampaignChallenges";
+import CampaignLayout from "./components/CampaignLayout";
+
 
 export default () => {
-    registerPlugin("categoryType", "campaign", { component: CampaignChallenges });
+    registerPlugin("categoryType", "campaign", { component: CampaignLayout });
     registerPlugin("challengeMetadata", "campaign", {
         fields: [
             {

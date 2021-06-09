@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Really Awesome Technology Ltd
+// Copyright (C) 2020-2021 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -16,24 +16,24 @@
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
-import { push } from "connected-react-router";
+import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
 
 import { createChallenge, editChallenge, reloadAll, removeChallenge } from "@ractf/api";
 import { PluginComponent, getPlugin } from "@ractf/plugins";
-import { useChallenge, useCategory } from "@ractf/util/hooks";
+import { Challenge, useChallenge, useCategory } from "@ractf/shell-util";
 import { useReactRouter } from "@ractf/util";
-import { appContext } from "ractf";
-import Challenge from "@ractf/util/challenge";
-import http from "@ractf/http";
+import { UiKitModals } from "@ractf/ui-kit";
+import * as http from "@ractf/util/http";
+
+import { push } from "connected-react-router";
 
 
-const EditorWrap = ({ challenge, category, isCreator }) => {
+const EditorWrap = ({ challenge, category, isCreator, embedded }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const app = useContext(appContext);
+    const modals = useContext(UiKitModals);
     let handler;
 
     if (challenge.challenge_type)
@@ -50,7 +50,6 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
             {t("challenge.forgot_plugin")}
         </>;
 
-
     const saveEdit = changes => {
         const original = (challenge.toJSON ? challenge.toJSON() : { ...challenge });
 
@@ -62,7 +61,7 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
                 flag = JSON.parse(changes.flag_metadata);
             } catch (e) {
                 if (!changes.flag_metadata.length) flag = "";
-                else return app.alert(t("challenge.invalid_flag_json"));
+                else return modals.alert(t("challenge.invalid_flag_json"));
             }
         }
 
@@ -82,29 +81,36 @@ const EditorWrap = ({ challenge, category, isCreator }) => {
                 dispatch(push(category.url + "#edit"));
 
             await reloadAll();
-        }).catch(e => app.alert(http.getError(e)));
+        }).catch(e => modals.alert(http.getError(e)));
     };
 
     const doRemoveChallenge = () => {
-        app.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
+        modals.promptConfirm({ message: "Remove challenge:\n" + challenge.name, small: true }).then(() => {
             removeChallenge(challenge).then(() => {
-                app.alert("Challenge removed");
+                modals.alert("Challenge removed");
                 dispatch(push(category.url));
             }).catch(e => {
-                app.alert("Error removing challenge:\n" + http.getError(e));
+                modals.alert("Error removing challenge:\n" + http.getError(e));
             });
         }).catch(() => { });
     };
 
     return React.createElement(handler.component, {
-        challenge, category, isCreator: isCreator, saveEdit, removeChallenge: doRemoveChallenge
+        challenge, category, embedded, isCreator, saveEdit, removeChallenge: doRemoveChallenge
     });
 };
 
-const ChallengePage = () => {
+const ChallengePage = ({ tabId, chalId, chalData, embedded }) => {
     const { match } = useReactRouter();
-    const catId = match.params.tabId;
-    const chalId = match.params.chalId;
+    embedded = (
+        embedded
+        || typeof tabId !== "undefined"
+        || typeof chalId !== "undefined"
+        || typeof chalData !== "undefined"
+    );
+
+    const catId = typeof tabId === "undefined" ? match.params.tabId : tabId;
+    chalId = typeof chalId === "undefined" ? match.params.chalId : chalId;
 
     const locationHash = useSelector(state => state.router?.location?.hash);
     const user = useSelector(state => state.user);
@@ -117,21 +123,26 @@ const ChallengePage = () => {
 
     if (isCreator) {
         try {
-            challenge = JSON.parse(decodeURIComponent(locationHash.substring(1)));
+            challenge = (typeof chalData === "undefined"
+                ? JSON.parse(decodeURIComponent(locationHash.substring(1)))
+                : chalData
+            );
         } catch (e) {
-            challenge = null;
+            challenge = {};
         }
+        challenge.challenge_metadata = challenge.challenge_metadata || {};
+        challenge = new Challenge(category, challenge);
     } else if (!challenge) return <Redirect to={"/404"} />;
     // Brand new challenge; wait for it to populate
-    if (!challenge) return null;
-    
+    if (!isCreator && !challenge) return null;
+
     let chalEl;
     if (isEditor || isCreator)
-        chalEl = <EditorWrap {...{ challenge, category, isCreator }} />;
+        chalEl = <EditorWrap {...{ challenge, category, isCreator, embedded }} />;
     else
         chalEl = (
             <PluginComponent type={"challengeType"} name={challenge.challenge_type} fallback={"default"}
-                challenge={challenge} category={category} />
+                challenge={challenge} category={category} embedded={embedded} />
         );
 
     return chalEl;
