@@ -85,6 +85,10 @@ export const editChallenge = ({
     });
 };
 
+export const incrementSolveCount = (id, team_name) => {
+    store.dispatch(actions.incrementSolveCount(id, team_name));
+};
+
 export const quickRemoveChallenge = async (challenge) => {
     return http.delete_(ENDPOINTS.CHALLENGES + challenge.id);
 };
