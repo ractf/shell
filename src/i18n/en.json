@@ -232,10 +232,11 @@
         "pass_reset": "Password reset! Please log in using your new password.",
         "reset_password": "Reset Password",
         "reset": "Reset",
-        "enter_email": "Enter your email to reset your password",
+        "enter_email": "Enter your email",
         "send_link": "Send Link",
         "email_sent": "Email sent, check your inbox",
         "pass_forgot": "I forgot my password",
+        "resend_verify": "Resend verification email",
         "no_accept": "You must accept the terms of use and privacy policy to register.",
         "no_invite": "This event requires an invitation code to join"
     },
