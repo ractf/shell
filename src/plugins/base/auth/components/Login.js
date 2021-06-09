@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import {
     Form, Input, Button, SubtleText, UiKitModals
 } from "@ractf/ui-kit";
-import { ENDPOINTS, reloadAll, postLogin, requestPasswordReset } from "@ractf/api";
+import {ENDPOINTS, reloadAll, postLogin, requestPasswordReset, resendVerification} from "@ractf/api";
 import { EMAIL_RE } from "@ractf/util";
 import * as http from "@ractf/util/http";
 
@@ -42,6 +42,22 @@ const BasicLogin = () => {
             [{ name: "email", placeholder: t("email"), format: EMAIL_RE }]
         ).then(({ email }) => {
             requestPasswordReset(email).then(() => {
+                modals.alert(t("auth.email_sent"));
+            }).catch(e => {
+                if (e === "permission_denied")
+                    // We're already logged in
+                    reloadAll();
+                else
+                    modals.alert(http.getError(e));
+            });
+        });
+    }, [modals, t]);
+
+    const openVerify = useCallback(() => {
+        modals.promptConfirm({ message: t("auth.enter_email"), okay: t("auth.send_link"), small: true },
+            [{ name: "email", placeholder: t("email"), format: EMAIL_RE }]
+        ).then(({ email }) => {
+            resendVerification(email).then(() => {
                 modals.alert(t("auth.email_sent"));
             }).catch(e => {
                 if (e === "permission_denied")
@@ -91,6 +107,9 @@ const BasicLogin = () => {
             <SubtleText>
                 <Link onClick={openForget}>{t("auth.pass_forgot")}
                 </Link> - <Link to={"/register"}>I need an account</Link>
+                <br />
+                <Link onClick={openVerify}>{t("auth.resend_verify")}
+                </Link>
             </SubtleText>
         </Form>
     </Wrap>;
