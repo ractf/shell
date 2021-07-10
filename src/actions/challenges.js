@@ -54,6 +54,13 @@ export const editChallenge = (challenge) => {
     };
 };
 
+export const incrementSolveCount = (challenge_id, team_name) => {
+    return {
+        type: "INCREMENT_SOLVE_COUNT",
+        payload: {id: challenge_id, team_name: team_name}
+    };
+};
+
 export const addFile = (chalId, data) => {
     return {
         type: "ADD_FILE",

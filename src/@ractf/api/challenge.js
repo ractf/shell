@@ -30,6 +30,12 @@ export const getChallenges = () => {
     });
 };
 
+export const resyncChallenge = (id) => {
+    return http.get(ENDPOINTS.CHALLENGES + id).then(data => {
+        store.dispatch(actions.editChallenge(data));
+    });
+};
+
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
@@ -77,6 +83,10 @@ export const editChallenge = ({
         store.dispatch(actions.editChallenge(original));
         throw e;
     });
+};
+
+export const incrementSolveCount = (id, team_name) => {
+    store.dispatch(actions.incrementSolveCount(id, team_name));
 };
 
 export const quickRemoveChallenge = async (challenge) => {

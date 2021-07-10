@@ -61,6 +61,7 @@ export const logout = (wasForced, details) => {
 export const add_2fa = () => http.post(ENDPOINTS.ADD_2FA);
 export const verify_2fa = (otp) => http.post(ENDPOINTS.VERIFY_2FA, { otp });
 export const requestPasswordReset = (email) => http.post(ENDPOINTS.REQUEST_RESET, { email });
+export const resendVerification = (email) => http.post(ENDPOINTS.RESEND_VERIFICATION, { email });
 
 export const verify = (uid, token) => {
     try {

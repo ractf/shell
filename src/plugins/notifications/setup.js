@@ -17,7 +17,7 @@
 
 import { getLocalConfig } from "@ractf/shell-util";
 import { registerPreferences, registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
-import { reloadAll, reloadTeam } from "@ractf/api";
+import { reloadAll, reloadTeam, incrementSolveCount } from "@ractf/api";
 import { getUUID } from "@ractf/util";
 
 import { store } from "store";
@@ -59,6 +59,9 @@ export default () => {
                 `scoring **${data.challenge_score}** points.`
             );
         }
+
+        incrementSolveCount(data.challenge_id, data.team_name);
+
         const teamId = store.getState().team?.id;
         const userId = store.getState().user?.id;
         if (data.team === teamId) {
