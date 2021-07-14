@@ -41,7 +41,7 @@ npm run build
 ```
 
 You can now either serve the `./build` directory directly (not recommended) or
-copy it's contents into a directory the web server is serving from.
+copy its contents into a directory the web server is serving from.
 `/var/www/ractf/` is a good choice for this.
 
 It is recommended that you set a very long cache time on the served files, as
