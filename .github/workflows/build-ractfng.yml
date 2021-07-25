@@ -61,7 +61,7 @@ jobs:
         RACTF_API_BASE: /api/v2
         RACTF_WSS_URL: wss://api-2021.ractf.co.uk/api/v2/ws/
         RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
-        RACTF_GA_UA: UA-167342912-1
+        RACTF_GA_UA: UA-203069817-1
         REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
 
     - name: Install Sentry CLI
