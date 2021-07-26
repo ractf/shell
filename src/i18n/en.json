@@ -156,6 +156,15 @@
         "cat_settings": "Category Settings"
     },
     "admin": {
+        "self_check": {
+            "title": "Pre-Event Checks",
+            "all_passed": "All Pre-Event Checks Successful.",
+            "edit": "Edit this challenge →",
+            "invalid_flag_data_type": "Flag metadata field is of an invalid type.",
+            "missing_points": "The points value of this challenge is missing or set to 0.",
+            "invalid_flag_data": "Flag metadata field is invalid.",
+            "missing_flag_type": "This challenge has no flag type set."
+        },
         "import_export": "Import/Export",
         "import_and_export": "Import and Export",
         "account_active": "Account Active",
