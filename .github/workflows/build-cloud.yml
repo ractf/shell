@@ -32,6 +32,10 @@ on:
         description: "The theme for the site"
         required: false
         default: "RACTF"
+      name:
+        description: "The name for the site"
+        required: false
+        default: "RACTF"
 
 jobs:
   build:
@@ -74,6 +78,7 @@ jobs:
         RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
         RACTF_GA_UA: UA-167342912-1
         RACTF_UI_KIT_THEME: ${{ github.event.inputs.theme }}
+        RACTF_SITE_NAME: ${{ github.event.inputs.name }}
         GENERATE_SOURCEMAP: true
 
     - name: Install Sentry CLI
