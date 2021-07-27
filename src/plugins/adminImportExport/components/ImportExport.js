@@ -106,7 +106,7 @@ export default () => {
     const cleanChallenge = (chal) => {
         chal = stripKeys(chal, [
             "solved", "unlocked", "first_blood",
-            "first_blood_name", "solve_count",
+            "solve_count",
         ]);
         chal.hints = chal.hints.map(hint => stripKeys(hint, ["used", "challenge"]));
         chal.files = chal.files.map(file => stripKeys(file, ["challenge"]));
