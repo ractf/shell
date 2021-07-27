@@ -99,7 +99,7 @@ const SideBarNav_ = ({ children }) => {
     const footer = <>
         <footer>
             <img alt={""} src={footerLogo} />
-            <p>&copy; Really Awesome Technology Ltd 2021</p>
+            <p>{t("copyright_note")}</p>
         </footer>
         <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
         {window.env.footerText && <p>{window.env.footerText}</p>}
@@ -192,6 +192,7 @@ const SideBarNav_ = ({ children }) => {
 const SideBarNav = React.memo(SideBarNav_);
 
 const SiteNav = ({ children }) => {
+    const { t } = useTranslation();
     const [showDev] = useExperiment("showDev");
     if (USE_HEAD_NAV)
         return <SiteWrap>
@@ -217,7 +218,7 @@ const SiteNav = ({ children }) => {
                         </FootRow>
                         <FootRow center slim darken column>
                             <p>Powered with <span role="img" aria-label="red heart">&#10084;&#65039;</span> by RACTF</p>
-                            <p>&copy; Really Awesome Technology Ltd 2021</p>
+                            <p>{t("copyright_note")}</p>
                             {window.env.footerText && <p>{window.env.footerText}</p>}
                         </FootRow>
                     </Footer>
