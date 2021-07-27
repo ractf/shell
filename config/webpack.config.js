@@ -378,6 +378,12 @@ module.exports = function (webpackEnv) {
             // Make sure to add the new loader(s) before the "file" loader.
           ],
         },
+        {
+          test: /static.+/,
+          use: [
+            { loader: "./config/static-loader" }
+          ]
+        },
       ],
     },
     plugins: [
