@@ -76,6 +76,7 @@ export default () => {
             ["enable_ctftime", "Enable CTFTime", "boolean"],
             ["login_provider", "Login provider", "string"],
             ["registration_provider", "Registration provider", "string"],
+            ["firstblood_webhook", "First blood webhook", "string"]
         ]
     });
 };
