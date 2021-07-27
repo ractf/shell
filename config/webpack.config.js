@@ -250,7 +250,7 @@ module.exports = function (webpackEnv) {
       rules: [
         { parser: { requireEnsure: false } },
         {
-          test: /en\.json/,
+          test: /i18n.+\.json/,
           use: [
             { loader: "./config/i18n-loader" }
           ]
