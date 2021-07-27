@@ -99,8 +99,8 @@ export default ({ challenge, category, embedded, rightComponent }) => {
 
     const tags = challenge.tags.map((i, n) => <Badge key={n} pill primary>{i}</Badge>);
 
-    const solveMsg = (challenge.first_blood_name
-        ? t("challenge.has_solve", { name: challenge.first_blood_name, count: challenge.solve_count })
+    const solveMsg = (challenge.first_blood
+        ? t("challenge.has_solve", { name: challenge.first_blood, count: challenge.solve_count })
         : t("challenge.no_solve"));
     const votesMessage = ((challenge.votes.positive || challenge.votes.negative)
         ? t("challenge.votes", {
