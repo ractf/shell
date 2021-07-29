@@ -40,6 +40,11 @@ export const setLocalConfig = (key, value) => {
     store.dispatch(actions.setPreference(key, value));
 };
 
+export const getConfig = (key, fallback) => {
+    const preferenceValue = (store.getState().config || {})[key];
+    return preferenceValue !== undefined ? preferenceValue : fallback;
+};
+
 const Loading = () => <LoadingPage />;
 export const dynamicLoad = (loader) => {
     return Loadable({
