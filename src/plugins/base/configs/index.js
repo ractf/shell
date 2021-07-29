@@ -44,6 +44,7 @@ export default () => {
 
         "Event Configuration": [
             ["flag_prefix", "Flag Prefix", "string"],
+            ["event_name", "Event Name", "string"],
         ],
 
         "Registration Restrictions": [
