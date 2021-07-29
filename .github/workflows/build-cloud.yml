@@ -36,6 +36,10 @@ on:
         description: "The name for the site"
         required: false
         default: "RACTF"
+      ga:
+        description: "Google Analytics Token"
+        required: false
+        default: "UA-167342912-1"
 
 jobs:
   build:
@@ -76,7 +80,7 @@ jobs:
         RACTF_API_BASE: /api/v2
         RACTF_WSS_URL: wss://${{ github.event.inputs.apiDomain }}/api/v2/ws/
         RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
-        RACTF_GA_UA: UA-167342912-1
+        RACTF_GA_UA: ${{ github.event.inputs.ga }}
         RACTF_UI_KIT_THEME: ${{ github.event.inputs.theme }}
         RACTF_SITE_NAME: ${{ github.event.inputs.name }}
         GENERATE_SOURCEMAP: true
