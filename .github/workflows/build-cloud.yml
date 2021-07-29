@@ -36,7 +36,7 @@ on:
         description: "The name for the site"
         required: false
         default: "RACTF"
-     ga:
+      ga:
         description: "Google Analytics Token"
         required: false
         default: "UA-167342912-1"
