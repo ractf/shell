@@ -473,6 +473,9 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             <Checkbox val={!!challenge.hidden} name={"hidden"}>
                                 {t("editor.hide_challenge")}
                             </Checkbox>
+                            <Checkbox val={!!challenge.maintenance} name={"maintenance"}>
+                                {t("editor.maintenance")}
+                            </Checkbox>
                         </Form.Row>
 
                         <Form.Group htmlFor={"challenge_type"} label={t("editor.chal_type")}>
