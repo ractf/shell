@@ -39,13 +39,13 @@ export const resyncChallenge = (id) => {
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
-    post_score_explanation, unlock_requirements, maintenance
+    post_score_explanation, unlock_requirements, maintenance, tiebreaker
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
         category: id, name, score, description,
         flag_type, flag_metadata, post_score_explanation,
         challenge_metadata, hidden, unlock_requirements,
-        author, files, tags, maintenance,
+        author, files, tags, maintenance, tiebreaker,
         challenge_type: challenge_type || "default",
     }).then(data => {
         store.dispatch(actions.addChallenge(data));
@@ -56,7 +56,7 @@ export const createChallenge = ({
 export const editChallenge = ({
     id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
-    post_score_explanation, unlock_requirements, maintenance
+    post_score_explanation, unlock_requirements, maintenance, tiebreaker
 }) => {
     const categories = store.getState().challenges?.categories || [];
     let original = null;
@@ -67,7 +67,7 @@ export const editChallenge = ({
         name, score, description, post_score_explanation,
         flag_type, flag_metadata, unlock_requirements,
         challenge_metadata, hidden, maintenance,
-        author, files, tags,
+        author, files, tags, tiebreaker,
         challenge_type: challenge_type || "default",
     };
     // Immediate dispatch to make things feel more responsive

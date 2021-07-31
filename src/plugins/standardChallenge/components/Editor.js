@@ -462,6 +462,9 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             <Input rows={3} val={challenge.post_score_explanation} name={"post_score_explanation"}
                                 placeholder={t("editor.post_score_explanation")} />
                         </Form.Group>
+                        <Checkbox val={isCreator || (!!challenge.tiebreaker)} name={"tiebreaker"}>
+                            {t("editor.tiebreaker")}
+                        </Checkbox>
                     </Card>
                     <Card lesser header={"Metadata"} collapsible startClosed>
                         <MetadataEditor category={category} challenge={challenge} save={saveEdit} />

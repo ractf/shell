@@ -153,6 +153,7 @@
         "save": "Save Challenge",
         "create": "Create Challenge",
         "hide_challenge": "Hide challenge",
+        "tiebreaker": "Enable challenge tie-break",
         "maintenance": "Enable maintenance warning",
         "hide_locked": "Hide Locked Challenges",
         "show_locked": "Show Locked Challenges",
