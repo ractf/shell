@@ -80,7 +80,7 @@ export const TeamsList = () => {
 
 export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
-    const [ordering, setOrdering] = useState("name");
+    const [ordering, setOrdering] = useState("username");
     const [state, next] = usePaginated(ENDPOINTS.USER, {orderBy: ordering});
     const hasTeams = useConfig("enable_teams");
 
