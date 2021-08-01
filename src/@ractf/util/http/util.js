@@ -99,7 +99,7 @@ export const addParams = (url, params) => {
     if (!params)
         return url;
 
-    return url + new URLSearchParams(
+    return url + "?" + new URLSearchParams(
         // Filter out any params with undefined or null, leaving other falsy values
         Object.fromEntries(Object.entries(params).filter(
             i => (i[1] !== null) && (typeof i[1] !== "undefined")

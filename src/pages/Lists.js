@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -33,10 +33,26 @@ import { BrokenShards } from "./ErrorPages";
 
 export const TeamsList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.TEAM);
-    const [state, next] = usePaginated(ENDPOINTS.TEAM);
+    const [ordering, setOrdering] = useState("name");
+    const [state, next] = usePaginated(ENDPOINTS.TEAM, {orderBy: ordering});
     const hasTeams = useConfig("enable_teams");
 
     const { t } = useTranslation();
+
+    const headerFields = {
+        "Team": "name",
+        "Members": "members"
+    };
+
+    const setOrderingFromHeaderName = (name) => {
+        let orderBy = headerFields[name];
+
+        if (ordering.charAt(0) !== "-") {
+            orderBy = "-" + orderBy;
+        }
+
+        setOrdering(orderBy);
+    };
 
     if (!hasTeams)
         return <Redirect to={"/"} />;
@@ -49,7 +65,7 @@ export const TeamsList = () => {
             </Form.Error>
             <BrokenShards />
         </> : <>
-            <Table headings={[t("team"), t("members")]} data={
+            <Table onHeaderClick={setOrderingFromHeaderName} headings={[t("team"), t("members")]} data={
                 state.data.map(x => [
                     <Link to={`/team/${x.id}`}>{x.name}</Link>,
                     <Link to={`/team/${x.id}`}>{x.members}</Link>,
@@ -64,9 +80,26 @@ export const TeamsList = () => {
 
 export const UsersList = () => {
     //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
-    const [state, next] = usePaginated(ENDPOINTS.USER);
-    const { t } = useTranslation();
+    const [ordering, setOrdering] = useState("name");
+    const [state, next] = usePaginated(ENDPOINTS.USER, {orderBy: ordering});
     const hasTeams = useConfig("enable_teams");
+
+    const { t } = useTranslation();
+
+    const headerFields = {
+        "Name": "username",
+        "Team": "team__name"
+    };
+
+    const setOrderingFromHeaderName = (name) => {
+        let orderBy = headerFields[name];
+
+        if (ordering.charAt(0) !== "-") {
+            orderBy = "-" + orderBy;
+        }
+
+        setOrdering(orderBy);
+    };
 
     return <Page title={t("user_plural")} centre={!!state.error}>
         <PageHead>{t("lists.all_users")}</PageHead>
@@ -77,7 +110,9 @@ export const UsersList = () => {
             </Form.Error>
             <BrokenShards />
         </> : <>
-            <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
+            <Table onHeaderClick={setOrderingFromHeaderName} headings={
+                [t("name"), hasTeams && t("team")].filter(Boolean)
+            } data={
                 state.data.map(x => [
                     <Link to={`/profile/${x.id}`}>{x.username}</Link>,
                     hasTeams && <Link to={`/profile/${x.id}`}>{x.team_name}</Link>
