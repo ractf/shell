@@ -120,7 +120,7 @@ const Leaderboard = React.memo(() => {
         {teamGraphData && teamGraphData.length > 0 && (
             <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
         )}
-        <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
+        <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} noSort />
         {tState.hasMore && <Container full centre>
             <Button disabled={tState.loading} onClick={tNext}>{t("load_more")}</Button>
         </Container>}
