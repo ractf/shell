@@ -41,7 +41,7 @@ export const TeamsList = () => {
 
     const headerFields = {
         "Team": "name",
-        "Members": "members"
+        "Members": "members_count"
     };
 
     const setOrderingFromHeaderName = (name) => {
