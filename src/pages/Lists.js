@@ -71,7 +71,7 @@ export const TeamsList = () => {
                     <Link to={`/team/${x.id}`}>{x.members}</Link>,
                 ])
             } />
-            {!state.hasMore && (<Container full centre>
+            {state.hasMore && (<Container full centre>
                 <Button disabled={state.loading} onClick={() => { next(); }}>{t("load_more")}</Button>
             </Container>)}
         </>}
