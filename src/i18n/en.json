@@ -378,7 +378,8 @@
         "invalid_team": "No team with this name was found.",
         "invalid_team_password": "Password incorrect.",
         "login_failed": "2-factor authentication failed.",
-        "code_incorrect": "2-factor code incorrect"
+        "code_incorrect": "2-factor code incorrect",
+        "already_in_team": "You're already in a team!"
     },
     "colours": {
         "backCol": "Background colour",
