@@ -32,7 +32,7 @@ const staticReplacer = (resourcePath, content) => {
         }
     }
 
-    return content;
+    return fs.readFileSync(resourcePath);
 };
 
 module.exports = {
