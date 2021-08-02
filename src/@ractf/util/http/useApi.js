@@ -67,7 +67,10 @@ export const usePaginated = (route, { limit, orderBy, autoLoad = true } = {}) =>
         if (inFlight.current) return;
         const path = nextPage.current || route;
 
-        const [request, ar] = http.abortableGet(path, { limit: localLimit.current, ordering: localOrder.current });
+        const [request, ar] = http.abortableGet(path, { 
+            limit: path.includes("limit=") ? null : localLimit.current, 
+            ordering: path.includes("ordering=") ? null : localOrder.current
+        });
         inFlight.current = true;
         abortRequest.current = ar;
 
