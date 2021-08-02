@@ -178,8 +178,10 @@ const SettingsPage = () => {
                                 <Form.Group htmlFor={"name"} label={t("team_name")}>
                                     <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />
                                 </Form.Group>
-                                <Form.Group htmlFor={"desc"} label={t("team_desc")}>
-                                    <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
+                                <Form.Group htmlFor={"description"} label={t("team_desc")}>
+                                    <Input val={
+                                        team.description
+                                    } name={"description"} rows={5} placeholder={t("team_desc")} />
                                 </Form.Group>
                                 <Form.Group htmlFor={"password"} label={t("team_secret")}>
                                     <Input val={team.password} name={"password"}
