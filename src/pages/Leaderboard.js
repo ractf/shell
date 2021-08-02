@@ -122,7 +122,7 @@ const Leaderboard = React.memo(() => {
         )}
         <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} noSort />
         {tState.hasMore && <Container full centre>
-            <Button disabled={tState.loading} onClick={tNext}>{t("load_more")}</Button>
+            <Button disabled={tState.loading} onClick={() => {tNext();}}>{t("load_more")}</Button>
         </Container>}
     </>;
     const userTab = <>
@@ -131,7 +131,7 @@ const Leaderboard = React.memo(() => {
         )}
         <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
         {uState.hasMore && <Container full centre>
-            <Button disabled={uState.loading} onClick={uNext}>{t("load_more")}</Button>
+            <Button disabled={uState.loading} onClick={() => {uNext();}}>{t("load_more")}</Button>
         </Container>}
     </>;
 
