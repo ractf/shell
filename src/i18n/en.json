@@ -92,9 +92,8 @@
     "lists": {
         "all_teams": "All Teams",
         "all_users": "All Users",
-        "teams_error": "Something went wrong trying to get the teams list",
-        "users_error": "Something went wrong trying to get the user list",
-        "try_reload": "Please try reloading the page"
+        "try_reload": "Please try reloading the page",
+        "paginated_error": "Something went wrong loading this list"
     },
     "errors": {
         "generic": "Something went wrong",
