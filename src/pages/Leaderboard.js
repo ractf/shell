@@ -120,7 +120,7 @@ const Leaderboard = React.memo(() => {
         {teamGraphData && teamGraphData.length > 0 && (
             <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
         )}
-        <Table headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} noSort />
+        <Table noSort headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
         {tState.hasMore && <Container full centre>
             <Button disabled={tState.loading} onClick={() => {tNext();}}>{t("load_more")}</Button>
         </Container>}
@@ -129,7 +129,7 @@ const Leaderboard = React.memo(() => {
         {userGraphData && userGraphData.length > 0 && (
             <Graph key="users" data={userGraphData} timeGraph noAnimate />
         )}
-        <Table headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
+        <Table noSort headings={["Place", t("user"), t("point_plural")]} data={userData(uState.data)} />
         {uState.hasMore && <Container full centre>
             <Button disabled={uState.loading} onClick={() => {uNext();}}>{t("load_more")}</Button>
         </Container>}
