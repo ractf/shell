@@ -72,7 +72,7 @@ export const TeamsList = () => {
                 ])
             } />
             {!state.hasMore && (<Container full centre>
-                <Button disabled={state.loading} onClick={next}>{t("load_more")}</Button>
+                <Button disabled={state.loading} onClick={() => { next(); }}>{t("load_more")}</Button>
             </Container>)}
         </>}
     </Page>;
@@ -119,7 +119,7 @@ export const UsersList = () => {
                 ].filter(i => i !== false))
             } />
             {state.hasMore && (<Container full centre>
-                <Button disabled={state.loading} onClick={next}>{t("load_more")}</Button>
+                <Button disabled={state.loading} onClick={() => { next(); }}>{t("load_more")}</Button>
             </Container>)}
         </>}
     </Page>;
