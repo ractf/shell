@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
 
 import {
-    SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
+    SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol, HR,
     Container, SiteWrap, NavCollapse, NavMenu, Wordmark, NavItem, Scrollbar
 } from "@ractf/ui-kit";
 import { iteratePlugins } from "@ractf/plugins";
@@ -97,6 +97,9 @@ const SideBarNav_ = ({ children }) => {
 
     const header = <Wordmark />;
     const footer = <>
+        <p>Sponsored by</p>
+        <img src={require("../static/LMAX.svg")} alt={"LMAX Logo"} width={"100%"}/>
+        <HR />
         <footer>
             <img alt={""} src={footerLogo} />
             <p>{t("copyright_note")}</p>
