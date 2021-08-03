@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useRef } from "react";
 
 import { Card } from "@ractf/ui-kit";
 
@@ -27,8 +27,15 @@ import { setJeopardyOpenCards } from "../actions";
 
 const Challenge = ({ challenge }) => {
     const startOpen = (store.getState().jeopardySearch?.openCards[challenge.id]) || false;
+    const [renderCard, setRenderCard] = useState(startOpen);
+    const contentClearTimeout = useRef();
 
     const onOpenToggle = useCallback((open) => {
+        if (open) { clearTimeout(contentClearTimeout.current); }
+        contentClearTimeout.current = setTimeout(() => { 
+            setRenderCard(open);
+        }, open ? 0 : 500);
+
         const newOpenCards = {...store.getState().jeopardySearch.openCards};
         if (open) newOpenCards[challenge.id] = true;
         else delete newOpenCards[challenge.id];
@@ -40,7 +47,7 @@ const Challenge = ({ challenge }) => {
         collapsible startClosed={!startOpen} onOpenToggle={onOpenToggle}
         success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden}
     >
-        <ChallengePage tabId={challenge.category.id} chalId={challenge.id} embedded />
+        {renderCard && <ChallengePage tabId={challenge.category.id} chalId={challenge.id} embedded />}
     </Card>;
 };
 export default React.memo(Challenge);
