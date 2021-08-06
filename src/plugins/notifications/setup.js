@@ -33,8 +33,6 @@ const WS_TEAM_HINT_USE = 3;
 const WS_TEAM_JOIN = 4;
 
 export default () => {
-    const solveBroadcastEnabled = getConfig("enable_solve_broadcast", true);
-
     registerReducer("notifications", notificationReducer);
 
     registerMount("app", "notifications", AppNotifications);
@@ -54,7 +52,7 @@ export default () => {
     };
 
     registerPlugin("wsMessage", WS_CHALLENGE_SCORE, (data) => {
-        if (solveBroadcastEnabled && getLocalConfig("notifs.all_solves", undefined, true)) {
+        if (getConfig("enable_solve_broadcast", false) && getLocalConfig("notifs.all_solves", undefined, true)) {
             addNotification("Challenge solved",
                 `**${data.challenge_name}** was solved by ` +
                 `**${data.username}** for **${data.team_name}**, ` +
