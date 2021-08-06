@@ -378,7 +378,8 @@
         "invalid_team_password": "Password incorrect.",
         "login_failed": "2-factor authentication failed.",
         "code_incorrect": "2-factor code incorrect",
-        "already_in_team": "You're already in a team!"
+        "already_in_team": "You're already in a team!",
+        "weak_password": "Your password is too weak!"
     },
     "colours": {
         "backCol": "Background colour",
