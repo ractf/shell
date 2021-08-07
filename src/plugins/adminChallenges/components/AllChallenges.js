@@ -21,19 +21,27 @@ import { PageHead, Table } from "@ractf/ui-kit";
 import { useCategories } from "@ractf/shell-util";
 
 
+const calcPercentage = (challenge) => {
+    const rating = Math.round(
+        (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
+    ) / 10;
+    return isNaN(rating) ? null : rating;
+};
+
 const AllChallenges = () => {
     const categories = useCategories();
     const challenges = categories.flatMap(i => i.challenges);
 
     const serializeChallenges = () => {
         return challenges.map((chal) => {
-            return [chal.name, chal.author, chal.score, chal.solve_count, chal.first_blood];
+            return [chal.name, chal.author, chal.score, chal.solve_count, chal.first_blood, calcPercentage(chal)];
         });
     };
 
     return <>
         <PageHead title={"All Challenges"} />
-        <Table headings={["name", "author", "points", "solves", "blood"]} data={serializeChallenges()}></Table>
+        <Table headings={["Name", "Author", "Points", "Solves", "Blood", "Rating"]}
+               data={serializeChallenges()}></Table>
     </>;
 };
 
