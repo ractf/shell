@@ -28,6 +28,7 @@ import style from "./Countdown.module.scss";
 export default ({ cdKey }) => {
     const { dates: countdown_dates } = useSelector(state => state.countdowns) || {};
     const [countdownText, setCountdownText] = useState("");
+    const [showTip, setShowTip] = useState(false);
 
     const pad = n => {
         if (n < 10) return "0" + n;
@@ -52,6 +53,10 @@ export default ({ cdKey }) => {
             + pad(minutes) + " minute" + (minutes === 1 ? "" : "s") + ", "
             + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
 
+        if (delta < 60 * 10 && !showTip) {
+            setShowTip(true);
+        }
+
         if (delta === 0) {
             recheckCountdowns();
         }
@@ -66,6 +71,9 @@ export default ({ cdKey }) => {
 
         <div className={style.lockTitle}>Site Locked!</div>
         <div className={style.siteCountdown}>{countdownText ? "Unlock in " + countdownText : ""}</div>
+        <div className={style.tooltip} style={{opacity: showTip ? "100%" : "0%"}}>
+            The site will update automatically - no need to refresh!
+        </div>
     </div>;
 };
 
