@@ -29,6 +29,13 @@ export const setJeopardyFilter = (filter) => {
     };
 };
 
+export const setJeopardySort = (sort) => {
+    return {
+        type: "SET_JEOPARDY_SORT",
+        payload: sort
+    };
+};
+
 export const setJeopardyShowSolved = (showSolved) => {
     return {
         type: "SET_JEOPARDY_SHOW_SOLVED",
