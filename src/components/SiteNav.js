@@ -18,7 +18,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers } from "react-icons/fi";
+import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers, FiClock } from "react-icons/fi";
 
 import {
     SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
@@ -124,6 +124,7 @@ const SideBarNav_ = ({ children }) => {
     </>;
 
     const { location: { pathname } } = useReactRouter();
+    const countdown_passed = useSelector(state => state.countdowns?.passed) || {};
 
     const items = <>
         <SideNavLink to={"/"} Icon={FiHome} name={t("sidebar.home")} />
@@ -132,6 +133,10 @@ const SideBarNav_ = ({ children }) => {
             <SideNavLink to={"/teams"} Icon={FiUsers} name={t("team_plural")} />
         )}
         <SideNavLink to={"/leaderboard"} Icon={FiBarChart2} name={t("leaderboard")} />
+        {
+            !countdown_passed["countdown_timestamp"] && 
+            <SideNavLink to={"/campaign/"} name={"Countdown"} Icon={FiClock} />
+        }
 
         {user ? <>
             {(user.is_staff || categories.length > 1) && (
