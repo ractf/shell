@@ -131,8 +131,10 @@ export default ({ challenge, submitFlag, onFlagResponse }) => {
             {selectedLongLat && (
                 <Modal small okay={"Submit"}
                     onClose={() => setSelectedLongLat(null)}
-                    onConfirm={() => submitFlag.current({ flag: selectedLongLat })}
-                >
+                    onConfirm={() => {
+                        submitFlag.current({ flag: selectedLongLat });
+                        setSelectedLongLat(null);
+                    }}>
                     {toDMSPair(...selectedLongLat)} selected. Submit as flag?
                 </Modal>
             )}
