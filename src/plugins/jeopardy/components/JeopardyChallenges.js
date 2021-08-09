@@ -18,7 +18,7 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Column, Card, Input, Form, ItemStack, Checkbox, Container } from "@ractf/ui-kit";
+import { Column, Card, Input, Form, ItemStack, Checkbox, Container, Select } from "@ractf/ui-kit";
 
 import ChallengePage from "pages/ChallengePage.js";
 
@@ -29,6 +29,7 @@ import Challenge from "./Challenge.js";
 export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, showLocked }) => {
     const showSolved = useSelector(state => state.jeopardySearch.showSolved);
     const filter = useSelector(state => state.jeopardySearch.filter);
+    const sort = useSelector(state => state.jeopardySearch.sort);
     const search = useSelector(state => state.jeopardySearch.search);
     const dispatch = useDispatch();
 
@@ -77,6 +78,29 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
     const searchChanged = useCallback((value) => {
         dispatch(actions.setJeopardySearch(value));
     }, [dispatch]);
+
+    const sortChanged = useCallback((value) => {
+        dispatch(actions.setJeopardySort(value));
+    }, [dispatch]);
+
+    const calcPercentage = (challenge) => {
+        return Math.round(
+            (challenge.votes.positive / (challenge.votes.positive + challenge.votes.negative)) * 1000
+        ) / 10;
+    };
+
+    const sortChallenges = (x, y) => {
+        switch (sort || "Points") {
+            case "Solves":
+                return y.solve_count - x.solve_count;
+            case "Rating":
+                return calcPercentage(y) - calcPercentage(x);
+            case "Points":
+            default:
+                return x.score - y.score;
+        }
+    };
+
     const toggleFilter = (i) => {
         return () => {
             const newFilter = { ...filter };
@@ -115,7 +139,12 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
                 </Form.Group>
                 <Checkbox name={"done"} managed onChange={setShowSolved} val={showSolved}>
                     Show solved challenges ({solved})
-                </Checkbox>
+                </Checkbox><br/>
+                <Form.Group label={"Sort by"}>
+                    <Select options={["Points", "Solves", "Rating"]}
+                        initial={sort || "Points"}
+                        onChange={sortChanged} />
+                </Form.Group>
             </Card>
             {sortedTags.length !== 0 && (
                 <Card lesser noPad header={"Filter"} collapsible>
@@ -138,7 +167,7 @@ export const JeopardyChallenges = ({ challenges: category, showEditor, isEdit, s
                     <ChallengePage tabId={category.id} chalId={"new"} />
                 </Card>
             )}
-            {category.challenges.sort((x, y) => x.score - y.score).map(
+            {category.challenges.sort(sortChallenges).map(
                 i => (shouldShow(i) ? <Challenge category={category} key={i.id} challenge={i} /> : null)
             )}
         </Column>

@@ -54,6 +54,7 @@ export const getCountdown = () => http.get(ENDPOINTS.COUNTDOWN).then(data => {
     const countdown = {
         dates: {},
         passed: {},
+        offset: offset,
     };
     Object.entries(data).forEach(([key, value]) => {
         if (key === "server_timestamp") return;

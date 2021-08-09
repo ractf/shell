@@ -43,6 +43,12 @@
         font-weight: 400;
     }
 
+    .tooltip {
+        margin-top: .5em;
+        font-style: italic;
+        transition: opacity 2s ease;
+    }
+
     canvas {
         position: absolute;
         top: 0;
