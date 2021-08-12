@@ -66,7 +66,8 @@ export default () => {
             ["enable_scoring", "Enable Scoring", "boolean"],
             ["enable_solve_broadcast", "Enable Solve Broadcasting", "boolean"],
             ["enable_team_join", "Enable Team Joining", "boolean"],
-            ["enable_team_leave", "Enable Team Leaving", "boolean"]
+            ["enable_team_leave", "Enable Team Leaving", "boolean"],
+            ["enable_challenge_server", "Enable Challenge Server", "boolean"]
         ],
 
         "Teams": [
