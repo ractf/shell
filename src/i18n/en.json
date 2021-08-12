@@ -379,7 +379,8 @@
         "login_failed": "2-factor authentication failed.",
         "code_incorrect": "2-factor code incorrect",
         "already_in_team": "You're already in a team!",
-        "weak_password": "Your password is too weak!"
+        "weak_password": "Your password is too weak!",
+        "challenge_server_disabled": "The challenge server has been disabled on this instance of RACTF"
     },
     "colours": {
         "backCol": "Background colour",
