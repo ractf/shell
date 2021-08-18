@@ -1,12 +1,13 @@
-http://localhost:8000
+http://localhost:8000 {
+  root * /site
+  route {
+    reverse_proxy /api/v2/* backend:8000
+    reverse_proxy /api/v2/ws/* sockets:8000
 
-root * /site
+    try_files {path} /index.html
 
-file_server
-templates
-encode gzip
-
-try_files {path} /index.html
-
-reverse_proxy /api/v2/* backend:8000
-reverse_proxy /api/v2/ws/* sockets:8000
+    file_server
+    templates
+    encode gzip 
+  }
+}
