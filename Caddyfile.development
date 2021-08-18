@@ -1,10 +1,17 @@
-http://localhost:8000
+:8000 {
+    root * /site
 
-root * /site
+    file_server
+    templates
+    encode gzip
+    
+    try_files {path} /index.html
 
-file_server
-templates
-encode gzip
+    reverse_proxy /api/v2/* backend:8000
+    reverse_proxy /api/v2/ws/* sockets:8000
 
-reverse_proxy /api/v2/* backend:8000
-reverse_proxy /api/v2/ws/* sockets:8000
+    header {
+        X-Frame-Options Deny
+        Content-Security-Policy "frame-ancestors 'none';"
+    }
+}
