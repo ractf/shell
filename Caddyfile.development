@@ -2,7 +2,7 @@ http://localhost:8000 {
   root * /site
   route {
     reverse_proxy /api/v2/* backend:8000
-    reverse_proxy /api/v2/ws/* sockets:800
+    reverse_proxy /api/v2/ws/* sockets:8000
 
     try_files {path} /index.html
 
