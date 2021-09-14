@@ -76,9 +76,8 @@ const Statistics = () => {
             <Column lgWidth={6} mdWidth={12}>
                 <Card lesser header={"Quick breakdown"}>
                     <Large>
-                        <b>{stats.users.all.toString()}</b> registered users (
-                            <b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation
-                        )
+                        <b>{stats.users.all.toString()}</b> registered users
+                        (<b>{(stats.users.all - stats.users.confirmed).toString()}</b> pending confirmation)
                         {hasTeams && <><br /><b>{stats.teams.toString()}</b> registered teams</>}
                         <br /><b>{stats.ips.toString()}</b> unique IPs
                     </Large>
