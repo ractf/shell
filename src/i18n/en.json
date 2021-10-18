@@ -378,6 +378,7 @@
         "invalid_team_password": "Password incorrect.",
         "login_failed": "2-factor authentication failed.",
         "code_incorrect": "2-factor code incorrect",
+        "username_already_exists": "Username is already in use.",
         "already_in_team": "You're already in a team!",
         "weak_password": "Your password is too weak!",
         "challenge_server_disabled": "The challenge server has been disabled on this instance of RACTF"
