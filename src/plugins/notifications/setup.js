@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { getLocalConfig } from "@ractf/shell-util";
+import { getLocalConfig, getConfig } from "@ractf/shell-util";
 import { registerPreferences, registerPlugin, registerReducer, registerMount } from "@ractf/plugins";
 import { reloadAll, reloadTeam, incrementSolveCount } from "@ractf/api";
 import { getUUID } from "@ractf/util";
@@ -52,7 +52,7 @@ export default () => {
     };
 
     registerPlugin("wsMessage", WS_CHALLENGE_SCORE, (data) => {
-        if (getLocalConfig("notifs.all_solves", undefined, true)) {
+        if (getConfig("enable_solve_broadcast", false) && getLocalConfig("notifs.all_solves", undefined, true)) {
             addNotification("Challenge solved",
                 `**${data.challenge_name}** was solved by ` +
                 `**${data.username}** for **${data.team_name}**, ` +

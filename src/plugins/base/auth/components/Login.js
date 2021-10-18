@@ -60,16 +60,20 @@ const BasicLogin = () => {
             resendVerification(email).then(() => {
                 modals.alert(t("auth.email_sent"));
             }).catch(e => {
-                if (e === "permission_denied")
+                const m = e?.response?.data?.m;
+                if (m === "permission_denied")
                     // We're already logged in
                     reloadAll();
+                else if (m === "not_found")
+                    modals.alert("No account with that email address was found.");
                 else
                     modals.alert(http.getError(e));
             });
         });
     }, [modals, t]);
 
-    const onError = useCallback(({ resp, retry, showError }) => {
+    const onError = useCallback(({ resp, retry, showError, error }) => {
+        const m = error?.response?.data?.m;
         if (resp && resp.reason === "2fa_required") {
             const faPrompt = () => {
                 setNeedsOtp(true);
@@ -85,6 +89,11 @@ const BasicLogin = () => {
                 });
             };
             faPrompt();
+
+            return false;
+        } else if (m === "permission_denied") {
+            // We're actually already logged in
+            reloadAll();
 
             return false;
         }

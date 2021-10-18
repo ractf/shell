@@ -15,17 +15,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { FiTrendingUp } from "react-icons/fi";
+import { FiActivity } from "react-icons/fi";
 
 import { registerPlugin } from "@ractf/plugins";
 
-import Statistics from "./components/Statistics";
+import SelfCheck from "./components/SelfCheck";
 
 
 export default () => {
-    registerPlugin("adminPage", "statistics", {
-        component: Statistics,
-        sidebar: "Statistics",
-        Icon: FiTrendingUp,
+    registerPlugin("adminPage", "check", {
+        component: SelfCheck,
+        sidebar: "Pre-Event Check",
+        Icon: FiActivity,
     });
 };

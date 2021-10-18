@@ -45,7 +45,7 @@ export const useApi = route => {
     return [data, error, () => abortRequest.current(), refresh];
 };
 
-export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
+export const usePaginated = (route, { limit, orderBy, autoLoad = true } = {}) => {
     const abortRequest = useRef();
     const inFlight = useRef();
     const nextPage = useRef();
@@ -58,6 +58,7 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
     });
     const lastRoute = useRef(route);
     const localLimit = useRef(limit);
+    const localOrder = useRef(orderBy);
     useEffect(() => {
         localLimit.current = limit;
     }, [limit]);
@@ -66,7 +67,10 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
         if (inFlight.current) return;
         const path = nextPage.current || route;
 
-        const [request, ar] = http.abortableGet(path, { limit: localLimit.current });
+        const [request, ar] = http.abortableGet(path, { 
+            limit: path.includes("limit=") ? null : localLimit.current, 
+            ordering: path.includes("ordering=") ? null : localOrder.current
+        });
         inFlight.current = true;
         abortRequest.current = ar;
 
@@ -94,6 +98,11 @@ export const usePaginated = (route, { limit, autoLoad = true } = {}) => {
         nextPage.current = null;
         next(true);
     }, [next]);
+
+    useEffect(() => {
+        localOrder.current = orderBy;
+        refresh();
+    }, [orderBy, refresh]);
 
     useEffect(() => {
         if (route !== lastRoute.current) {

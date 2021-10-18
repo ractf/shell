@@ -250,6 +250,12 @@ module.exports = function (webpackEnv) {
       rules: [
         { parser: { requireEnsure: false } },
         {
+          test: /i18n.+\.json/,
+          use: [
+            { loader: "./config/i18n-loader" }
+          ]
+        },
+        {
           // Linter!!
           test: /\.(js|mjs|jsx)$/,
           enforce: 'pre',
@@ -371,6 +377,12 @@ module.exports = function (webpackEnv) {
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.
           ],
+        },
+        {
+          test: /static.+/,
+          use: [
+            { loader: "./config/static-loader" }
+          ]
         },
       ],
     },

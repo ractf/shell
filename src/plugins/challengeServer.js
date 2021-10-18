@@ -58,7 +58,8 @@ const ChallengeServer = ({ challenge }) => {
                             {state.instance.ip}:{state.instance.port}
                         </code>. <span className={"linkStyle"} onClick={reset}>
                             Click here to request a new instance.
-                        </span>
+                        </span><br/>
+                        {state.instance.extra && state.instance.extra.map((i) => (<>{i}<br/></>))}
                     </div>
                 ) : <Spinner />}
         </Card>

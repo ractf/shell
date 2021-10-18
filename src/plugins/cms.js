@@ -63,7 +63,6 @@ const cmsReducer = (state = INITIAL, { type, payload }) => {
 };
 
 const CMSPage = React.memo(({ page }) => {
-    console.log(page);
     if (page.title)
         document.title = page.title;
 

@@ -33,7 +33,8 @@
         "no_solves": "{{name}} haven't solved any challenges yet",
         "no_bio": "No bio set",
         "solve": "{{count}} point - Scored by {{user_name}}",
-        "solve_plural": "{{count}} points - Scored by {{user_name}}"
+        "solve_plural": "{{count}} points - Scored by {{user_name}}",
+        "already_in_team": "You are already in a team."
     },
     "profile": {
         "no_bio": "No bio set",
@@ -91,9 +92,8 @@
     "lists": {
         "all_teams": "All Teams",
         "all_users": "All Users",
-        "teams_error": "Something went wrong trying to get the teams list",
-        "users_error": "Something went wrong trying to get the user list",
-        "try_reload": "Please try reloading the page"
+        "try_reload": "Please try reloading the page",
+        "paginated_error": "Something went wrong loading this list"
     },
     "errors": {
         "generic": "Something went wrong",
@@ -131,7 +131,9 @@
         "has_solve_plural": "First solved by {{name}}, {{count}} solves in total",
         "post_score_explanation": "Challenge explanation",
         "no_votes": "Nobody has rated this challenge yet",
-        "votes": "{{percentage}}% positive votes"
+        "votes": "{{percentage}}% positive votes",
+        "maintenance_header": "🚨 This challenge is in maintenance mode.",
+        "maintenance_body": "We've received reports of problems with this challenge which we are investigating. Participants are still free to attempt the challenge but may experience issues locating or submitting the solution."
     },
     "editor": {
         "chal_name": "Challenge name",
@@ -151,11 +153,22 @@
         "save": "Save Challenge",
         "create": "Create Challenge",
         "hide_challenge": "Hide challenge",
+        "tiebreaker": "Enable challenge tie-break",
+        "maintenance": "Enable maintenance warning",
         "hide_locked": "Hide Locked Challenges",
         "show_locked": "Show Locked Challenges",
         "cat_settings": "Category Settings"
     },
     "admin": {
+        "self_check": {
+            "title": "Pre-Event Checks",
+            "all_passed": "All Pre-Event Checks Successful.",
+            "edit": "Edit this challenge →",
+            "invalid_flag_data_type": "Flag metadata field is of an invalid type.",
+            "missing_points": "The points value of this challenge is missing or set to 0.",
+            "invalid_flag_data": "Flag metadata field is invalid.",
+            "missing_flag_type": "This challenge has no flag type set."
+        },
         "import_export": "Import/Export",
         "import_and_export": "Import and Export",
         "account_active": "Account Active",
@@ -304,6 +317,7 @@
     "register": "Register",
     "okay": "Okay",
     "cancel": "Cancel",
+    "copyright_note": "© Really Awesome Technology Ltd 2021",
     "sidebar": {
         "brand": "RACTF",
         "home": "Home",
@@ -364,7 +378,10 @@
         "invalid_team_password": "Password incorrect.",
         "login_failed": "2-factor authentication failed.",
         "code_incorrect": "2-factor code incorrect",
-        "username_already_exists": "Username is already in use."
+        "username_already_exists": "Username is already in use.",
+        "already_in_team": "You're already in a team!",
+        "weak_password": "Your password is too weak!",
+        "challenge_server_disabled": "The challenge server has been disabled on this instance of RACTF"
     },
     "colours": {
         "backCol": "Background colour",

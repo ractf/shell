@@ -26,3 +26,4 @@ export * from "./file";
 export * from "./reloadAll";
 export * from "./team";
 export * from "./user";
+export * from "./admin";

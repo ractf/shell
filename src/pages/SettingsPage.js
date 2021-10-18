@@ -77,6 +77,7 @@ const SettingsPage = () => {
     const team = useSelector(state => state.team);
     const [preferences, setPreferences] = usePreferences();
     const hasTeams = useConfig("enable_teams");
+    const solveBroadcastEnabled = useConfig("enable_solve_broadcast", true);
 
     const deleteValidator = useCallback(({ password }) => {
         return new Promise((resolve, reject) => {
@@ -114,7 +115,9 @@ const SettingsPage = () => {
     const teamOwner = (team ? team.owner === user.id : null);
 
     const notificationGroups = [
-        { name: "all_solves", description: hasTeams ? "A team scores a flag" : "A player scores a flag" },
+        solveBroadcastEnabled && { 
+            name: "all_solves", description: hasTeams ? "A team scores a flag" : "A player scores a flag" 
+        },
         hasTeams && { name: "team_join", description: "A user joins my team" },
         hasTeams && { name: "hint_used", description: "A team member uses a hint" },
         hasTeams && { name: "flag_reject", description: "A team member has a flag rejected" },
@@ -175,8 +178,10 @@ const SettingsPage = () => {
                                 <Form.Group htmlFor={"name"} label={t("team_name")}>
                                     <Input val={team.name} name={"name"} limit={36} placeholder={t("team_name")} />
                                 </Form.Group>
-                                <Form.Group htmlFor={"desc"} label={t("team_desc")}>
-                                    <Input val={team.description} name={"desc"} rows={5} placeholder={t("team_desc")} />
+                                <Form.Group htmlFor={"description"} label={t("team_desc")}>
+                                    <Input val={
+                                        team.description
+                                    } name={"description"} rows={5} placeholder={t("team_desc")} />
                                 </Form.Group>
                                 <Form.Group htmlFor={"password"} label={t("team_secret")}>
                                     <Input val={team.password} name={"password"}

@@ -15,17 +15,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { FiTrendingUp } from "react-icons/fi";
+import { FiCpu } from "react-icons/fi";
 
 import { registerPlugin } from "@ractf/plugins";
 
-import Statistics from "./components/Statistics";
+import AllChallenges from "./components/AllChallenges";
 
 
 export default () => {
-    registerPlugin("adminPage", "statistics", {
-        component: Statistics,
-        sidebar: "Statistics",
-        Icon: FiTrendingUp,
+    registerPlugin("adminPage", "allChallenges", {
+        component: AllChallenges,
+        sidebar: "Challenge Overview",
+        Icon: FiCpu,
     });
 };

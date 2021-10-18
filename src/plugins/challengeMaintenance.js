@@ -15,17 +15,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { FiTrendingUp } from "react-icons/fi";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
+import { Card } from "@ractf/ui-kit";
 import { registerPlugin } from "@ractf/plugins";
 
-import Statistics from "./components/Statistics";
 
+const MaintenanceWarning = ({ challenge }) => {
+    const { t } = useTranslation();
+
+    return (
+        <Card warning header={t("challenge.maintenance_header")}>
+            {t("challenge.maintenance_body")}
+        </Card>
+    );
+};
 
 export default () => {
-    registerPlugin("adminPage", "statistics", {
-        component: Statistics,
-        sidebar: "Statistics",
-        Icon: FiTrendingUp,
+    registerPlugin("challengeMod", "maintenanceMode", {
+        component: MaintenanceWarning,
+        check: (challenge) => challenge.maintenance
     });
 };

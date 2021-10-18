@@ -15,17 +15,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { FiTrendingUp } from "react-icons/fi";
+import * as http from "@ractf/util/http";
 
-import { registerPlugin } from "@ractf/plugins";
-
-import Statistics from "./components/Statistics";
+import { ENDPOINTS } from "./consts";
 
 
-export default () => {
-    registerPlugin("adminPage", "statistics", {
-        component: Statistics,
-        sidebar: "Statistics",
-        Icon: FiTrendingUp,
+export const selfCheck = () => {
+    return new Promise((resolve, reject) => {
+        http.get(ENDPOINTS.SELF_CHECK).then(async (result)  => {
+            resolve(result);
+        }).catch(reject);
     });
 };

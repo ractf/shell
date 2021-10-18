@@ -15,17 +15,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import { FiTrendingUp } from "react-icons/fi";
+import ReactGA from "react-ga";
 
-import { registerPlugin } from "@ractf/plugins";
+import { registerReducer } from "@ractf/plugins";
 
-import Statistics from "./components/Statistics";
+import { LOCATION_CHANGE } from "connected-react-router";
 
+
+const analyticsReducer = (state, { type, payload }) => {
+    if (type === LOCATION_CHANGE) {
+        const { location } = payload;
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname);
+    }
+    return state;
+};
 
 export default () => {
-    registerPlugin("adminPage", "statistics", {
-        component: Statistics,
-        sidebar: "Statistics",
-        Icon: FiTrendingUp,
-    });
+    const UA = window.env.gaUa;
+    if (UA) {
+        ReactGA.initialize(UA);
+        registerReducer(null, analyticsReducer);
+    }
 };

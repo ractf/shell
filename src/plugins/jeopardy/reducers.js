@@ -27,6 +27,8 @@ export const jeopardySearchReducer = (state = INITIAL, { type, payload }) => {
             return { ...state, filter: payload };
         case "SET_JEOPARDY_SHOW_SOLVED":
             return { ...state, showSolved: payload };
+        case "SET_JEOPARDY_SORT":
+            return { ...state, sort: payload };
         case "SET_JEOPARDY_SHOW_LOCKED":
             return { ...state, showLocked: payload };
         case "SET_JEOPARDY_OPEN_CARDS":

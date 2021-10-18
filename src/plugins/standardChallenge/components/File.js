@@ -26,13 +26,14 @@ import * as http from "@ractf/util/http";
 import "./Challenge.scss";
 
 
-export default ({ name, url, size, id, isEdit, ...props }) => {
+export default ({ name, url, size, id, isEdit, md5, ...props }) => {
     const modals = useContext(UiKitModals);
 
     const edit = () => {
         modals.promptConfirm({ message: "Edit file", remove: () => removeFile(id) },
             [{ name: "name", placeholder: "File name", label: "Name", val: name },
             { name: "url", placeholder: "File URL", label: "URL", val: url },
+            { name: "md5", placeholder: "MD5 Hash", label: "MD5", val: md5 },
             { name: "size", placeholder: "File size", label: "Size (bytes)", val: size.toString(), format: NUMBER_RE }]
         ).then(({ name, url, size }) => {
 
@@ -55,7 +56,7 @@ export default ({ name, url, size, id, isEdit, ...props }) => {
 
     return <a href={url} target={"_blank"} rel={"noopener noreferrer"}>
         <Button Icon={FiFile} tooltip={formatBytes(size)} {...props}>
-            {name}
+            {`${name} - ${md5.slice(0, 6)}`}
         </Button>
     </a>;
 };

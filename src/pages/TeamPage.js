@@ -115,7 +115,7 @@ const TeamPage = () => {
         <Container.Row>
             <Column xlWidth={3} lgWidth={4} mdWidth={12}>
                 <div className={"userName"}><FiUsers /> {teamData.name}</div>
-                <div>{t("point_count", { count: teamData.leaderboard_points })}</div>
+                <div>{t("point_count", { count: teamData.leaderboard_points ? teamData.leaderboard_points : 0 })}</div>
                 <div className={"userBio" + ((!teamData.description || teamData.description.length === 0)
                     ? " noBio" : "")}>
                     {teamData.description || t("teams.no_bio")}

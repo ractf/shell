@@ -20,72 +20,56 @@ import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
-    Page, Table, Button, PageHead, Container, Form
+    Page, PageHead
 } from "@ractf/ui-kit";
 import { ENDPOINTS } from "@ractf/api";
-import { usePaginated } from "@ractf/util/http";
 import { useConfig } from "@ractf/shell-util";
 
 import Link from "components/Link";
-
-import { BrokenShards } from "./ErrorPages";
+import PaginatedTable from "components/PaginatedTable";
 
 
 export const TeamsList = () => {
-    //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.TEAM);
-    const [state, next] = usePaginated(ENDPOINTS.TEAM);
     const hasTeams = useConfig("enable_teams");
-
     const { t } = useTranslation();
 
     if (!hasTeams)
         return <Redirect to={"/"} />;
 
-    return <Page title={t("team_plural")} centre={!!state.error}>
+    return <Page title={t("team_plural")}>
         <PageHead>{t("lists.all_teams")}</PageHead>
-        {state.error ? <>
-            <Form.Error>
-                {t("lists.teams_error")}<br />{t("lists.try_reload")}
-            </Form.Error>
-            <BrokenShards />
-        </> : <>
-            <Table headings={[t("team"), t("members")]} data={
-                state.data.map(x => [
-                    <Link to={`/team/${x.id}`}>{x.name}</Link>,
-                    <Link to={`/team/${x.id}`}>{x.members}</Link>,
-                ])
-            } />
-            {!state.hasMore && (<Container full centre>
-                <Button disabled={state.loading} onClick={next}>{t("load_more")}</Button>
-            </Container>)}
-        </>}
+        <PaginatedTable
+            headers={{
+                "Team": "name",
+                "Members": "members_count"
+            }}
+            defaultOrdering="name"
+            endpoint={ENDPOINTS.TEAM}
+            transformerFunction={x => [
+                <Link to={`/team/${x.id}`}>{x.name}</Link>,
+                <Link to={`/team/${x.id}`}>{x.members}</Link>,
+            ]}
+        />
     </Page>;
 };
 
 export const UsersList = () => {
-    //const [{results, hasMore}, next, loading, error] = usePaginated(ENDPOINTS.USER);
-    const [state, next] = usePaginated(ENDPOINTS.USER);
     const { t } = useTranslation();
     const hasTeams = useConfig("enable_teams");
 
-    return <Page title={t("user_plural")} centre={!!state.error}>
+    return <Page title={t("user_plural")}>
         <PageHead>{t("lists.all_users")}</PageHead>
-
-        {state.error ? <>
-            <Form.Error>
-                {t("lists.users_error")}<br />{t("lists.try_reload")}
-            </Form.Error>
-            <BrokenShards />
-        </> : <>
-            <Table headings={[t("name"), hasTeams && t("team")].filter(Boolean)} data={
-                state.data.map(x => [
-                    <Link to={`/profile/${x.id}`}>{x.username}</Link>,
-                    hasTeams && <Link to={`/profile/${x.id}`}>{x.team_name}</Link>
-                ].filter(i => i !== false))
-            } />
-            {state.hasMore && (<Container full centre>
-                <Button disabled={state.loading} onClick={next}>{t("load_more")}</Button>
-            </Container>)}
-        </>}
+        <PaginatedTable 
+            headers={{
+                "Name": "username",
+                ...(hasTeams && {"Team": "team__name"})
+            }}
+            defaultOrdering="username"
+            endpoint={ENDPOINTS.USER}
+            transformerFunction={x => [
+                <Link to={`/profile/${x.id}`}>{x.username}</Link>,
+                hasTeams && <Link to={`/profile/${x.id}`}>{x.team_name}</Link>
+            ].filter(i => i !== false)}
+        />
     </Page>;
 };

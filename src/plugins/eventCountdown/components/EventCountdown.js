@@ -23,12 +23,14 @@ import { useInterval } from "@ractf/util";
 import { ToggleTab } from "@ractf/ui-kit";
 
 
-const EventCountdown = ({ cdKey = "competition_end" }) => {
-    const { dates: countdown_dates } = useSelector(state => state.countdowns) || {};
+const EventCountdown = () => {
+    const { dates: countdown_dates, passed } = useSelector(state => state.countdowns) || {};
     const [countdown, setCountdown] = useState(null);
 
     const pad = n => (n < 10 ? "0" : "") + n;
     useInterval(() => {
+        const cdKey = passed["countdown_timestamp"] ? "competition_end" : "countdown_timestamp";
+
         if (!countdown_dates || !countdown_dates[cdKey]) {
             return setCountdown(null);
         }
@@ -46,9 +48,9 @@ const EventCountdown = ({ cdKey = "competition_end" }) => {
         setCountdown(`${days}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`);
     }, 1000);
 
-    if (!countdown) return null;
-    return <ToggleTab Icon={IoMdStopwatch}>
+    return <>
+    {countdown && <ToggleTab Icon={IoMdStopwatch}>
         {countdown}
-    </ToggleTab>;
+    </ToggleTab>}</>;
 };
-export default React.memo(EventCountdown);
+export default EventCountdown;

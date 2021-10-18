@@ -44,6 +44,7 @@ export default () => {
 
         "Event Configuration": [
             ["flag_prefix", "Flag Prefix", "string"],
+            ["event_name", "Event Name", "string"],
         ],
 
         "Registration Restrictions": [
@@ -65,6 +66,8 @@ export default () => {
             ["enable_scoring", "Enable Scoring", "boolean"],
             ["enable_solve_broadcast", "Enable Solve Broadcasting", "boolean"],
             ["enable_team_join", "Enable Team Joining", "boolean"],
+            ["enable_team_leave", "Enable Team Leaving", "boolean"],
+            ["enable_challenge_server", "Enable Challenge Server", "boolean"]
         ],
 
         "Teams": [
@@ -76,6 +79,7 @@ export default () => {
             ["enable_ctftime", "Enable CTFTime", "boolean"],
             ["login_provider", "Login provider", "string"],
             ["registration_provider", "Registration provider", "string"],
+            ["firstblood_webhook", "First blood webhook", "string"]
         ]
     });
 };

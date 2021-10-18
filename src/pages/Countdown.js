@@ -28,6 +28,9 @@ import style from "./Countdown.module.scss";
 export default ({ cdKey }) => {
     const { dates: countdown_dates } = useSelector(state => state.countdowns) || {};
     const [countdownText, setCountdownText] = useState("");
+    const [tooltipText, setTooltipText] = useState("The site will update automatically - no need to refresh!");
+    const [showTip, setShowTip] = useState(false);
+    const [loadingTipShowing, setLoadingTipShowing] = useState(false);
 
     const pad = n => {
         if (n < 10) return "0" + n;
@@ -52,6 +55,22 @@ export default ({ cdKey }) => {
             + pad(minutes) + " minute" + (minutes === 1 ? "" : "s") + ", "
             + pad(seconds) + " second" + (seconds === 1 ? "" : "s"));
 
+        if (delta < 60 * 10 && !showTip && !loadingTipShowing) {
+            setShowTip(true);
+        }
+
+        if (delta === 0 && !loadingTipShowing) {
+            setLoadingTipShowing(true);
+            setShowTip(false);
+            setTimeout(() => {
+                setTooltipText(
+                    "The site is loading, please be patient and do not refresh," +
+                    " it will move you back further in the queue."
+                );
+                setShowTip(true);
+            }, 2000);
+        }
+
         if (delta === 0) {
             recheckCountdowns();
         }
@@ -66,6 +85,9 @@ export default ({ cdKey }) => {
 
         <div className={style.lockTitle}>Site Locked!</div>
         <div className={style.siteCountdown}>{countdownText ? "Unlock in " + countdownText : ""}</div>
+        <div className={style.tooltip} style={{opacity: showTip ? "100%" : "0%"}}>
+            {tooltipText}
+        </div>
     </div>;
 };
 
