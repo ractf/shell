@@ -381,7 +381,8 @@
         "username_already_exists": "Username is already in use.",
         "already_in_team": "You're already in a team!",
         "weak_password": "Your password is too weak!",
-        "challenge_server_disabled": "The challenge server has been disabled on this instance of RACTF"
+        "challenge_server_disabled": "The challenge server has been disabled on this instance of RACTF.",
+        "challenge_server_team_required": "You need to be in a team before requesting a challenge instance!"
     },
     "colours": {
         "backCol": "Background colour",
