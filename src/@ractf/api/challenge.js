@@ -36,6 +36,15 @@ export const resyncChallenge = (id) => {
     });
 };
 
+export const updateChallengeLocal = (id, fieldsToUpdate) => {
+    // fieldsToUpdate in the form { score: number, name: string } etc
+    const data = {
+        id,
+        ...fieldsToUpdate,
+    }
+    return store.dispatch(actions.editChallenge(data))
+}
+
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
