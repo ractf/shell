@@ -27,67 +27,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
 
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
+      - name: Use Node.js 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
 
-    - name: Use Node.js 14
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
+      - name: Cache Node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-    - name: Cache Node modules
-      uses: actions/cache@v1
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+      - name: Install dependencies
+        run: npm ci --progress=false
 
-    - name: Install dependencies
-      run: npm ci --progress=false
+      - name: Run Build
+        run: npm run build
+        env:
+          CI: "false"
+          RACTF_API_DOMAIN: https://api-2021.ractf.co.uk
+          RACTF_API_BASE: /api/v2
+          RACTF_WSS_URL: wss://api-2021.ractf.co.uk/api/v2/ws/
+          RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
+          RACTF_GA_UA: UA-203069817-1
+          REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
 
-    - name: Run Build
-      run: npm run build
-      env:
-        CI: "false"
-        RACTF_API_DOMAIN: https://api-2021.ractf.co.uk
-        RACTF_API_BASE: /api/v2
-        RACTF_WSS_URL: wss://api-2021.ractf.co.uk/api/v2/ws/
-        RACTF_SENTRY_DSN: https://b51135cca11047fe979c7b44cc35a404@o104250.ingest.sentry.io/1815863
-        RACTF_GA_UA: UA-203069817-1
-        REACT_APP_MAP_PROVIDER: ${{ secrets.REACT_APP_MAP_PROVIDER }}
+      - name: Install Sentry CLI
+        run: curl -sL https://sentry.io/get-cli/ | bash
 
-    - name: Install Sentry CLI
-      run: curl -sL https://sentry.io/get-cli/ | bash
+      - name: Publish Sentry Release
+        run: >-
+          VERSION=$(sentry-cli releases propose-version) &&
+          sentry-cli releases new $VERSION &&
+          sentry-cli releases set-commits --auto $VERSION &&
+          sentry-cli releases files $VERSION upload-sourcemaps build &&
+          sentry-cli releases finalize $VERSION
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ractf
+          SENTRY_PROJECT: frontend
 
-    - name: Publish Sentry Release
-      run: >-
-        VERSION=$(sentry-cli releases propose-version) &&
-        sentry-cli releases new $VERSION &&
-        sentry-cli releases set-commits --auto $VERSION &&
-        sentry-cli releases files $VERSION upload-sourcemaps build &&
-        sentry-cli releases finalize $VERSION
-      env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ractf
-        SENTRY_PROJECT: frontend
+      - name: Clear Sourcemaps
+        run: find . -type f -name '*.map' -delete
 
-    - name: Clear Sourcemaps
-      run: find . -type f -name '*.map' -delete
-
-    - uses: jakejarvis/s3-sync-action@master
-      with:
-        args: --acl public-read --follow-symlinks
-      env:
-        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_2021 }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'eu-west-2'
-        SOURCE_DIR: 'build'
+      - uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_2021 }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'eu-west-2'
+          SOURCE_DIR: 'build'
