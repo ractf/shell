@@ -6,27 +6,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
 
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
+      - name: Build Docker container
+        run: docker build -t ractf/shell:latest -t ghcr.io/ractf/shell:latest .
 
-    - name: Build Docker container
-      run: docker build -t ractf/shell:latest -t ghcr.io/ractf/shell:latest .
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker login --username ractf --password ${{ secrets.password }}
 
-    - name: Login to Docker Hub
-      if: github.ref == 'refs/heads/master'
-      run: docker login --username ractf --password ${{ secrets.password }}
+      - name: Login to Github Container Registry
+        if: github.ref == 'refs/heads/master'
+        run: echo ${{ secrets.ghtoken }} | docker login ghcr.io -u ${{ secrets.ghuser }} --password-stdin
 
-    - name: Login to Github Container Registry
-      if: github.ref == 'refs/heads/master'
-      run: echo ${{ secrets.ghtoken }} | docker login ghcr.io -u ${{ secrets.ghuser }} --password-stdin
+      - name: Push to Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push ractf/shell:latest
 
-    - name: Push to Docker Hub
-      if: github.ref == 'refs/heads/master'
-      run: docker push ractf/shell:latest
-
-    - name: Push to Github Container Registry
-      if: github.ref == 'refs/heads/master'
-      run: docker push ghcr.io/ractf/shell:latest
+      - name: Push to Github Container Registry
+        if: github.ref == 'refs/heads/master'
+        run: docker push ghcr.io/ractf/shell:latest
