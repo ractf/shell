@@ -19,13 +19,10 @@ import { registerPlugin } from "@ractf/plugins";
 import { updateChallengeLocal } from "@ractf/api";
 
 
-const WS_DYNAMIC_SCORING = 7;
+const WS_CHALLENGE_LOCAL_UPDATE = 7;
 
 export default () => {
-    registerPlugin("wsMessage", WS_DYNAMIC_SCORING, (data) => {
-        const toUpdate = {
-            score: data.score,
-        };
-        updateChallengeLocal(data.challenge_id, toUpdate);
+    registerPlugin("wsMessage", WS_CHALLENGE_LOCAL_UPDATE, (data) => {
+        updateChallengeLocal(data);
     });
 };
