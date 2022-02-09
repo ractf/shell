@@ -37,7 +37,7 @@ A basic build can now be performed with the following commands:
 
 ```bash
 cd shell
-ppm i
+pnpm i
 pnpm run build
 ```
 
