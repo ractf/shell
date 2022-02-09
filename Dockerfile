@@ -1,4 +1,4 @@
-FROM node:14.7.0-alpine
+FROM docker.io/library/node:14.7.0-alpine
 
 WORKDIR /app
 RUN apk add git curl
@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 RUN cp -r build /site
 
-FROM caddy:2.1.1-alpine
+FROM docker.io/library/caddy:2.1.1-alpine
 
 COPY Caddyfile.development /etc/caddy/Caddyfile.development
 COPY Caddyfile.production /etc/caddy/Caddyfile
