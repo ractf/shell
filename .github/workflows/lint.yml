@@ -47,7 +47,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile --shamefully-hoist
 
       - name: Run Build
         run: pnpm run lint

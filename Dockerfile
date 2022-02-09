@@ -9,7 +9,7 @@ ENV RACTF_USING_CADDY=true
 
 RUN curl -L https://unpkg.com/@pnpm/self-installer | node
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --shamefully-hoist
 RUN pnpm run build
 RUN cp -r build /site
 

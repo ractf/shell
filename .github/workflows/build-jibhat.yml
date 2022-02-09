@@ -46,7 +46,7 @@ jobs:
         run: pnpm install
 
       - name: Run Build
-        run: pnpm run build --frozen-lockfile
+        run: pnpm run build --frozen-lockfile --shamefully-hoist
         env:
           CI: "false"
           RACTF_API_DOMAIN: https://api-jibhat.ractf.co.uk
