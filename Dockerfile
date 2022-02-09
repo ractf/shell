@@ -7,7 +7,10 @@ COPY . /app
 
 ENV RACTF_USING_CADDY=true
 
-RUN npm i && npm run build
+RUN curl -L https://unpkg.com/@pnpm/self-installer | node && apk del .build-deps
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 RUN cp -r build /site
 
 FROM caddy:2.1.1-alpine
