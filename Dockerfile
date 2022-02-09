@@ -1,7 +1,7 @@
 FROM node:14.7.0-alpine
 
 WORKDIR /app
-RUN apk add git
+RUN apk add git curl
 
 COPY . /app
 
