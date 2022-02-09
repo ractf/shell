@@ -12,6 +12,13 @@ installation of which widely ranges between distributions. See
 about `pnpm env`. Using pnpm is identical to npm in almost every way, but your
 disk space will thank you when working with multiple projects that use npm packages.
 
+On some systems, some packages require you to use Node.js 14. Please refer to my earlier 
+mention of `pnpm env`, and run `pnpm env use 14 --global` (only global is supported
+as of the time of writing) or use your usual node version manager (eg `nvm`).
+
+You need to use the `--shamefully-hoist` flag when installing dependencies because
+some of the dependency developers do not know how to write good code. 
+
 As this project contains submodules, cloning should be performed with the
 command:
 
@@ -37,7 +44,7 @@ A basic build can now be performed with the following commands:
 
 ```bash
 cd shell
-pnpm i
+ppm i --shamefully-hoist
 pnpm run build
 ```
 
