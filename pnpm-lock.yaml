@@ -63,7 +63,6 @@ specifiers:
   react-loadable: ^5.5.0
   react-moment: ^0.9.7
   react-redux: ^7.2.0
-  react-router: 5.2.0
   react-router-dom: ^5.1.2
   react-simple-code-editor: ^0.11.0
   react-vis-network: ^1.0.0
@@ -84,7 +83,7 @@ specifiers:
 dependencies:
   '@sentry/browser': 5.15.5
   chart.js: 2.5.0
-  connected-react-router: 6.8.0_2cc2ae23829b391368cc09aa812c8578
+  connected-react-router: 6.8.0_f335e0554af146d3efbce05aea54a3c2
   dayjs: 1.10.4
   i18next: 19.4.4
   markdown-to-jsx: 6.11.4_react@16.13.1
@@ -106,7 +105,6 @@ dependencies:
   react-loadable: 5.5.0_react@16.13.1
   react-moment: 0.9.7_moment@2.24.0+react@16.13.1
   react-redux: 7.2.0_49f644e2f7de4182503f8b93abece808
-  react-router: 5.2.0_react@16.13.1
   react-router-dom: 5.1.2_react@16.13.1
   react-simple-code-editor: 0.11.0_react-dom@16.13.1+react@16.13.1
   react-vis-network: 1.0.0_react-dom@16.13.1+react@16.13.1
@@ -5703,7 +5701,7 @@ packages:
     engines: {node: '>=0.8'}
     dev: true
 
-  /connected-react-router/6.8.0_2cc2ae23829b391368cc09aa812c8578:
+  /connected-react-router/6.8.0_f335e0554af146d3efbce05aea54a3c2:
     resolution: {integrity: sha512-E64/6krdJM3Ag3MMmh2nKPtMbH15s3JQDuaYJvOVXzu6MbHbDyIvuwLOyhQIuP4Om9zqEfZYiVyflROibSsONg==}
     peerDependencies:
       history: ^4.7.2
@@ -5717,7 +5715,6 @@ packages:
       prop-types: 15.7.2
       react: 16.13.1
       react-redux: 7.2.0_49f644e2f7de4182503f8b93abece808
-      react-router: 5.2.0_react@16.13.1
       redux: 4.0.5
     dev: false
 
@@ -9794,18 +9791,6 @@ packages:
       tiny-warning: 1.0.3
     dev: false
 
-  /mini-create-react-context/0.4.1_prop-types@15.7.2+react@16.13.1:
-    resolution: {integrity: sha512-YWCYEmd5CQeHGSAKrYvXgmzzkrvssZcuuQDDeqkT+PziKGMgE+0MCCtcKbROzocGBG1meBLl2FotlRwf4gAzbQ==}
-    peerDependencies:
-      prop-types: ^15.0.0
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-    dependencies:
-      '@babel/runtime': 7.13.10
-      prop-types: 15.7.2
-      react: 16.13.1
-      tiny-warning: 1.0.3
-    dev: false
-
   /mini-css-extract-plugin/0.5.0_webpack@4.29.6:
     resolution: {integrity: sha512-IuaLjruM0vMKhUUT51fQdQzBYTX49dLj8w68ALEAe2A4iYNpIC4eMac67mt3NzycvjOlf07/kYxJDc0RTl1Wqw==}
     engines: {node: '>= 6.9.0 <7.0.0 || >= 8.9.0'}
@@ -12217,24 +12202,6 @@ packages:
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
       mini-create-react-context: 0.3.2_prop-types@15.7.2+react@16.13.1
-      path-to-regexp: 1.8.0
-      prop-types: 15.7.2
-      react: 16.13.1
-      react-is: 16.13.1
-      tiny-invariant: 1.1.0
-      tiny-warning: 1.0.3
-    dev: false
-
-  /react-router/5.2.0_react@16.13.1:
-    resolution: {integrity: sha512-smz1DUuFHRKdcJC0jobGo8cVbhO3x50tCL4icacOlcwDOEQPq4TMqwx3sY1TP+DvtTgz4nm3thuo7A+BK2U0Dw==}
-    peerDependencies:
-      react: '>=15'
-    dependencies:
-      '@babel/runtime': 7.13.10
-      history: 4.10.1
-      hoist-non-react-statics: 3.3.2
-      loose-envify: 1.4.0
-      mini-create-react-context: 0.4.1_prop-types@15.7.2+react@16.13.1
       path-to-regexp: 1.8.0
       prop-types: 15.7.2
       react: 16.13.1
