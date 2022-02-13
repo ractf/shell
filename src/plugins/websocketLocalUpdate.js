@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Really Awesome Technology Ltd
+// Copyright (C) 2022 Really Awesome Technology Ltd
 //
 // This file is part of RACTF.
 //
@@ -19,7 +19,7 @@ import { registerPlugin } from "@ractf/plugins";
 import { updateChallengeLocal } from "@ractf/api";
 
 
-const WS_CHALLENGE_LOCAL_UPDATE = 7;
+const WS_CHALLENGE_LOCAL_UPDATE = 7; // This is the event type
 
 export default () => {
     registerPlugin("wsMessage", WS_CHALLENGE_LOCAL_UPDATE, (data) => {
