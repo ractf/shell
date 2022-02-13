@@ -33,28 +33,21 @@ jobs:
         with:
           submodules: true
 
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.20.3
+
       - name: Use Node.js 14
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-
-      - name: Cache Node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci --progress=false
+        run: pnpm install --frozen-lockfile --shamefully-hoist
 
       - name: Run Build
-        run: npm run build-storybook -- -o build-storybook
+        run: pnpm run build-storybook -- -o build-storybook
 
       - uses: jakejarvis/s3-sync-action@master
         with:

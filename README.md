@@ -6,10 +6,18 @@
 
 `ractf/shell` operates as a static single-page app. This means that you will
 require a separate web server to serve files - nginx or apache will usually do
-the job. The single dependency for building the app is node.js, this
+the job. The sole dependencies for building the app are Node.js and pnpm, this
 installation of which widely ranges between distributions. See
-[here](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for
-more details on that.
+[here](https://pnpm.io/installation) for more details on that, ensuring you read 
+about `pnpm env`. Using pnpm is identical to npm in almost every way, but your
+disk space will thank you when working with multiple projects that use npm packages.
+
+On some systems, some packages require you to use Node.js 14. Please refer to my earlier 
+mention of `pnpm env`, and run `pnpm env use 14 --global` (only global is supported
+as of the time of writing) or use your usual node version manager (eg `nvm`).
+
+You need to use the `--shamefully-hoist` flag when installing dependencies because
+some of the dependency developers do not know how to write good code. 
 
 As this project contains submodules, cloning should be performed with the
 command:
@@ -36,8 +44,8 @@ A basic build can now be performed with the following commands:
 
 ```bash
 cd shell
-npm i
-npm run build
+ppm i --shamefully-hoist
+pnpm run build
 ```
 
 You can now either serve the `./build` directory directly (not recommended) or

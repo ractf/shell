@@ -46,7 +46,7 @@ export default () => {
 
     let localEmailRegex;
     if (emailRegex)
-        localEmailRegex = emailRegex;
+        localEmailRegex = new RegExp(emailRegex);
     else if (emailDomain)
         localEmailRegex = new RegExp("^.*@" + escapeRegex(emailDomain.replace(/^@+/, "")) + "$");
     else
