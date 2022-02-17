@@ -58,10 +58,10 @@ export const EmailVerif = () => {
 
     return <Wrap>
         <div>
-            <div style={{textAlign: "center"}}>
+            <h1 style={{textAlign: "center"}}>
                {t("auth.welcome")}
-            </div>
-            {page && <Markdown LinkElem={Link} source={page.content} />}
+            </h1>
+            {page && <Markdown LinkElem={Link} source={page.content} style={{ margin: "20px 0" }} />}
         </div>
         <div style={{ textAlign: "center" }}>
             {verif === -1 ? <>
