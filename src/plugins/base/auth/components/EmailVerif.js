@@ -17,18 +17,26 @@
 
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-import { Button, Form, Spinner } from "@ractf/ui-kit";
+import { Button, Form, Spinner, Markdown } from "@ractf/ui-kit";
 import { useReactRouter } from "@ractf/util";
 import { verify } from "@ractf/api";
 import * as http from "@ractf/util/http";
 
+import Link from "components/Link";
 import qs from "query-string";
 
 import { Wrap } from "./Parts";
 
 
 export const EmailVerif = () => {
+    const user = useSelector(state => state.user);
+    const pages = useSelector(state => state.cms.pages);
+    const page = pages.find(i => i.url === "/conduct");
+    const { t } = useTranslation();
+
     const [verif, setVerif] = useState(-1); // -1 = not started, 0 = loading, 1 = error, 2 = success
     const [message, setMessage] = useState("");
 
@@ -46,8 +54,15 @@ export const EmailVerif = () => {
     };
 
     if (!(secret && id)) return <Redirect to={"/login"} />;
+    if (user?.is_verified) return <Redirect to={"/"} />;
 
     return <Wrap>
+        <div>
+            <div style={{textAlign: "center"}}>
+               {t("auth.welcome")}
+            </div>
+            {page && <Markdown LinkElem={Link} source={page.content} />}
+        </div>
         <div style={{ textAlign: "center" }}>
             {verif === -1 ? <>
                 <Button onClick={runVerif} disabled={verif === 0}>Verify Email</Button>
