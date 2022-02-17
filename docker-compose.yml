@@ -31,7 +31,7 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
 
   shell:
-    image: ghcr.io/ractf/shell:latest
+    build: .
     ports:
       - "8000:8000"
     environment:
