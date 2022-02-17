@@ -15,42 +15,59 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
-import { Spinner, Form } from "@ractf/ui-kit";
+import { Button, Form, Spinner, Markdown } from "@ractf/ui-kit";
 import { useReactRouter } from "@ractf/util";
 import { verify } from "@ractf/api";
 import * as http from "@ractf/util/http";
 
+import Link from "components/Link";
 import qs from "query-string";
 
 import { Wrap } from "./Parts";
 
 
 export const EmailVerif = () => {
-    const [verif, setVerif] = useState(0);
+    const user = useSelector(state => state.user);
+    const pages = useSelector(state => state.cms.pages);
+    const page = pages.find(i => i.url === "/conduct");
+    const { t } = useTranslation();
+
+    const [verif, setVerif] = useState(-1); // -1 = not started, 0 = loading, 1 = error, 2 = success
     const [message, setMessage] = useState("");
 
     const { location } = useReactRouter();
     const { id, secret } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
-    useEffect(() => {
+    const runVerif = () => {
+        setVerif(0);
         verify(id, secret).then(() => {
             setVerif(2);
         }).catch((e) => {
             setMessage(http.getError(e));
             setVerif(1);
         });
-    }, [setVerif, setMessage, id, secret]);
+    };
+
     if (!(secret && id)) return <Redirect to={"/login"} />;
+    if (user?.is_verified) return <Redirect to={"/"} />;
 
     return <Wrap>
+        <div>
+            <h1 style={{textAlign: "center"}}>
+               {t("auth.welcome")}
+            </h1>
+            {page && <Markdown LinkElem={Link} source={page.content} style={{ margin: "20px 0" }} />}
+        </div>
         <div style={{ textAlign: "center" }}>
-            {verif === 0 ? <>
-                <div>Verifying your account...</div>
+            {verif === -1 ? <>
+                <Button onClick={runVerif} disabled={verif === 0}>Verify Email</Button>
+                {verif === 0 && <Spinner /> }
                 <br />
-                <Spinner />
             </> : verif === 1 ? <>
                 <Form.Error>Account verification failed!</Form.Error>
                 <br />
