@@ -133,7 +133,8 @@
         "no_votes": "Nobody has rated this challenge yet",
         "votes": "{{percentage}}% positive votes",
         "maintenance_header": "🚨 This challenge is in maintenance mode.",
-        "maintenance_body": "We've received reports of problems with this challenge which we are investigating. Participants are still free to attempt the challenge but may experience issues locating or submitting the solution."
+        "maintenance_body": "We've received reports of problems with this challenge which we are investigating. Participants are still free to attempt the challenge but may experience issues locating or submitting the solution.",
+        "points_type": "Type of scoring system"
     },
     "editor": {
         "chal_name": "Challenge name",

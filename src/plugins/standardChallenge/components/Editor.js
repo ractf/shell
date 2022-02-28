@@ -462,6 +462,10 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             <Input rows={3} val={challenge.post_score_explanation} name={"post_score_explanation"}
                                 placeholder={t("editor.post_score_explanation")} />
                         </Form.Group>
+                        <Form.Group htmlFor={"points_type"} label={t("editor.points_type")}>
+                            <Select initial={challenge.points_type ?? 'basic'}
+                                name={"points_type"} options={['basic', 'decay']} />
+                        </Form.Group>
                         <Checkbox val={isCreator || (!!challenge.tiebreaker)} name={"tiebreaker"}>
                             {t("editor.tiebreaker")}
                         </Checkbox>
