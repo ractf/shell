@@ -250,14 +250,16 @@ const FlagMetadata = React.memo(({ flag_type, val, onChange, challenge }) => {
     const plugin = getPlugin("flagType", flag_type);
     if (!plugin) return null;
 
+    const currentPlugin = { ...plugin };
+
     if (challenge.points_type === "decay") {
-        plugin.schema.push({
+        currentPlugin.schema.push({
             name: "min_score",
             label: "Minimum Score",
             type: "number"
         });
     
-        plugin.schema.push({
+        currentPlugin.schema.push({
             name: "decay_constant",
             label: "Decay Constant",
             type: "number"
@@ -265,7 +267,7 @@ const FlagMetadata = React.memo(({ flag_type, val, onChange, challenge }) => {
     }
 
     return <Form onChange={onChange}>
-        {fromJson(plugin.schema, val)}
+        {fromJson(currentPlugin.schema, val)}
     </Form>;
 });
 FlagMetadata.displayName = "FlagMetadata";
