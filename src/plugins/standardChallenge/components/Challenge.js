@@ -123,7 +123,7 @@ export default ({ challenge, category, embedded, rightComponent }) => {
 
     const leftSide = <Page>
         <PageHead
-            subTitle={<>{t("point_count", { count: challenge.score })} - {solveMsg} - {votesMessage}</>}
+            subTitle={<>{t("point_count", { count: challenge.current_score ?? challenge.score })} - {solveMsg} - {votesMessage}</>}
             back={<Link className={"backToChals"} to={challenge.category.url}>
                 {t("back_to_chal")}
             </Link>}
