@@ -45,13 +45,14 @@ export const updateChallengeLocal = (data) => {
 export const createChallenge = ({
     id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
-    post_score_explanation, unlock_requirements, maintenance, tiebreaker
+    post_score_explanation, unlock_requirements, maintenance, tiebreaker,
+    points_type
 }) => {
     return http.post(ENDPOINTS.CHALLENGES, {
         category: id, name, score, description,
         flag_type, flag_metadata, post_score_explanation,
         challenge_metadata, hidden, unlock_requirements,
-        author, files, tags, maintenance, tiebreaker,
+        author, files, tags, maintenance, tiebreaker, points_type,
         challenge_type: challenge_type || "default",
     }).then(data => {
         store.dispatch(actions.addChallenge(data));
