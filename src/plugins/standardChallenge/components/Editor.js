@@ -480,7 +480,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                         </Form.Group>
                         <Form.Group htmlFor={"points_type"} label={t("editor.points_type")}>
                             <Select initial={challenge.points_type ?? "basic"}
-                                name={"points_type"} options={["basic", "decay"]} />
+                                name={"points_type"} options={["basic", "decay"].map((key) => ({ key, value: key }))} />
                         </Form.Group>
                         <Checkbox val={isCreator || (!!challenge.tiebreaker)} name={"tiebreaker"}>
                             {t("editor.tiebreaker")}
