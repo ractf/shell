@@ -62,7 +62,8 @@ export const createChallenge = ({
 export const editChallenge = ({
     id, name, score, description, flag_type, flag_metadata,
     challenge_metadata, author, challenge_type, files, hidden, tags,
-    post_score_explanation, unlock_requirements, maintenance, tiebreaker
+    post_score_explanation, unlock_requirements, maintenance, tiebreaker,
+    points_type
 }) => {
     const categories = store.getState().challenges?.categories || [];
     let original = null;
@@ -73,7 +74,7 @@ export const editChallenge = ({
         name, score, description, post_score_explanation,
         flag_type, flag_metadata, unlock_requirements,
         challenge_metadata, hidden, maintenance,
-        author, files, tags, tiebreaker,
+        author, files, tags, tiebreaker, points_type,
         challenge_type: challenge_type || "default",
     };
     // Immediate dispatch to make things feel more responsive
