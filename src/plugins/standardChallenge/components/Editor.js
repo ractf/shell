@@ -254,8 +254,8 @@ const FlagMetadata = React.memo(({ flag_type, val, onChange, challenge }) => {
 
     if (challenge.points_type === "decay") {
         currentPlugin.schema.push({
-            name: "min_score",
-            label: "Minimum Score",
+            name: "min_points",
+            label: "Minimum Points",
             type: "number"
         });
     
