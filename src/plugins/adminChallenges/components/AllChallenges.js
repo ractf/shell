@@ -34,7 +34,8 @@ const AllChallenges = () => {
 
     const serializeChallenges = () => {
         return challenges.map((chal) => {
-            return [chal.name, chal.author, chal.current_score ?? chal.score, chal.solve_count, chal.first_blood, calcPercentage(chal)];
+            return [chal.name, chal.author, chal.current_score ?? chal.score, chal.solve_count, chal.first_blood,
+                    calcPercentage(chal)];
         });
     };
 

@@ -246,9 +246,19 @@ const FileEditor = ({ challenge }) => {
     </>;
 };
 
-const FlagMetadata = React.memo(({ flag_type, val, onChange }) => {
+const FlagMetadata = React.memo(({ flag_type, val, onChange, challenge }) => {
     const plugin = getPlugin("flagType", flag_type);
     if (!plugin) return null;
+
+    if (challenge.points_type === "decay") plugin.schema.push({
+        name: "min_score",
+        label: "Minimum Score",
+        type: "number"
+    }).push({
+        name: "decay_constant",
+        label: "Decay Constant",
+        type: "number"
+    });
 
     return <Form onChange={onChange}>
         {fromJson(plugin.schema, val)}
@@ -463,8 +473,8 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                 placeholder={t("editor.post_score_explanation")} />
                         </Form.Group>
                         <Form.Group htmlFor={"points_type"} label={t("editor.points_type")}>
-                            <Select initial={challenge.points_type ?? 'basic'}
-                                name={"points_type"} options={['basic', 'decay']} />
+                            <Select initial={challenge.points_type ?? "basic"}
+                                name={"points_type"} options={["basic", "decay"]} />
                         </Form.Group>
                         <Checkbox val={isCreator || (!!challenge.tiebreaker)} name={"tiebreaker"}>
                             {t("editor.tiebreaker")}
@@ -501,7 +511,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                 name={"flag_type"} />
                         </Form.Group>
                         <FlagMetadata formRequires={["flag_type"]} name={"flag_metadata"}
-                            val={challenge.flag_metadata} />
+                            val={challenge.flag_metadata} challenge={challenge} />
                         {/*
                         <Form.Group htmlFor={"flag_metadata"} label={t("editor.chal_flag")}>
                             <Input placeholder={t("editor.chal_flag")}
