@@ -246,12 +246,28 @@ const FileEditor = ({ challenge }) => {
     </>;
 };
 
-const FlagMetadata = React.memo(({ flag_type, val, onChange }) => {
+const FlagMetadata = React.memo(({ flag_type, val, onChange, challenge }) => {
     const plugin = getPlugin("flagType", flag_type);
     if (!plugin) return null;
 
+    const currentPlugin = { ...plugin, schema: [...plugin.schema] };
+
+    if (challenge.points_type === "decay") {
+        currentPlugin.schema.push({
+            name: "min_points",
+            label: "Minimum Points",
+            type: "number"
+        });
+    
+        currentPlugin.schema.push({
+            name: "decay_constant",
+            label: "Decay Constant",
+            type: "number"
+         });
+    }
+
     return <Form onChange={onChange}>
-        {fromJson(plugin.schema, val)}
+        {fromJson(currentPlugin.schema, val)}
     </Form>;
 });
 FlagMetadata.displayName = "FlagMetadata";
@@ -462,6 +478,10 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                             <Input rows={3} val={challenge.post_score_explanation} name={"post_score_explanation"}
                                 placeholder={t("editor.post_score_explanation")} />
                         </Form.Group>
+                        <Form.Group htmlFor={"points_type"} label={t("editor.points_type")}>
+                            <Select initial={challenge.points_type ?? "basic"}
+                                name={"points_type"} options={["basic", "decay"]} />
+                        </Form.Group>
                         <Checkbox val={isCreator || (!!challenge.tiebreaker)} name={"tiebreaker"}>
                             {t("editor.tiebreaker")}
                         </Checkbox>
@@ -497,7 +517,7 @@ const Editor = ({ challenge, category, isCreator, saveEdit, removeChallenge, emb
                                 name={"flag_type"} />
                         </Form.Group>
                         <FlagMetadata formRequires={["flag_type"]} name={"flag_metadata"}
-                            val={challenge.flag_metadata} />
+                            val={challenge.flag_metadata} challenge={challenge} />
                         {/*
                         <Form.Group htmlFor={"flag_metadata"} label={t("editor.chal_flag")}>
                             <Input placeholder={t("editor.chal_flag")}

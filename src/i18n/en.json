@@ -157,7 +157,8 @@
         "maintenance": "Enable maintenance warning",
         "hide_locked": "Hide Locked Challenges",
         "show_locked": "Show Locked Challenges",
-        "cat_settings": "Category Settings"
+        "cat_settings": "Category Settings",
+        "points_type": "Type of scoring system"
     },
     "admin": {
         "self_check": {

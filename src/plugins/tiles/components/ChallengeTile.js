@@ -54,7 +54,7 @@ const ChallengeTile = ({ setChallenge, challenge }) => {
             </div>
             <span>{DIFFICULTIES[difficulty][1]}</span>
         </>} callout={<>
-            <div className={style.points}>{challenge.score}</div>
+            <div className={style.points}>{challenge.current_score ?? challenge.score}</div>
             <div className={style.pointsSub}>points</div>
         </>}
         success={challenge.solved} lesser

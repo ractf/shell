@@ -43,7 +43,7 @@ const Challenge = ({ challenge }) => {
     }, [challenge.id]);
 
     return <Card
-        header={`${challenge.name} (${challenge.score} points)`} lesser
+        header={`${challenge.name} (${challenge.current_score ?? challenge.score} points)`} lesser
         collapsible startClosed={!startOpen} onOpenToggle={onOpenToggle}
         success={challenge.solved} danger={challenge.hidden} warning={!challenge.unlocked && !challenge.hidden}
     >

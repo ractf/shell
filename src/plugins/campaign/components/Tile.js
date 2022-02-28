@@ -42,7 +42,7 @@ export const Tile = ({
     ...props
 }) => {
     const { unlocked } = props;
-    const { solved, solve_count, score } = challenge || {};
+    const { solved, solve_count, score, current_score } = challenge || {};
     const { t } = useTranslation();
 
     const solvedRight = solved && right && right.solved;
@@ -73,7 +73,7 @@ export const Tile = ({
         <div className={style.name}>{name}</div>
         {unlocked && (typeof score === "number") &&
             <div className={style.points}>
-                {score}
+                {current_score ?? score}
                 <div className={style.subLabel}>{t("point", { count: score })}</div>
             </div>
         }
