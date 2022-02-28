@@ -250,7 +250,7 @@ const FlagMetadata = React.memo(({ flag_type, val, onChange, challenge }) => {
     const plugin = getPlugin("flagType", flag_type);
     if (!plugin) return null;
 
-    const currentPlugin = { ...plugin };
+    const currentPlugin = { ...plugin, schema: [...plugin.schema] };
 
     if (challenge.points_type === "decay") {
         currentPlugin.schema.push({
