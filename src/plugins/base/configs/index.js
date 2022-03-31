@@ -30,7 +30,7 @@ export default () => {
     });
 
     registerPlugin("config", "baseConfig", {
-        "Dates and Times": [
+        "Dates and Times (Local Timezone)": [
             ["register_start_time", "Register Start Time", "date"],
             ["register_end_time", "Register End Time", "date"],
             ["start_time", "Event Start Time", "date"],
