@@ -6,6 +6,7 @@ RUN apk add git curl
 COPY . /app
 
 ENV RACTF_USING_CADDY=true
+ENV PNPM_VERSION=6.32.11
 
 RUN curl -L https://unpkg.com/@pnpm/self-installer | node
 
