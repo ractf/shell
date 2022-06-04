@@ -117,6 +117,7 @@ const Profile = () => {
                     </SubtleText></Container>}
                     <Container full toolbar spaced>
                         {userData.is_staff && <Badge danger pill outline>Admin</Badge>}
+                        {userData.state_actor && <Badge primary pill outline>State Actor</Badge>}
                         {userData.is_verified && <Badge warning pill outline={!userData.is_staff}>
                             Staff
                         </Badge>}
