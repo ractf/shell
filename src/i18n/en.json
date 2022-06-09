@@ -218,7 +218,14 @@
         "export_chal": "Export challenge",
         "export_sb": "Export scoreboards",
         "export_players": "Export players list",
-        "export_teams": "Export teams list"
+        "export_teams": "Export teams list",
+        "warnings": {
+            "scoring_disabled_during_event": "Event is open but scoring is disabled.",
+            "maintenance_mode": "Event is in maintenance mode.",
+            "flag_submission_disabled_during_event": "Event is open but flag submission is disabled.",
+            "challenges_locked": "Challenges locked!",
+            "registration_locked": "Registration locked!"
+        }
     },
     "team_wiz": {
         "name_missing": "Team name missing",
