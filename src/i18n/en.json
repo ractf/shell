@@ -225,6 +225,24 @@
             "flag_submission_disabled_during_event": "Event is open but flag submission is disabled.",
             "challenges_locked": "Challenges locked!",
             "registration_locked": "Registration locked!"
+        },
+        "audit_log": {
+            "title": "Audit Log",
+            "empty": "The audit log is empty.",
+            "heading_set_config": "Config Change",
+            "entry_set_config": "{{_username}} changed {{key}} from {{old_value}} to {{new_value}}.",
+            "heading_management_create_preevent_cache": "Pre-event cache created",
+            "entry_management_create_preevent_cache": "{{_username}} created the pre-event cache.",
+            "heading_management_reset_scores": "Scores reset",
+            "entry_management_reset_scores": "{{_username}} reset scores.",
+            "heading_management_create_user": "User created",
+            "entry_management_create_user": "{{_username}} created user {{username}} is_visible: {{is_visible}} is_staff: {{is_staff}} is_superuser: {{is_superuser}} is_bot: {{is_bot}} email: {{email}}.",
+            "heading_management_transfer": "Team ownership transferred",
+            "entry_management_transfer": "{{_username}} transferred ownership of team id {{team_id}} to user id {{user_id}}.",
+            "heading_management_unteam_delete": "Team deleted",
+            "entry_management_unteam_delete": "{{_username}} deleted team {{deleted_team}}.",
+            "heading_management_unteam": "Player removed from team",
+            "entry_management_unteam": "{{_username}} removed user {{user_id}} from their team."
         }
     },
     "team_wiz": {

@@ -15,23 +15,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with RACTF.  If not, see <https://www.gnu.org/licenses/>.
 
-import * as http from "@ractf/util/http";
+import { FiList } from "react-icons/fi";
 
-import { ENDPOINTS } from "./consts";
+import { registerPlugin } from "@ractf/plugins";
+
+import AuditLog from "./components/AuditLog";
 
 
-export const selfCheck = () => {
-    return new Promise((resolve, reject) => {
-        http.get(ENDPOINTS.SELF_CHECK).then(async (result)  => {
-            resolve(result);
-        }).catch(reject);
-    });
-};
-
-export const auditLog = () => {
-    return new Promise((resolve, reject) => {
-        http.get(ENDPOINTS.AUDIT_LOG).then(async (result)  => {
-            resolve(result);
-        }).catch(reject);
+export default () => {
+    registerPlugin("adminPage", "audit_log", {
+        component: AuditLog,
+        sidebar: "Audit Log",
+        Icon: FiList,
     });
 };

@@ -55,4 +55,5 @@ export const ENDPOINTS = {
     VERSION: "/stats/version/",
 
     SELF_CHECK: "/admin/self_check/",
+    AUDIT_LOG: "/admin/audit_log/",
 };
