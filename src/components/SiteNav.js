@@ -179,7 +179,7 @@ const SideBarNav_ = ({ children }) => {
                             </SideNav.Item>
                         </Link>}
                         {registration && <Link to={"/register"}>
-                            <SideNav.Item active={pathname === "/register"}>
+                            <SideNav.Item active={pathname === "/register"} Icon={FiHome}>
                                 {t("register")}
                             </SideNav.Item>
                         </Link>}
