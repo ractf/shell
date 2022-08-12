@@ -18,7 +18,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers, FiClock } from "react-icons/fi";
+import { FiBarChart2, FiHome, FiLogIn, FiLogOut, FiPlus, FiSettings, FiUser, FiUsers, FiClock, FiUserPlus } from "react-icons/fi";
 
 import {
     SideNav, NavBar, NavBrand, NavGap, Footer, FootRow, FootCol,
@@ -179,7 +179,7 @@ const SideBarNav_ = ({ children }) => {
                             </SideNav.Item>
                         </Link>}
                         {registration && <Link to={"/register"}>
-                            <SideNav.Item active={pathname === "/register"}>
+                            <SideNav.Item active={pathname === "/register"} Icon={FiUserPlus}>
                                 {t("register")}
                             </SideNav.Item>
                         </Link>}
