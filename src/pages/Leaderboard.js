@@ -19,7 +19,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-    Button, Graph, Tab, Table, Page, PageHead, Container
+    Button, Graph, Tab, Table, Page, PageHead, Container,
+    TabbedView
 } from "@ractf/ui-kit";
 import { useApi, usePaginated } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
@@ -36,6 +37,7 @@ const Leaderboard = React.memo(() => {
     const { t } = useTranslation();
 
     const [graph, , , refreshGraph] = useApi(ENDPOINTS.LEADERBOARD_GRAPH);
+    const [groups,      , gRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_GROUPS);
     const [uState, uNext, uRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_USER);
     const [tState, tNext, tRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_TEAM);
     const start_time = useConfig("start_time");
@@ -78,7 +80,10 @@ const Leaderboard = React.memo(() => {
 
             if (!teamPlots.hasOwnProperty(id)) {
                 teamPlots[id] = {
-                    data: [{ x: minTime, y: 0 }], label: i.team_name
+                    data: 
+                        [{ x: minTime, y: 0 }], 
+                        label: i.team_name, 
+                        leaderboard_group_name: i.leaderboard_group_name ?? t("teams.no_leaderboard_group_tab")
                 };
                 points[id] = 0;
             }
@@ -92,13 +97,14 @@ const Leaderboard = React.memo(() => {
         setTeamGraphData(
             Object.values(teamPlots).sort((a, b) => points[b.id] - points[a.id])
         );
-    }, [graph, start_time, hasTeams]);
+    }, [graph, start_time, hasTeams, t]);
 
     useInterval(() => {
         if (!liveReload) return;
         refreshGraph();
         uRefresh();
         tRefresh();
+        gRefresh();
     }, 10000);
 
     const userData = (lbdata) => {
@@ -116,15 +122,48 @@ const Leaderboard = React.memo(() => {
         ]);
     };
 
-    const teamTab = <>
-        {teamGraphData && teamGraphData.length > 0 && (
-            <Graph key="teams" data={teamGraphData} timeGraph noAnimate />
-        )}
-        <Table noSort headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
-        {tState.hasMore && <Container full centre>
-            <Button disabled={tState.loading} onClick={() => {tNext();}}>{t("load_more")}</Button>
-        </Container>}
-    </>;
+    const defaultTabContent = (
+        <>
+            {teamGraphData && teamGraphData.length > 0 && <Graph key="teams" data={teamGraphData} timeGraph noAnimate />}
+            <Table noSort headings={["Place", t("team"), t("point_plural")]} data={teamData(tState.data)} />
+            {tState.hasMore && (
+                <Container full centre>
+                    <Button disabled={tState.loading} onClick={() => { tNext(); }}>{t("load_more")}</Button>
+                </Container>
+            )}
+        </>
+    );
+    
+    const teamTab = (
+        <>
+            {groups.data && groups.data.length > 1 ? (
+                <TabbedView center initial={0}>
+                    <Tab label={t("teams.all_leaderboard_groups")}>
+                        {defaultTabContent}
+                    </Tab>
+                    {groups.data.map(g => {
+                        const filteredGraphData = teamGraphData.filter(i => i.leaderboard_group_name === g.name);
+                        const filteredTeamData = tState.data.filter(i => i.leaderboard_group_name === g.name);
+    
+                        return (
+                            <Tab label={g.name} key={g.name}>
+                                {filteredGraphData && filteredGraphData.length > 0 && <Graph key="teams" data={filteredGraphData} timeGraph noAnimate />}
+                                <Table noSort headings={["Place", t("team"), t("point_plural")]} data={teamData(filteredTeamData)} />
+                                {tState.hasMore && (
+                                    <Container full centre>
+                                        <Button disabled={tState.loading} onClick={() => { tNext(); }}>{t("load_more")}</Button>
+                                    </Container>
+                                )}
+                            </Tab>
+                        );
+                    })}
+                </TabbedView>
+            ) : (
+                <>{defaultTabContent}</>
+            )}
+        </>
+    );
+    
     const userTab = <>
         {userGraphData && userGraphData.length > 0 && (
             <Graph key="users" data={userGraphData} timeGraph noAnimate />

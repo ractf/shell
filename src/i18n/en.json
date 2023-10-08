@@ -34,7 +34,9 @@
         "no_bio": "No bio set",
         "solve": "{{count}} point - Scored by {{user_name}}",
         "solve_plural": "{{count}} points - Scored by {{user_name}}",
-        "already_in_team": "You are already in a team."
+        "already_in_team": "You are already in a team.",
+        "no_leaderboard_group_tab": "No group set",
+        "all_leaderboard_groups": "All teams"
     },
     "profile": {
         "no_bio": "No bio set",

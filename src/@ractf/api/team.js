@@ -26,9 +26,9 @@ import { reloadAll } from "./reloadAll";
 
 export const modifyTeam = (teamId, data) => http.patch(ENDPOINTS.TEAM + teamId, data);
 
-export const createTeam = (name, password) => {
+export const createTeam = (name, password, leaderboard_group) => {
     return new Promise((resolve, reject) => {
-        http.post(ENDPOINTS.TEAM_CREATE, { name, password }).then(async data => {
+        http.post(ENDPOINTS.TEAM_CREATE, { name, password, leaderboard_group }).then(async data => {
             const team = await http.get("/team/self");
             store.dispatch(actions.setTeam(team));
             resolve(data);
