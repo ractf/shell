@@ -46,7 +46,6 @@ export const ENDPOINTS = {
     TEAM_CREATE: "/team/create/",
     TEAM_JOIN: "/team/join/",
     TEAM_LEAVE: "/team/leave/",
-    LEADERBOARD_GROUPS: "/team/groups/",
 
     LEADERBOARD_GRAPH: "/leaderboard/graph/",
     LEADERBOARD_USER: "/leaderboard/user/",

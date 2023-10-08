@@ -21,12 +21,11 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import {
-    Form, HR, Input, Button, SubtleText, Container, Select
+    Form, HR, Input, Button, SubtleText, Container
 } from "@ractf/ui-kit";
+import { joinTeam, createTeam, reloadAll } from "@ractf/api";
 import { useConfig } from "@ractf/shell-util";
 import * as http from "@ractf/util/http";
-import { usePaginated } from "@ractf/util/http";
-import { ENDPOINTS, joinTeam, createTeam, reloadAll } from "@ractf/api";
 
 import Link from "components/Link";
 
@@ -101,7 +100,6 @@ export const CreateTeam = () => {
 
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
-    const [groups,      , gRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_GROUPS);
     const [locked, setLocked] = useState(false);
     const team = useSelector(state => state.team);
     const hasTeams = useConfig("enable_teams");
@@ -112,14 +110,14 @@ export const CreateTeam = () => {
     if (team !== null)
         return <Redirect to={"/team/me"} />;
 
-    const doCreateTeam = ({ name, password, leaderboard_group }) => {
+    const doCreateTeam = ({ name, password }) => {
         if (!name.length)
             return setMessage(t("team_wiz.name_missing"));
         if (password.length < 8)
             return setMessage(t("team_wiz.pass_short"));
 
         setLocked(true);
-        createTeam(name, password, leaderboard_group).then(resp => {
+        createTeam(name, password).then(resp => {
             reloadAll();
             setSuccess(true);
         }).catch(e => {
@@ -149,11 +147,6 @@ export const CreateTeam = () => {
                     <Input autofill={"off"} name={"name"} limit={36} placeholder={t("team_name")} required />
                     <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} required password />
                     <SubtleText>{t("team_secret_warn")}</SubtleText>
-                    {groups && groups.data.length && 
-                        <Form.Group htmlFor={"leaderboard_group"} label={"Select your leaderboard group!"}>
-                            <Select options={groups.data.map(i => ({key: i.id, value: i.name}))} name={"leaderboard_group"} />
-                        </Form.Group>
-                    }
                 </Form.Group>
 
                 {message && <Form.Error>{message}</Form.Error>}
