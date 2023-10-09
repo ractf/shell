@@ -61,10 +61,15 @@ const CMSAdmin = () => {
                     action={(typeof editingGroup.id !== "undefined") ? `/team/groups/${editingGroup.id}/` : "/team/groups/"}
                     method={(typeof editingGroup.id !== "undefined") ? "PATCH" : "POST"} submitRef={formSubmit}
                 >
-                    <Form.Group label={"Name"}>
-                        <Input placeholder={"Name"} name={"name"} val={editingGroup.name} required />
-                    </Form.Group>
-                    <Form.Group label={"Description"}>
+                    <Form.Row>
+                        <Form.Group label={"Name"}>
+                            <Input placeholder={"Name"} name={"name"} val={editingGroup.name} required />
+                        </Form.Group>
+                        {(typeof editingGroup.id !== "undefined") && <Form.Group label={"Group ID"} htmlFor={"id"}>
+                            <Input val={editingGroup.id} name={"id"} readonly />
+                        </Form.Group>}
+                    </Form.Row>
+                    <Form.Group label={"Description (for admin reference)"}>
                         <Input placeholder={"Description"} name={"description"} val={""} />
                     </Form.Group>
                     <Form.Group label={"Self-assignable on team create?"}>
@@ -73,8 +78,6 @@ const CMSAdmin = () => {
                     <Form.Group label={"Has its own leaderboard page?"}>
                         <Checkbox name={"has_own_leaderboard"} val={editingGroup.has_own_leaderboard} />
                     </Form.Group>
-
-                    <HR />
                 </Form>
             </Modal> : null
         }
