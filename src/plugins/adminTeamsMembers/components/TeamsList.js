@@ -138,6 +138,9 @@ export default () => {
                 <Form.Group label={"Owner ID"} htmlFor={"owner"}>
                     <Input val={state.team.owner} name={"owner"} format={NUMBER_RE} />
                 </Form.Group>
+                <Form.Group label={"Leaderboard Group ID"} htmlFor={"leaderboard_group"}>
+                    <Input val={state.team.leaderboard_group} name={"leaderboard_group"} format={NUMBER_RE} />
+                </Form.Group>
                 <Form.Group label={"Members"}>
                     {state.team.members.map(i => {
                         const owner = i.id === state.team.owner;

@@ -365,6 +365,7 @@
     "point_count_plural": "{{count}} points",
     "required": "This field is required",
     "api": {
+        "does_not_exist": "Something you're trying to edit or set a value to doesn't exist.",
         "throttled": "You are being rate-limited.",
         "invalid_token_or_uid": "Invalid token or UID.",
         "not_found": "The page or resource you were looking for could not be found.",
