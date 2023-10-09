@@ -136,12 +136,12 @@ const Leaderboard = React.memo(() => {
     
     const teamTab = (
         <>
-            {groups.data && groups.data.length > 1 ? (
+            {groups.data && groups.data.filter(i => i.has_own_leaderboard).length > 1 ? (
                 <TabbedView center initial={0}>
                     <Tab label={t("teams.all_leaderboard_groups")}>
                         {defaultTabContent}
                     </Tab>
-                    {groups.data.map(g => {
+                    {groups.data.filter(i => i.has_own_leaderboard).map(g => {
                         const filteredGraphData = teamGraphData.filter(i => i.leaderboard_group_name === g.name);
                         const filteredTeamData = tState.data.filter(i => i.leaderboard_group_name === g.name);
     

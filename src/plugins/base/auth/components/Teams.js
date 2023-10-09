@@ -101,7 +101,7 @@ export const CreateTeam = () => {
 
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState(false);
-    const [groups,      , gRefresh] = usePaginated(ENDPOINTS.LEADERBOARD_GROUPS);
+    const [groups, ,          ] = usePaginated(ENDPOINTS.LEADERBOARD_GROUPS);
     const [locked, setLocked] = useState(false);
     const team = useSelector(state => state.team);
     const hasTeams = useConfig("enable_teams");
@@ -149,9 +149,11 @@ export const CreateTeam = () => {
                     <Input autofill={"off"} name={"name"} limit={36} placeholder={t("team_name")} required />
                     <Input autofill={"off"} name={"password"} placeholder={t("team_secret")} required password />
                     <SubtleText>{t("team_secret_warn")}</SubtleText>
-                    {groups && groups.data.length && 
+                    {groups && groups.data.filter(i => i.is_self_assignable).length && 
                         <Form.Group htmlFor={"leaderboard_group"} label={"Select your leaderboard group!"}>
-                            <Select options={groups.data.map(i => ({key: i.id, value: i.name}))} name={"leaderboard_group"} />
+                            <Select options={
+                                groups.data.filter(i => i.is_self_assignable).map(i => ({key: i.id, value: i.name}))
+                            } name={"leaderboard_group"} />
                         </Form.Group>
                     }
                 </Form.Group>
