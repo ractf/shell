@@ -23,7 +23,7 @@ import { usePaginated } from "@ractf/util/http";
 import { ENDPOINTS } from "@ractf/api";
 import { registerPlugin } from "@ractf/plugins";
 import {
-    Page, PageHead, Grid, Button, Modal, Input, Form, HR,
+    Page, PageHead, Grid, Button, Modal, Input, Form,
     UiKitModals, Container, Checkbox
 } from "@ractf/ui-kit";
 
