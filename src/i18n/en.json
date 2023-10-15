@@ -232,7 +232,7 @@
             "title": "Audit Log",
             "empty": "The audit log is empty.",
             "heading_set_config": "Config Change",
-            "entry_set_config": "{{_username}} changed {{key}} from {{old_value}} to {{new_value}}.",
+            "entry_set_config": "The body for this event is handled in AuditLog.js",
             "heading_management_create_preevent_cache": "Pre-event cache created",
             "entry_management_create_preevent_cache": "{{_username}} created the pre-event cache.",
             "heading_management_reset_scores": "Scores reset",

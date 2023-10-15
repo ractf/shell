@@ -47,9 +47,24 @@ export default () => {
                 items.map((item) => {
                     const details = item.extra;
                     details._username = item.username;
-                    return <Card header={t("admin.audit_log.heading_" + item.action)}>
-                        {t("admin.audit_log.entry_" + item.action, details)}
-                    </Card>;
+
+                    // Special-cased actions get handled first...
+                    if (item.action === "set_config") {
+                        // Don't ask why these checks exist, just accept that they do.
+                        if (details.old_value === null && details.new_value === "") { return <></>; }
+                        if (details.old_value === details.new_value)                { return <></>; }
+
+                        return <Card header={t("admin.audit_log.heading_" + item.action)}>
+                            {details._username} changed <code>{details.key}</code> from 
+                            <code>{details.old_value}</code> to <code>{details.new_value}</code>.
+                        </Card>;
+                        
+                    // ...Otherwise, fall back on translations.
+                    } else {
+                        return <Card header={t("admin.audit_log.heading_" + item.action)}>
+                            {t("admin.audit_log.entry_" + item.action, details)}
+                        </Card>;
+                    }
                 })
                 : <Card>{t("admin.audit_log.empty")}</Card>
             : <ModalSpinner />
