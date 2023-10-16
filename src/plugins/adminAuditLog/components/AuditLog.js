@@ -56,9 +56,33 @@ export default () => {
 
                         return <Card header={t("admin.audit_log.heading_" + item.action)}>
                             {details._username} changed <code>{details.key}</code> from 
-                            <code>{details.old_value}</code> to <code>{details.new_value}</code>.
+                            <code>{String(details.old_value)}</code> to <code>{String(details.new_value)}</code>.
                         </Card>;
-                        
+                    
+                    } else if (item.action === "update_model") {
+                        return <Card header={t("admin.audit_log.heading_" + item.action)}>
+                            {details._username} updated the following fields on <code>{details.model_name}</code> with ID {details.model_id}: <br/>
+                            {Object.entries(details.updated_fields).map(([field_name, values]) => 
+                                <><code>{field_name}</code>: from <code>{String(values.old)}</code> to <code>{String(values.new)}</code>.<br/></>)
+                            }
+                        </Card>;
+                    
+                    } else if (item.action === "create_model") {
+                        return <Card header={t("admin.audit_log.heading_" + item.action)}>
+                            {details._username} created a <code>{details.model_name}</code>: <br/>
+                            {Object.entries(details.model_fields).map(([field_name, value]) => 
+                                <><code>{field_name}</code>: <code>{String(value)}</code>.<br/></>)
+                            }
+                        </Card>;
+                    
+                    } else if (item.action === "destroy_model") {
+                        return <Card header={t("admin.audit_log.heading_" + item.action)}>
+                            {details._username} deleted <code>{details.model_name}</code> with ID {details.model_id} which had the following fields: <br/>
+                            {Object.entries(details.model_fields).map(([field_name, value]) => 
+                                <><code>{field_name}</code>: <code>{String(value)}</code>.<br/></>)
+                            }
+                       </Card>;
+
                     // ...Otherwise, fall back on translations.
                     } else {
                         return <Card header={t("admin.audit_log.heading_" + item.action)}>

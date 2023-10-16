@@ -70,7 +70,7 @@ const CMSAdmin = () => {
                         </Form.Group>}
                     </Form.Row>
                     <Form.Group label={"Description (for admin reference)"}>
-                        <Input placeholder={"Description"} name={"description"} val={""} />
+                        <Input placeholder={"Description"} name={"description"} val={editingGroup.description} />
                     </Form.Group>
                     <Form.Group label={"Self-assignable on team create?"}>
                         <Checkbox name={"is_self_assignable"} val={editingGroup.is_self_assignable} />
