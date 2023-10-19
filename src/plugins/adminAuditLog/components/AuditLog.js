@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import { auditLog } from "@ractf/api";
 import {
-    PageHead, Card, ModalSpinner
+    PageHead, Card, ModalSpinner, TreeWrap, TreeValue, Tree
 } from "@ractf/ui-kit";
 
 
@@ -38,6 +38,19 @@ export default () => {
     useEffect(() => {
         loadItems();
     }, []);
+
+    const RecursiveObjectTree = ({obj}) => 
+        Object.entries(obj).map(([k, v]) => 
+            typeof(v) === "object" ?
+                <Tree name={k} startOpen>
+                    <RecursiveObjectTree obj={v}/>
+                </Tree> :
+                <TreeValue name={k} value={String(v)}/>
+        );
+
+    const ObjectTree = ({obj}) => <TreeWrap>
+        <RecursiveObjectTree obj={obj}/>
+    </TreeWrap>;
 
     return <>
         <PageHead title={t("admin.audit_log.title")} />
@@ -61,26 +74,25 @@ export default () => {
                     
                     } else if (item.action === "update_model") {
                         return <Card header={t("admin.audit_log.heading_" + item.action)}>
-                            {details._username} updated the following fields on <code>{details.model_name}</code> with ID {details.model_id}: <br/>
-                            {Object.entries(details.updated_fields).map(([field_name, values]) => 
-                                <><code>{field_name}</code>: from <code>{String(values.old)}</code> to <code>{String(values.new)}</code>.<br/></>)
-                            }
+                            {details._username} updated the following fields on a 
+                            <code>{details.model_name}</code> with ID {details.model_id}: <br/>
+
+                            <ObjectTree obj={details.updated_fields}/>
                         </Card>;
                     
                     } else if (item.action === "create_model") {
                         return <Card header={t("admin.audit_log.heading_" + item.action)}>
                             {details._username} created a <code>{details.model_name}</code>: <br/>
-                            {Object.entries(details.model_fields).map(([field_name, value]) => 
-                                <><code>{field_name}</code>: <code>{String(value)}</code>.<br/></>)
-                            }
+
+                            <ObjectTree obj={details.model_fields}/>
                         </Card>;
                     
                     } else if (item.action === "destroy_model") {
                         return <Card header={t("admin.audit_log.heading_" + item.action)}>
-                            {details._username} deleted <code>{details.model_name}</code> with ID {details.model_id} which had the following fields: <br/>
-                            {Object.entries(details.model_fields).map(([field_name, value]) => 
-                                <><code>{field_name}</code>: <code>{String(value)}</code>.<br/></>)
-                            }
+                            {details._username} deleted a <code>{details.model_name}</code> 
+                            with ID {details.model_id} which had the following fields: <br/>
+
+                            <ObjectTree obj={details.model_fields}/>
                        </Card>;
 
                     // ...Otherwise, fall back on translations.
