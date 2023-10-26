@@ -342,7 +342,7 @@
     "team_name": "Team Name",
     "team_desc": "Team Description",
     "team_secret": "Team Secret",
-    "team_secret_warn": "In order to display the secret for you above, we store it un-hashed. Don't put sensitive things like your bank details here.",
+    "team_secret_warn": "In order to display the secret to you and your team members, we store it in plaintext. Don't put your account password or other sensitive information here.",
     "bio": "Bio",
     "account": "Account",
     "login": "Login",
